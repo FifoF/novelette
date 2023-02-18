@@ -1,0 +1,116 @@
+%% This is file `novelette-shades.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-shades.sty}%
+[2023/01/20 v0.2 LaTeX file (shadings for margins and lines)]
+%%
+
+
+%% SHADE MARGINS, SHADE LINES
+% This file is loaded AtEndPreamble, if option shademargins or shadelines.
+%   Shading is written into the background. But it must precede other
+% background items (in particular, overfull rules) or it will conceal them.
+% The `etoolbox` command \pretocmd does the trick.
+%   The \textblock does not occupy the entire width beteen \@mins and \@mout.
+% Thin padding \@spad is at either side of \textblock. Although images must
+% be confined to \textblock, text may protrude into \@spad. 
+%   When line positions are shaded, the top of the shade is at the baseline.
+% The thickness of the shade is \@desc.
+
+
+\newcounter{@mline}
+\newcommand{\@bghook}{}
+\newcommand{\@addbg}{\g@addto@macro\@bghook}
+\AddToHook{shipout/background}{\put(0,-\pageheight){\@bghook}}
+\IfHookEmptyTF{shipout/background}{\AddToHook{shipout/background}{\relax}}{}
+
+
+%% SHADE MARGINS. SHADE LINES, OPENING GUIDES
+% (1) Fill entire trim area with gray. If using \sheetfeed, does not fill area
+% beyond the trimbox. (2) Fill rectangle bounded by margins with light gray.
+% (3) Fill main textbox with white. Thin side paddings, and the header/footer
+% areas (if used) remain light gray. (4) Fill spine glue strip with dark gray.
+% (5) If page has an opening environment, place small guides in side margins.
+% (6) If shadelines option, place pale gray lines at each baseline of header,
+% main tex, footer. Top of line is text baseline. Line depth is \@desc.
+% (7) In side margins, place guides at \@openabove and \@openht.
+\pretocmd\@kernel@before@shipout@background{
+  % Fill trim area with gray. If sheetfeed, do not extend gray outside trim:
+  \@trim@LL{{\@shade{.6}\rule{\@trimw}{\@trimh}}}
+  % Fill rectangle, bounded by margins, with light gray:
+  \@print@LL{{\@shade{.75}\rule{\@trimw-\@mout-\@mins}{\@trimh-\@mtop-\@mbot}}}
+  % Fill main textblock white. Side padding, header, footer remain light gray:
+  \setlength\temp@l{0pt}
+  \if@has@footer\setlength\temp@l{\@leading+\@footgap\@leading}\fi
+  \@print@LL{%
+    \hspace{\@spad}{\@shade{1}\rule[\temp@l]{\textwidth}{\textheight+\@desc}}%
+  }
+  % If shadelines, do it for main, header, footer:
+  \if@shadelines
+    \@shade@main@lines
+    \if@has@header
+      \@print@UL{{\@shade{.8}\rule[-\@asc-\@desc]{\textwidth+2\@spad}{\@desc}}}
+    \fi%
+    \if@has@footer
+      \@print@LL{{\@shade{.8}\rule{\textwidth+2\@spad}{\@desc}}}
+    \fi
+  \fi
+  \@place@opening@guides
+  % Dark gray area for spine glue:
+  \setlength\temp@l{\@trimw-\@spinew}%
+  \ifodd\c@page\setlength\temp@l{0pt}\fi%
+  \@trim@LL{\rule{\temp@l}{0pt}{\@shade{.4}\rule{\@spinew}{\@trimh}}}%
+}{\typeout{Shading applied.}}{\typeout{Shading failed.}}
+%%
+
+
+%% Main text baselines:
+\def\@shade@main@lines{%
+  \setcounter{@mline}{0}%
+  \loop%
+  \@print@UL{\@shade{.9}%
+    \hspace{\@spad}%
+    \setlength\temp@l{-\value{@mline}\@leading}%
+    \if@has@header\addtolength\temp@l{-\@leading-\@headgap\@leading}\fi%
+    \rule[\temp@l-\@asc-\@desc]{\textwidth}{\@desc}%
+  }%
+  \addtocounter{@mline}{1}%
+  \ifnum\value{@mline}<\@lpp%
+  \repeat%
+}
+%%
+
+
+%% Opening guides.
+\def\@place@opening@guides{%
+  \FPsub{\@openht}{\@openht}{1}%
+  \FPsub{\@openabove}{\@openabove}{1}%
+  \@print@UL{{\@shade{.8}
+    \hspace{-16pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@openabove\@leading]{12pt}{\@desc}
+  }}%
+  \@print@UL{{\@shade{.8}
+    \hspace{-16pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@openht\@leading]{12pt}{\@desc}
+  }}%
+  \@print@UL{{\@shade{.8}
+    \hspace{\textwidth+2\@spad+4pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@openabove\@leading]{12pt}{\@desc}
+  }}%
+  \@print@UL{{\@shade{.8}
+    \hspace{\textwidth+2\@spad+4pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@openht\@leading]{12pt}{\@desc}
+  }}%
+}
+%%
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-shades.sty'.

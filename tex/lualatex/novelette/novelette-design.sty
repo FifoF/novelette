@@ -1,0 +1,266 @@
+%% This is file `novelette-design.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-design.sty}%
+[2023/01/20 v0.2 LaTeX file (page design calculations)]
+%%
+
+
+%% PAGE DESIGN CALCULATIONS
+% -----------------------------------------------------------------------------
+
+
+%% MARGINS
+% Minimum P.O.D. margins are usually 0.5in/13mm top, outside, bottom,
+% plus 0.125in/3mm inside. Novelette does not enforce these, but instead
+% enforces much smaller values, just in case you are not using P.O.D.
+\def\@process@margins{
+  \@oktrue
+  \ifdimcomp{\@mtop}{>}{0pt}{ % User set values.
+    \ifdimcomp{\@mtop}{<}{0pt}{\@okfalse}{}
+    \ifdimcomp{\@mtop}{>}{.25\@trimh}{\@okfalse}{}
+    \ifdimcomp{\@mout}{<}{0pt}{\@okfalse}{}
+    \ifdimcomp{\@mout}{>}{.25\@trimw}{\@okfalse}{}
+    \ifdimcomp{\@mbot}{<}{0pt}{\@okfalse}{}
+    \ifdimcomp{\@mbot}{>}{.25\@trimh}{\@okfalse}{}
+    \ifdimcomp{\@mins}{<}{0pt}{\@okfalse}{}
+    \ifdimcomp{\@mins}{>}{.25\@trimw}{\@okfalse}{}
+  }{}
+  \if@ok\else
+    \@errMOOR % Margins out of range.
+    \global\deflength\@mtop{0pt} % Reset.
+  \fi
+  \ifdimcomp{\@mtop}{=}{0pt}{ % Unset or reset.
+    \FPsub{\temp@w}{\strip@pt\@trimw}{398} % 398pt is 5.5in.
+    \FPifgt{\temp@w}{0}
+      \FPmul{\temp@d}{\temp@w}{.2}
+    \else
+      \def\temp@d{0}
+    \fi
+    \IfSubStr*{\log@trimsize}{mm}{ % Using Metric mm units.
+      \FPdiv{\temp@d}{\temp@d}{2.845} % 2.845pt/mm.
+      \FPadd{\temp@n}{\temp@d}{13}
+      \FPround{\temp@n}{\temp@n}{2}
+      \FPclip{\temp@n}{\temp@n}
+      \global\deflength\@mtop{\temp@n mm}
+      \global\deflength\@mout{\temp@n mm}
+      \global\deflength\@mbot{\temp@n mm}
+      \FPadd{\temp@d}{\temp@n}{3}
+      \FPclip{\temp@d}{\temp@d}
+      \global\deflength\@mins{\temp@d mm}
+      \global\deflength\@spinew{3mm}
+      \xdef\log@margins{\string\margins{top=\temp@n mm,outside=\temp@n mm,%
+        bottom=\temp@n mm,inside=\temp@d mm}}
+    }{ % Something else, so use in.
+      \FPdiv{\temp@d}{\temp@d}{72.27} % 72.27pt/in.
+      \FPadd{\temp@n}{\temp@d}{.5}
+      \FPround{\temp@n}{\temp@n}{3}
+      \FPclip{\temp@n}{\temp@n}
+      \global\deflength\@mtop{\temp@n in}
+      \global\deflength\@mout{\temp@n in}
+      \global\deflength\@mbot{\temp@n in}
+      \FPadd{\temp@d}{\temp@n}{.125}
+      \FPclip{\temp@d}{\temp@d}
+      \global\deflength\@mins{\temp@d in}
+      \global\deflength\@spinew{.125in}
+      \xdef\log@margins{\string\margins{top=\temp@n in,outside=\temp@n in,%
+        bottom=\temp@n in,inside=\temp@d in}}
+    }
+  }{}
+  \global\deflength\@totalh{\@trimh-\@mtop-\@mbot}
+}
+%%
+
+
+%% EMWIDTH, GAPS, STYLE, TYPESIZE
+\def\@process@design{
+  \FPsub{\temp@n}{\strip@pt\@trimw}{\strip@pt\@mout}
+  \FPsub{\temp@w}{\temp@n}{\strip@pt\@mins}
+  \ifdefined\@textchars\else\gdef\@textchars{62}\fi
+  \FPdiv{\temp@n}{\temp@w}{\@textchars}
+  \FPdiv{\temp@n}{\temp@n}{.45} % Average character width 0.45em.
+  \FPround{\temp@n}{\temp@n}{3}
+  \FPclip{\temp@n}{\temp@n}
+  \global\deflength\@typesize{\temp@n pt}
+  \global\deflength\@spad{0.08\@typesize} % Just a tiny amount.
+  \global\deflength\textwidth{\@trimw-\@mout-\@mins-2\@spad}
+  \ifdefined\@headgap
+    \ifdefined\@footgap\else
+      \gdef\@footgap{\@headgap}
+    \fi
+  \fi
+  \ifdefined\@footgap
+    \ifdefined\@headgap\else
+      \gdef\@headgap{\@footgap}
+    \fi
+  \fi
+  \ifdefined\@headgap\else
+    \ifdefined\@footgap\else
+      \gdef\@headgap{0.5}
+      \gdef\@footgap{0.5}
+    \fi
+  \fi
+  \ifdefined\@hfstyle\else
+    \ifdimcomp{\@totalh}{<}{6.8in}{%
+      \gdef\@hfstyle{1} % Only footer.
+    }{%
+      \ifdimcomp{\@totalh}{<}{7.2in}{%
+        \gdef\@hfstyle{3} % Only header.
+      }{\gdef\@hfstyle{2}} % Both.
+    }
+  \fi
+  \FPiflt{\@hfstyle}{4}\global\@has@footertrue\fi
+  \FPifgt{\@hfstyle}{1}\global\@has@headertrue\fi
+  \FPifeq{\@hfstyle}{0}\global\@has@footerfalse\fi
+  \if@pnital
+    \gdef\pagenumber{\textit{\thepage}}
+  \else
+    \gdef\pagenumber{\thepage}
+  \fi
+  \global\deflength\oddsidemargin{\@mins+\@spad+0.5\pagewidth-0.5\@trimw-1in}
+  \global\deflength\evensidemargin{\@mout+\@spad+0.5\pagewidth-0.5\@trimw-1in}
+}
+%%
+
+
+%% CALCULATE LEADING, LINES PER PAGE (four cases, depending on header/footer)
+\def\@calculate@leading{
+  \@start@calc
+  \if@has@header
+    \if@has@footer\@calculate@leading@both\else\@calculate@leading@head\fi
+  \else
+    \if@has@footer\@calculate@leading@foot\else\@calculate@leading@none\fi
+  \fi
+  \@finish@calc
+  \@check@leading
+}
+%%
+\def\@start@calc{
+  \global\deflength\topmargin{\@mtop+0.5\pageheight-0.5\@trimh-1in}
+  \global\deflength\adj@totalh{\@totalh-\@asc-\@desc}
+}
+%%
+\def\@calculate@leading@none{ % No header or footer.
+  \ifdefined\@lpp\else
+    \FPmul{\temp@n}{\strip@pt\@typesize}{1.3} % A mid-range leading.
+    \FPdiv{\temp@lpp}{\strip@pt\adj@totalh}{\temp@n}
+    \FPtrunc{\temp@lpp}{\temp@lpp}{0}
+    \xdef\@lpp{\temp@lpp}
+  \fi
+  \FPsub{\adj@lpp}{\@lpp}{1}
+  \FPdiv{\temp@leading}{\strip@pt\adj@totalh}{\adj@lpp}
+  \FPtrunc{\temp@leading}{\temp@leading}{3}
+  \global\deflength\@leading{\temp@leading pt}
+  \global\deflength\footskip{0pt}
+}
+%%
+\def\@calculate@leading@head{ % Only header.
+  \ifdefined\@lpp\else % User did not set lines.
+    \FPmul{\temp@n}{\strip@pt\@typesize}{1.3}
+    \FPdiv{\temp@lpp}{\strip@pt\adj@totalh}{\temp@n}
+    \FPsub{\temp@lpp}{\temp@lpp}{1} % Header.
+    \FPsub{\temp@lpp}{\temp@lpp}{\@headgap} % Header gap.
+    \FPtrunc{\temp@lpp}{\temp@lpp}{0}
+    \xdef\@lpp{\temp@lpp}
+  \fi
+  \FPadd{\adj@lpp}{\@lpp}{\@headgap}
+  \FPdiv{\temp@leading}{\strip@pt\adj@totalh}{\adj@lpp}
+  \FPtrunc{\temp@leading}{\temp@leading}{3}
+  \global\deflength\@leading{\temp@leading pt}
+  \global\deflength\footskip{0pt}
+  \global\deflength\headheight{\@leading}
+  \global\deflength\headsep{\@headgap\@leading}
+}
+%%
+\def\@calculate@leading@foot{ % Only footer.
+  \ifdefined\@lpp\else % User did not set lines.
+    \FPmul{\temp@n}{\strip@pt\@typesize}{1.3}
+    \FPdiv{\temp@lpp}{\strip@pt\adj@totalh}{\temp@n}
+    \FPsub{\temp@lpp}{\temp@lpp}{\@footgap} % Footer gap.
+    \FPsub{\temp@lpp}{\temp@lpp}{1} % Footer.
+    \FPtrunc{\temp@lpp}{\temp@lpp}{0}
+    \xdef\@lpp{\temp@lpp}
+  \fi
+  \FPadd{\adj@lpp}{\@lpp}{\@footgap}
+  \FPdiv{\temp@leading}{\strip@pt\adj@totalh}{\adj@lpp}
+  \FPtrunc{\temp@leading}{\temp@leading}{3}
+  \global\deflength\@leading{\temp@leading pt}
+  \global\deflength\footskip{\@footgap\@leading+\@leading}
+}
+\def\@calculate@leading@both{ % Header and footer.
+  \ifdefined\@lpp\else
+    \FPmul{\temp@n}{\strip@pt\@typesize}{1.3}
+    \FPdiv{\temp@lpp}{\strip@pt\adj@totalh}{\temp@n}
+    \FPsub{\temp@lpp}{\temp@lpp}{2} % Header and footer
+    \FPsub{\temp@lpp}{\temp@lpp}{\@headgap} % Header gap.
+    \FPsub{\temp@lpp}{\temp@lpp}{\@footgap} % Footer gap.
+    \FPtrunc{\temp@lpp}{\temp@lpp}{0}
+    \xdef\@lpp{\temp@lpp}
+  \fi
+  \FPadd{\adj@lpp}{\@lpp}{1}
+  \FPadd{\adj@lpp}{\adj@lpp}{\@headgap}
+  \FPadd{\adj@lpp}{\adj@lpp}{\@footgap}
+  \FPdiv{\temp@leading}{\strip@pt\adj@totalh}{\adj@lpp}
+  \FPtrunc{\temp@leading}{\temp@leading}{3}
+  \global\deflength\@leading{\temp@leading pt}
+  \global\deflength\headheight{\@leading}
+  \global\deflength\headsep{\@headgap\@leading}
+  \global\deflength\footskip{\@footgap\@leading}
+}
+%%
+\def\@finish@calc{
+  \global\deflength\topskip{\@asc}
+  \global\deflength\textheight{\@lpp\@leading-\@leading+\@asc}
+  \global\deflength\baselineskip{\@leading}
+  \xdef\log@design{%
+    \string\design{chars=\@textchars,lines=\@lpp,%
+    headgap=\@headgap,footgap=\@footgap,%
+    style=\@hfstyle\if@pnital i\fi}%
+  }%
+}
+%%
+\def\@check@leading{
+  \FPadd{\temp@d}{\strip@pt\@asc}{\strip@pt\@desc}
+  \FPdiv{\temp@n}{\strip@pt\@leading}{\temp@d}
+  \FPiflt{\temp@n}{1}\@errTMLPP\fi % Too many lines per page.
+}
+%%
+
+
+%% RENEW NORMALSIZE
+\def\@renew@normalsize{
+  \renewcommand\normalsize{\@setfontsize\normalsize{\@typesize}{\@leading}}
+  \normalsize
+  \let\@normalsize\normalsize\relax % Hack for fancyhdr.
+  \global\deflength\@indent{1.5\@typesize}
+  \global\deflength\footnotesep{0.8\@leading}
+  \DeclareRobustCommand\@footnotesize{% For actual footnotes.
+    \@setfontsize\@footnotesize{.92\@typesize}{.92\@leading}%
+  }
+  \let\tiny\normalsize\relax
+  \let\scriptsize\normalsize\relax
+  \let\footnotesize\normalsize\relax % See \@footnotesize.
+  \let\small\normalsize\relax
+  \let\large\normalsize\relax
+  \let\Large\normalsize\relax
+  \let\LARGE\normalsize\relax
+  \let\huge\normalsize\relax
+  \let\Huge\normalsize\relax
+  \let\HUGE\normalsize\relax
+}
+%%
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-design.sty'.

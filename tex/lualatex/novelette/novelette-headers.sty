@@ -1,0 +1,102 @@
+%% This is file `novelette-headers.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-headers.sty}%
+[2023/01/20 v0.2 LaTeX file (header and footer style details)]
+%%
+
+
+\def\versohead#1{\gdef\versoheadtext{#1}}
+\def\rectohead#1{\gdef\rectoheadtext{#1}}
+
+
+%% INITIALIZE FANCYHDR
+\providecommand\headrulewidth{0pt}\renewcommand\headrulewidth{0pt}
+\providecommand\footrulewidth{0pt}\renewcommand\footrulewidth{0pt}
+\fancyhead[LO,RE,LE,RO,CE,CO]{}
+\fancyfoot[LO,RE,LE,RO,CE,CO]{}
+\gdef\headruleskip{0pt}
+\gdef\footruleskip{0pt}
+\gdef\headrulewidth{0pt}
+\gdef\footrulewidth{0pt}
+%%
+
+
+%% THISPAGESTYLE COMMANDS
+% Re-define \thispagestyle based on design. When it requests only the page
+% number, decide what to do based on this command and whether footer is used:
+\fancypagestyle{footer}{\fancyhead[LO,RE,LE,RO,CE,CO]{}}
+\fancypagestyle{plain}{\fancyhead[LO,RE,LE,RO,CE,CO]{}}
+\fancypagestyle{fancyplain}{\fancyhead[LO,RE,LE,RO,CE,CO]{}}
+%%
+
+
+%%
+\def\@headily#1{%
+  \raisebox{2\@desc-\@leading}{\rule{0pt}{\@asc+\@leading}}%
+  \raisebox{2\@desc}{{\@headfont\addfontfeature{ScaleAgain=\@headrescale}#1}}%
+}
+\def\@widebar{%
+  \rule[-\@headrescale\@desc]{.08em}{\@headrescale\@desc+\@headrescale\@asc}%
+}
+%%
+
+
+%% PROCESS HFSTYLE
+\def\@process@hfstyle{ % Called AtEndPreamble.
+  \ifthenelse{\equal{\@hfstyle}{1}}{
+    \fancyfoot[CO,CE]{\rule{0pt}{\@asc}%
+      {\@headfont\addfontfeature{ScaleAgain=\@headrescale}\pagenumber}}
+  }{}
+  \ifthenelse{\equal{\@hfstyle}{2}}{
+    \fancyhead[CE]{\@headily{\versoheadtext}}
+    \fancyhead[CO]{\@headily{\rectoheadtext}}
+    \fancyfoot[CO,CE]{\vfil\leavevmode\rule{0pt}{\@leading}%
+     {\@headfont\addfontfeature{ScaleAgain=\@headrescale}\pagenumber}}
+  }{}
+  \ifthenelse{\equal{\@hfstyle}{3}}{
+    \fancyhead[LE]{\@headily{\versoheadtext}}
+    \fancyhead[RO]{\@headily{\rectoheadtext}}
+    \fancyfoot[LE,RO]{\vfil\leavevmode\rule{0pt}{\@leading}%
+     {\@headfont\addfontfeature{ScaleAgain=\@headrescale}\pagenumber}}
+  }{}
+  \ifthenelse{\equal{\@hfstyle}{4}}{
+    \fancyhead[LE]{\@headily{\pagenumber}}
+    \fancyhead[RO]{\@headily{\pagenumber}}
+    \fancyhead[CE]{\@headily{\versoheadtext}}
+    \fancyhead[CO]{\@headily{\rectoheadtext}}
+  }{}
+  \ifthenelse{\equal{\@hfstyle}{5}}{
+    \fancyhead[LE]{\@headily{\makebox[2\@indent][l]{\pagenumber}\@widebar}}
+    \fancyhead[CE]{\@headily{\versoheadtext}}
+    \fancyhead[CO]{\@headily{\rectoheadtext}}
+    \fancyhead[RO]{\@headily{\@widebar\makebox[2\@indent][r]{\pagenumber}}}
+  }{}
+  \ifthenelse{\equal{\@hfstyle}{6}}{
+    \fancyhead[LE]{\@headily{\pagenumber~/}}
+    \fancyhead[CE]{\@headily{\versoheadtext}}
+    \fancyhead[CO]{\@headily{\rectoheadtext}}
+    \fancyhead[RO]{\@headily{/~\pagenumber}}
+  }{}
+  \ifthenelse{\equal{\@hfstyle}{7}}{
+    \fancyhead[CE]{\@headily{\pagenumber~/~\versoheadtext}}
+    \fancyhead[CO]{\@headily{\rectoheadtext~/~\pagenumber}}
+  }{}
+  \pagestyle{fancy} % Unless over-ridden by \thispagestyle.
+}
+%%
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-headers.sty'

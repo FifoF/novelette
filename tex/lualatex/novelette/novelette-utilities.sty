@@ -1,0 +1,416 @@
+%% This is file `novelette-utilities.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-utilities.sty}%
+[2023/01/20 v0.2 LaTeX file (macros used by other sty files)]
+%%
+
+
+%% UTILITY MACROS
+%% ----------------------------------------------------------------------------
+% These are used by other packages and novelette-*.sty files, during setup.
+
+
+
+%% PART I. REDEFINITIONS
+% -----------------------------------------------------------------------------
+% TeX "helpfully" provides many settings and commands that are inappropriate
+% in Novelette. This file unsets, changes, or re-defines things.
+%   There are five ways to do things: the right way, the wrong way,
+% the Army way, the TeX way, and the Novelette way.
+
+
+%% CLEARPAGE %%%%% maybe \addtocmd\clearpage{...}{}{}
+\let\old@clearpage\clearpage\relax
+\def\clearpage{%
+  \old@clearpage%
+  \ifnow@frontmatter%
+    \versohead{}%
+    \rectohead{}%
+  \fi%
+}
+%%
+
+
+%% FRONTMATTER, MAINMATTER, BACKMATTER
+% These commands can only be used in document body:
+\def\frontmatter{%
+  \ifnow@frontmatter\@errBADMAT\fi% Bad matter command.
+  \ifnow@mainmatter\@errBADMAT\fi%
+  \global\now@frontmattertrue%
+  \global\now@mainmatterfalse%
+  \clearpage%
+  \versohead{}%
+  \rectohead{}%
+  \pagenumbering{roman}%
+  \setcounter{page}{1}%
+}
+%
+\def\mainmatter{ % Restarts page to 1, arabic numbers; freeze frontpagecount.
+  \ifnow@mainmatter\@errBADMAT\fi%
+  \cleartorecto%
+  \versohead{}
+  \rectohead{}
+  \global\now@frontmatterfalse%
+  \global\now@mainmattertrue%
+  \pagenumbering{arabic}%
+  \setcounter{page}{1}%
+}
+%
+\def\backmatter{%
+  \cleartorecto%
+  \versohead{}%
+  \rectohead{}%
+}
+%%
+
+
+%% INITIALIZE VARIABLES, AND UNGLUE LENGTHS
+%% ----------------------------------------------------------------------------
+\setlength\hoffset{0pt}
+\setlength\voffset{0pt}
+\global\deflength\headheight{0pt}
+\global\deflength\headsep{0pt}
+\global\deflength\footskip{0pt}
+\global\deflength\footnotesep{0pt} %%%%%
+\global\deflength\fboxrule{0pt}
+\global\deflength\fboxsep{0pt}
+\@twocolumnfalse
+\@twosidetrue
+\setlength\columnsep{12pt} % Not needed, picked something at random.
+\setlength\columnseprule{0pt}
+\@mparswitchtrue
+\setlength\marginparwidth{0pt}
+\setlength\marginparsep{0pt}
+\setlength\marginparpush{0pt}
+\global\@topnum=0
+\setlength\abovedisplayskip{0pt}
+\setlength\abovedisplayshortskip{0pt}
+\setlength\belowdisplayshortskip{0pt}
+\setlength\belowdisplayskip{0pt}
+\setlength\smallskipamount{0pt}
+\setlength\medskipamount{0pt}
+\setlength\bigskipamount{0pt}
+\setlength\topsep{0pt}
+\setlength\partopsep{0pt}
+\setlength\parsep{0pt}
+\setlength\parskip{0pt}
+\setlength\floatsep{0pt}
+\setlength\textfloatsep{0pt}
+\setlength\dbltextfloatsep{0pt}
+\setlength\intextsep{0pt}
+\setlength\lineskip{0pt}
+\setlength\normallineskip{0pt}
+\setlength\lineskiplimit{-1pt} % Allows some limited vertical clash.
+\renewcommand\baselinestretch{1}
+\widowpenalty 150
+\clubpenalty 150
+\@lowpenalty   51
+\@medpenalty  151
+\@highpenalty 301
+%%%%% \vbadness=99999 % Suppress nuisance warnings.
+\setcounter{topnumber}{2}
+\renewcommand\topfraction{1} % Was .7
+\setcounter{bottomnumber}{1}
+\renewcommand\bottomfraction{1} % Was .3
+\setcounter{totalnumber}{3}
+\renewcommand\textfraction{0} % Was .2
+\renewcommand\floatpagefraction{1} % Was .5
+\setcounter{dbltopnumber}{2}
+\renewcommand\dbltopfraction{1} % Was .7
+\renewcommand\dblfloatpagefraction{1} % Was .5
+\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\normalfont\rmfamily}
+\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\normalfont\sffamily}
+\DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\normalfont\ttfamily}
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\normalfont\bfseries}
+\DeclareOldFontCommand{\it}{\normalfont\itshape}{\normalfont\itshape}
+\DeclareOldFontCommand{\sl}{\normalfont\slshape}{\normalfont\slshape}
+\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\normalfont\scshape}
+\pagestyle{empty}
+\pagenumbering{arabic}
+\flushbottom
+%%
+
+
+%% DISABLE OR NEUTRALIZE SOME STANDARD LATEX COMMANDS
+%% ----------------------------------------------------------------------------
+% Novelette disallows these commands, or neutralizes them by simply
+% repeating their arguments. In some cases, they request functionality that is
+% not implemented in Novelette. In other cases, functionality is part of core,
+% but would interfere with the Novelette emphasis on constant line skip.
+% You may redefine the commands using your own Preamble code (discouraged).
+% Novelette does not allow TeX size commands. If used, most of them  merely
+% echo the argument without change.
+\long\gdef\part#1{#1}
+\long\gdef\chapter#1{#1}
+\long\gdef\section#1{#1}
+\long\gdef\subsection#1{#1}
+\long\gdef\subsubsection#1{#1}
+\long\gdef\paragraph#1{#1}
+\long\gdef\subparagraph#1{#1}
+\long\gdef\appendix#1{#1}
+\DeclareDocumentCommand\@nodocommand{O{}+m}{\@errNODO{#2}}% Do not do it.
+% The no-do commands:
+\long\gdef\maketitle{\@nodocommand{maketitle}}
+\long\gdef\makeindex{\@nodocommand{makeindex}}
+\long\gdef\tableofcontents{\@nodocommand{tableofcontents}}
+\long\gdef\listoftables{\@nodocommand{listoftables}}
+\long\gdef\listoffigures{\@nodocommand{listoffigures}}
+\long\gdef\thebibliography{\@nodocommand{thebibliography}}
+\long\gdef\theindex{\@nodocommand{theindex}}
+\long\gdef\abstract{\@nodocommand{abstract}}
+\long\gdef\caption{\@nodocommand{caption}}
+\DeclareDocumentEnvironment{tabular}{sO{}+m}{\@nodocommand{tabular}}{}
+\DeclareDocumentEnvironment{table}{sO{}}{\@nodocommand{table}}{}
+\DeclareDocumentEnvironment{figure}{sO{}}{\@nodocommand{figure}}{}
+\DeclareDocumentEnvironment{itemize}{s}{\@nodocommand{itemize}}{}
+\DeclareDocumentEnvironment{enumerate}{s}{\@nodocommand{enumerate}}{}
+\DeclareDocumentEnvironment{description}{s}{\@nodocommand{description}}{}
+\DeclareDocumentEnvironment{labeling}{s}{\@nodocommand{labeling}}{}
+%%
+
+
+%%
+\def\@getepoch{% My first lua code!
+  \directlua{
+    local jack = os.time()
+    tex.sprint(jack)
+  }%
+}
+% From user `egreg' at tex.stackexchange.com, q. 62010 :
+% Puts environment variable #2 into macro #1.
+% Example: \getenv[\userhome]{HOME}
+\ExplSyntaxOn
+\NewDocumentCommand{\getenv}{om}
+ {
+  \sys_get_shell:nnN { kpsewhich ~ --var-value ~ #2 } { } \l_tmpa_tl
+  \tl_trim_spaces:N \l_tmpa_tl
+  \IfNoValueTF { #1 }
+   {
+    \tl_use:N \l_tmpa_tl
+   }
+   {
+    \tl_set_eq:NN #1 \l_tmpa_tl
+   }
+ }
+\ExplSyntaxOff
+\getenv[\@invocation]{processedbynovelette}
+\edef\@rightnow{\@getepoch}
+\IfInteger{\@invocation}{%
+  \FPsub{\temp@n}{\@rightnow}{\@invocation}%
+  \FPabs{\temp@n}{\temp@n}%
+  \FPiflt{\temp@n}{20}%
+    \gdef\@signoffmsg{Processed with lualatex by novelette script.}%
+  \else%
+    \long\gdef\@signoffmsg{Processed with lualatex.^^J%
+      You may get better results by processing via novelette script.^^J%
+      See Novelette documentation for explanation.}%
+  \fi%
+}{%
+    \long\gdef\@signoffmsg{Processed with lualatex.^^J%
+      You may get better results by processing via novelette script.^^J%
+      See Novelette documentation for explanation.}%
+}
+%%
+
+
+%% For convenience, code from `article' class.
+%% ----------------------------------------------------------------------------
+% Environments verse, quotation, and quote are contained in `article' class.
+% They are not very useful in `novelette', but are made available because they
+% are often mentioned by others.
+\newenvironment{verse}{%
+  \let\\\@centercr
+  \list{}{%
+    \itemsep{0pt} %%%%%
+    \itemindent -\parindent%
+    \listparindent\itemindent
+    \rightmargin \leftmargin
+    \advance\leftmargin \parindent%
+  }%
+  \item\relax%
+}{%
+  \endlist%
+}
+\newenvironment{quotation}{%
+  \list{}{%
+    \listparindent \parindent%
+    \itemindent \listparindent
+    \rightmargin \leftmargin
+    \parsep{0pt}%
+  }%
+  \item\relax%
+}{%
+  \endlist%
+}
+\newenvironment{quote}{%
+  \list{}{%
+    \rightmargin\leftmargin%
+  }%
+  \item\relax%
+}{%
+  \endlist%
+}
+%%
+
+
+%% Write straight quotes that TeX will not auto-convert to curly quotes:
+\gdef\straightquote{{\addfontfeature{Ligatures=ResetAll}'}}
+\gdef\straightdblquote{{\addfontfeature{Ligatures=ResetAll}"}}
+%%
+
+
+%% \memo{} does not print or save its argument. May be more than one paragraph.
+% Useful when you wish to put a note to yourself in the *.tex document.
+% Not the same as % comment, because anything after the braces will print.
+\long\gdef\memo#1{}
+%%
+
+
+%% \stake is like \strut, but does not occupy much vertical space.
+\gdef\stake{\rule{0pt}{1pt}}
+%%
+
+
+\ExplSyntaxOn
+%% \smcp{} and \textsc{} lowercase to small caps (Open Type):
+\DeclareDocumentCommand\smcp{+m}{% lowercase to small caps
+  {\addfontfeature{Letters=SmallCaps}#1}%
+}
+%% \capsmcp{} uppercase to small caps (OpenType c2sc):
+\DeclareDocumentCommand\capsmcp{+m}{% uppercase to small caps
+  \fontspec_if_feature:nTF{c2sc}{%
+    {\addfontfeature{Letters=UppercaseSmallCaps}#1}%
+  }{%
+    \fontspec_if_feature:nTF{smcp}{%
+      {\addfontfeature{Letters=SmallCaps}\MakeLowercase{#1}}%
+    }{%
+      #1%
+    }%
+  }%
+}
+%%
+\DeclareDocumentCommand\allsmcp{+m}{% uppercase+lowercase to small caps
+  \fontspec_if_feature:nTF{c2sc}{%
+    {\addfontfeature{Letters=UppercaseSmallCaps,Letters=SmallCaps}#1}%
+  }{%
+    \fontspec_if_feature:nTF{smcp}{%
+      {\addfontfeature{Letters=SmallCaps}\MakeLowercase{#1}}%
+    }{%
+      #1%
+    }%
+  }%
+}
+\let\textsc\smcp\relax % unified
+\let\oldscshape\scshape\relax % unified
+\let\scshape\smcp\relax % unified
+\ExplSyntaxOff
+%%
+
+
+%% legalese environment. Certain info, such as Copyright page, customarily is
+% neither justified nor hyphenated. Can be used wherever desired, of course.
+\newenvironment{legalese}{%
+  \vspace*{\@leading}%
+  \vfill% %%%%%
+  \raggedright%
+  \hyphenpenalty=10000%
+  \exhyphenpenalty=10000%
+  \begingroup%
+  \@footnotefont%
+  \setlength\baselineskip{.88\@leading}% %%%%%
+  \parskip=\baselineskip% Not necessarily \@leading.
+}{%
+  \ifdimcomp{\pagegoal}{<}{8000pt}{%
+    \FPdiv{\temp@n}{\strip@pt\pagegoal}{\strip@pt\@leading}%
+    \FPtrunc{\temp@d}{\temp@n}{0}%
+    \FPsub{\temp@n}{\temp@n}{\temp@d}%
+    \vspace{\temp@n\@leading-\@leading}%
+  }{}%
+  \endgroup%
+}
+%%
+
+
+%% \lnum for lining numbers.
+\gdef\lnum#1{{\addfontfeature{Numbers=Lining}#1}}
+%%
+
+
+% \cleartorecto works same as \clearpage when next page is recto.
+%   If next page would be verso, a blank verso is inserted,
+%   so that the following material is recto.
+% \cleartoend is used at very end of book.
+%   It adds a blank page. If the blank is verso, end of book.
+%   But if that blank is recto, it adds a second blank page, end of book.
+%   So, the book always ends with a blank verso.
+\gdef\cleartorecto{
+  \clearpage
+  \ifodd\c@page\else
+    \thispagestyle{empty}\null\clearpage
+  \fi
+}
+\gdef\cleartoend{
+  \if@cleartoend\else
+    \clearpage
+    \ifodd\c@page
+      \thispagestyle{empty}\null\clearpage
+    \fi
+    \thispagestyle{empty}\null\clearpage
+  \fi
+  \global\@cleartoendtrue
+}
+%%
+
+
+%% For use with draft, shademargins, shadelines:
+\def\@labeldraft{%
+  \AddToHook{shipout/foreground}{%
+    \@print@UL{\hspace*{\@spad}\raisebox{\@desc}{DRAFT}}%
+  }
+}
+\newcommand\@trim@LL[1]{% Lower left of trimsize.
+  \put(.5\pagewidth-.5\@trimw,-.5\pageheight-.5\@trimh){#1}%
+}
+% The printable area extends \@spad beyond left and right sides of \textwidth.
+\newcommand\@print@UL[1]{% Upper left of printable area.
+  \ifodd\c@page%
+    \put(.5\pagewidth-.5\@trimw+\@mins,-.5\pageheight+.5\@trimh-\@mtop){#1}%
+  \else%
+    \put(.5\pagewidth-.5\@trimw+\@mout,-.5\pageheight+.5\@trimh-\@mtop){#1}%
+  \fi%
+}
+\newcommand\@print@LL[1]{% Lower left of printable area.
+  \ifodd\c@page%
+    \put(.5\pagewidth-.5\@trimw+\@mins,-.5\pageheight-.5\@trimh+\@mbot){#1}%
+  \else%
+    \put(.5\pagewidth-.5\@trimw+\@mout,-.5\pageheight-.5\@trimh+\@mbot){#1}%
+  \fi%
+}
+%%
+
+
+%% Lua side bearings:
+\def\mylsb#1{
+  \setlength\mylsblen{\lsidebearing{#1}}
+  \FPdiv{\myratio}{\strip@pt\mylsblen}{\strip@pt\@leading}
+  \FPtrunc{\myratio}{\myratio}{3}
+  #1=\myratio,
+}
+%%
+
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-utilities.sty'.

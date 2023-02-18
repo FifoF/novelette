@@ -1,0 +1,238 @@
+%% This is file `novelette-fonts.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-fonts.sty}%
+[2023/01/20 v0.2 LaTeX file (font settings and defaults)]
+%%
+
+
+%% CHARACTER SET
+% Novelette measures tallest (above baseline) and deepest (below baseline)
+% characters in Latin-1. If your main language uses taller|deeper characters,
+% you should add them to the string. This prevents too many lines per page.
+\newcommand\charmeasure[1]{\gdef\@charmeasure{3456789JÀÁÂÃÄÅÇçjfhlygpqþ#1}}
+\charmeasure{}
+%%
+
+
+%% FONT SELECTION (before fontspec loads)
+% These commands may be used in Preamble. They merely save the settings.
+% Later, fonts are created by \@process@ macros.
+\DeclareDocumentCommand\setfont{mmO{}}{
+  \def\temp@s{main head name desc note deco}
+  \IfSubStr{\temp@s}{#1}{}{\@errBFASF{#1}} % Bad first argument for setfont.
+  \def\temp@s{Color color Colour colour Opacity opacity}
+  \IfSubStr{\temp@s}{#3}{\@errNCOF}{} % No color or opacity in font.
+  \ifthenelse{\equal{#1}{main}}{\gdef\main@font{#2}\gdef\main@feat{#3}}{}
+  \ifthenelse{\equal{#1}{head}}{\gdef\head@font{#2}\gdef\head@feat{#3}}{}
+  \ifthenelse{\equal{#1}{name}}{\gdef\name@font{#2}\gdef\name@feat{#3}}{}
+  \ifthenelse{\equal{#1}{desc}}{\gdef\desc@font{#2}\gdef\desc@feat{#3}}{}
+  \ifthenelse{\equal{#1}{note}}{\gdef\note@font{#2}\gdef\note@feat{#3}}{}
+  \ifthenelse{\equal{#1}{deco}}{\gdef\deco@font{#2}\gdef\deco@feat{#3}}{}
+}
+\@onlypreamble\@setfont
+%%
+
+
+%%
+\def\@pickdefaultfont{
+  \gdef\main@feat{}
+  \IfFontExistsTF{EB Garamond}{
+    \gdef\main@font{EB Garamond}
+  }{
+    \IfFontExistsTF{Libertinus Serif}{
+      \gdef\main@font{Libertinus Serif}
+    }{
+      \IfFontExistsTF{Latin Modern Roman}{ % Almost all TeX has it.
+        \gdef\main@font{Latin Modern Roman}
+      }{\@errRNDMF} % Really no default main font.
+    }
+  }
+}
+%%
+
+
+%%
+\def\@process@mainfont{ % After fontspec loads.
+  \defaultfontfeatures{} % Reset.
+  \defaultfontfeatures[\rmfamily,\sffamily]{Kerning=On,Numbers=OldStyle,%
+    SmallCapsFeatures={Renderer=Basic},Ligatures=TeX,} %%%%%
+  \ifdefined\main@font
+    \IfFontExistsTF{\main@font}{}{
+      \@warnNMFF{\main@font} % No main font found.
+      \@pickdefaultfont
+    }
+  \else
+    \@pickdefaultfont
+  \fi
+  \setmainfont{\main@font}[\main@feat]
+  \let\mainfont\rmfamily\relax % Backwards compatibility.
+}
+%%
+
+
+%% A "well-behaved" font has a Latin-1 character set in which the total height
+% from lowest descender (gjy) to heightest ascender (accents over capitals)
+% does not exceed 1.2em. If font is not well-behaved, it is scaled to fit.
+\def\@rescale@mainfont{
+  \sbox0{\mainfont \@charmeasure}
+  \FPadd{\temp@d}{\strip@pt\ht0}{\strip@pt\dp0}
+  \FPmul{\temp@n}{\strip@pt\@typesize}{1.2}
+  \FPifgt{\temp@d}{\temp@n}
+    \FPdiv{\temp@r}{\temp@n}{\temp@d}
+  \else
+    \def\temp@r{1}
+  \fi
+  \FPtrunc{\temp@r}{\temp@r}{3}
+  \FPclip{\temp@r}{\temp@r}
+  \xdef\@mainrescale{\temp@r}
+  \global\deflength\@asc{\@mainrescale\ht0}
+  \global\deflength\@desc{\@mainrescale\dp0}
+  \FPifeq{\@mainrescale}{1}\else
+    \xdef\temp@s{\main@feat}
+    \xdef\main@feat{\temp@s,ScaleAgain=\@mainrescale}
+  \fi
+  \StrSubstitute{\main@feat}{,,}{,}[\main@feat]
+  \IfBeginWith{\main@feat}{,}{\StrGobbleLeft{\main@feat}{1}[\main@feat]}{}
+  \setmainfont{\main@font}[\main@feat]
+  \ifthenelse{\equal{\main@feat}{}}{\def\temp@s{}}{\def\temp@s{[\main@feat]}}
+  \xdef\log@mainfont{\string\setfont{main}{\main@font}\temp@s}
+  \let\mainfont\rmfamily\relax % Backwards compatibility.
+}
+%%
+
+
+%%
+\def\@process@headfont{
+  \ifdefined\head@font\else\xdef\head@font{\main@font}\fi
+  \ifdefined\head@feat\else\gdef\head@feat{}\fi
+  \IfFontExistsTF{\head@font}{
+    \newfontfamily\@headfont{\head@font}[\head@feat]
+  }{
+    \@warnNFF{\head@font}
+    \newfontfamily\@headfont{\main@font}[ScaleAgain=\@mainrescale]
+  }
+}
+%%
+
+
+%%
+\def\@rescale@headfont{
+  \sbox0{{\@headfont \@charmeasure}}
+  \FPdiv{\temp@n}{\strip@pt\@asc}{\strip@pt\ht0}
+  \FPdiv{\temp@d}{\strip@pt\@asc}{\strip@pt\dp0}
+  \FPmin{\temp@n}{\temp@n}{\temp@d}
+  \FPmin{\temp@n}{\temp@n}{1}
+  \FPtrunc{\temp@n}{\temp@n}{3}
+  \FPclip{\temp@n}{\temp@n}
+  \xdef\@headrescale{\temp@n}
+  \FPifeq{\@headrescale}{1}\else
+    \xdef\temp@s{\head@feat}
+    \xdef\head@feat{\temp@s,ScaleAgain=\@headrescale}
+  \fi
+  \StrSubstitute{\head@feat}{,,}{,}[\head@feat]
+  \IfBeginWith{\head@feat}{,}{\StrGobbleLeft{\head@feat}{1}[\head@feat]}{}
+  \renewfontfamily\@headfont{\head@font}[\head@feat]
+  \ifthenelse{\equal{\head@feat}{}}{\def\temp@s{}}{\def\temp@s{[\head@feat]}}
+  \xdef\log@headfont{\string\setfont{head}{\head@font}\temp@s}
+}
+%%
+
+
+%%
+\def\@process@otherfonts{
+  % name font:
+  \ifdefined\name@font\else\xdef\name@font{\main@font}\fi
+  \ifdefined\name@feat\else\gdef\name@feat{Scale=1.6}\fi
+  \IfFontExistsTF{\name@font}{}{
+    \@warnNFF{\name@font}
+    \xdef\name@font{\main@font}
+  }
+  \newfontfamily\@namefont{\name@font}[\name@feat]
+  \ifthenelse{\equal{\name@feat}{}}{\def\temp@s{}}{\def\temp@s{[\name@feat]}}
+  \xdef\log@namefont{\string\setfont{name}{\name@font}\temp@s}
+  % desc font:
+  \ifdefined\desc@font\else\xdef\desc@font{\main@font}\fi
+  \ifdefined\desc@feat\else\gdef\desc@feat{Scale=1.25}\fi
+  \IfFontExistsTF{\desc@font}{}{
+    \@warnNFF{\desc@font} % No font found.
+    \xdef\desc@font{\main@font}
+  }
+  \newfontfamily\@descfont{\desc@font}[\desc@feat]
+  \ifthenelse{\equal{\desc@feat}{}}{\def\temp@s{}}{\def\temp@s{[\desc@feat]}}
+  \xdef\log@descfont{\string\setfont{desc}{\desc@font}\temp@s}
+  % note font:
+  \ifdefined\note@font\else\xdef\note@font{\main@font}\fi
+  \ifdefined\note@feat\else\gdef\note@feat{}\fi
+  \IfFontExistsTF{\note@font}{}{
+    \@warnNFF{\note@font} % No font found.
+    \xdef\note@font{\main@font}
+  }
+  \newfontfamily\@notefont{\note@font}[\note@feat]
+  \ifthenelse{\equal{\desc@feat}{}}{\def\temp@s{}}{\def\temp@s{[\desc@feat]}}
+  \xdef\log@notefont{\string\setfont{note}{\note@font}\temp@s}
+  % deco font:
+  \ifdefined\deco@font\else\xdef\deco@font{\main@font}\fi
+  \ifdefined\deco@feat\else\gdef\deco@feat{}\fi
+  \IfFontExistsTF{\deco@font}{}{
+    \@warnNFF{\deco@font} % No font found.
+    \xdef\deco@font{\main@font}
+  }
+  \newfontfamily\@decofont{\deco@font}[\deco@feat]
+  \ifthenelse{\equal{\deco@feat}{}}{\def\temp@s{}}{\def\temp@s{[\deco@feat]}}
+  \xdef\log@decofont{\string\setfont{deco}{\deco@font}\temp@s}
+}
+%%
+
+
+%% MICROTYPE OPTIONS
+\def\@setmtoptions{% Default.
+  config=novelette-microtype,%
+    stretch=20,shrink=20,protrusion=true,verbose=silent%
+}
+\DeclareDocumentCommand\setmtoptions{m}{ % Disallow draft, prefer silent.
+  \StrDel{#1}{ifdraft}[\temp@s]
+  \StrDel{\temp@s}{draft}[\temp@s]
+  \StrDel{\temp@s}{final}[\temp@s]
+  \IfSubStr{\temp@s}{config}{}{
+    \g@addto@macro\temp@s{,config=novelette-microtype}
+  }
+  \IfSubStr{\temp@s}{verbose}{}{\g@addto@macro\temp@s{,verbose=silent}}
+  \xdef\@setmtoptions{\temp@s}
+}
+\setmtoptions{stretch=20,shrink=20,protrusion=true} % And others. Default.
+\@onlypreamble\setmtoptions
+\def\@process@mtoptions{
+  \xdef\log@mto{\string\setmtoptions{\@setmtoptions}}
+}
+%%
+
+
+\newcommand\fontclass[1]{%
+  \IfInteger{#1}{%
+    \gdef\@fontclass{#1}%
+  }{%
+    \ClassWarning{novelette}{\string\fontclass\space accepts only integer.^^J%
+      Using default fontclass 0.}%
+    \gdef\@fontclass{0}%
+  }%
+}
+\fontclass{0} % Default
+\@onlypreamble\fontclass
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-fonts.sty'
+
+

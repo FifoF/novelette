@@ -1,0 +1,282 @@
+%% This is file `novelette-metadata.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-metadata.sty}%
+[2023/01/20 v0.2 LaTeX file (Metadata settings)]
+%% 
+
+
+%% PDF METADATA
+% PDF metadata is written into the PDF as XMP.
+%   PDF Metadata is non-printing, identifying information in the PDF file.
+% It describes the file contents for the benefit of PDF reader software,
+% for the benefit of printers, and for the benefit of search databases.
+%   PDF reader software will let you inspect some of the metadata.
+% Professional PDF software lets you inspect more metadata, and sometimes
+% allows you to change it.
+%   Among the vital metadata are book dimensions, page numbers,
+% title, and author. Unless in draft mode or \intent{none}, Novelette also
+% adds PDF/X conformance with an XMP packet.
+%   Some metadata (such as \title) are directly set by you. Other metadata
+% are automatically generated, based on other settings.
+%   Most online advice pertains to Ebooks, or similar documents that are
+% distributed in digital form. These files have metadata including
+% topic, keywords, and other information needed for classification and
+% search. But Novelette only produces files for paper print, not Ebooks.
+% So, there is no provision for that kind of metadata within the PDF file.
+% However, the service that distributes your book will store such
+% information in its database, for purposes of marketing and distribution.
+%   Your book ISBN is not PDF metadata. The reason is that you are not
+% selling the PDF itself. Your Copyright notice is (usually) not PDF metadata,
+% because you are not publishing the PDF itself; you are privately sending it
+% to the print service. ISBN and Copyright notice must be printed on the
+% Copyright page. 
+%   In the event that your document was compiled with an error, PDF /Info
+% will be written, instead of XMP.
+%%
+
+
+%% FIXMETA (utility macro)
+\def\@fixmeta#1{% Converts things such as curly quotes to straight, etc.
+  \StrSubstitute{#1}{``}{"}[\temp@s]%
+  \StrSubstitute{\temp@s}{''}{"}[\temp@s]%
+  \StrSubstitute{\temp@s}{`}{'}[\temp@s]%
+  \StrSubstitute{\temp@s}{‘}{'}[\temp@s]%
+  \StrSubstitute{\temp@s}{’}{'}[\temp@s]%
+  \StrSubstitute{\temp@s}{“}{"}[\temp@s]%
+  \StrSubstitute{\temp@s}{”}{"}[\temp@s]%
+  \StrSubstitute{\temp@s}{^^^^00a0}{ }[\temp@s]% Nonbreaking space.
+  \StrSubstitute{\temp@s}{~}{ }[\temp@s]% TeX nonbreaking space.
+  \StrSubstitute{\temp@s}{^^^^00ad}{}[\temp@s]% Soft hyphen. Remove it.
+  \StrSubstitute{\temp@s}{---}{-}[\temp@s]%
+  \StrSubstitute{\temp@s}{--}{-}[\temp@s]%
+  \StrSubstitute{\temp@s}{‐}{-}[\temp@s]% These next few lines convert various
+  \StrSubstitute{\temp@s}{‑}{-}[\temp@s]% kinds of dashes to hyphen.
+  \StrSubstitute{\temp@s}{‒}{-}[\temp@s]% But on most terminals, the dashes
+  \StrSubstitute{\temp@s}{–}{-}[\temp@s]% all look like the same character,
+  \StrSubstitute{\temp@s}{—}{-}[\temp@s]% due to monospace terminal font.
+  \StrSubstitute{\temp@s}{…}{...}[\temp@s]%
+  \temp@s%
+}
+%%
+
+
+%% PDF/X OUTPUT INTENT
+% Unless \intent{none}, or draft mode, novelette creates PDF/X-1a:2001 files.
+% This format is specifically intended for commercial printing.
+% It requires an Output Intent declaration, even though it is
+% irrelevant in non-color printing (and will be ignored by the printer).
+% Each named intent has identifier, condition, info, and registry.
+% Novelette does not attach an *.icc color profile.
+\StrDel{\@intent}{ }[\temp@s]
+\@okfalse
+\ifthenelse{\equal{\temp@s}{none}}{\@oktrue}{} % Will not be PDF/X.
+\ifthenelse{\equal{\temp@s}{SWOP}}{\@oktrue}{} % Typical for USA.
+\ifthenelse{\equal{\temp@s}{FOGRA39}}{\@oktrue}{} % Typical for Europe.
+\ifthenelse{\equal{\temp@s}{JC200103}}{\@oktrue}{} % Typical for Japan.
+\ifthenelse{\equal{\temp@s}{custom}}{\@oktrue}{} % Something else.
+\if@ok
+  \xdef\@intent{\temp@s}
+\else
+  \@errBVOI % Bad value for output intent.
+\fi
+%%
+
+
+%% PROCESS METADATA
+\def\@process@metadata{
+  \@oktrue
+%%%%%  \ifthenelse{\equal{\thetitle}{Untitled Document}}{\@okfalse}{}
+%%%%%  \ifthenelse{\equal{\theauthor}{Anonymous Author}}{\@okfalse}{}
+  \if@nvtdraft
+    \gdef\@intent{none}
+  \else
+    \if@ok\else\@errDNSTA\fi % Did not specify both title and author.
+  \fi
+%%%%%  \ifthenelse{\equal{\@intent}{none}}{
+%%%%%    \gdef\OIidentifier{none}
+%%%%%    \global\@tempnoinspecttrue
+%%%%%  }{}
+  \ifthenelse{\equal{\@intent}{SWOP}}{ % Typical for USA.
+    \gdef\OIidentifier{CGATS TR 001}
+    \gdef\OIcondition{SWOP (Publication) printing in USA %
+      (Printing process definition: ANSI CGATS.6).}
+    \gdef\OIinfo{U.S. Web Coated (SWOP) v2}
+    \gdef\OIregistry{http://www.color.org}
+  }{}
+  \ifthenelse{\equal{\@intent}{FOGRA39}}{ % Typical for Europe.
+    \gdef\OIidentifier{FOGRA39}
+    \gdef\OIcondition{Offset commercial and specialty printing %
+      according to ISO 12647-2:2004 / Amd 1, paper type 1 or 2 %
+      (gloss or matte coated offset, 115 g/m2), screen frequency 60/cm.}
+    \gdef\OIinfo{Coated FOGRA39 (ISO 12647-2:2004)}
+    \gdef\OIregistry{http://www.color.org}
+  }{}
+  \ifthenelse{\equal{\@intent}{JC200103}}{ % Typical for Japan.
+    \gdef\OIidentifier{JC200103}
+    \gdef\OIcondition{Japan Color 2001 Coated: Printing process definition: %
+      ISO 12647-2:2004, sheet-fed offset printing, positive plates, %
+      paper type 3 (coated, 105 gsm), screen frequency 69/cm.}
+    \gdef\OIinfo{Japan Color 2001 Coated}
+    \gdef\OIregistry{http://www.color.org}
+  }{}
+  \ifthenelse{\equal{\@intent}{custom}}{ % Something else.
+    % You must provide this data yourself. In Preamble, do this:
+    %   \def\OIidentifier{NAME}
+    %   \def\OIcondition{various details}
+    %   \def\OIinfo{long name}
+    %   \def\OIregistry{http://www.color.org}
+    % Registry http://www.color.org is most likely. Change it, if necessary..
+    % The "identifier" is also known as "reference name".
+    % TeX special characters must be backslashed in these definitions.
+    % You may see % or # or _ in the data or file names.
+    % Be sure to write them as \% \# \_ or there will be big trouble.
+    \@oktrue
+    \ifdefined\OIidentifier\else\@okfalse\fi
+    \ifdefined\OIcondition\else\@okfalse\fi
+    \ifdefined\OIinfo\else\@okfalse\fi
+    \ifdefined\OIregistry\else\@okfalse\fi
+    \if@ok\else\@errMPDCI\fi% Must provide definitions for custom intent.
+  }{}
+}
+%%
+
+
+%% DATE FORMATS
+% Not the most compact way to change date format, but easy to read:
+\StrBehind{\pdffeedback creationdate}{:}[\temp@s] % Leading D: removed.
+\StrMid{\temp@s}{1}{4}[\@yyear]
+\StrMid{\temp@s}{5}{6}[\@ymon]
+\StrMid{\temp@s}{7}{8}[\@yday]
+\StrMid{\temp@s}{9}{10}[\@yhr]
+\StrMid{\temp@s}{11}{12}[\@ymin]
+\StrMid{\temp@s}{13}{14}[\@ysec]
+\StrGobbleLeft{\temp@s}{14}[\temp@s]
+\def\@ysign{+}
+\IfBeginWith{\temp@s}{-}{\def\@ysign{-}}{}
+\StrMid{\temp@s}{2}{6}[\@yzone]
+\ifthenelse{\equal{\@yzone}{}}{\def\@yzone{00:00}}{}
+\StrSubstitute{\@yzone}{'}{:}[\@yzone]
+\def\@modifyDate{\@yyear-\@ymon-\@yday T\@yhr:\@ymin:\@ysec\@ysign\@yzone}
+\edef\@createDate{\@modifyDate}
+\edef\@metadataDate{\@modifyDate}
+%%
+
+
+%% DOCUMENT AND INSTANCE UUID
+% PDF/X is for printing, not digital archives. Required uuid can be simple:
+\edef\xmp@docid{\pdf@mdfivesum{jobname.pdf}}
+\edef\xmp@instid{\pdf@mdfivesum{\pdffeedback creationdate}}
+\def\@documentID{uuid:\xmp@docid}
+\def\@instanceID{uuid:\xmp@instid}
+%%
+
+
+%% PROCESS XMP
+\def\@process@xmp{
+  \begingroup
+    \makeatletter
+    \input{novelette-xmppacket.sty}
+    \global\let\@xmpData\@xmpPacket
+    \begingroup
+      \pdfcompresslevel=0
+      \immediate\pdfobj stream attr {/Type /Metadata /Subtype /XML} {\@xmpData}
+      \pdfcatalog{/Metadata \the\pdflastobj\space 0 R}
+    \endgroup
+  \endgroup
+}
+%%
+
+
+%% PROCESS INTENT
+\def\@process@intent{ % Will not attach any *.icc file.
+    \begingroup
+    \edef\@pctchar{\expandafter\@gobble\string\%} % Escaped in TeX, not PDF.
+    \edef\@bchar{\expandafter\@gobble\string\\} % For use as escape, below.
+    \edef\0{\string\0} % Not sure why, but it works.
+    \edef\({\string\(} % PDF Catalog requires escaped parentheses.
+    \edef\){\string\)} % PDF Catalog requires escaped parentheses.
+    \catcode`\_ 12 % The codes might contain underscores.
+    \edef\@OIidentifierString{/OutputConditionIdentifier (\OIidentifier)}%
+    \edef\@OIconditionString{/OutputCondition (\OIcondition)}%
+    \edef\@OIinfoString{/Info (\OIinfo)}%
+    \edef\@OIregistryString{/RegistryName (\OIregistry)}%
+    \pdfcatalog{%
+      /OutputIntents [ <<%
+      /Type/OutputIntent%
+      /S/GTS_PDFX%
+      \@OIconditionString%
+      \@OIidentifierString%
+      \@OIinfoString%
+      \@OIregistryString%
+      >> ]%
+    }%
+    \endgroup
+}
+%%
+
+
+%% PROCESS PDF BOXES
+% MediaBox, CropBox, and TrimBox are written into each page.
+% MediaBox is automatically provided.
+% TrimBox is always necessary for PDF/X.
+% Although CropBox is not necessary, it seems that it is often written by
+% professional PDF software. For that reason, CropBox is created (= MediaBox).
+% The 0.99626401 converts TeX points to PostScript points.
+\def\calc@pdfboxes{
+  \FPmul{\@myMW}{\strip@pt\pagewidth}{0.99626401}
+  \FPround{\@myMW}{\@myMW}{4}
+  \FPclip{\@myMW}{\@myMW}
+  \FPmul{\@myMH}{\strip@pt\pageheight}{0.99626401}
+  \FPround{\@myMH}{\@myMH}{4}
+  \FPclip{\@myMH}{\@myMH}
+  \FPmul{\@myTW}{\strip@pt\@trimw}{0.99626401}
+  \FPround{\@myTW}{\@myTW}{4}
+  \FPclip{\@myTW}{\@myTW}
+  \FPmul{\@myTH}{\strip@pt\@trimh}{0.99626401}
+  \FPround{\@myTH}{\@myTH}{4}
+  \FPclip{\@myTH}{\@myTH}
+  %
+  \FPsub{\@myTWorigin}{\@myMW}{\@myTW}
+  \FPmul{\@myTWorigin}{\@myTWorigin}{0.5}
+  \FPround{\@myTWorigin}{\@myTWorigin}{4}
+  \FPclip{\@myTWorigin}{\@myTWorigin}
+  \FPadd{\@myTWcorner}{\@myTWorigin}{\@myTW}
+  \FPround{\@myTWcorner}{\@myTWcorner}{4}
+  \FPclip{\@myTWcorner}{\@myTWcorner}
+  \FPsub{\@myTHorigin}{\@myMH}{\@myTH}
+  \FPmul{\@myTHorigin}{\@myTHorigin}{0.5}
+  \FPround{\@myTHorigin}{\@myTHorigin}{4}
+  \FPclip{\@myTHorigin}{\@myTHorigin}
+  \FPadd{\@myTHcorner}{\@myTHorigin}{\@myTH}
+  \FPround{\@myTHcorner}{\@myTHcorner}{4}
+  \FPclip{\@myTHcorner}{\@myTHcorner}
+}
+\def\novelette@CropBox{%
+  /CropBox[ 0\space0\space\@myMW\space\@myMH\space]%
+}
+\def\novelette@TrimBox{%
+  /TrimBox[ \@myTWorigin\space\@myTHorigin\space\@myTWcorner\space\@myTHcorner\space]%
+}
+\def\@process@pdfboxes{
+  \calc@pdfboxes
+  \edef\@placectboxes{\pdfpageattr{\novelette@CropBox^^J\novelette@TrimBox}}
+  \@placectboxes
+}
+%%
+
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-metadata.sty'.

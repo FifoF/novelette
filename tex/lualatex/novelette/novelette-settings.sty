@@ -1,0 +1,299 @@
+%% This is file `novelette-settings.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-settings.sty}%
+[2023/01/20 v0.2 LaTeX file (book and page design settings)]
+%%
+
+
+%% BOOK SIZE AND PAGE DESIGN SETTINGS
+% -----------------------------------------------------------------------------
+% These define the dimensions and styles of your book, and its page design.
+% Fonts, openings, and metadata are defined in other files.
+%   If you set \trimsize, you must set both width,height.
+%   If you set \margins, you must set all of top,outside,bottom,inside.
+%   If you set \design, you must set all of emwidth,lines,gap,style.
+% Novelette provides defaults for anything you do not set. In some cases,
+% the defaults are based on other settings or defaults.
+%   These settings are parsed for syntax and acceptable values, at the time
+% they are read. The values are not activated until AtEndPreamble or later,
+% since they must be processed in a certain order. See novelette-design.sty.
+%%
+% \@trimws, \@trimhs -> Strings parsed from \trimsize{} command, units in|mm.
+% \@trimw, \@trimh   -> Corresponding lengths, stored as TeX pt.
+% \@mtop, \@mout, \@mbot, \@min -> Margins (top,outside,bottom,inside). TeX pt.
+%   Margins exclude all printed material. Header/footer do not sit within
+%   the margins, but sit within the same rectangle as main text. 
+% \@lpp -> Integer lines per page, main textblock (not counting header/footer).
+% \@headgap, \@footgap -> Increases line space from main to header|footer.
+%          Range 0-1, may be decimal. Value 1 means one full blank line gap.
+% \@hfstyle -> Chooses the style of header/footer.
+% Settings for fonts, and header style formats, are in other files.
+%%
+
+
+%% Utility: Check if string can be used to set a length (number with units).
+\newcommand\@checklength[1]{
+  \@okfalse
+  \IfEndWith{#1}{in}{\@oktrue}{}
+  \IfEndWith{#1}{mm}{\@oktrue}{}
+  \IfEndWith{#1}{cm}{\@oktrue}{}
+  \IfEndWith{#1}{pt}{\@oktrue}{}
+  \IfEndWith{#1}{bp}{\@oktrue}{}
+  \StrGobbleRight{#1}{2}[\temp@ckln]
+  \IfDecimal{\temp@ckln}{}{\@okfalse}
+}
+%%
+
+
+%% TRIM SIZE (Finished page size of the book.)
+\newcommand\trimsize[1]{
+  \StrDel{#1,}{ }[\temp@s]
+  \StrBehind{\temp@s}{width=}[\temp@w]
+  \StrBefore{\temp@w}{,}[\temp@w]
+  \@checklength{\temp@w}
+  \StrDel{#1,}{ }[\temp@h]
+  \StrBehind{\temp@h}{height=}[\temp@h]
+  \StrBefore{\temp@h}{,}[\temp@h]
+  \@checklength{\temp@h}
+  \ifdimcomp{\temp@w}{<}{4in}{\@okfalse}{}
+  \ifdimcomp{\temp@w}{>}{12in}{\@okfalse}{}
+  \ifdimcomp{\temp@h}{<}{6in}{\@okfalse}{}
+  \ifdimcomp{\temp@h}{>}{18in}{\@okfalse}{}
+  \ifdimcomp{\temp@h}{<}{\temp@w}{\@okfalse}{}
+  \if@ok
+    \global\deflength\@trimw{\temp@w}
+    \global\deflength\@trimh{\temp@h}
+  \else
+    \@errBTS % Bad trim size.
+  \fi
+  \xdef\log@trimsize{\string\trimsize{#1}}
+}
+\trimsize{width=5.5in,height=8.5in} % Default.
+\@onlypreamble\trimsize
+%%
+
+
+%% SHEETFEED (Normally not used. See Novelette documentation.)
+\newcommand\sheetfeed[1]{
+  \@okfalse
+  \StrDel{#1}{ }[\temp@s]
+  \ifthenelse{\equal{\temp@s}{trimsize}}{
+    \@oktrue
+    \global\deflength\pagewidth{\@trimw}
+    \global\deflength\pageheight{\@trimh}
+  }{}
+  \ifthenelse{\equal{\temp@s}{letter}}{
+    \@oktrue
+    \global\deflength\pagewidth{8.5in}
+    \global\deflength\pageheight{11in}
+  }{}
+  \ifthenelse{\equal{\temp@s}{a4} \OR \equal{\temp@s}{A4}}{
+    \@oktrue
+    \global\deflength\pagewidth{210mm}
+    \global\deflength\pageheight{297mm}
+  }{}
+  \if@ok\else\@errBVSF\fi % Bad value sheetfeed.
+  \xdef\log@sheetfeed{\string\sheetfeed{#1}}
+}
+\sheetfeed{trimsize} % Default.
+\@onlypreamble\sheetfeed
+%%
+
+
+%% MARGINS (Excludes all printable material. Inside is at spine.)
+\newcommand\margins[1]{
+  \StrDel{#1,}{ }[\temp@s]
+  \StrBehind{\temp@s}{top=}[\temp@t]
+  \StrBefore{\temp@t}{,}[\temp@t]
+  \@checklength{\temp@t}
+  \StrDel{#1,}{ }[\temp@o]
+  \StrBehind{\temp@o}{outside=}[\temp@o]
+  \StrBefore{\temp@o}{,}[\temp@o]
+  \@checklength{\temp@o}
+  \StrDel{#1,}{ }[\temp@b]
+  \StrBehind{\temp@b}{bottom=}[\temp@b]
+  \StrBefore{\temp@b}{,}[\temp@b]
+  \@checklength{\temp@b}
+  \StrDel{#1,}{ }[\temp@i]
+  \StrBehind{\temp@i}{inside=}[\temp@i]
+  \StrBefore{\temp@i}{,}[\temp@i]
+  \@checklength{\temp@i}
+  \if@ok
+    \global\deflength\@mtop{\temp@t}
+    \global\deflength\@mout{\temp@o}
+    \global\deflength\@mbot{\temp@b}
+    \global\deflength\@mins{\temp@i}
+  \else
+    \StrDel{#1}{ }[\temp@t]
+    \@checklength{\temp@t}
+    \if@ok
+      \global\deflength\@mtop{\temp@t}
+      \global\deflength\@mout{\temp@t}
+      \global\deflength\@mbot{\temp@t}
+      \IfSubStr*{\temp@t}{mm}{
+        \global\deflength\@mins{\@mtop+3mm}
+      }{
+        \global\deflength\@mins{\@mtop+.125in}
+      }
+    \else
+      \@errBVMAR % Bad value margins.
+    \fi
+  \fi
+  \xdef\log@margins{\string\margins{#1}}
+  \IfSubStr{\log@margins}{mm}{
+    \global\deflength\@spinew{3mm}
+  }{
+    \global\deflength\@spinew{.125in}
+  }
+}
+\@onlypreamble\margins % Default will be calculated, based on trim size.
+%%
+
+
+%% PAGE DESIGN (chars, lines, headgap, footgap, style)
+% chars = integer|decimal, usually 60-66. Target number of characters per line.
+% lines = integer lines per page, main textblock (not counting header/footer).
+% headgap, footgap = integer|decimal 0-1. Extra line space at header/footer.
+% style = integer 1-7. Selects header/footer style. i = italics page number.
+\newcommand\design[1]{
+  \@oktrue
+  \StrDel{#1,}{ }[\temp@s]
+  \StrBehind{\temp@s}{chars=}[\temp@s]
+  \StrBefore{\temp@s}{,}[\temp@s]
+  \ifthenelse{\equal{\temp@s}{}}{}{
+    \IfInteger{\temp@s}{
+      \FPiflt{\temp@s}{20}
+        \@okfalse
+      \else
+        \FPifgt{\temp@s}{42}
+          \@okfalse
+        \else
+          \xdef\@textchars{\temp@s}
+        \fi
+     \fi
+    }{\@okfalse}
+  }
+  \StrDel{#1,}{ }[\temp@s]
+  \StrBehind{\temp@s}{lines=}[\temp@s]
+  \StrBefore{\temp@s}{,}[\temp@s]
+  \ifthenelse{\equal{\temp@s}{}}{}{
+    \IfInteger{\temp@s}{
+      \FPiflt{\temp@s}{12}
+        \@okfalse
+      \else
+        \FPifgt{\temp@s}{72}
+          \@okfalse
+        \else
+          \xdef\@lpp{\temp@s}
+        \fi
+     \fi
+    }{\@okfalse}
+  }
+  \StrDel{#1,}{ }[\temp@s]
+  \StrBehind{\temp@s}{headgap=}[\temp@s]
+  \StrBefore{\temp@s}{,}[\temp@s]
+  \ifthenelse{\equal{\temp@s}{}}{}{
+    \IfDecimal{\temp@s}{
+      \FPiflt{\temp@s}{0}
+        \@okfalse
+      \else
+        \FPifgt{\temp@s}{1}
+          \@okfalse
+        \else
+          \xdef\@headgap{\temp@s}
+        \fi
+     \fi
+    }{\@okfalse}
+  }
+  \StrDel{#1,}{ }[\temp@s]
+  \StrBehind{\temp@s}{footgap=}[\temp@s]
+  \StrBefore{\temp@s}{,}[\temp@s]
+  \ifthenelse{\equal{\temp@s}{}}{}{
+    \IfDecimal{\temp@s}{
+      \FPiflt{\temp@s}{0}
+        \@okfalse
+      \else
+        \FPifgt{\temp@s}{1}
+          \@okfalse
+        \else
+          \xdef\@footgap{\temp@s}
+        \fi
+     \fi
+    }{\@okfalse}
+  }
+  \StrDel{#1,}{ }[\temp@s]
+  \StrBehind{\temp@s}{style=}[\temp@s]
+  \StrBefore{\temp@s}{,}[\temp@s]
+  \IfSubStr{\temp@s}{i}{\global\@pnitaltrue\StrDel{\temp@s}{i}[\temp@s]}{}
+  \ifthenelse{\equal{\temp@s}{}}{}{
+    \IfInteger{\temp@s}{
+      \FPiflt{\temp@s}{0}
+        \@okfalse
+      \else
+        \FPifgt{\temp@s}{7}
+          \@okfalse
+        \else
+          \xdef\@hfstyle{\temp@s}
+        \fi
+     \fi
+    }{\@okfalse}
+  }
+  \if@ok\else
+    \@errBVDES % Bad value for design.
+  \fi
+}
+\@onlypreamble\design % Defaults will be calculated. Also \log@design.
+%%
+
+
+%% FOOTNOTE REFERENCE MARKS (Literary or numerical.)
+\newcounter{@fnmnum} % Which marker in the list.
+\setcounter{@fnmnum}{1}
+\newcommand\markers[1]{
+  \@okfalse
+  \StrDel{#1}{ }[\temp@s]
+  \ifthenelse{\equal{\temp@s}{*}}{\@oktrue\gdef\@markers{*}}{}
+  \ifthenelse{\equal{\temp@s}{1}}{\@oktrue\gdef\@markers{1}}{}
+  \if@ok\else\@errBVFM\fi% Bad value for footnote markers.
+  \xdef\log@markers{\string\markers{#1}}
+}
+\markers{*} % Default.
+\@onlypreamble\markers
+%%
+
+
+%% MICROTYPE OPTIONS
+% Novelette loads microtype automatically, AtEndPreamble. This is equivalent
+% to \PassOptionsToPackage{microtype}, but passes \@setmtoptions instead:
+\DeclareDocumentCommand\setmtoptions{m}{ % Disallow draft, prefer silent.
+  \StrDel{#1}{ifdraft}[\temp@s]
+  \StrDel{\temp@s}{draft}[\temp@s]
+  \StrDel{\temp@s}{final}[\temp@s]
+  \IfSubStr{\temp@s}{config}{}{
+    \g@addto@macro\temp@s{,config=novelette-microtype}
+  }
+  \IfSubStr{\temp@s}{verbose}{}{\g@addto@macro\temp@s{,verbose=silent}}
+  \xdef\@setmtoptions{\temp@s}
+}
+\setmtoptions{stretch=20,shrink=20,protrusion=true} % And others. Default.
+\@onlypreamble\setmtoptions
+\def\@process@mtoptions{
+  \xdef\log@mto{\string\setmtoptions{\@setmtoptions}}
+}
+%%
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-settings.sty'.

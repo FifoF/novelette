@@ -1,0 +1,289 @@
+%% This is file `novelette-graphics.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-graphics.sty}%
+[2023/01/20 v0.2 LaTeX file (alternative to graphics and color)]
+%%
+
+
+%% LIMITED GRAPHICS, LIMITED GRAY COLOR
+%% ----------------------------------------------------------------------------
+% Standard LaTeX color management, and graphics inclusion, is contained in the
+% graphics bundle, by David Carlisle, Sebastian Rahtz, and other members of
+% the LaTeX project, and individual authors. Shout-out to them!
+%   However, Novelette only allows monochrome black/white, except limited
+% grayscale shades, for alignment purposes, in draft mode. And, Novelette
+% restricts images to monochrome 1-bit per pixels black/white png format,
+% without the ability to rotate, scale, crop, or otherwise transform.
+%   Thus, the standard LaTeX color and graphics files are not loaded, because
+% that would necessitate nullifying nearly all of their available commands.
+% Novelette uses its own code for color and graphics.
+%%
+
+
+%% WARN WHEN ATTEMPTING TO USE STANDARD COMMANDS
+\def\@nvtcolormsg{\if@sent@colormsg\else\@warnNOC\fi}
+\DeclareDocumentCommand\color{O{}m}{\@nvtcolormsg\ignorespaces}
+\def\textcolor#1#2{\leavevmode\@nvtcolormsg #2}
+\def\colorbox#1#2{\leavevmode\@nvtcolormsg #2}
+\def\pagecolor#1{\@nvtcolormsg}
+\def\nopagecolor{\@nvtcolormsg}
+\def\definecolor#1#2#3{\@nvtcolormsg}
+\def\DefineNamedColor#1#2#3#4{\@nvtcolormsg}
+\def\normalcolor{}
+%%
+
+
+%% DRAFT MODE GRAY SHADES
+\def\@black{0 g 0 G}
+\def\@shade{0 g 0 G}
+\def\@newcolor{%
+  \pdfextension colorstack 0 push{\@shade}%
+  \aftergroup\@prevcolor%
+}
+\def\@prevcolor{\pdfextension colorstack 0 pop\relax}
+\DeclareRobustCommand\@shade[1]{\def\@shade{#1 g #1 G}\@newcolor\ignorespaces}
+\protected\def\@textshade#1#2{{\@shade{#1}#2}}
+%%
+
+
+
+%% IMAGES IN NOVELETTE
+% Standard LaTeX graphics uses the graphics bundle, which has several files.
+% Those files were written by David Carlisle, Sebastian Rahtz, and other
+% members of the LaTeX project and individual authors. Shout-out to them!
+%   However, Novelette uses its own graphics code. In particular: You may only
+% use png images (or fake box, in draft mode). You may not rotate, scale, crop.
+% No frames. No captions. No 2-column.
+%   Why not simply load the graphics package? It contains many commands that
+% cannot be used in Novelette, and places things somewhat differently than
+% Novelette wants to place them.
+%   If you attempt to use the standard \includegraphics command, then instead
+% Novelette will throw a rude error:
+\DeclareDocumentCommand\includegraphics{sO{}m}{\@errNINCG}% No \includegraphics.
+%%
+
+
+%% IMAGE
+% Syntax: \image[options]{integer or filename.png}
+% Option t b p floats top, bottom, fullpage. Default unfloated.
+% Option l c r aligns left, center, right. Default c, except in opening.
+% If an integer is provided (instead of an image filename), then in draft mode
+% Novelette creates a fake image (gray box) occupying that many lines of text.
+% Fake image is error, if not in draft mode.
+% Real image must have extension png or PNG. No other image format allowed.
+% In draft mode, or if not using PDF/X, image check is superficial.
+% When using PDF/X and not in draft mode, image check is more comprehensive.
+\newsavebox\@imagebox
+\def\ftype@figure{1} % Mystery TeX code.
+\DeclareDocumentCommand\image{O{}m}{%
+  \begingroup%
+  \setlength\parindent{0pt}%
+  \@TestImagePlacement{#1}%
+  \@TestImageFormat{#2}%
+  \ifthenelse{\equal{\@imgformat}{real}}{%
+    \@addtofilelist{#2}\ProvidesFile{#2}[png image]%
+    \saveimageresource attr{/Interpolate true } cropbox {#2}%
+    \sbox\@imagebox{\useimageresource\the\lastsavedimageresourceindex}%
+  }{%
+    \sbox\@imagebox{\@shade{.5}%
+      \rule[\@asc]{.5\textwidth}%
+        {\@desc+\@intht\@leading-\@leading+\@asc}%
+    }%
+  }%
+  \setlength\@imagewidth{\wd\@imagebox}%
+  \setlength\@imageheight{\ht\@imagebox}%
+  \FPdiv{\temp@n}{\strip@pt\@imageheight}{\strip@pt\@leading}%
+  \FPadd{\temp@d}{\temp@n}{1}%
+  \FPtrunc{\temp@d}{\temp@d}{0}%
+  \FPsub{\temp@n}{\temp@d}{\temp@n}%
+  \setlength\@imgadj{\temp@n\@leading}%
+  \setlength\temp@l{\@imageheight+\@imgadj}
+%%%%%  \FPdiv{\temp@r}{\strip@pt\temp@l}{\strip@pt\@leading}
+  \ifthenelse{\equal{\@floatpos}{n}}{\@nofloatimg}{}%
+  \ifthenelse{\equal{\@floatpos}{t}}{\@topfloatimg}{}%
+  \ifthenelse{\equal{\@floatpos}{b}}{\@botfloatimg}{}%
+  \ifthenelse{\equal{\@floatpos}{p}}{\@pgfloatimg}{}%
+  \ifthenelse{\equal{\@floatpos}{i}}{\@inlineimg}{}%
+  \endgroup%
+}
+%%
+
+
+%% TEST IMAGE PLACEMENT
+\newcommand\@TestImagePlacement[1]{% No error or warning, if bad value.
+  \def\@imgpos{c}%
+  \IfSubStr{#1}{l}{\def\@imgpos{l}}{}%
+  \IfSubStr{#1}{r}{\def\@imgpos{r}}{}%
+  \def\@floatpos{n}% Default no float.
+  \IfSubStr{#1}{t}{\def\@floatpos{t}}{}%
+  \IfSubStr{#1}{b}{\def\@floatpos{b}}{}%
+  \IfSubStr{#1}{p}{\def\@floatpos{p}}{}%
+  \IfSubStr{#1}{i}{\def\@floatpos{i}}{}%
+  \IfSubStr{#1}{h}{%
+    \ClassWarning{novelette}{Image position h ignored, on page \thepage.^^J%
+      For `h', do not specify a float position. If it does not fit,^^J%
+      it will not float. If you request `ht' it will always float `t'.}%
+  }{}%
+}
+%%
+
+
+%% TEST IMAGE FORMAT
+\newcommand\@TestImageFormat[1]{%
+  \def\@imgformat{fake}%
+  \@okfalse%
+  \IfEndWith{#1}{.png}{\@oktrue}{}%
+  \IfEndWith{#1}{.PNG}{\@oktrue}{}%
+  \if@ok%
+    \IfBeginWith*{#1}{/}{\@okfalse}{% No absolute path.
+      \IfBeginWith*{#1}{..}{\@okfalse}{% No escape from document directory.
+        \IfFileExists{#1}{}{\@okfalse}%
+      }%
+    }%
+  \fi%
+  \if@ok
+    \def\@imgformat{real}%
+  \else%
+    \StrDel{#1}{ }[\@intht]%
+    \IfInteger{\@intht}{\@oktrue}{}%
+  \fi%
+  \if@ok\else\def\@intht{2}\@errBIMF\fi% Bad image format.
+}
+%%
+
+
+%% UNFLOATED IMAGE (instead of `h' syntax)
+\def\@nofloatimg{%
+%  \vfil%
+  \leavevmode%
+  \ifthenelse{\equal{\@imgpos}{c}}{\hfil}{}%
+  \ifthenelse{\equal{\@imgpos}{r}}{\hfill}{}%
+  \rule{2pt}{\@imageheight+\@imgadj}%
+  \raisebox{\@imgadj-\@leading+\@asc}{\usebox\@imagebox}%
+  \ifthenelse{\equal{\@imgpos}{c}}{\hfil}{}%
+  \ifthenelse{\equal{\@imgpos}{l}}{\hfill}{}%
+  \par%
+  \ifthenelse{\equal{\@imgformat}{fake}}{\vspace{-\@leading}}{}%
+%  \vfil%
+}
+%%
+
+
+%% TOP FLOAT
+\def\@topfloatimg{%
+  \def\fps@figure{t}%
+  \@float{figure}%
+%%%%%  \vspace*{\@leading-\@asc}%
+  \leavevmode%
+  \ifthenelse{\equal{\@imgpos}{c}}{\hfil}{}%
+  \ifthenelse{\equal{\@imgpos}{r}}{\hfill}{}%
+  \if@has@header%
+    \rule{2pt}{\@imageheight+\@imgadj}%
+%%%%%    \raisebox{\@imgadj}{\usebox\@imagebox}%
+    \raisebox{\@imgadj-\@desc}{\usebox\@imagebox} %%%%%
+  \else%
+    \rule[-\@asc]{2pt}{\@imageheight+\@imgadj}%
+    \usebox\@imagebox%
+  \fi%
+  \ifthenelse{\equal{\@imgpos}{c}}{\hfil}{}%
+  \ifthenelse{\equal{\@imgpos}{l}}{\hfill}{}%
+  \par%
+%  \vspace{}% %%%%%
+%%%%%  \vspace{\@asc-\@leading}% %%%%%
+  \end@float%
+}
+%%
+
+
+%% BOTTOM FLOAT
+\def\@botfloatimg{%
+  \def\fps@figure{b}%
+  \@float{figure}%
+  \vspace{\@desc-\@imgadj}
+  \leavevmode%
+  \ifthenelse{\equal{\@imgpos}{c}}{\hfil}{}%
+  \ifthenelse{\equal{\@imgpos}{r}}{\hfill}{}%
+  \rule{0pt}{\@imageheight+\@imgadj-\@desc}\usebox\@imagebox%
+  \ifthenelse{\equal{\@imgpos}{c}}{\hfil}{}%
+  \ifthenelse{\equal{\@imgpos}{l}}{\hfill}{}%
+  \par%
+  \end@float%
+}
+%%
+
+
+%% FULL PAGE FLOAT
+\def\@pgfloatimg{%
+  \def\fps@figure{p}%
+  \@float{figure}%
+  \vspace*{\@leading-\@asc}%
+  \leavevmode%
+  \ifthenelse{\equal{\@imgpos}{c}}{\hfil}{}%
+  \ifthenelse{\equal{\@imgpos}{r}}{\hfill}{}%
+  \usebox\@imagebox%
+  \ifthenelse{\equal{\@imgpos}{c}}{\hfil}{}%
+  \ifthenelse{\equal{\@imgpos}{l}}{\hfill}{}%
+  \par%
+  \end@float%
+%  \vfil%
+}
+%%
+
+
+%% INLINE IMAGE
+\def\@inlineimg{%
+  \setlength\temp@l{\@asc+\@desc}%
+  \ifdimcomp{\@imageheight}{>}{\temp@l}{%
+    \@errIITT% Inline image too tall.
+  }{%
+    \raisebox{-\@desc}{\usebox\@imagebox}%
+  }%
+}
+%%
+
+
+%% IMAGE SPECIFICATIONS (Suggest image sizes, base on design.)
+\def\log@imagespecs{
+  \FPsub{\temp@n}{\strip@pt\textwidth}{.1}%
+  \FPdiv{\temp@n}{\temp@n}{72.27}%
+  \FPmul{\temp@n}{\temp@n}{600}%
+  \FPtrunc{\temp@n}{\temp@n}{0}%
+  \typeout{Max image width, @600ppi: \temp@n\space pixels.}%
+  \FPadd{\temp@n}{\strip@pt\@asc}{\strip@pt\@desc}%
+  \FPmul{\temp@n}{\temp@n}{8.3022} % TeX pt to 600ppi.
+  \FPtrunc{\temp@n}{\temp@n}{0}%
+  \typeout{Max height of inline image, @600ppi: \temp@n\space pixels.}%
+  \FPmul{\temp@d}{\strip@pt\@desc}{8.3022}%
+  \FPtrunc{\temp@d}{\temp@d}{0}%
+  \typeout{Baseline above inline image bottom, @600ppi: \temp@d\space pixels}%
+  \FPdiv{\temp@d}{\strip@pt\@leading}{72.27}%
+  \FPmul{\temp@d}{\temp@d}{600}%
+  \FPtrunc{\temp@d}{\temp@d}{0}%
+  \FPadd{\temp@r}{\temp@d}{\temp@n}% %%%%%
+  \FPtrunc{\temp@r}{\temp@r}{0}% %%%%%
+  \typeout{Max height of two-line image, @600ppi: \temp@r\space pixels.}% %%%%%
+  \typeout{Each additional line @600ppi: add \temp@d\space pixels.}%
+  \FPmul{\temp@n}{\strip@pt\@desc}{1.004}%
+  \FPsub{\temp@n}{\strip@pt\textheight}{\temp@n}%
+  \FPdiv{\temp@n}{\temp@n}{72.27}%
+  \FPmul{\temp@n}{\temp@n}{600}%
+  \FPtrunc{\temp@n}{\temp@n}{0}%
+  \typeout{Max height of full-page image, @600ppi: \temp@n\space pixels.}
+}
+%%
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-graphics.sty'.

@@ -1,0 +1,192 @@
+%% This is file `novelette-opendisp.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-opendisp.sty}%
+[2023/01/20 v0.2 LaTeX file (opening pages and display pages)]
+%%
+
+
+%% OPENING PAGES
+% Some portions of your book will begin with a reserved area, occupying perhaps
+% one-fourth to one-half of the main text height. Main text does not begin
+% until after the reserved area. The purpose is to create visual
+% white space, so the reader knows this is different than what came before.
+% New chapters, and some chapter-like portions, start this way.
+%   Novelette uses the `opening' environment. Each opening begins a new page.
+% If page design has a header, it will be empty above the opening.
+%   Within the opening, material will have its own default alignment,
+% rather than the full-textwidth justification of main text. The default
+% in frontmatter and backmatter is centered. In mainmatter, it is a setting.
+% This can be changed on a local basis.
+%   When viewed with class option `shadelines', the background of the opening
+% is palegray. The number of lines is set by height. The baseline of the
+% topmost opening line is set by above. Note that the height and top are not
+% enforced; they are only provided for visualization.
+%   In Preamble, setting \openings{above=A,height=H,position=P} Integer A, H.
+% P is one of center, left, right, outside, inside.
+%   Note that the setting is `openings' (plural) but the individual page
+% environment is 'opening' (singular), which may be locally modified.
+%   Within an opening environment, commands \name and \desc provide
+% styled text. Ordinary text and images may also be used.
+%%
+
+
+%% OPENINGS STYLE
+% Global setting, In Preamble. Local changes: \thisopeningstyle{}.
+\def\@openabove{0} % At top. 
+\def\@openht{0} % Number of lines shaded, when shadelines.
+\newcommand\openings[1]{
+  \@oktrue
+  \StrDel{#1,}{ }[\temp@s]
+  \StrBehind{\temp@s}{above=}[\temp@n]
+  \StrBefore{\temp@n}{,}[\temp@n]
+  \IfInteger{\temp@n}{
+    \FPiflt{\temp@n}{2}\def\temp@n{2}\@okfalse\fi
+    \FPmul{\temp@d}{\@lpp}{.33}
+    \FPtrunc{\temp@d}{\temp@d}{0}
+    \FPifgt{\temp@n}{\temp@d}\def\temp@n{\temp@d}\@okfalse\fi
+  }{}
+  \ifthenelse{\equal{\temp@n}{}}{
+    \FPmul{\temp@n}{\@lpp}{.25}
+    \FPtrunc{\temp@n}{\temp@n}{0}
+  }{}
+  \xdef\@openabove{\temp@n}
+  \StrBehind{\temp@s}{height=}[\temp@n]
+  \StrBefore{\temp@n}{,}[\temp@n]
+  \IfInteger{\temp@n}{
+    \FPiflt{\temp@n}{4}\def\temp@n{4}\@okfalse\fi
+    \FPmul{\temp@d}{\@lpp}{.6}
+    \FPtrunc{\temp@d}{\temp@d}{0}
+    \FPifgt{\temp@n}{\temp@d}\def\temp@n{\temp@d}\@okfalse\fi
+  }{}
+  \ifthenelse{\equal{\temp@n}{}}{
+    \FPmul{\temp@n}{\@lpp}{.5}
+    \FPtrunc{\temp@n}{\temp@n}{0}
+  }{}
+  \xdef\@openht{\temp@n}
+  \StrBehind{\temp@s}{align=}[\temp@s]
+  \StrBefore{\temp@s}{,}[\temp@s]
+  \gdef\@openalign{oops}
+  \ifthenelse{\equal{\temp@s}{left}}{\gdef\@openalign{left}}{}
+  \ifthenelse{\equal{\temp@s}{right}}{\gdef\@openalign{right}}{}
+  \ifthenelse{\equal{\temp@s}{center}}{\gdef\@openalign{center}}{}
+  \ifthenelse{\equal{\temp@s}{outside}}{\gdef\@openalign{outside}}{}
+  \ifthenelse{\equal{\temp@s}{inside}}{\gdef\@openalign{inside}}{}
+  \ifthenelse{\equal{\temp@s}{}}{\gdef\@openalign{center}}{}
+  \ifthenelse{\equal{\@openalign}{oops}}{\gdef\@openalign{left}\@okfalse}{}
+  \if@ok\else\@errBVO\fi
+  \xdef\log@openings{\string\openings{above=\@openabove,height=\@openht,%
+    alignment=\@openalign}}
+}
+\@onlypreamble\openings
+\def\@process@openings{
+  \ifthenelse{\equal{\@openht}{0}}{
+    \openings{} % Defaults.
+  }{}
+}
+%%
+
+
+%% OPENING ENVIRONMENT
+\newenvironment{opening}{%
+  \clearpage%
+  \if@has@header%
+    \if@has@footer%
+      \thispagestyle{footer}% %%%%%
+    \else%
+      \thispagestyle{empty}%
+    \fi%
+  \fi%
+  \suppressfloats[t]% Ensures that a floated image does not go above opening.
+  \suppressfloats[b]% Or beneath.
+  \begingroup%
+  \@inopeningtrue%
+  \setlength\parindent{0pt}% Just within this environment.
+  \ifthenelse{\equal{\@openalign}{left}}{}{}%
+  \ifthenelse{\equal{\@openalign}{right}}{\raggedleft}{}%
+  \ifthenelse{\equal{\@openalign}{center}}{\begin{center}}{}%
+  \ifthenelse{\equal{\@openalign}{outside}}{\ifodd\c@page\raggedleft\fi}{}%
+  \ifthenelse{\equal{\@openalign}{inside}}{\ifodd\c@page\else\raggedleft\fi}{}%
+}{% Close the environment:
+  \ifthenelse{\equal{\@openalign}{center}}{\end{center}}{}%
+  \setcounter{@fnmnum}{1}% Footnote markers.
+  \endgroup%
+  \vfil%
+  \setlength\parindent{\@indent}% Restored.
+}
+\AfterEndEnvironment{opening}{%
+  \NoIndentAfterThis%
+}
+%%
+
+
+\newcommand\name[1]{%
+  \if@inopening%
+    \null\par%
+    \strut\smash{\@namefont #1}\par%
+  \else%
+    \@errNOO%
+  \fi%
+}
+\newcommand\desc[1]{%
+  \if@inopening%
+    \null\par%
+    \strut\smash{\desc@font #1}\par%
+  \else%
+    \@errNOO%
+  \fi%
+}
+\newcommand\icon[1]{% %%%%%
+  \if@inopening%
+    \null\par\strut\smash{\@namefont #1}\strut\par%
+  \else%
+    \@errNOO%
+  \fi%
+}
+%%
+
+
+%% DISPLAY PAGES
+% A "display page" ia a single page with style of its own, unrelated to
+% anything else. Examples are Half-Title, Frontispiece, Title Page,
+% Copyright Page, Dedication, Epigraph, and perhaps some others.
+% Do not confuse a `display' with an `opening'.
+%   Each display starts on a new page, and concludes with a new page.
+% Note that TeX disregards multiple requests for a new page, unless there
+% is something (even an intentional blank page) in between.
+%   On the display page, all items are horizontally centered by default.
+% There is no paragraph indent. There is a one-line gap between paragraphs.
+% Header and footer will be empty. No footnotes are allowed.
+%   Within display, you may use the `legalese' and `textblock' environments.
+%%
+\newenvironment{display}{%
+  \clearpage%
+  \thispagestyle{empty}%
+  \begingroup%
+  \@indisplaytrue%
+  \setlength\parindent{0pt}%
+  \setlength\parskip{\@leading}%
+  \begin{center}%
+}{% End the environment:
+  \end{center}%
+  \endgroup%
+  \vfil%
+}
+\AfterEndEnvironment{display}{\clearpage}
+%%
+
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-opendisp.sty'.

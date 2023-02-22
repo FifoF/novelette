@@ -195,6 +195,8 @@
 \FPmessagesfalse
 \RequirePackage{silence}
 \WarningFilter{microtype}{I cannot find a protrusion list}
+\WarningFilter{microtype}{protrusion}
+\WarningFilter{microtype}{Redefining}
 \WarningsOff[Fancyhdr,fancyhdr]
 \RequirePackage{calc} % Length expression calculations.
 \RequirePackage{atbegshi} % For header changes.
@@ -266,9 +268,8 @@
   \@rescale@mainfont
   \@calculate@leading
   \@renew@normalsize % The real value.
-  \directlua{require "novelette-sidebearings"}
-  \def\lsidebearing#1{\directlua{packagedata.sidebearings.left [[#1]]}}
-  \def\rsidebearing#1{\directlua{packagedata.sidebearings.right [[#1]]}}
+  \RequirePackage[\@setmtoptions]{microtype}
+  \def\MT@find@file#1{} % Prevents loading mt-*.cfg files AtBeginDocument.
   \@process@headfont
   \@rescale@headfont
   \@process@otherfonts
@@ -279,13 +280,9 @@
   \RequirePackage{novelette-headers}
   \@process@hfstyle
   \@process@openings
-  \ifdefined\MTprefix\else\def\MTprefix{doesnotexist}\fi
-  \ifthenelse{\equal{\MTprefix}{@font@does@not@exist}}{
-    \LetLtxMacro\@real@rm@family\rmfamily\relax
-    \def\rmfamily{doesnotexist} % Temporarily fool microtype.
-  }{}
-  \RequirePackage[\@setmtoptions]{microtype}
-  \LetLtxMacro\rmfamily\@real@rm@family\relax
+%  \directlua{require "novelette-sidebearings"}
+%  \def\lsidebearing#1{\directlua{packagedata.sidebearings.left [[#1]]}}
+%  \def\rsidebearing#1{\directlua{packagedata.sidebearings.right [[#1]]}}
   \if@shademargins\RequirePackage{novelette-shades}\fi
   \if@nvtdraft\@labeldraft\fi
   \RequirePackage{novelette-metadata}
@@ -314,7 +311,9 @@
 
 %% AFTER END PREAMBLE (Tacked onto the end of AtBeginDocument.)
 %% ----------------------------------------------------------------------------
-\AfterEndPreamble{\versohead{Verso}\rectohead{Recto}} % Dummy fill.
+\AfterEndPreamble{
+  \versohead{Verso}\rectohead{Recto} % Dummy fill.
+}
 %%
 
 

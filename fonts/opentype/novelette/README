@@ -1,0 +1,9 @@
+Swainson Fonts README
+
+Currently, this directory contains plain text files, in the FontForge *.sfd format, but with extension re-named as *txt.
+
+The developer is still working on these. Not even close to finished.
+
+The files are provided for backup purposes. When the fonts are finished,
+these files will be replaced by their *otf fonts.
+

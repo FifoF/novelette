@@ -186,7 +186,7 @@
     tex.sprint(jack)
   }%
 }
-% From user `egreg' at tex.stackexchange.com, q. 62010 :
+% Code by user `egreg' at tex.stackexchange.com, q. 62010 :
 % Puts environment variable #2 into macro #1.
 % Example: \getenv[\userhome]{HOME}
 \ExplSyntaxOn
@@ -203,6 +203,7 @@
    }
  }
 \ExplSyntaxOff
+% End code by egreg.
 \getenv[\@invocation]{processedbynovelette}
 \edef\@rightnow{\@getepoch}
 \IfInteger{\@invocation}{%
@@ -346,6 +347,22 @@
 %%
 
 
+%% \init[kern{Letter}{phrase} for optional styling first line of a chapter.
+\DeclareDocumentCommand\init{O{0pt}mm}{%
+  \noindent\smash{\addfontfeature{ScaleAgain=1.2}#2}%
+  \kern#1%
+  \smcp{#3}%
+}
+%%
+
+
+%% Fake medium caps, if smcp available:
+\DeclareDocumentCommand\medcap{m}{%
+  {\addfontfeature{ScaleAgain=1.18,FakeStretch=0.9}\allsmcp{#1}}%
+}
+%%
+
+
 % \cleartorecto works same as \clearpage when next page is recto.
 %   If next page would be verso, a blank verso is inserted,
 %   so that the following material is recto.
@@ -405,6 +422,26 @@
   \FPdiv{\myratio}{\strip@pt\mylsblen}{\strip@pt\@leading}
   \FPtrunc{\myratio}{\myratio}{3}
   #1=\myratio,
+}
+%%
+
+
+%% Detect whether an error was thrown, regardless of its source.
+\newif\if@error@thrown
+\directlua{
+  local error_seen = false
+  local true_cmd = token.create'use_i:nn'
+  local false_cmd = token.create'use_ii:nn'
+  local id = luatexbase.new_luafunction'iferrorsissued'
+  token.set_lua('iferrorsissued', id)
+  lua.get_functions_table()[id] = function()
+    token.put_next(error_seen and true_cmd or false_cmd)
+  end
+  luatexbase.add_to_callback('show_error_hook', function()
+    error_seen = true
+    texio.write('.')
+    tex.show_context()
+  end, 'track_errors')
 }
 %%
 

@@ -24,22 +24,18 @@
 \def\@nvtbad{\global\@nvterrtrue\gdef\@intent{none}}
 
 
-\def\@errPLNA{%
+\def\@errCURP{%
+  \ClassError{novelette}{No \string\usepackage, or \string\RequirePackage.^^J%
+    Novelette does not allow you to add packages. There is a reason.^^J%
+    If you wish to use `lipsum`, it is a document class option.^^J%
+    For more details, see Novelette documentation.^^J%
+    \@XN}{\@RXN}\@nvtbad%
+}
+
+\def\@errLINL{%
   \ClassError{novelette}{\string\lipsum\space is not available.^^J%
-    Do this, in Preamble: \string\RequirePackage[options]{lipsum}^^J%
-    \@XN}{\@RXN}%
-}
-
-\def\@errJOBP{%
-  \ClassError{novelette}{You may load only one of babel or polyglossia.
-  \@XN}{\@RXN}%
-}
-
-\def\@errCLTP{%
-  \ClassError{novelette}{You may not load any packages except these:^^J%
-    \@exception@list^^J%
-    (only one of babel|polyglossia)^^J%
-    \@XN}{\@RXN}%
+    To load the `lipsum' package: \string\documentclass[lipsum]{novelette}^^J%
+    \@XN}{\@RXN}\@nvtbad%
 }
 
 \def\@warnBCO{%
@@ -51,7 +47,7 @@
   \ClassError{novelette}{Inline image is too tall, on page \thepage.^^J%
    The allowed image height is related to the leading (baselineskip)^^J%
    and typesize. If it is too tall, it cannot fit without spreading lines.^^J%
-   \@XN}{\@RXN}%
+   \@XN}{\@RXN}\@nvtbad%
 }
 
 \def\@errRNDMF{%
@@ -282,10 +278,10 @@
 
 \def\@errBVDES{%
   \ClassError{novelette}{Bad setting for \string\design.^^J%
-    You may set all, some, or none of emwidth, lines, gap, style.^^J%
+    You may set all, some, or none of chars, lines, gap, style.^^J%
     Anything you do not set will be assigned a default value.^^J%
     Syntax is comma-separated key=value pairs.^^J%
-    emwidth=M where M is integer|decimal from 20 to 42. Typical 28.^^J%
+    chars=C where C is integer|decimal from 20 to 80. Typical 28.^^J%
     lines=L where L is integer lines in main textblock (not header/footer).^^J%
     gap=G where G is integer|decimal from 0 to 1. Default .5 if unset.^^J%
     style=S where S is integer, selects header/footer style. See docs.^^J%

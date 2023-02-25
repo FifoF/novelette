@@ -101,6 +101,7 @@
 \newif\if@shademargins % True if class option shademargins.
 \newif\ifmsdoc % Manuscript, always false. Compatibility with some packages.
 \newif\if@nvtdraft % True unless final mode.
+\newif\ifload@lipsum % True if class option lipsum.
 %%
 
 
@@ -149,9 +150,10 @@
 %%
 
 
-%% MODE, AND PROCESS (unsed) CLASS OPTIONS
+%% MODE, AND PROCESS (unused) CLASS OPTIONS
 %% ----------------------------------------------------------------------------
 % Novelette uses \mode, instead of a class option, for certain behavior:
+\newcommand\lang[1]{\gdef\@nvtlang{#1}\PassOptionsToPackage{#1}{babel}}
 \newcommand\mode[1]{
   \@okfalse
   \StrDel{#1}{ }[\temp@s]
@@ -177,6 +179,7 @@
     \@shademarginsfalse\@shadelinesfalse
   }{}
   \if@ok\else
+    \gdef\@nvtmode{draft}
     \ClassWarning{novelette}{Unknown \string\mode{\temp@s}.^^J%
       Ignored. Using draft mode instead.}
   \fi
@@ -184,7 +187,7 @@
 \@onlypreamble\mode
 \provideboolean{draftdoc} % Always false.
 \StrDel{\@classoptionslist}{draft}[\@classoptionslist] % Disallowed.
-% Only allowed class option is language name, if you use babel. See babel docs. 
+\DeclareOption{lipsum}{\load@lipsumtrue}
 \ProcessOptions\relax
 %%
 
@@ -207,6 +210,7 @@
 \RequirePackage{novelette-design}
 \RequirePackage{novelette-fonts}
 \RequirePackage{novelette-infwarerr}
+\ifload@lipsum\RequirePackage{lipsum}\fi
 %%
 
 
@@ -214,24 +218,10 @@
 %% ----------------------------------------------------------------------------
 % Many packages introduce code that disrupts the uniform line grid,
 % or writes information disallowed by PDF/X. Solution: No user-added packages.
-% The exception list allows a few. Caution: Only add exceptions at great risk!
-\def\@exception@list{ babel polyglossia lipsum magaz limited }
 \LetLtxMacro\@get@package\RequirePackage\relax
-\RenewDocumentCommand\RequirePackage{O{}m}{
-  \IfSubStr{\@exception@list}{#2}{
-  \@oktrue
-  \@ifpackageloaded{babel}{\ifthenelse{\equal{#2}{polyglossia}}{\@okfalse}{}}{}
-  \@ifpackageloaded{polyglossia}{\ifthenelse{\equal{#2}{babel}}{\@okfalse}{}}{}
-  \if@ok\@get@package[#1]{#2}\else\@errJOBP\fi % Just one of babel/polyglossia.
-  }{
-    \ifthenelse{\equal{#2}{limited}}{
-      \typout{ALERT: RequirePackage{limited} is an example only. No effect.}
-    }{
-      \@errCLTP % Cannot load that package.
-    }
-  }
-}
-\LetLtxMacro\usepackage\RequirePackage
+\NewDocumentCommand\out@of@luck{O{}m}{\@errCURP} % Cannot use \RequirePackage.
+\LetLtxMacro\RequirePackage\out@of@luck\relax
+\LetLtxMacro\usepackage\out@of@luck\relax
 %%
 
 
@@ -247,9 +237,15 @@
   }
   \LetLtxMacro\RequirePackage\@get@package\relax
   \LetLtxMacro\usepackage\@get@package\relax
-  \@ifpackageloaded{babel}{}{ % User choice, babel or polyglossia.
-    \@ifpackageloaded{polyglossia}{}{\RequirePackage{babel}} % Default babel.
-  }
+  \ifdefined\@nvtlang\else\lang{english}\fi
+  \RequirePackage[shorthands=off,silent]{babel}
+  \ifdefined\lipsum
+    \ifthenelse{\equal{\@nvtmode}{final}}{
+      \typeout{^^JALERT: Using lipsum in final mode.^^J}
+    }{}
+  \else
+    \DeclareDocumentCommand\lipsum{sO{}o}{\@errLINL} % Lipsum is not loaded.
+  \fi
   \ifundef{\thetitle}{\global\@nvtdrafttrue\title{DRAFT - \jobname}}{}
   \ifundef{\theauthor}{\global\@nvtdrafttrue\author{Anonymous Author}}{}
   \ifundef{\@application}{\application{Novelette}}{}
@@ -302,9 +298,6 @@
   \let\lsstyle\relax
   \hyphenpenalty=1000
   \exhyphenpenalty=1000
-  \ifdefined\lipsum\else
-    \DeclareDocumentCommand\lipsum{O{}}{\@errPLNA} % Package lipsum n/a.
-  \fi
 }
 %%
 

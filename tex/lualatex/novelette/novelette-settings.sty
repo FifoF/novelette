@@ -21,7 +21,7 @@
 % Fonts, openings, and metadata are defined in other files.
 %   If you set \trimsize, you must set both width,height.
 %   If you set \margins, you must set all of top,outside,bottom,inside.
-%   If you set \design, you must set all of emwidth,lines,gap,style.
+%   If you set \design, you must set all of chars,lines,gap,style.
 % Novelette provides defaults for anything you do not set. In some cases,
 % the defaults are based on other settings or defaults.
 %   These settings are parsed for syntax and acceptable values, at the time
@@ -175,7 +175,7 @@
       \FPiflt{\temp@s}{20}
         \@okfalse
       \else
-        \FPifgt{\temp@s}{42}
+        \FPifgt{\temp@s}{80}
           \@okfalse
         \else
           \xdef\@textchars{\temp@s}

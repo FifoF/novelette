@@ -24,6 +24,12 @@
 %%
 
 
+%% Developer tool, for testing fonts. If used, must precede any \setfont.
+\newcommand\kernoff{\gdef\@maybekern{}}
+\def\@maybekern{Kerning=On,}
+%%
+
+
 %% FONT SELECTION (before fontspec loads)
 % These commands may be used in Preamble. They merely save the settings.
 % Later, fonts are created by \@process@ macros.
@@ -64,7 +70,7 @@
 %%
 \def\@process@mainfont{ % After fontspec loads.
   \defaultfontfeatures{} % Reset.
-  \defaultfontfeatures[\rmfamily,\sffamily]{Kerning=On,Numbers=OldStyle,%
+  \defaultfontfeatures[\rmfamily,\sffamily]{\@maybekern Numbers=OldStyle,%
     SmallCapsFeatures={Renderer=Basic},Ligatures=TeX,} %%%%%
   \ifdefined\main@font
     \IfFontExistsTF{\main@font}{}{

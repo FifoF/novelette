@@ -3,7 +3,7 @@ FontName: Swainson-Light
 FullName: Swainson Light
 FamilyName: Swainson
 Weight: Light
-Copyright: Copyright 2023 Robert Allgeyer. Derived from Libertinus Serif, Copyright 2018-2022 The Libertinus Project Authors.
+Copyright: Copyright 2023 Robert Allgeyer. Released under terms of the SIL Open Font License, v. 1.1.
 Version: 0.0.1
 ItalicAngle: 0
 UnderlinePosition: -100
@@ -19,7 +19,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1156455862
-ModificationTime: 1677075607
+ModificationTime: 1677429858
 PfmFamily: 17
 TTFWeight: 300
 TTFWidth: 5
@@ -138,7 +138,7 @@ KernClass2: 19 24 "'kern' Horizontal Kerning first uppercase-1"
  137 Atilde.c2sc Adieresis.c2sc Edieresis.c2sc Otilde.c2sc Odieresis.c2sc atilde.smcp adieresis.smcp edieresis.smcp otilde.smcp odieresis.smcp
  23 Iacute.c2sc iacute.smcp
  0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -50 {} -50 {} -30 {} -100 {} -80 {} 0 {} -80 {} -20 {} -20 {} 0 {} -30 {} 0 {} 0 {} 0 {} -40 {} 0 {} 0 {} 0 {} -30 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} 0 {} -20 {} -20 {} 0 {} 0 {} -10 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} -20 {} -50 {} 0 {} 0 {} 0 {} -10 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} -20 {} -20 {} 0 {} -20 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} -20 {} 0 {} -20 {} 0 {} 0 {} 0 {} 0 {} -40 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -40 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} 0 {} 0 {} 0 {} -20 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -40 {} 0 {} -40 {} -40 {} 0 {} -40 {} -20 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} 0 {} 0 {} 0 {} -20 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -100 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -100 {} 0 {} 0 {} -60 {} -30 {} 0 {} -30 {} 0 {} 0 {} 0 {} -50 {} -50 {} -50 {} 0 {} -50 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} -20 {} 0 {} -20 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -60 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -60 {} 0 {} 0 {} -60 {} -20 {} 0 {} -60 {} 0 {} -40 {} -40 {} -40 {} -20 {} -20 {} 0 {} -20 {} 0 {} 0 {} -40 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} -20 {} -20 {} 0 {} -10 {} 0 {} 0 {} -100 {} 0 {} -40 {} 0 {} 0 {} 0 {} 0 {} -100 {} 0 {} 0 {} -80 {} -40 {} 0 {} -80 {} -30 {} -40 {} 0 {} -60 {} -60 {} -60 {} 0 {} -60 {} 0 {} 0 {} 0 {} 0 {} -20 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} 0 {} 0 {} 0 {} 0 {} 0 {} -20 {} 0 {} 0 {} 0 {} -10 {} 0 {} 0 {} 0 {} -60 {} 0 {} -20 {} 0 {} 0 {} 0 {} 0 {} -40 {} 0 {} 0 {} -40 {} -20 {} 0 {} -60 {} -30 {} -30 {} -30 {} -30 {} -30 {} -30 {} -10 {} -30 {} -10 {} 0 {} -40 {} 0 {} 0 {} 0 {} 0 {} -20 {} 0 {} -20 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -40 {} 0 {} 0 {} 0 {} 0 {} -40 {} -40 {} -60 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} 0 {} -40 {} -40 {} -40 {} 0 {} -40 {} 0 {}
-LangName: 1033 "" "" "" "" "" "" "" "" "" "Original Libertinus by Philipp H. Poll, Khaled Hosny. Derivation by Robert Allgeyer." "" "" "" "This Font Software is licensed under the SIL Open Font License, Version 1.1" "https://scripts.sil.org/OFL"
+LangName: 1033 "" "" "" "" "" "" "" "" "" "Designed by Robert Allgeyer. Thanks to Libertinus Serif fonts by Philipp H. Poll, Khaled Hosny, for visual guidance." "" "" "" "This Font Software is licensed under the SIL Open Font License, Version 1.1. Reserved font name: Swainson." "https://scripts.sil.org/OFL"
 Encoding: UnicodeBmp
 Compacted: 1
 UnicodeInterp: none

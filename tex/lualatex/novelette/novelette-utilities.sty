@@ -446,6 +446,20 @@
 %%
 
 
+\def\sups#1{%
+  {\addfontfeature{Numbers=ResetAll,VerticalPosition=Superior}#1}%
+}
+
+\def\subs#1{%
+  {\addfontfeature{Numbers=ResetAll,VerticalPosition=Inferior}#1}%
+}
+
+\AtBeginDocument{%
+  \providecommand\fraction[2]{% Use only with Swainson fonts.
+    \sups{#1}^^^^2044\raisebox{.129em}{\subs{#2}}%
+  }%
+}
+
 
 %%
 \endinput

@@ -24,17 +24,22 @@
 \def\@nvtbad{\global\@nvterrtrue\gdef\@intent{none}}
 
 
+\def\@errMLANG{%
+  \ClassError{novelette}{Only one language may be set by class option.^^J%
+    \@XN}{\@RXN}\@nvtbad%
+}
+
 \def\@errCURP{%
   \ClassError{novelette}{No \string\usepackage, or \string\RequirePackage.^^J%
     Novelette does not allow you to add packages. There is a reason.^^J%
-    If you wish to use `lipsum`, it is a document class option.^^J%
+    If you need `lipsum`, command: \string\uselipsum\space in Preamble.^^J%
     For more details, see Novelette documentation.^^J%
     \@XN}{\@RXN}\@nvtbad%
 }
 
 \def\@errLINL{%
   \ClassError{novelette}{\string\lipsum\space is not available.^^J%
-    To load the `lipsum' package: \string\documentclass[lipsum]{novelette}^^J%
+    To load `lipsum' package: command \string\uselipsum\space in Preamble.^^J%
     \@XN}{\@RXN}\@nvtbad%
 }
 

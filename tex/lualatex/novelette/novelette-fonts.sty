@@ -34,7 +34,7 @@
 % These commands may be used in Preamble. They merely save the settings.
 % Later, fonts are created by \@process@ macros.
 \DeclareDocumentCommand\setfont{mmO{}}{
-  \def\temp@s{main head name desc note deco}
+  \def\temp@s{main head name desc note deco alt init}
   \IfSubStr{\temp@s}{#1}{}{\@errBFASF{#1}} % Bad first argument for setfont.
   \def\temp@s{Color color Colour colour Opacity opacity}
   \IfSubStr{\temp@s}{#3}{\@errNCOF}{} % No color or opacity in font.
@@ -44,6 +44,8 @@
   \ifthenelse{\equal{#1}{desc}}{\gdef\desc@font{#2}\gdef\desc@feat{#3}}{}
   \ifthenelse{\equal{#1}{note}}{\gdef\note@font{#2}\gdef\note@feat{#3}}{}
   \ifthenelse{\equal{#1}{deco}}{\gdef\deco@font{#2}\gdef\deco@feat{#3}}{}
+  \ifthenelse{\equal{#1}{alt}}{\gdef\alt@font{#2}\gdef\alt@feat{#3}}{}
+  \ifthenelse{\equal{#1}{init}}{\gdef\init@font{#2}\gdef\init@feat{#3}}{}
 }
 \@onlypreamble\@setfont
 %%
@@ -71,7 +73,7 @@
 \def\@process@mainfont{ % After fontspec loads.
   \defaultfontfeatures{} % Reset.
   \defaultfontfeatures[\rmfamily,\sffamily]{\@maybekern Numbers=OldStyle,%
-    SmallCapsFeatures={Renderer=Basic},Ligatures=TeX,} %%%%%
+    Ligatures=TeX,}
   \ifdefined\main@font
     \IfFontExistsTF{\main@font}{}{
       \@warnNMFF{\main@font} % No main font found.
@@ -196,6 +198,26 @@
   \newfontfamily\@decofont{\deco@font}[\deco@feat]
   \ifthenelse{\equal{\deco@feat}{}}{\def\temp@s{}}{\def\temp@s{[\deco@feat]}}
   \xdef\log@decofont{\string\setfont{deco}{\deco@font}\temp@s}
+  % alt font:
+  \ifdefined\alt@font\else\xdef\alt@font{\main@font}\fi
+  \ifdefined\alt@feat\else\gdef\alt@feat{}\fi
+  \IfFontExistsTF{\alt@font}{}{
+    \@warnNFF{\alt@font} % No font found.
+    \xdef\alt@font{\main@font}
+  }
+  \newfontfamily\@altfont{\alt@font}[\alt@feat]
+  \ifthenelse{\equal{\alt@feat}{}}{\def\temp@s{}}{\def\temp@s{[\alt@feat]}}
+  \xdef\log@altfont{\string\setfont{alt}{\alt@font}\temp@s}
+  % init font:
+  \ifdefined\init@font\else\xdef\init@font{\main@font}\fi
+  \ifdefined\init@feat\else\gdef\init@feat{}\fi
+  \IfFontExistsTF{\init@font}{}{
+    \@warnNFF{\init@font} % No font found.
+    \xdef\init@font{\main@font}
+  }
+  \newfontfamily\@initfont{\init@font}[\init@feat]
+  \ifthenelse{\equal{\init@feat}{}}{\def\temp@s{}}{\def\temp@s{[\init@feat]}}
+  \xdef\log@initfont{\string\setfont{init}{\init@font}\temp@s}
 }
 %%
 

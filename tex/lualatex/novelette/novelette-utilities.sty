@@ -347,7 +347,7 @@
 %%
 
 
-%% \init[kern{Letter}{phrase} for optional styling first line of a chapter.
+%% \init[kern]{Letter}{phrase} for optional styling first line of a chapter.
 \DeclareDocumentCommand\init{O{0pt}mm}{%
   \noindent\smash{\addfontfeature{ScaleAgain=1.2}#2}%
   \kern#1%
@@ -455,8 +455,8 @@
 }
 
 \AtBeginDocument{%
-  \providecommand\fraction[2]{% Use only with Swainson fonts.
-    \sups{#1}^^^^2044\raisebox{.129em}{\subs{#2}}%
+  \providecommand\fraction[2]{% Use only with Swainson fonts (metrics).
+    \raisebox{-.103em}{\sups{#1}}^^^^2044\raisebox{.168em}{\subs{#2}}%
   }%
 }
 

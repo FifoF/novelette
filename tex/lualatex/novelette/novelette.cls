@@ -102,6 +102,7 @@
 \newif\ifmsdoc % Manuscript, always false. Compatibility with some packages.
 \newif\if@nvtdraft % True unless final mode.
 \newif\ifload@lipsum % True if class option lipsum.
+\newif\if@langset % True when language is set.
 %%
 
 
@@ -147,13 +148,13 @@
 \RequirePackage{etoolbox} % general good stuff
 \RequirePackage{xifthen} % improved ifthenelse handling
 \RequirePackage{xstring} % parses strings
+\RequirePackage{novelette-infwarerr}
 %%
 
 
-%% MODE, AND PROCESS (unused) CLASS OPTIONS
+%% MODE
 %% ----------------------------------------------------------------------------
 % Novelette uses \mode, instead of a class option, for certain behavior:
-\newcommand\lang[1]{\gdef\@nvtlang{#1}\PassOptionsToPackage{#1}{babel}}
 \newcommand\mode[1]{
   \@okfalse
   \StrDel{#1}{ }[\temp@s]
@@ -185,10 +186,111 @@
   \fi
 }
 \@onlypreamble\mode
+%%
+
+
+%% CLASS OPTIONS (language)
+%% ----------------------------------------------------------------------------
+\DeclareOption{english-au}{
+  \if@langset\@errMLANG\else\@langsettrue % Multiple language options.
+  \gdef\@setnvtlang{\setmainlanguage[variant=australian]{english}}\fi
+}
+\DeclareOption{english-ca}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=canadian]{english}}\fi
+}
+\DeclareOption{english-gb}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=british]{english}}\fi
+}
+\DeclareOption{english-au}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=newzealand]{english}}\fi
+}
+\DeclareOption{english-us}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=american]{english}}\fi
+}
+\DeclareOption{english}{ % Default for English.
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=american]{english}}\fi
+}
+\DeclareOption{french-ca}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=canadian]{french}}\fi
+}
+\DeclareOption{french-ch}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=swisss]{french}}\fi
+}
+\DeclareOption{french}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{french}}\fi
+}
+\DeclareOption{german-au}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=austrian]{german}}\fi
+}
+\DeclareOption{german-ch}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=swiss]{german}}\fi
+}
+\DeclareOption{german}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{german}}\fi
+}
+\DeclareOption{norwegian-bk}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=bokmal]{norwegian}}\fi
+}
+\DeclareOption{norwegian}{ % Nynorsk.
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{norwegian}}\fi
+}
+\DeclareOption{portuguese-br}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=brazilian]{portuguese}}\fi
+}
+\DeclareOption{portuguese}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{portuguese}}\fi
+}
+\DeclareOption{spanish-mx}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage[variant=mexican]{spanish}}\fi
+}
+\DeclareOption{spanish}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{spanish}}\fi
+}
+\DeclareOption{danish}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{danish}}\fi
+}
+\DeclareOption{dutch}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{dutch}}\fi
+}
+\DeclareOption{icelandic}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{icelandic}}\fi
+}
+\DeclareOption{italian}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{italian}}\fi
+}
+\DeclareOption{latin}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{latin}}\fi
+}
+\DeclareOption{swedish}{
+  \if@langset\@errMLANG\else\global\@langsettrue
+  \gdef\@setnvtlang{\setmainlanguage{swedish}}\fi
+}
 \provideboolean{draftdoc} % Always false.
 \StrDel{\@classoptionslist}{draft}[\@classoptionslist] % Disallowed.
-\DeclareOption{lipsum}{\load@lipsumtrue}
 \ProcessOptions\relax
+\newcommand\uselipsum{\load@lipsumtrue}
 %%
 
 
@@ -209,8 +311,6 @@
 \RequirePackage{novelette-settings}
 \RequirePackage{novelette-design}
 \RequirePackage{novelette-fonts}
-\RequirePackage{novelette-infwarerr}
-\ifload@lipsum\RequirePackage{lipsum}\fi
 %%
 
 
@@ -237,15 +337,6 @@
   }
   \LetLtxMacro\RequirePackage\@get@package\relax
   \LetLtxMacro\usepackage\@get@package\relax
-  \ifdefined\@nvtlang\else\lang{english}\fi
-  \RequirePackage[shorthands=off,silent]{babel}
-  \ifdefined\lipsum
-    \ifthenelse{\equal{\@nvtmode}{final}}{
-      \typeout{^^JALERT: Using lipsum in final mode.^^J}
-    }{}
-  \else
-    \DeclareDocumentCommand\lipsum{sO{}o}{\@errLINL} % Lipsum is not loaded.
-  \fi
   \ifundef{\thetitle}{\global\@nvtdrafttrue\title{DRAFT - \jobname}}{}
   \ifundef{\theauthor}{\global\@nvtdrafttrue\author{Anonymous Author}}{}
   \ifundef{\@application}{\application{Novelette}}{}
@@ -264,6 +355,20 @@
   \@rescale@mainfont
   \@calculate@leading
   \@renew@normalsize % The real value.
+  \RequirePackage[verbose=false]{polyglossia}
+  \if@langset
+    \@setnvtlang % From class option.
+  \else
+    \setmainlanguage[variant=american]{english} % Default.
+  \fi
+  \ifload@lipsum\RequirePackage{lipsum}\setotherlanguage{latin}\fi
+  \ifdefined\lipsum
+    \ifthenelse{\equal{\@nvtmode}{final}}{
+      \typeout{^^JALERT: Using lipsum in final mode.^^J}
+    }{}
+  \else
+    \DeclareDocumentCommand\lipsum{sO{}o}{\@errLINL} % Lipsum is not loaded.
+  \fi
   \RequirePackage[\@setmtoptions]{microtype}
   \def\MT@find@file#1{} % Prevents loading mt-*.cfg files AtBeginDocument.
   \@process@headfont

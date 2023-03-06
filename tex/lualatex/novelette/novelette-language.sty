@@ -1,0 +1,136 @@
+%% This is file `novelette-language.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-language.sty}%
+[2023/01/20 v0.2 LaTeX file (language setting)]
+%%
+
+
+%% LANGUAGE
+%% ----------------------------------------------------------------------------
+% Novelette uses polyglossia for language support, but does not make all
+% of its commands or languages available. This is because many languages
+% have typographic requirements that would conflict with Novelette layout.
+% Also, print-on-demand may place additional restrictions. For simplicity,
+% only a small number of Western European languages are available.  
+% If these do not meet your needs, you should use a different document class.
+%   Some languages have regional variants, such as de-ch for Swiss German.
+% Not all variants are supported. If you request an unsupported variant,
+% such as fr-be for Belgian French, then the main country (France French)
+% will be used instead. This rarely makes much of a difference.
+%   Language controls hyphenation patterns, and sometimes fine-tuning of
+% punctuation. It does not check spelling or grammar. So if you request
+% French, but write in German, it will be processed without complaint.
+% However, the result may have unexpected hyphenation and punctuation.
+%   You may only set one language. The occasional word or phrase in another
+% language is permitted. It will be processed according to the rules of
+% the set language. This is normal practice. However, if the foreign text
+% is lengthy, then you may need to manually adjust its hyphenation.
+%   If you use lipsum, then Latin (if available) will be loaded automatically.
+% You cannot set Latin yourself.
+%   Language codes are case-insensitive.
+%%
+
+
+%%
+\def\@dadalangs{danish da dansk}
+\def\@nlnllangs{dutch nl nederlands}
+\def\@isislangs{icelandic is islenska íslenska}
+\def\@ititlangs{italian it italiano}
+\def\@svsvlangs{swedish sv svenska}
+\def\@engblangs{english en en-gb en-GB ukenglish uk-english british}
+\def\@enuslangs{en-us en-US usenglish us-english american}
+\def\@frfrlangs{french fr fr-FR fr-fr francais francais-fr français français-fr}
+%\def\@frcalangs{french-ca fr-ca fr-CA francais-ca français-ca canadien}
+\def\@frchlangs{french-ch fr-ch fr-CH francais-ch français-ch suisse}
+\def\@dedelangs{german de de-de de-DE deutsch}
+\def\@deatlangs{german-at de-at de-AT deutsch-at austrian}
+\def\@dechlangs{german-ch d-ch de-CH deutsch-ch}
+\def\@nonnlangs{norwegian no norwegian-nn norsk nynorsk no-nn no-NN}
+\def\@nonblangs{norwegian-nb no-nb no-NB bokmal}
+\def\@eseslangs{spanish es es-es es-ES espanol español}
+\def\@esmxlangs{spanish-mx es-mx es-MX espanol-mx español-mx}
+\def\@ptptlangs{portuguese pt pt-pt pt-PT portugues português}
+\def\@ptbrlangs{portuguese-br pt-br pt-BR portugues-br português-br}
+%%
+
+
+%%
+\newcommand\setlang[1]{
+  \@okfalse
+  \@parselang{#1}
+  \if@ok
+    \xdef\@nvtsetlang{#1}
+  \else
+    \@infoLSUB{\temp@s} % Language substitution.
+    \StrBefore{#1}{-}[\temp@s]
+    \@parselang{\temp@s}
+  \fi
+  \if@ok
+    \xdef\@nvtsetlang{\temp@s}
+  \else
+    \@warnNOLL{\temp@s} % Not on language list.
+    \gdef\@nvtlang{\setmainlanguage[variant=british]{english}} % Default.
+    \gdef\@nvtsetlang{en-gb}
+  \fi
+}
+%%
+\newcommand\@parselang[1]{
+  \StrDel{#1}{ }[\temp@s]
+  \IfSubStr{\temp@s}{,}{\@errTML}{} % Too many languages.
+  \@okfalse
+  \IfSubStr{\@dadalangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage{danish}}}{}
+  \IfSubStr{\@nlnllangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage{dutch}}}{}
+  \IfSubStr{\@isislangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage{icelandic}}}{}
+  \IfSubStr{\@ititlangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage{italian}}}{}
+  \IfSubStr{\@svsvlangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage{swedish}}}{}
+  \IfSubStr{\@frfrlangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage{french}}}{}
+%  \IfSubStr{\@frcalangs}{\temp@s}{
+%    \@oktrue\gdef\@nvtlang{\setmainlanguage[variant=canadian]{french}}}{}
+  \IfSubStr{\@frchlangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage[variant=swiss]{french}}}{}
+  \IfSubStr{\@dedelangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage{german}}}{}
+  \IfSubStr{\@deatlangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage[variant=austrian]{german}}}{}
+  \IfSubStr{\@dechlangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage[variant=swiss]{german}}}{}
+  \IfSubStr{\@nonnlangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage[variant=nynorsk]{norwegian}}}{}
+  \IfSubStr{\@nonblangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage[variant=bokmal]{norwegian}}}{}
+  \IfSubStr{\@eseslangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage{spanish}}}{}
+  \IfSubStr{\@esmxlangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage[variant=mexican]{spanish}}}{}
+  \IfSubStr{\@ptptlangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage{portuguese}}}{}
+  \IfSubStr{\@ptbrlangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage[variant=brazilian]{portuguese}}}{}
+  \IfSubStr{\@enuslangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage[variant=american]{english}}}{}
+  \IfSubStr{\@engblangs}{\temp@s}{
+    \@oktrue\gdef\@nvtlang{\setmainlanguage[variant=british]{english}}}{}
+}
+%%
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-language.sty'.

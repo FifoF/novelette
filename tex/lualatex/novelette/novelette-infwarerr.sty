@@ -23,10 +23,37 @@
 \def\@RXN{Really, respond with x and exit now. Else bad things may happen.}
 \def\@nvtbad{\global\@nvterrtrue\gdef\@intent{none}}
 
+\def\@infoDEFL{%
+  \typeout{^^JALERT: \string\setlang\space not set. Using default en-gb.^^J}%
+}
 
-\def\@errMLANG{%
-  \ClassError{novelette}{Only one language may be set by class option.^^J%
-    \@XN}{\@RXN}\@nvtbad%
+\def\@warnNOLL#1{%
+  \ClassWarning{novelette}{\string\setlang{#1} language unavailable.^^J%
+    Will use default British English instead.}%
+}
+
+\def\@infoLSUB#1{%
+  \typeout{^^JLanguage #1 not on list. Will try without regional variant.^^J}%
+}
+
+\def\@warnDINCO{%
+  \ClassWarning{novelette}{There is no `draft' class option. Ignored.^^J%
+    See novelette docs regarding the \string\mode\space setting.}%
+}
+
+\def\@warnTML{%
+  \ClassWarning{novelette}{\string\setlang\space allows only one language.^^J%
+    Will use default British English instead.}%
+}
+
+\def\@warnNLHP{%
+  \ClassWarning{novelette}{Did not find latin hyphenation for lipsum.^^J%
+    The lipsum will be hyphenated according to some other language rules.^^J
+    For better results, install package hyphen-latin.}%
+}
+
+\def\@infoDNSL{%
+  \typeout{^^JALERT: No language set as class option. Default english-us.^^J}%
 }
 
 \def\@errCURP{%

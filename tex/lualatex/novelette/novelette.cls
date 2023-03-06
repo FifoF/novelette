@@ -82,7 +82,6 @@
 \subtitle{} % Default empty.
 %%
 
-
 %% BOOLEANS (Used here, and in other Novelette files.)
 \newif\if@ok % Local scratch boolean. Typically used for and/or series.
 \newif\ifcolors@ % Always false.
@@ -102,7 +101,6 @@
 \newif\ifmsdoc % Manuscript, always false. Compatibility with some packages.
 \newif\if@nvtdraft % True unless final mode.
 \newif\ifload@lipsum % True if class option lipsum.
-\newif\if@langset % True when language is set.
 %%
 
 
@@ -141,7 +139,7 @@
 %%
 
 
-%% REQUIRE PACKAGES
+%% REQUIRE SOME PACKAGES
 %% ----------------------------------------------------------------------------
 \RequirePackage{xparse} % For writing cool-looking commands.
 \RequirePackage{letltxmacro} % For re-defining some macros.
@@ -152,9 +150,20 @@
 %%
 
 
-%% MODE
+%% CLASS OPTIONS (none!), LANGUAGE, MODE
 %% ----------------------------------------------------------------------------
-% Novelette uses \mode, instead of a class option, for certain behavior:
+% Novelette does not use class options. Dimensions, font size, and everything
+% are are set by specific commands in Preamble.
+%   \setlang{language} selects the language. Only one. Default en-gb.
+%   \mode{choose} selects draft, shade, align, final. Default draft.
+\ifdefined\@raw@classoptionslist
+  \ifthenelse{\equal{\@raw@classoptionslist}{}}{}{
+    \typeout{^^JALERT: Novelette has no class options. Ignored!^^J}
+  }
+\fi
+\def\@raw@classoptionslist{}
+\def\@classoptionslist{}
+\RequirePackage{novelette-language}
 \newcommand\mode[1]{
   \@okfalse
   \StrDel{#1}{ }[\temp@s]
@@ -189,113 +198,15 @@
 %%
 
 
-%% CLASS OPTIONS (language)
-%% ----------------------------------------------------------------------------
-\DeclareOption{english-au}{
-  \if@langset\@errMLANG\else\@langsettrue % Multiple language options.
-  \gdef\@setnvtlang{\setmainlanguage[variant=australian]{english}}\fi
-}
-\DeclareOption{english-ca}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=canadian]{english}}\fi
-}
-\DeclareOption{english-gb}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=british]{english}}\fi
-}
-\DeclareOption{english-au}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=newzealand]{english}}\fi
-}
-\DeclareOption{english-us}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=american]{english}}\fi
-}
-\DeclareOption{english}{ % Default for English.
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=american]{english}}\fi
-}
-\DeclareOption{french-ca}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=canadian]{french}}\fi
-}
-\DeclareOption{french-ch}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=swisss]{french}}\fi
-}
-\DeclareOption{french}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{french}}\fi
-}
-\DeclareOption{german-au}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=austrian]{german}}\fi
-}
-\DeclareOption{german-ch}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=swiss]{german}}\fi
-}
-\DeclareOption{german}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{german}}\fi
-}
-\DeclareOption{norwegian-bk}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=bokmal]{norwegian}}\fi
-}
-\DeclareOption{norwegian}{ % Nynorsk.
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{norwegian}}\fi
-}
-\DeclareOption{portuguese-br}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=brazilian]{portuguese}}\fi
-}
-\DeclareOption{portuguese}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{portuguese}}\fi
-}
-\DeclareOption{spanish-mx}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage[variant=mexican]{spanish}}\fi
-}
-\DeclareOption{spanish}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{spanish}}\fi
-}
-\DeclareOption{danish}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{danish}}\fi
-}
-\DeclareOption{dutch}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{dutch}}\fi
-}
-\DeclareOption{icelandic}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{icelandic}}\fi
-}
-\DeclareOption{italian}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{italian}}\fi
-}
-\DeclareOption{latin}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{latin}}\fi
-}
-\DeclareOption{swedish}{
-  \if@langset\@errMLANG\else\global\@langsettrue
-  \gdef\@setnvtlang{\setmainlanguage{swedish}}\fi
-}
-\provideboolean{draftdoc} % Always false.
-\StrDel{\@classoptionslist}{draft}[\@classoptionslist] % Disallowed.
-\ProcessOptions\relax
-\newcommand\uselipsum{\load@lipsumtrue}
-%%
-
-
 %% MORE PACKAGES
 %% ----------------------------------------------------------------------------
+% Package polyglossia loads fontspec, which requires already-set normalsize.
+% But Novelette calculates normalsize AtEndPreamble, too late for fontspec.
+% Trick: Set a tentative normalsize now. Change it to real value later.
+\renewcommand\normalsize{\@setfontsize\normalsize{11pt}{14pt}}\normalsize
+\PassOptionsToPackage{fontspec}{no-math,quiet}
+\RequirePackage[verbose=false]{polyglossia}
+\newcommand\uselipsum{\load@lipsumtrue}
 \RequirePackage[nomessages]{fp} % Calculations.
 \FPmessagesfalse
 \RequirePackage{silence}
@@ -344,24 +255,26 @@
   \ifundef{\@intent}{\intent{none}}{}
   \@process@margins
   \@process@design
-  % Before fontspec loads, typesize and leading must be set. But Novelette
-  % calculates leading after fontspec loads. What to do? Fool fontspec!
-  \setlength\@leading{1.3\@typesize} % Temporary, so fontspec can load.
-  \renewcommand\normalsize{\@setfontsize\normalsize{\@typesize}{\@leading}}
-  \normalsize
-  \RequirePackage[no-math,quiet]{fontspec}
   \RequirePackage{novelette-fonts}
   \@process@mainfont
   \@rescale@mainfont
   \@calculate@leading
   \@renew@normalsize % The real value.
-  \RequirePackage[verbose=false]{polyglossia}
-  \if@langset
-    \@setnvtlang % From class option.
+  \ifdefined\@nvtlang
+    \@nvtlang
   \else
-    \setmainlanguage[variant=american]{english} % Default.
+    \@infoDEFL % Default language.
+    \setmainlanguage[variant=british]{english}
+    \gdef\@nvtsetlang{en-gb}
   \fi
-  \ifload@lipsum\RequirePackage{lipsum}\setotherlanguage{latin}\fi
+  \ifload@lipsum
+    \RequirePackage{lipsum}
+    \IfFileExists{hyph-la.tex}{\setotherlanguage[variant=modern]{latin}}{}
+  \fi
+  \renewcommand\setmainlanguage[2][]{}
+  \renewcommand\setdefaultlanguage[2][]{}
+  \renewcommand\setotherlanguage[2][]{}
+  \renewcommand\setotherlanguages[1]{}
   \ifdefined\lipsum
     \ifthenelse{\equal{\@nvtmode}{final}}{
       \typeout{^^JALERT: Using lipsum in final mode.^^J}
@@ -452,6 +365,8 @@
   \typeout{\string\application{\@application}}
   \typeout{\string\producer{\@producer}}
   \typeout{\string\intent{\@intent}}
+  \typeout{\string\mode{\@nvtmode}}
+  \typeout{\string\setlang{\@nvtsetlang}}
   \typeout{\log@trimsize}
   \typeout{\log@sheetfeed}
   \typeout{\log@margins}

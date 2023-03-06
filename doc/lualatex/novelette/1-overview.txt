@@ -1,0 +1,32 @@
+
+PLACEHOLDER
+Subject to change.
+
+OVERVIEW
+
+Novelette is a lualatex document class, specifically intended for
+popular fiction, especially using print-on-demand TO PAPER technology.
+It has no capability for Ebooks, and never will.
+
+Unlike most other document classes, Novelette is pre-configured for
+the most frequently used size and style of P.O.D. popular fiction.
+If that is not what you need, the various settings have understandable
+names and values.
+
+There are not a lot of possible settings. There are not a lot of possible
+automations. Novelette keeps you focused on writing your book,
+not on difficult TeX code.
+
+And ... [pause for dramatic effect] ... Novelette does not have math.
+You weren't going to put math in your fiction book, were you?
+
+The existing "Novel" document class (from 2018) was successfully used
+for printed fiction, by several authors. But it has much more capability
+than is really needed, and thus has a learning curve. The Novelette class
+has only what is necessary to produce every murder mystery, sci-fi, and
+adventure novel that I see on the public library shelves. You would be
+amazed at how little is needed, and how easy it is to learn (if you already
+have a working TeX system).
+
+
+

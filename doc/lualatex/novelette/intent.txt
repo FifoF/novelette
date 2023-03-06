@@ -1,0 +1,38 @@
+
+PLACEHOLDER
+Subject to change.
+
+INTENT
+
+This determines PDF/X-1a:2001 conformance.
+
+\intent{none}
+	-> Not PDF/X conformant.
+	-> Uses PDF /Info instead of XMP metadata.
+	-> Does not rigorously examine images.
+	-> Automatically used in draft mode, regardless of user setting.
+
+\intent{SWOP}
+	-> PDF/X-1a:2001 conformant.
+	-> Uses XMP metadata with SWOP output intent.
+	-> Only applied in final mode.
+	-> Rigorously examines images.
+
+\intent{FOGRA}
+	-> PDF/X-1a:2001 conformant.
+	-> Uses XMP metadata with FOGRA39 output intent.
+	-> Only applied in final mode.
+	-> Rigorously examines images.
+
+\intent{JC}
+	-> PDF/X-1a:2001 conformant.
+	-> Uses XMP metadata with SWOP output intent.
+	-> Only applied in final mode.
+	-> Rigorously examines images.
+
+\intent{CUSTOM}
+	-> PDF/X-1a:2001 conformant.
+	-> Uses XMP metadata with do-it-yourself output intent.
+	-> Only applied in final mode.
+	-> Rigorously examines images.
+

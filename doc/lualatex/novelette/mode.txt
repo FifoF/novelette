@@ -1,0 +1,23 @@
+
+PLACEHOLDER
+Subject to change.
+
+MODE
+
+\mode{draft}
+	-> Each page has DRAFT written at upper left.
+	-> Document title is changed to DRAFT - jobname.
+	-> PDF will not have XMP metadata.
+	-> PDF will not be PDF/X
+
+\mode{shade}
+	-> Automatically invokes draft mode.
+	-> Margins are shaded gray.
+
+\mode{align}
+	-> Automatically invokes draft and shade modes.
+	-> Gray lines at each text baseline.
+
+\mode{final}
+	-> Provides XMP metadata nd PDF/X, if requested by \intent.
+	-> Refused by Novelette, under some error conditions.

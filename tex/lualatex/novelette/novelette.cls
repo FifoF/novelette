@@ -147,14 +147,17 @@
 \RequirePackage{xifthen} % improved ifthenelse handling
 \RequirePackage{xstring} % parses strings
 \RequirePackage{novelette-infwarerr}
+% Package fontspec requires normalsize. Trick: Tentative normalsize.
+% Novelette calculates real normalsize AtEndPreamble.
+\renewcommand\normalsize{\@setfontsize\normalsize{11pt}{14pt}}\normalsize
+\RequirePackage[no-math,quiet]{fontspec}
 %%
 
 
-%% CLASS OPTIONS (none!), LANGUAGE, MODE
+%% CLASS OPTIONS (none!), MODE
 %% ----------------------------------------------------------------------------
 % Novelette does not use class options. Dimensions, font size, and everything
 % are are set by specific commands in Preamble.
-%   \setlang{language} selects the language. Only one. Default en-gb.
 %   \mode{choose} selects draft, shade, align, final. Default draft.
 \ifdefined\@raw@classoptionslist
   \ifthenelse{\equal{\@raw@classoptionslist}{}}{}{
@@ -163,7 +166,6 @@
 \fi
 \def\@raw@classoptionslist{}
 \def\@classoptionslist{}
-\RequirePackage{novelette-language}
 \newcommand\mode[1]{
   \@okfalse
   \StrDel{#1}{ }[\temp@s]
@@ -200,12 +202,8 @@
 
 %% MORE PACKAGES
 %% ----------------------------------------------------------------------------
-% Package polyglossia loads fontspec, which requires already-set normalsize.
-% But Novelette calculates normalsize AtEndPreamble, too late for fontspec.
-% Trick: Set a tentative normalsize now. Change it to real value later.
-\renewcommand\normalsize{\@setfontsize\normalsize{11pt}{14pt}}\normalsize
-\PassOptionsToPackage{fontspec}{no-math,quiet}
-\RequirePackage[verbose=false]{polyglossia}
+\RequirePackage{luahyphenrules}
+\RequirePackage{novelette-language}
 \newcommand\uselipsum{\load@lipsumtrue}
 \RequirePackage[nomessages]{fp} % Calculations.
 \FPmessagesfalse
@@ -260,21 +258,16 @@
   \@rescale@mainfont
   \@calculate@leading
   \@renew@normalsize % The real value.
-  \ifdefined\@nvtlang
-    \@nvtlang
-  \else
+  \ifdefined\@nvtsetlang\@process@nvtlang{\@nvtsetlang}\fi
+  \ifdefined\@nvtlang\else
     \@infoDEFL % Default language.
-    \setmainlanguage[variant=british]{english}
-    \gdef\@nvtsetlang{en-gb}
+    \HyphenRules{usenglishmax}
+    \gdef\@nvtlang{american}
   \fi
   \ifload@lipsum
     \RequirePackage{lipsum}
-    \IfFileExists{hyph-la.tex}{\setotherlanguage[variant=modern]{latin}}{}
+    \IfFileExists{hyph-la.tex}{\HyphenRules{latin}}{}
   \fi
-  \renewcommand\setmainlanguage[2][]{}
-  \renewcommand\setdefaultlanguage[2][]{}
-  \renewcommand\setotherlanguage[2][]{}
-  \renewcommand\setotherlanguages[1]{}
   \ifdefined\lipsum
     \ifthenelse{\equal{\@nvtmode}{final}}{
       \typeout{^^JALERT: Using lipsum in final mode.^^J}
@@ -366,7 +359,7 @@
   \typeout{\string\producer{\@producer}}
   \typeout{\string\intent{\@intent}}
   \typeout{\string\mode{\@nvtmode}}
-  \typeout{\string\setlang{\@nvtsetlang}}
+  \typeout{\string\setlang{\@nvtlang}}
   \typeout{\log@trimsize}
   \typeout{\log@sheetfeed}
   \typeout{\log@margins}

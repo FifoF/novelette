@@ -14,25 +14,26 @@ This determines PDF/X-1a:2001 conformance.
 
 \intent{SWOP}
 	-> PDF/X-1a:2001 conformant.
-	-> Uses XMP metadata with SWOP output intent.
+	-> Uses XMP metadata with US Web Coated SWOP output intent.
 	-> Only applied in final mode.
 	-> Rigorously examines images.
 
-\intent{FOGRA}
+\intent{FOGRA39}
 	-> PDF/X-1a:2001 conformant.
 	-> Uses XMP metadata with FOGRA39 output intent.
 	-> Only applied in final mode.
 	-> Rigorously examines images.
 
-\intent{JC}
+\intent{JC200103}
 	-> PDF/X-1a:2001 conformant.
-	-> Uses XMP metadata with SWOP output intent.
+	-> Uses XMP metadata with JC200203 output intent.
 	-> Only applied in final mode.
 	-> Rigorously examines images.
 
-\intent{CUSTOM}
+\intent{custom}
 	-> PDF/X-1a:2001 conformant.
 	-> Uses XMP metadata with do-it-yourself output intent.
+	-> Requires user-provided definitions.
 	-> Only applied in final mode.
 	-> Rigorously examines images.
 

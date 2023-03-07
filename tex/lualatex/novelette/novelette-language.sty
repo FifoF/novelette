@@ -17,51 +17,77 @@
 
 %% LANGUAGE
 %% ----------------------------------------------------------------------------
-% Novelette only allows English (American or British, default American)
-% and/or Spanish. Reason: Intended for popular fiction print-on-demand.
-\RequirePackage{luahyphenrules}
-\newcommand\setlang[1]{\gdef\@nvtsetlang{#1}}
-\def\@process@nvtlang#1{ % AtEndPreamble.
-  \IfSubStr{#1}{English}{
-    \gdef\@nvtlang{american}\HyphenRules{usenglishmax}
-  }{
-    \IfSubStr{#1}{english}{
-      \gdef\@nvtlang{american}\HyphenRules{usenglishmax}
-    }{
-      \IfSubStr{#1}{American}{
-        \gdef\@nvtlang{american}\HyphenRules{usenglishmax}
-      }{
-        \IfSubStr{#1}{american}{
-          \gdef\@nvtlang{american}\HyphenRules{usenglishmax}
-        }{
-          \IfSubStr{#1}{British}{
-            \gdef\@nvtlang{british}\HyphenRules{ukenglish}
-          }{
-            \IfSubStr{#1}{british}{
-              \gdef\@nvtlang{british}\HyphenRules{ukenglish}
-            }{}
-          }
-        }
-      }
-    }
-  }
-  \ifdefined\@nvtlang
-    \IfSubStr{#1}{Spanish}{
-      \g@addto@macro\@nvtlang{,spanish}\HyphenRules{spanish}
-    }{
-      \IfSubStr{#1}{spanish}{
-        \g@addto@macro\@nvtlang{,spanish}\HyphenRules{spanish}
-      }{}
-    }
-  \else
-    \IfSubStr{#1}{Spanish}{
-      \gdef\@nvtlang{spanish}\HyphenRules{spanish}
-    }{
-      \IfSubStr{#1}{spanish}{
-        \gdef\@nvtlang{spanish}\HyphenRules{spanish}
-      }{}
-    }
-  \fi
+% Novelette is intended for popular fiction, written in a single language.
+% So, you may set only one main language, which will be used throughout
+% your book for hyphenation patterns. The language does not implement other
+% LaTeX-related features such as style of dates and times. Only hyphenation!
+%   You may still write words and phrases in another language. You may even
+% set one main language, then write in an entirely different language.
+% Novelette will not complain. It does not know or care what you write.
+% But words in the other language will be hyphenated according to the patterns
+% of the main language. This may or may not be typogaphically incorrect.
+% You can always manually hyphenate or un-hyphenate foreign words.  
+%   Exception: If you load the lipsum package, and your TeX system has the
+% latin hyphenation installed, then latin hyphenation will be automatically
+% used for the lipsum text, regardless of your main language setting.
+%   Default language is "american" using the "usenglishmax" hyphenation.
+% If you request "english" you will get "american". If you prefer British
+% usage, then request "british" language.
+%   Reminder: The language setting is not a spelling or grammar check.
+% In Novelette, it does no special styling. All it does is select hyphenation.
+%%
+
+
+%%
+\def\nvt@setlang{}
+\newcounter{nvt@langcount}
+\newcommand\setlang[1]{\gdef\nvt@setlang{#1}}
+%%
+
+\def\nvt@american{:American:american:English:english:usenglish:usenglishmax:%
+  :en-us:en-US:USenglish:us-english:en:english-us:}
+
+\def\nvt@british{:British:british:en-gb:en-GB:ukenglish:uk-english:english-uk:}
+
+\def\nvt@spanish{:Spanish:spanish:espanol:es:es-es:es-ES:es-mx:es-MX:mexican:}
+
+%% Other languages may be added in the future. Any any case, only Western
+%% European languages will be added.
+
+
+%%
+\def\@process@nvtlang{ % AtEndPreamble.
+  \setcounter{nvt@langcount}{0}
+  \IfSubStr{\nvt@american}{:\nvt@setlang:}{
+    \stepcounter{nvt@langcount}
+    \gdef\nvt@lang{american}
+    \HyphenRules{usenglishmax}
+  }{}
+  \IfSubStr{\nvt@british}{:\nvt@setlang:}{
+    \stepcounter{nvt@langcount}
+    \ifnumless{\value{nvt@langcount}}{2}{
+      \gdef\nvt@lang{british}
+      \HyphenRules{ukenglish}  
+    }{}
+  }{}
+  \IfSubStr{\nvt@spanish}{:\nvt@setlang:}{
+    \stepcounter{nvt@langcount}
+    \ifnumless{\value{nvt@langcount}}{2}{
+      \gdef\nvt@lang{spanish}
+      \HyphenRules{spanish}  
+    }{}
+  }{}
+  %%
+  %% If other languages are added, they go here.
+  %%
+  \ifnumless{\value{nvt@langcount}}{1}{
+    \gdef\nvt@lang{american}
+    \HyphenRules{usenglishmax}
+    \@infoDEFL % Default language.
+  }{}
+  \ifnumgreater{\value{nvt@langcount}}{1}{
+    \@warnTML % Too many languages.
+  }{}
 }
 \@onlypreamble\setlang
 %%

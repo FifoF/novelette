@@ -169,29 +169,29 @@
 \newcommand\mode[1]{
   \@okfalse
   \StrDel{#1}{ }[\temp@s]
-  \ifdefined\@nvtmode % Prevent duplicates.
+  \ifdefined\nvt@mode % Prevent duplicates.
     \def\temp@s{draft}
     \ClassWarning{novelette}{Multiple usage of \string\mode^^J%
       All ignored. Using draft mode instead.}
   \fi
   \ifthenelse{\equal{\temp@s}{draft}}{
-    \@oktrue\@nvtdrafttrue\gdef\@nvtmode{draft}
+    \@oktrue\@nvtdrafttrue\gdef\nvt@mode{draft}
     \@shademarginsfalse\@shadelinesfalse
   }{}
   \ifthenelse{\equal{\temp@s}{shade}}{
-    \@oktrue\@nvtdrafttrue\gdef\@nvtmode{shade}
+    \@oktrue\@nvtdrafttrue\gdef\nvt@mode{shade}
     \@shademarginstrue\@shadelinesfalse
   }{}
   \ifthenelse{\equal{\temp@s}{align}}{
-    \@oktrue\@nvtdrafttrue\gdef\@nvtmode{align}
+    \@oktrue\@nvtdrafttrue\gdef\nvt@mode{align}
     \@shademarginstrue\@shadelinestrue
   }{}
   \ifthenelse{\equal{\temp@s}{final}}{
-    \@oktrue\@nvtdraftfalse\gdef\@nvtmode{final}
+    \@oktrue\@nvtdraftfalse\gdef\nvt@mode{final}
     \@shademarginsfalse\@shadelinesfalse
   }{}
   \if@ok\else
-    \gdef\@nvtmode{draft}
+    \gdef\nvt@mode{draft}
     \ClassWarning{novelette}{Unknown \string\mode{\temp@s}.^^J%
       Ignored. Using draft mode instead.}
   \fi
@@ -238,8 +238,8 @@
 %% ----------------------------------------------------------------------------
 %% Process user settings, set defaults, calculate page design.
 \AtEndPreamble{
-  \ifdefined\@nvtmode\else\mode{draft}\fi
-  \ifthenelse{\equal{\@nvtmode}{final}}{
+  \ifdefined\nvt@mode\else\mode{draft}\fi
+  \ifthenelse{\equal{\nvt@mode}{final}}{
     \global\deflength\overfullrule{0pt}
   }{
     \global\deflength\overfullrule{6pt}
@@ -258,23 +258,16 @@
   \@rescale@mainfont
   \@calculate@leading
   \@renew@normalsize % The real value.
-  \ifdefined\@nvtsetlang\@process@nvtlang{\@nvtsetlang}\fi
-  \ifdefined\@nvtlang\else
-    \@infoDEFL % Default language.
-    \HyphenRules{usenglishmax}
-    \gdef\@nvtlang{american}
-  \fi
   \ifload@lipsum
-    \RequirePackage{lipsum}
-    \IfFileExists{hyph-la.tex}{\HyphenRules{latin}}{}
+    \RequirePackage{lipsum}\IfFileExists{hyph-la.tex}{\HyphenRules{latin}}{}
   \fi
   \ifdefined\lipsum
-    \ifthenelse{\equal{\@nvtmode}{final}}{
-      \typeout{^^JALERT: Using lipsum in final mode.^^J}
-    }{}
+    \ifthenelse{\equal{\nvt@mode}{final}}{\@infoULF}{} % Using lipsum in final.
   \else
     \DeclareDocumentCommand\lipsum{sO{}o}{\@errLINL} % Lipsum is not loaded.
   \fi
+  \StrDel{\nvt@setlang}{::}[\nvt@setlang]
+  \@process@nvtlang
   \RequirePackage[\@setmtoptions]{microtype}
   \def\MT@find@file#1{} % Prevents loading mt-*.cfg files AtBeginDocument.
   \@process@headfont
@@ -358,8 +351,8 @@
   \typeout{\string\application{\@application}}
   \typeout{\string\producer{\@producer}}
   \typeout{\string\intent{\@intent}}
-  \typeout{\string\mode{\@nvtmode}}
-  \typeout{\string\setlang{\@nvtlang}}
+  \typeout{\string\mode{\nvt@mode}}
+  \typeout{\string\setlang{\nvt@lang}}
   \typeout{\log@trimsize}
   \typeout{\log@sheetfeed}
   \typeout{\log@margins}

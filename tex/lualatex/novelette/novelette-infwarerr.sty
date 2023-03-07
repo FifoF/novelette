@@ -23,17 +23,21 @@
 \def\@RXN{Really, respond with x and exit now. Else bad things may happen.}
 \def\@nvtbad{\global\@nvterrtrue\gdef\@intent{none}}
 
-\def\@infoDEFL{%
-  \typeout{^^JALERT: \string\setlang\space not set. Default: american.^^J}%
+
+\def\@infoULF{%
+  \typeout{^^JALERT: Using lipsum in final mode.^^J}%
 }
 
-\def\@warnBVSL{%
-  \ClassWarning{novelette}{Bad value for \string\setlang.^^J%
-    Choices: english american british spanish.^^J%
-    Also combined: english,spanish american,spanish british,spanish.^^J%
-    Choices english and american are identical.^^J%
-    If  american,british or english,british, american wins. Sorry, lads.^^J%
-    Your document will be processed using default: american.}%
+\def\@infoDEFL{%
+  \typeout{^^JALERT: \string\setlang\space not set, or chosen language ^^J%
+    is not available in Novelette. Will use default language: american.^^J}%
+}
+
+\def\@warnTML{%
+  \ifdefined\nvt@lang\def\nvt@lw{\nvt@lang}\else\def\nvt@lw{american}\fi%
+  \ClassWarning{novelette}{More than one language in \string\setlang.^^J%
+    You may one set one language. If none set, default is american.^^J%
+    This language will be used: \nvt@lw.}%
 }
 
 \def\@warnDINCO{%
@@ -41,10 +45,9 @@
     See novelette docs regarding the \string\mode\space setting.}%
 }
 
-\def\@warnNLHP{%
-  \ClassWarning{novelette}{Did not find latin hyphenation for lipsum.^^J%
-    The lipsum will be hyphenated according to some other language rules.^^J
-    For better results, install package hyphen-latin.}%
+\def\@infoNLHP{%
+  \typeout{^^JALERT: Did not find latin hyphenation for lipsum.^^J%
+    For better results, install package hyphen-latin.^^J}%
 }
 
 \def\@errCURP{%

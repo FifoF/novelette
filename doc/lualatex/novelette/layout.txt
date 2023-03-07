@@ -1,0 +1,27 @@
+
+PLACEHOLDER
+Subject to revision.
+
+LAYOUT
+
+\trimsize{width=W,height=H}
+	W and H are measured in units of in or mm.
+
+\margins{top=T,outside=O,bottom=B,inside=I}
+	T, O, B, I are measured in units of in or mm.
+	Inside means at the spine (binding). Usually larger than the others.
+
+\design{chars=C,lines=L,style=S,headgap=H,footgap=F}
+	C is expected average number of characters (including spaces) per line
+of main text. This is only an estimate. Typically near 62 for fiction books.
+	L is lines per page, in main body text (not counting header/footer).
+	S is an integer style number, which set whether running-body pages
+have header/footer/both, and the position of items in the header.
+	H and F adjust the vertical space between header/body and body/footer.
+
+Note that Novelette does not have a setting for font size, or leading
+(baseline skip). These are calculated from other settings. The calculated
+values are reported in the log summary.
+
+There are a few other settings that serve special purposes (TO DO).
+}

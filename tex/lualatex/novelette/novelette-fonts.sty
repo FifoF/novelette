@@ -160,7 +160,7 @@
 \def\@process@otherfonts{
   % name font:
   \ifdefined\name@font\else\xdef\name@font{\main@font}\fi
-  \ifdefined\name@feat\else\gdef\name@feat{Scale=1.6}\fi
+  \ifdefined\name@feat\else\gdef\name@feat{Scale=1.8}\fi
   \IfFontExistsTF{\name@font}{}{
     \@warnNFF{\name@font}
     \xdef\name@font{\main@font}
@@ -170,7 +170,7 @@
   \xdef\log@namefont{\string\setfont{name}{\name@font}\temp@s}
   % desc font:
   \ifdefined\desc@font\else\xdef\desc@font{\main@font}\fi
-  \ifdefined\desc@feat\else\gdef\desc@feat{Scale=1.25}\fi
+  \ifdefined\desc@feat\else\gdef\desc@feat{Scale=1.33}\fi
   \IfFontExistsTF{\desc@font}{}{
     \@warnNFF{\desc@font} % No font found.
     \xdef\desc@font{\main@font}

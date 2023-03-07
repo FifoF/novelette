@@ -1,0 +1,46 @@
+
+PLACEHOLDER
+Subject to revision.
+
+OPENINGS
+
+An "opening" is a page with special layout. New chapters begin with an opening.
+Certain chapter-like portions, such as Introduction or Prologue, may use
+the opening style.
+
+\begin{opening}
+\name{such as chapter number}
+\desc{if used, a very short description}
+\end{opening}
+Main text starts here.
+
+Command \begin{opening} begins a new page. If your page style uses headers,
+there will be no header on that page.
+
+Commands \name and \desc may only be used within the opening. They will
+style the text according to \setfont{name} and \setfont{desc}.
+
+In the Preamble, you may use this command (note plural openings):
+	\openings{top=T,height=H,align=A} %%%%% revise
+T and H are integers, lines of text. T defines where you normally will place
+the topmostitem in the opening (usually the name) H defines the height of
+the opening before main text begins. A is left|center|right, and determines
+how name and desc are placed.
+	Novelette does not enforce T or H. Instead, when you work in shade mode,
+it places markers at T and H. Then you can manually adjust vertical positions.
+
+The first line of main text may have special styling. A common practice is
+to enlarge the first letter, and put a few words in small caps.
+If you wish to do this, use the \init command:
+	\init[option]{letter}{words} then ordinary text follows.
+The letter is the first letter (sometimes also an opening quotation mark).
+The words are placed in small caps. Be sure that the letter is not duplicated
+at the start of the words.
+	The option is a small number, which adjusts kerning between the letter
+and the next character. For example, if the letter is T, you may be able to
+place the following letter so that it partially moves under the arm of the T.
+A negative number moves things closer. Typical value might be 0.2.
+	The enlarged first letter does not push its line downward.
+
+There are no drop caps. Just forget about them.
+

@@ -1,0 +1,22 @@
+
+PLACEHOLDER
+Subject to revision.
+
+SUMMARY IN LOG FILE
+
+After a document successfully creates its PDF, the log file will contain
+a summary, near the end of the file. This summary is custom to Novelette.
+
+The summary shows all the settings that were actually used. Some of them are
+your own settings. Some of them are defaults (which are calculated from other
+settings).
+
+In a few cases, you may see that Novelette used a setting that is different
+from what you requested. That means your request could not be honored,
+so it was automatically tweaked to something possible. In most cases,
+you should re-write your settings so that they agree with the summary.
+
+When your work is at or near final, be sure to save its summary. That will
+help you re-compile the document, in the event that you move to a different
+TeX system.
+

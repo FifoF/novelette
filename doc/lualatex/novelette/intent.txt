@@ -6,6 +6,32 @@ INTENT
 
 This determines PDF/X-1a:2001 conformance.
 
+PDF/X, particularly PDF/X-1a:2001, is a PDF format intended for the most
+reliable exchange to a printing machine. The format requires that certain
+things be in the PDF, and that other thing must not be in the PDF.
+
+Your home or office printer does not need PDF/X, because its technology will
+understand almost anything you provide. The result may or may not be exactly
+what you wanted, but it will be good enough.
+
+In the commercial printing world, "good enough" is not good enough.
+The printer will not guess what you mean. It will not take time to analyze
+ambiguous PDF instructions. It will require precise definition of colors
+according to printing technology standards (this does not apply to you).
+Some print services will reject a PDF unless it conforms to PDF/X.
+A non-conforming PDF is not necessarily defective, so some other print
+services will accept it.
+
+Novelette allows you to choose among several widely-used PDF/X-1a:2001
+output intent. An output intent is your declaration that your color definitions
+agree with the capabilites of a particular print technology. This is actually
+irrelevant to a black/white book interior, but it is part of the standard.
+
+If you choose intent none, your PDF will not be PDF/X. If you are in draft
+mode, it is always intent none, no matter what your setting. The only
+advantage to intent none, is that some inspections are not performed
+udring build, so your document builds faster.
+
 \intent{none}
 	-> Not PDF/X conformant.
 	-> Uses PDF /Info instead of XMP metadata.
@@ -31,7 +57,7 @@ This determines PDF/X-1a:2001 conformance.
 	-> Rigorously examines images.
 
 \intent{custom}
-	-> PDF/X-1a:2001 conformant.
+	-> PDF/X-1a:2001 conformant, if your code is good.
 	-> Uses XMP metadata with do-it-yourself output intent.
 	-> Requires user-provided definitions.
 	-> Only applied in final mode.

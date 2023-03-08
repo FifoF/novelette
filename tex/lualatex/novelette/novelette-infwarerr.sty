@@ -24,10 +24,6 @@
 \def\@nvtbad{\global\@nvterrtrue\gdef\@intent{none}}
 
 
-\def\@infoULF{%
-  \typeout{^^JALERT: Using lipsum in final mode.^^J}%
-}
-
 \def\@infoDEFL{%
   \typeout{^^JALERT: \string\setlang\space not set, or chosen language ^^J%
     is not available in Novelette. Will use default language: american.^^J}%
@@ -45,22 +41,18 @@
     See novelette docs regarding the \string\mode\space setting.}%
 }
 
-\def\@infoNLHP{%
-  \typeout{^^JALERT: Did not find latin hyphenation for lipsum.^^J%
-    For better results, install package hyphen-latin.^^J}%
-}
-
 \def\@errCURP{%
   \ClassError{novelette}{No \string\usepackage, or \string\RequirePackage.^^J%
     Novelette does not allow you to add packages. There is a reason.^^J%
-    If you need `lipsum`, command: \string\uselipsum\space in Preamble.^^J%
-    For more details, see Novelette documentation.^^J%
+    If you need `lipsum' it is not available. But Novelette has built-in^^J%
+    nonsense text. For that, use command \string\darkandstormy, in body.^^J%
     \@XN}{\@RXN}\@nvtbad%
 }
 
 \def\@errLINL{%
   \ClassError{novelette}{\string\lipsum\space is not available.^^J%
-    To load `lipsum' package: command \string\uselipsum\space in Preamble.^^J%
+    But Novelette has built-in nonsense text. To load it, use command^^J%
+    \string\darkandstormy\space in document body.^^J%
     \@XN}{\@RXN}\@nvtbad%
 }
 

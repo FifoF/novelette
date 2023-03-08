@@ -100,7 +100,6 @@
 \newif\if@shademargins % True if class option shademargins.
 \newif\ifmsdoc % Manuscript, always false. Compatibility with some packages.
 \newif\if@nvtdraft % True unless final mode.
-\newif\ifload@lipsum % True if class option lipsum.
 %%
 
 
@@ -115,7 +114,7 @@
 \newlength\@spad % Padding at sides of textblock, to allow for protrusion.
 \newlength\@trimw % Trim width.
 \newlength\@trimh % Trim height.
-\newlength\@indent % Standard paragraph indent.
+\newlength\normalindent % Standard paragraph indent.
 \newlength\@mtop % Margin top.
 \newlength\@mout % Margin outside.
 \newlength\@mbot % Margin bottom.
@@ -204,7 +203,6 @@
 %% ----------------------------------------------------------------------------
 \RequirePackage{luahyphenrules}
 \RequirePackage{novelette-language}
-\newcommand\uselipsum{\load@lipsumtrue}
 \RequirePackage[nomessages]{fp} % Calculations.
 \FPmessagesfalse
 \RequirePackage{silence}
@@ -258,14 +256,7 @@
   \@rescale@mainfont
   \@calculate@leading
   \@renew@normalsize % The real value.
-  \ifload@lipsum
-    \RequirePackage{lipsum}\IfFileExists{hyph-la.tex}{\HyphenRules{latin}}{}
-  \fi
-  \ifdefined\lipsum
-    \ifthenelse{\equal{\nvt@mode}{final}}{\@infoULF}{} % Using lipsum in final.
-  \else
-    \DeclareDocumentCommand\lipsum{sO{}o}{\@errLINL} % Lipsum is not loaded.
-  \fi
+  \DeclareDocumentCommand\lipsum{sO{}o}{\@errLINL} % Lipsum is not loaded.
   \StrDel{\nvt@setlang}{::}[\nvt@setlang]
   \@process@nvtlang
   \RequirePackage[\@setmtoptions]{microtype}
@@ -298,9 +289,9 @@
 %% ----------------------------------------------------------------------------
 \AtBeginDocument{
   \global\deflength\textfloatsep{0pt plus \@leading minus \@leading}
-  \global\deflength\parindent{\@indent}
-  \gdef\forceindent{\ifvmode\else\unskip\fi\stake\hspace{\@indent}}
-  \gdef\backindent{\ifvmode\else\unskip\fi\hspace{-\@indent}}
+  \global\deflength\parindent{\normalindent}
+  \gdef\forceindent{\ifvmode\else\unskip\fi\stake\hspace{\normalindent}}
+  \gdef\backindent{\ifvmode\else\unskip\fi\hspace{-\normalindent}}
   \DeclareDocumentCommand\textls{sO{}+m}{#3} % Do-nothing.
   \let\lsstyle\relax
   \hyphenpenalty=1000

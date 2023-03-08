@@ -6,25 +6,22 @@ LANGUAGE
 
 Novelette is intended for popular fiction, often print-on-demand, in
 American and possibly British markets. For this reason, the choice of
-language is very limited.
+language is very limited. Others may be added in the future (no promises).
 
 Command \setlang allows you to choose at most one of:
-	English english American american British british
-The default English/english is American.
+	american british spanish
+If you ask for english, you will get american. Sorry, lads.
 
-You may also choose at most one of:
-	Spanish spanish
-
-If you do not use \setlang, default is American (English).
+If you do not use \setlang, default is american.
 
 The language does not load babel or polyglossia. All it does is load
 hyphenation patterns (if installed) for the requested language.
-In the case of American, the patterns are "usenglishmax".
 
-If you request the lipsum package, then latin hyphenation (if available)
-is automatically loaded, not by using \setlang.
+No matter what language you set, you may write in any language. Novelette
+will not complain. The language setting does not check spelling or syntax.
+It does not change punctuation. All it does is select a hyphenation pattern.
 
-If you set English but write in French, Novelette will not complain.
-But your French will be hyphenated according to English rules, and you
-will not obtain punctuation spacing unless you type it manually.
+You cannot load the `lipsum' package. If you need some nonsense text for
+testing layout, the built-in \darkandstormy command may be used in the
+document body.
 

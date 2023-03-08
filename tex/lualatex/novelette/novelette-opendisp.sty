@@ -29,10 +29,10 @@
 % This can be changed on a local basis.
 %   When viewed with class option `shadelines', the background of the opening
 % is palegray. The number of lines is set by height. The baseline of the
-% topmost opening line is set by above. Note that the height and top are not
+% topmost opening line is set by top. Note that the height and top are not
 % enforced; they are only provided for visualization.
-%   In Preamble, setting \openings{above=A,height=H,position=P} Integer A, H.
-% P is one of center, left, right, outside, inside.
+%   In Preamble, setting \openings{top=T,height=H,align=A} Integer T, H.
+% A is one of center, left, right, outside, inside.
 %   Note that the setting is `openings' (plural) but the individual page
 % environment is 'opening' (singular), which may be locally modified.
 %   Within an opening environment, commands \name and \desc provide
@@ -42,12 +42,12 @@
 
 %% OPENINGS STYLE
 % Global setting, In Preamble. Local changes: \thisopeningstyle{}.
-\def\@openabove{0} % At top. 
+\def\@opentop{0} % At top. 
 \def\@openht{0} % Number of lines shaded, when shadelines.
 \newcommand\openings[1]{
   \@oktrue
   \StrDel{#1,}{ }[\temp@s]
-  \StrBehind{\temp@s}{above=}[\temp@n]
+  \StrBehind{\temp@s}{top=}[\temp@n]
   \StrBefore{\temp@n}{,}[\temp@n]
   \IfInteger{\temp@n}{
     \FPiflt{\temp@n}{2}\def\temp@n{2}\@okfalse\fi
@@ -59,7 +59,7 @@
     \FPmul{\temp@n}{\@lpp}{.25}
     \FPtrunc{\temp@n}{\temp@n}{0}
   }{}
-  \xdef\@openabove{\temp@n}
+  \xdef\@opentop{\temp@n}
   \StrBehind{\temp@s}{height=}[\temp@n]
   \StrBefore{\temp@n}{,}[\temp@n]
   \IfInteger{\temp@n}{
@@ -84,7 +84,7 @@
   \ifthenelse{\equal{\temp@s}{}}{\gdef\@openalign{center}}{}
   \ifthenelse{\equal{\@openalign}{oops}}{\gdef\@openalign{left}\@okfalse}{}
   \if@ok\else\@errBVO\fi
-  \xdef\log@openings{\string\openings{above=\@openabove,height=\@openht,%
+  \xdef\log@openings{\string\openings{top=\@opentop,height=\@openht,%
     alignment=\@openalign}}
 }
 \@onlypreamble\openings
@@ -120,7 +120,6 @@
   \ifthenelse{\equal{\@openalign}{center}}{\end{center}}{}%
   \setcounter{@fnmnum}{1}% Footnote markers.
   \endgroup%
-%%%%%  \vfil%
   \setlength\parindent{\normalindent}% Restored.
 }
 \AfterEndEnvironment{opening}{%

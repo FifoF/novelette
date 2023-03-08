@@ -21,13 +21,25 @@ Commands \name and \desc may only be used within the opening. They will
 style the text according to \setfont{name} and \setfont{desc}.
 
 In the Preamble, you may use this command (note plural openings):
-	\openings{top=T,height=H,align=A} %%%%% revise
-T and H are integers, lines of text. T defines where you normally will place
-the topmostitem in the opening (usually the name) H defines the height of
-the opening before main text begins. A is left|center|right, and determines
-how name and desc are placed.
-	Novelette does not enforce T or H. Instead, when you work in shade mode,
-it places markers at T and H. Then you can manually adjust vertical positions.
+	\openings{top=T,height=H,align=A}
+T and H are integers. T is the line from top of textblock, where the baseline
+of topmost opening content (usually name) should be placed. H is the line from
+top of textblock, where the first line of main content should be placed.
+	T and H are not enforced. You can place things where you wish. When you
+use shade or align mode, markers are placed in the margins at T and H.
+Then you can manually get the desired vertical positions by writing as many
+\null commands (blank lines) as you need.
+	Novelette default values for T and H are calculated, based on other
+settings.
+	A is the horizontal alignment of material in the opening.
+Choices are left, center, right. Default center.
+
+To change the defaults to your own values, use this in Preamble:
+	\openings{top=T,height=H,align=A}
+Note the plural "openings".
+
+To locally change a specific opening, write this just above \begin{opening}:
+	\thisopeningstyle{top=T,height=H,align=A} %%%%% Subject to change.
 
 The first line of main text may have special styling. A common practice is
 to enlarge the first letter, and put a few words in small caps.
@@ -40,6 +52,7 @@ at the start of the words.
 and the next character. For example, if the letter is T, you may be able to
 place the following letter so that it partially moves under the arm of the T.
 A negative number moves things closer. Typical value might be 0.2.
+Do not use units, just the number. Novelette automatically uses em units.
 	The enlarged first letter does not push its line downward.
 
 There are no drop caps. Just forget about them.

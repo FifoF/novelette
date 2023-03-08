@@ -42,7 +42,7 @@
 % (5) If page has an opening environment, place small guides in side margins.
 % (6) If shadelines option, place pale gray lines at each baseline of header,
 % main tex, footer. Top of line is text baseline. Line depth is \@desc.
-% (7) In side margins, place guides at \@openabove and \@openht.
+% (7) In side margins, place guides at \@opentop and \@openht.
 \pretocmd\@kernel@before@shipout@background{
   % Fill trim area with gray. If sheetfeed, do not extend gray outside trim:
   \@trim@LL{{\@shade{.6}\rule{\@trimw}{\@trimh}}}
@@ -93,15 +93,15 @@
 %% Opening guides.
 \def\@place@opening@guides{%
   \FPsub{\@openht}{\@openht}{1}%
-  \FPsub{\@openabove}{\@openabove}{1}%
+  \FPsub{\@opentop}{\@opentop}{1}%
   \@print@UL{{\@shade{.8}
-    \hspace{-16pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@openabove\@leading]{12pt}{\@desc}
+    \hspace{-16pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@opentop\@leading]{12pt}{\@desc}
   }}%
   \@print@UL{{\@shade{.8}
     \hspace{-16pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@openht\@leading]{12pt}{\@desc}
   }}%
   \@print@UL{{\@shade{.8}
-    \hspace{\textwidth+2\@spad+4pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@openabove\@leading]{12pt}{\@desc}
+    \hspace{\textwidth+2\@spad+4pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@opentop\@leading]{12pt}{\@desc}
   }}%
   \@print@UL{{\@shade{.8}
     \hspace{\textwidth+2\@spad+4pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@openht\@leading]{12pt}{\@desc}

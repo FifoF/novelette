@@ -24,6 +24,14 @@
 \def\@nvtbad{\global\@nvterrtrue\gdef\@intent{none}}
 
 
+\def\@warnBIK{%
+  \ClassWarning{novelette}{Bad optional value \string\init, page \thepage.^^J%
+     The optional value must be an integer or decimal number.^^J%
+     It may not end with period or comma. May be plus or minus.^^J%
+     Do not provide units. Novelette automatically adds em as units.^^J%
+     The bad value was ignored.}%
+}
+
 \def\@infoDEFL{%
   \typeout{^^JALERT: \string\setlang\space not set, or chosen language ^^J%
     is not available in Novelette. Will use default language: american.^^J}%

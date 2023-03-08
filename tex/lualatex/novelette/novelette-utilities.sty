@@ -348,9 +348,9 @@
 
 
 %% \init[kern]{Letter}{phrase} for optional styling first line of a chapter.
-\DeclareDocumentCommand\init{O{0pt}mm}{%
-  \noindent\smash{\addfontfeature{ScaleAgain=1.2}#2}%
-  \kern#1%
+\DeclareDocumentCommand\init{O{0}mm}{%
+  \noindent\smash{\addfontfeature{ScaleAgain=1.33}#2}%
+  \IfDecimal{#1}{\kern#1em}{\@warnBIK}% Bad init kern.
   \smcp{#3}%
 }
 %%

@@ -280,11 +280,14 @@
   \RequirePackage{novelette-headers}
   \@process@hfstyle
   \@process@openings
+  \RequirePackage{novelette-stormy}
 %  \directlua{require "novelette-sidebearings"}
 %  \def\lsidebearing#1{\directlua{packagedata.sidebearings.left [[#1]]}}
 %  \def\rsidebearing#1{\directlua{packagedata.sidebearings.right [[#1]]}}
   \if@shademargins\RequirePackage{novelette-shades}\fi
-  \if@nvtdraft\@labeldraft\fi
+  \ifthenelse{\equal{\nvt@mode}{draft}}{\@labeldraft}{}
+  \ifthenelse{\equal{\nvt@mode}{shade}}{\@labelshade}{}
+  \ifthenelse{\equal{\nvt@mode}{align}}{\@labelalign}{}
   \RequirePackage{novelette-metadata}
   \@process@pdfboxes
 }

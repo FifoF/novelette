@@ -389,10 +389,20 @@
 %%
 
 
-%% For use with draft, shademargins, shadelines:
+%% For use with draft, shade, align modes:
 \def\@labeldraft{%
   \AddToHook{shipout/foreground}{%
-    \@print@UL{\hspace*{\@spad}\raisebox{\@desc}{DRAFT}}%
+    \@print@UL{\hspace*{\@spad}\raisebox{\@desc}{{\normalfont MODE:DRAFT}}}%
+  }
+}
+\def\@labelshade{%
+  \AddToHook{shipout/foreground}{%
+    \@print@UL{\hspace*{\@spad}\raisebox{\@desc}{{\normalfont MODE:SHADE}}}%
+  }
+}
+\def\@labelalign{%
+  \AddToHook{shipout/foreground}{%
+    \@print@UL{\hspace*{\@spad}\raisebox{\@desc}{{\normalfont MODE:ALIGN}}}%
   }
 }
 \newcommand\@trim@LL[1]{% Lower left of trimsize.

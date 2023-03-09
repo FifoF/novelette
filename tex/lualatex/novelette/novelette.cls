@@ -271,7 +271,7 @@
   \RequirePackage{novelette-headers}
   \@process@hfstyle
   \@process@openings
-  \RequirePackage{novelette-stormy}
+  \RequirePackage{novelette-fillertext}
 %  \directlua{require "novelette-sidebearings"}
 %  \def\lsidebearing#1{\directlua{packagedata.sidebearings.left [[#1]]}}
 %  \def\rsidebearing#1{\directlua{packagedata.sidebearings.right [[#1]]}}

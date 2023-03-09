@@ -27,15 +27,43 @@
 % But words in the other language will be hyphenated according to the patterns
 % of the main language. This may or may not be typogaphically incorrect.
 % You can always manually hyphenate or un-hyphenate foreign words.  
-%   Default language is "american" using the "usenglishmax" hyphenation.
-% If you request "english" you will get "american". If you prefer British
-% usage, then request "british" language.
-%   Reminder: The language setting is not a spelling or grammar check.
-% In Novelette, it does no special styling. All it does is select hyphenation.
+%   The default hyphenation uses the old TeX "english" patterns. This is
+% part of every TeX system. It will be used if you do not set language,
+% or use an invalid language code, or more than one language. In these cases,
+% a warning is issued. The log summary will show "default" as language.
+%   Setting "english" will be interpreted as "default". It probably is not
+% what you want. Use "en-US" or "en-GB" instead.
+%   If you request an unlisted language variant, such as "fr-CA" for
+% French Canadian, then Novelette will substitute the main language "fr".
+% No warning is issued, but the log file will have an alert. In general,
+% when a variant is unlisted, it means that hyphenation is the same as its
+% main language.
+%   Novelette does not provide automatic spacing adjustments, which is
+% used by French. Do it manually.
+% Noveletee does not provide automatic time and date format. In a work of
+% fiction, you will hardly ever need it. Type it yourself!
 %   If you need `lipsum', it is not available. Novelette has built-in nonsense
-% text, available in document body by \darkandstormy command.
+% text, available in document body by \fillertext command.
 %%
 
+
+%% Thanks Skillmon and DocOctal, tex.stackexchange.com q.508268, CC-BY-SA-3.0:
+\ExplSyntaxOn
+\cs_generate_variant:Nn \str_foldcase:n {e}
+\NewDocumentCommand\nvt@getlc{m}{\str_foldcase:e{#1}}
+\ExplSyntaxOff
+\def\selectlanguage{}
+%%
+
+%%
+\newcommand\nvt@readlang[1]{
+  \StrDel{#1}{ }[\temp@s]
+  \StrDel{\temp@s}{-}[\temp@s]
+  \StrDel{\temp@s}{:}[\temp@s]
+  \IfSubStr{\temp@s}{,}{\@warnTML}{}
+  \xdef\nvt@lang{\nvt@getlc{\temp@s}}
+}
+%%
 
 %%
 \def\nvt@setlang{}
@@ -43,12 +71,11 @@
 \newcommand\setlang[1]{\gdef\nvt@setlang{#1}}
 %%
 
-\def\nvt@american{:American:american:English:english:usenglish:usenglishmax:%
-  :en-us:en-US:USenglish:us-english:en:english-us:}
-
-\def\nvt@british{:British:british:en-gb:en-GB:ukenglish:uk-english:english-uk:}
-
-\def\nvt@spanish{:Spanish:spanish:espanol:es:es-es:es-ES:es-mx:es-MX:mexican:}
+\def\nvt@english{:english:en:default:latex:}
+\def\nvt@american{:american:usenglish:usenglishmax:enus:englishus:}
+\def\nvt@british{:british:engb:enuk:ukenglish:englishuk:englishgb:}
+\def\nvt@spanish{:spanish:espanol:es:eses:}
+\def\nvt@mexican{:mexican:esmx:}
 
 %% Other languages may be added in the future. Any any case, only Western
 %% European languages will be added.

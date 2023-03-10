@@ -4,24 +4,57 @@ Subject to change
 
 LANGUAGE
 
-Novelette is intended for popular fiction, often print-on-demand, in
-American and possibly British markets. For this reason, the choice of
-language is very limited. Others may be added in the future (no promises).
+Important: Other document classes use different methods for specifying
+language. Disregard anything you read elsewhere!
 
-Command \setlang allows you to choose at most one of:
-	american british spanish
-If you ask for english, you will get american. Sorry, lads.
+Novelette uses this command in Preamble:
+	\setlang{code}
+Notice that it is NOT \setlanguage.
 
-If you do not use \setlang, default is american.
+There is a limited list of available codes. You may use only one.
+The code is case-sensitive!
+	If you do not use \setlang, a default hyphenation pattern will be used.
+If you attempt to set more than one language, only the last valid setting
+will be used. If no valid setting, the default will be used.
+	Do not use any codes but these. \setlang{english} is wrong.
 
-The language does not load babel or polyglossia. All it does is load
-hyphenation patterns (if installed) for the requested language.
+codes	languages
+-----	---------
+en		British English
+en-GB	British English
+en-US	American English
+de		German
+de-CH	Swiss German
+fr		French
+es		Spanish
+pt		Portuguese
+it		Italian
+ca		Catalan
+oc		Occitan
+da		Danish
+nl		Denmark
+sv		Sweden
+is		Iceland
+no		Norway (Nynorsk)
+nn		Norway (Nynorsk}
+nb		Norway (Bokmal)
 
-No matter what language you set, you may write in any language. Novelette
-will not complain. The language setting does not check spelling or syntax.
-It does not change punctuation. All it does is select a hyphenation pattern.
+Many languages are pronounced differently, in different regions. Some have
+differing choices of vocabulary. But Novelette language is only concerned
+with hyphenation patterms, which are generally the same despite regions.
 
-You cannot load the `lipsum' package. If you need some nonsense text for
-testing layout, the built-in \darkandstormy command may be used in the
+French writers beware: Novelette can automatically add extra space between
+sentences. But it does NOT automatically add punctuation spaces.
+You will have to type those spaces yourself.
+
+Any language: The title of your book, and author name, must be in the
+Latin-1 character set.
+
+Novelette does not care what you write. If you use \setlang{fr} but then
+write the entire book in German, no complaint. But your German will be
+hyphenated according to French rules.
+
+You cannot load the `lipsum' package. If you need some text for
+testing layout, the built-in \fillertext command may be used in the
 document body.
 

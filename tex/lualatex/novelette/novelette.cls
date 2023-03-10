@@ -257,8 +257,7 @@
   \@calculate@leading
   \@renew@normalsize % The real value.
   \DeclareDocumentCommand\lipsum{sO{}o}{\@errLINL} % Lipsum is not loaded.
-  \StrDel{\nvt@setlang}{::}[\nvt@setlang]
-  \@process@nvtlang
+  \@process@language
   \RequirePackage[\@setmtoptions]{microtype}
   \def\MT@find@file#1{} % Prevents loading mt-*.cfg files AtBeginDocument.
   \@process@headfont

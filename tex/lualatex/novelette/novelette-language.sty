@@ -40,82 +40,72 @@
 % main language.
 %   Novelette does not provide automatic spacing adjustments, which is
 % used by French. Do it manually.
-% Noveletee does not provide automatic time and date format. In a work of
+% Novelette does not provide automatic time and date format. In a work of
 % fiction, you will hardly ever need it. Type it yourself!
 %   If you need `lipsum', it is not available. Novelette has built-in nonsense
 % text, available in document body by \fillertext command.
 %%
 
 
-%% Thanks Skillmon and DocOctal, tex.stackexchange.com q.508268, CC-BY-SA-3.0:
-\ExplSyntaxOn
-\cs_generate_variant:Nn \str_foldcase:n {e}
-\NewDocumentCommand\nvt@getlc{m}{\str_foldcase:e{#1}}
-\ExplSyntaxOff
-\def\selectlanguage{}
 %%
-
-%%
-\newcommand\nvt@readlang[1]{
+\newcounter{nvt@langcnt} \setcounter{nvt@langcnt}{0}
+\newcommand\setlang[1]{
   \StrDel{#1}{ }[\temp@s]
-  \StrDel{\temp@s}{-}[\temp@s]
-  \StrDel{\temp@s}{:}[\temp@s]
-  \IfSubStr{\temp@s}{,}{\@warnTML}{}
-  \xdef\nvt@lang{\nvt@getlc{\temp@s}}
-}
-%%
-
-%%
-\def\nvt@setlang{}
-\newcounter{nvt@langcount}
-\newcommand\setlang[1]{\gdef\nvt@setlang{#1}}
-%%
-
-\def\nvt@english{:english:en:default:latex:}
-\def\nvt@american{:american:usenglish:usenglishmax:enus:englishus:}
-\def\nvt@british{:british:engb:enuk:ukenglish:englishuk:englishgb:}
-\def\nvt@spanish{:spanish:espanol:es:eses:}
-\def\nvt@mexican{:mexican:esmx:}
-
-%% Other languages may be added in the future. Any any case, only Western
-%% European languages will be added.
-
-
-%%
-\def\@process@nvtlang{ % AtEndPreamble.
-  \setcounter{nvt@langcount}{0}
-  \IfSubStr{\nvt@american}{:\nvt@setlang:}{
-    \stepcounter{nvt@langcount}
-    \gdef\nvt@lang{american}
-    \HyphenRules{usenglishmax}
+  \ifthenelse{\equal{\temp@s}{en-US}}{\gdef\nvt@lang{en-US}
+    \gdef\nvt@hyrule{usenglishmax}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{en-GB}}{\gdef\nvt@lang{en-GB}
+    \gdef\nvt@hyrule{british}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{en}}{\gdef\nvt@lang{en-GB}
+    \gdef\nvt@hyrule{british}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{fr}}{\gdef\nvt@lang{fr}
+    \gdef\nvt@hyrule{french}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{de}}{\gdef\nvt@lang{de}
+    \gdef\nvt@hyrule{ngerman}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{de-CH}}{\gdef\nvt@lang{de-CH}
+    \gdef\nvt@hyrule{swissgerman}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{es}}{\gdef\nvt@lang{es}
+    \gdef\nvt@hyrule{spanish}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{pt}}{\gdef\nvt@lang{pt}
+    \gdef\nvt@hyrule{portuguese}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{ca}}{\gdef\nvt@lang{ca}
+    \gdef\nvt@hyrule{catalan}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{oc}}{\gdef\nvt@lang{oc}
+    \gdef\nvt@hyrule{occitan}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{sv}}{\gdef\nvt@lang{sv}
+    \gdef\nvt@hyrule{swedish}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{da}}{\gdef\nvt@lang{da}
+    \gdef\nvt@hyrule{danish}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{nl}}{\gdef\nvt@lang{nl}
+    \gdef\nvt@hyrule{dutch}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{is}}{\gdef\nvt@lang{is}
+    \gdef\nvt@hyrule{icelandic}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{no}}{\gdef\nvt@lang{nn}
+    \gdef\nvt@hyrule{nynorsk}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{nn}}{\gdef\nvt@lang{nn}
+    \gdef\nvt@hyrule{nynorsk}\stepcounter{nvt@langcnt}}{}
+  \ifthenelse{\equal{\temp@s}{nb}}{\gdef\nvt@lang{nb}
+    \gdef\nvt@hyrule{bokmal}\stepcounter{nvt@langcnt}}{}
+  \ifnumless{\value{nvt@langcnt}}{1}{
+    \gdef\nvt@lang{default}\gdef\nvt@hyrule{english}
+    \@warnDEFL % Default language (did not understand the setting).
   }{}
-  \IfSubStr{\nvt@british}{:\nvt@setlang:}{
-    \stepcounter{nvt@langcount}
-    \ifnumless{\value{nvt@langcount}}{2}{
-      \gdef\nvt@lang{british}
-      \HyphenRules{ukenglish}  
-    }{}
-  }{}
-  \IfSubStr{\nvt@spanish}{:\nvt@setlang:}{
-    \stepcounter{nvt@langcount}
-    \ifnumless{\value{nvt@langcount}}{2}{
-      \gdef\nvt@lang{spanish}
-      \HyphenRules{spanish}  
-    }{}
-  }{}
-  %%
-  %% If other languages are added, they go here.
-  %%
-  \ifnumless{\value{nvt@langcount}}{1}{
-    \gdef\nvt@lang{american}
-    \HyphenRules{usenglishmax}
-    \@infoDEFL % Default language.
-  }{}
-  \ifnumgreater{\value{nvt@langcount}}{1}{
+  \ifnumgreater{\value{nvt@langcnt}}{1}{
     \@warnTML % Too many languages.
   }{}
 }
 \@onlypreamble\setlang
+%%
+
+
+%%
+\def\@process@language{ % Called AtEndPreamble.
+  \ifdefined\nvt@lang\else
+    \typeout{^^JALERT: \string\setlang\space unset. Default hyphenation.^^J}
+    \gdef\nvt@lang{default}
+    \gdef\nvt@hyrule{english}
+  \fi
+  \HyphenRules{\nvt@hyrule}
+}
 %%
 
 

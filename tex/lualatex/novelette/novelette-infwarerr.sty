@@ -32,16 +32,14 @@
      The bad value was ignored.}%
 }
 
-\def\@infoDEFL{%
-  \typeout{^^JALERT: \string\setlang\space not set, or chosen language ^^J%
-    is not available in Novelette. Will use default language: american.^^J}%
+\def\@warnDEFL{%
+  \ClassWarning{novelette}{Bad value for \string\setlang.^^J%
+    Will use default hyphenation patterns.}%
 }
 
 \def\@warnTML{%
-  \ifdefined\nvt@lang\def\nvt@lw{\nvt@lang}\else\def\nvt@lw{american}\fi%
   \ClassWarning{novelette}{More than one language in \string\setlang.^^J%
-    You may one set one language. If none set, default is american.^^J%
-    This language will be used: \nvt@lw.}%
+    This language will be used for hyphenation: \nvt@lang.}%
 }
 
 \def\@warnDINCO{%

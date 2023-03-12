@@ -14,8 +14,8 @@ LAYOUT
 \design{chars=C,lines=L,style=S,headgap=H,footgap=F}
 	C is expected average number of characters (including spaces) per line
 of main text. This is only an estimate. Typically near 62 for fiction books.
-	L is lines per page, in main body text (not counting header/footer).
-	S is an integer style number, which set whether running-body pages
+	L is integer lines per page, main body text (not counting header/footer).
+	S is integer style number, which sets whether running-body pages
 have header/footer/both, and the position of items in the header.
 	H and F adjust the vertical space between header/body and body/footer.
 
@@ -24,4 +24,4 @@ Note that Novelette does not have a setting for font size, or leading
 values are reported in the log summary.
 
 There are a few other settings that serve special purposes (TO DO).
-}
+

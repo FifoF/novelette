@@ -7,54 +7,50 @@ LANGUAGE
 Important: Other document classes use different methods for specifying
 language. Disregard anything you read elsewhere!
 
+When Novelette loads a language, it ONLY loads a hyphenation pattern.
+There is no spelling or grammar check. There is no automatic styling
+of time and date, or chapters, or anything else. Do it yourself!
+
 Novelette uses this command in Preamble:
 	\setlang{code}
-Notice that it is NOT \setlanguage.
+Notice that it is NOT \language or \lang or \setlanguage.
+If you do not use \setlang, the default language is english. See note 1.
 
-There is a limited list of available codes. You may use only one.
-The code is case-sensitive!
-	If you do not use \setlang, a default hyphenation pattern will be used.
-If you attempt to set more than one language, only the last valid setting
-will be used. If no valid setting, the default will be used.
-	Do not use any codes but these. \setlang{english} is wrong.
+There is a limited list of available language codes. You may set only one.
+Here are your choices:
+	english usenglishmax british (note 1)
+	german ngerman swissgerman german-x-latest ngerman-x-latest (note 2)
+	norwegian bokmal nynorsk (note 3)
+	french (note 4)
+    occitan spanish portutuese italian latin
+	basque finnish danish icelandic swedish
+	dutch (note 5)
+	catalan (note 6)
+	welsh (note 7)
+Most languages use the same hyphenation, regardless of regional differences
+in vocabulary or pronunciation. That is why there are no separate codes for
+Australian English, Canadian French, etc.
 
-codes	languages
------	---------
-en		British English
-en-GB	British English
-en-US	American English
-de		German
-de-CH	Swiss German
-fr		French
-es		Spanish
-pt		Portuguese
-it		Italian
-ca		Catalan
-oc		Occitan
-da		Danish
-nl		Denmark
-sv		Sweden
-is		Iceland
-no		Norway (Nynorsk)
-nn		Norway (Nynorsk}
-nb		Norway (Bokmal)
 
-Many languages are pronounced differently, in different regions. Some have
-differing choices of vocabulary. But Novelette language is only concerned
-with hyphenation patterms, which are generally the same despite regions.
+NOTES:
+	1. "english" is the default. It uses an out-of-date hyphenation pattern.
+Better results will be obtained by "usenglishmax" or "british".
+	2. "german" is 1901, "ngerman" is 1996. "swissgerman" is Swiss.
+"german-x-latest" and "ngerman-x-latest" are recent updates to the 1901
+and 1996 patterns.
+	3. "norwegian" uses bokmal. "bokmal" and "nynorsk" are specific. 
+	4. "french" does not load spacing patterns, just hyphenantion. Add the
+command \frenchspacing after \begin{document}, to increase the space between
+sentences. But for increased punctuation space, you must type it yourself.
+	5. Digraphs IJ and ij may not be used in title or author. You may type
+the two separate letters.
+	6. Single-character Ldot and ldot may not be used in title or author.
+Atually, you should not use them anywhere. Use middot when necessary.
+	7. Ycircumflex and y circumflex may not be used in title or author.
+You may not use W or w with any diatritical mark, in title or author.
 
-French writers beware: Novelette can automatically add extra space between
-sentences. But it does NOT automatically add punctuation spaces.
-You will have to type those spaces yourself.
-
-Any language: The title of your book, and author name, must be in the
-Latin-1 character set.
-
-Novelette does not care what you write. If you use \setlang{fr} but then
-write the entire book in German, no complaint. But your German will be
-hyphenated according to French rules.
 
 You cannot load the `lipsum' package. If you need some text for
 testing layout, the built-in \fillertext command may be used in the
-document body.
+document body. You may not use \fillertext in final mode.
 

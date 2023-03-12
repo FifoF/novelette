@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Document class "novel" - documentation</title>
+<style type="text/css">
+body{color:#000000; background-color:#aaaaaa}
+#main{max-width:80em; padding:1em; border:2px solid #000000; margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto; background-color:#dddddd}
+#doctemplate{width:80%; padding:1em; border:1px solid #000000; margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto; background-color:#ffffff}
+div{margin-top:2em; margin-bottom:2em}
+p.linesp{line-height: 150%}
+</style>
+</head>
+<body>
+<div id="main">
+<h2>Novelette - Documentation</h2>
+
+<p>Document class <i>novelette</i> is designed for one purpose only: popular fiction,
+printed to paper (not Ebooks), black ink, especially using print-on-demand technology.
+It has what is necessary for that purpose, and no more. Much of the vast LaTeX code
+is disabled or ignored. The result is a small set of commands that have simple names
+and simple usage. They do what you need, allowing you to focus on writing your book,
+instead of manipulating LaTeX code.</p>
+
+<p>Here is a model document template. Each of its commands is a hyperlink within
+this documentation. Click to learn what the commands do, and how to choose their values:</p>
+
+<div id="doctemplate"><p class="linesp">
+<a href="#lualatex">% !TeX TS-program = lualatex</a><br>
+<a href="#utf8">% !TeX encoding = UTF-8</a><br>
+<a href="#documentclass">\documentclass{novelette}</a><br>
+<a href="#mode">\mode</a>{draft}<br>
+<a href="#intent">\intent</a>{SWOP}<br>
+<a href="#trimsize">\trimsize</a>{width=5.5in,height=8.5in}<br>
+<a href="#sheetfeed">\sheetfeed</a>{trimsize} % Normally not used.<br>
+<a href="#margins">\margins</a>{top=.5in,outside=.5in,bottom=.5in,inside=.625in}<br>
+<a href="#design">\design</a>{chars=62,lines=30,style=2,headgap=1.5,footgap=1.5}<br>
+<a href="#setfont">\setfont</a>{main}{EB Garamond}[liga]<br>
+<a href="#openings">\openings</a>{top=5,height=14,align=center}<br>
+\begin{document}<br>
+% Your writing goes here.<br>
+\end{document}</p>
+</div>
+
+
+<a id="lualatex">
+<div>
+<h3>% !TeX TS-program = lualatex</h3>
+<p>This is a "magic comment". Some GUI programs (TeXworks, TeXstudio, etc.)
+can read this line. It tells them to use <i>lualatex</i> compiler, regardless
+of what the program uses for its standard compiler.</p>
+<p>If you are compiling from command line, be sure to use </i>lualatex</i>.
+Anything else will be rejected.</p>
+</div>
+
+<a id="utf-8">
+<div>
+<h3>% !TeX encoding = UTF-8</h3>
+<p>This is a "magic comment". It tells some GUI programs that the characters
+have utf-8 encoding. You must type your document using utf-8, without its
+"byte order mark" (BOM). This is essential. It is the default encoding for
+Linux and Mac. On Windows, be sure to tell configure text editor for
+utf-8 without BOM.</p>
+</div>
+
+<a id="documentclass">
+<div>
+<h3>\documentclass{novelette}</h3>
+<p>Unlike other LaTeX document classes, Novelette has no class options.
+Anything you need is set by one of the other commands in Preamble,
+or is automatically calculated from other settings.</p>
+</div>
+
+<a id="mode">
+<div>
+<h3>\mode{<i>choose</i>}</h3>
+<p>Novelette has four modes: draft, shade, align, final. If you do not set
+the mode, its default is draft.</p>
+<p><b>draft</b> disables PDF/X conformance (see <a href="#intent">intent</a>).
+It places DRAFT at the top left of each page. The PDF title is changed,
+to include the word DRAFT.</p>
+<p>Otherwise, the layout, line breaks, and page breaks are the same as they
+will be, when you graduate to final mode.</p>
+<p><b>shade</b> is draft mode, with margins tinted gray.</p>
+<p><b>align</b> is draft mode, with margins tinted gray, and with text baselines marked.</p>
+<p><b>final</b> should only be used when you are ready. In final mode, Novelette
+performs some checks that it would otherwise omit (to save time). If your document
+fails one of the checks, you will be warned. It will automatically revert to draft mode,
+so that the PDF cannot be confused with the final file.</p>
+</div>
+
+<a id="intent">
+<div>
+<h3>\intent{<i>choose</i>}</h3>
+<p>There are five intents: none, SWOP, FOGRA, JC, custom. The default is none.</p>
+<p>No matter which intent you choose, fonts are subset embedded. That is enough
+for some print services. But many print services require PDF/X conformance,
+especially <span style="white-space:nowrap">PDF/X-1a:2001.</span></p>
+<p>When a PDF file conforms to PDF/X, it must have a certain internal structure.
+Among the requirements is an "output intent", which states that the PDF was prepared
+according to the requirements of a particular print technology. It does not force
+the printer to use that technology. In fact, your file will be printed by
+entirely different methods. Nevertheless, an intent must be declared, even
+though it is useless.</p>
+<p>You are strongly urged to use an intent, other than <i>none</i>, for the final PDF.
+This enables additional checks, hopefully reducing the possibility that your
+file will be rejected by the print service.</p>
+<p><b>none</b> does not produce PDF/X. No matter how you set intent,
+it will be automatically changed to <i>none</i> unless you are in final mode.</p>
+<p><b>SWOP</b> means "US Web Coated SWOP". This is most frequently used in
+the United States.</p>
+<p><b>FOGRA</b> means "FOGRA39L". This is frequently used in Europe.</p>
+<p><b>JC</b> means "JC200103". This is frequently used in Japan.</p>
+<p><b>custom</b> means that you will provide the data for some other intent.
+You must code the data yourself. Do not use <i>custom</i> unless specifically required
+by your print service.</p>
+</div>
+
+<a id="trimsize">
+<div>
+<h3>\trimsize{width=<i>W</i>,height=<i>H</i>}</h3>
+<p>Trim Size is the size of your book pages. Be sure to choose cream paper
+(creme, off-white), not white paper. The print service will offer a choice
+of several standard sizes.</p>
+<p>Dimensions <i>W</i> and <i>H</i> are measured in units of inches or
+millimeters (in,mm).<p>
+<p>The name "trim size" comes from the manufacturing process. Softcover books,
+especially print-on-demand, are usually printed using Perfect Print technology.
+The pages are printed on larger paper, roughly cut and assembled with glue,
+the cover is attached with glue, then the entire book is "trimmed" with
+a cutting device. This is why Perfect Print books have all page edges aligned.</p>
+<p>In the case of library hardcover books, trim size refers to the interior
+pages. The cover size is slightly larger.</p>
+</div>
+
+<a id="sheetfeed">
+<div>
+<h3>\sheetfeed{<i>choose</i>}</h3>
+<p>Do not use the \sheetfeed setting, unless you are certain that you need it.
+If you use this setting incorrectly, big problems will result.
+Available choices are trimsize, letter, A4.</p>
+<p><b>trimsize</b> is the default. The PDF page size will be the same as
+the book trim size. This is how nearly all print-on-demand services want it.</p>
+<p><b>letter</b> forces the PDF page size to USletter, 8.5in width, 11in height.
+The book trim size is centered vertically and horizontally.</p>
+<p><b>A4</b> (or a4) forces the PDF page size to European A4, 210mm width,
+297mm height. The book trim size is cenetered vertically and horizontally.</p>
+<p>If you are printing pages at home, for manual editing, then you might
+use letter or A4, to produce a consistent result from your home printer.
+That might also be the case, if your book will be reviewed by an editor.</p>
+<p>Novelette does not produce crop marks or trim marks. It does write the
+internal "TrimBox" metadata to the PDF.</p>
+</div>
+
+<a id="margins">
+<div>
+<h3>\margins{top=<i>T</i>,outside=<i>O</i>,bottom=<i>B</i>,inside=<i>I</i>}</h3>
+<p>In Novelette, margins surround the printable area. Nothing may be printed
+within the margins. The header, main text, and footer all must fit within the
+rectangle surrounded by the margins. This is how the term "margins" is used
+by most print services.</p>
+<p>Word processors usually place header within the top margin, and footer
+within the bottom margin. You cannot do that in Novelette.</p>
+<p>Margins are measured in units of inches or millimeters (in,mm). It is best
+to use the same units for margins, as you use for trim size.</p>
+<p><b>top</b> margin is the area above the topmost printable item, which
+is the header (if your page style uses header), or main text (if otherwise).</p>
+<p><b>outside</b> margin is the area at the outer page edge, being the left
+side of even-numbered (verso) pages, or the right side of odd-numbered (recto)
+pages.</p>
+<p><b>bottom</b> margin is the area below the lowest printable item, which
+is the footer (if your page layout uses footer), or main text (if otherwise).</p>
+<p><b>inside</b> margin as at the spine (binding). In general, this margin
+should be set 0.125in (or 3mm) wider than the ouside margin. The extra width
+allows for binding glue.</p>
+<p>You may abbreviate the margins setting, with a single value:<br>
+\margins{<i>size</i>} sets top, ouside, and bottom margins to that size.
+Inside margin is set 0.125in (or 3mm) larger.</p>
+<p>If you do not set margins, Novelette will set them for you. At smaller
+trim sizes, the margins will be at the minimum required by print services.
+At larger trim size, the margins will be larger.</p>
+</div>
+
+<a id="design">
+<div>
+<h3>\design</a>{chars=<i>C</i>,lines=<i>L</i>,style=<i>S</i>,headgap=<i>H</i>,footgap=<i>F</i>}</h3>
+<p>This setting determines page layout. In Novelette, you do not set either the
+font size, or the leading (baselineskip). Instead, they are automatically
+calculated from the trim size, margins, and design.</p>
+<p><b>chars</b> is the typical average number of characters (including spaces) per line of main text.
+More characters means that more text fits on each line. This is achieved by reducing
+the font size to fit. The default value for C is 62 for small to medium trim sizes,
+larger for large trim sizes.</p>
+<p>The value is not precise, and it is only an average. It assumes that the font you use,
+and your style of writing, is "typical" for popular fiction. Do a few test pages,
+to see what value of C works best.</p>
+<p><b>lines</b>is the ineger number of lines in the main text block.
+It does not count header or footer. Default value varies, based on other setings.</p>
+<p><b>style</b> is an integer from 1 to 7. It determines whether page layout has
+header and/or footer, and determines alignment of header content. Other document classes
+require you to write code for the style. Novelette does that for you.</p>
+<p>The default style depends on how much vertical room is available, based on
+other settings. If enough room, style 2 is default. If not enough room, style 4.</p>
+<p><b>style=1</b> provides only footer. Page number centered in footer.</p>
+<p><b>style=2</b> provides both header and footer. Page number centered in footer.
+Text cenetered in header.</p>
+<p><b>style=3</b> provides both header and footer. Page number in footer,
+aligned to outside margin. Text in header aligned to outside margin.</p>
+<p><b>style=4</b> provides only header. Page number at outside margin.
+Text cenetered.</p>
+<p><b>style=5</b> is like 4. Adds a vertical bar near the page number, at fixed
+distance from the outside margin.</p>
+<p><b>style=6</b> is like 4. Adds a slash next to the page number.</p>
+<p><b>style=7</b> provides only header. Page number and text are centered,
+separated by slash. Page number is toward the outside.</p>
+<p><b>headgap</b> is a number (integer or decimal) from 0 to 1. It defines
+how much of a "gap" appears between the header and the top of main text.
+Value 0 is rarely useful. Value 1 skips a whole line, and is best for the
+large book sizes. Value 0.5 is a nice compromise for smaller books.</p>
+<p><b>footgap</b> works like headgap, except it applies between main text
+and footer.</p>
+<p>If your design has both header and footer, it is best to set headgap and
+footgap at the same value. But this is not requird.</p> 
+</div>
+
+<a id="setfont">
+<div>
+<h3>\setfont{<i>role</i>}{<i>font name</i>}[<i>features</i>]</h3>
+<p>Novelette uses <i>fontspec</i> technology for Open Type fonts. If you are
+a knowledgeable LaTeX user, you may use some aspects of <i>fontspec</i>
+directly. However, do not use <i>\setmainfont</i>.</p>
+<p>The <i>\setfont</i> command has two mandatory arguments, and an optional argument.</p>
+<p><b>role</b> is one of these keywords: <i>main head note name desc deco alt</i>.
+It assigns the font to its proper place and purpose.</p>
+<p><b>font name</b> is the Open Type font family name. Examples are Swainson,
+EB Garamond, Libertinus Serif. You cannot use TeX fonts (which use three-letter codes).</p>
+<p><b>features</b> is an optional, comma-separated list of Open Type features, using
+<i>fontspec</i> syntax.</p>
+<p><b>main</b> role is equivlanet to <i>\setmainfont</i>. The font and features
+will be used for main body text.</p>
+<p><b>head</b> is applied to only the header and footer. In many cases,
+this is the same as the main font, except do not use ligatures. You might
+prefer to use Scale=N where N is a number slightly less than 1.</p>
+<p><b>note</b> is used for footnotes and "legalese" text. It is almost always
+the same as main font, except with Scale less than 1.</p>
+<p><b>name</b> is the font used by the opening <i>\name</i> command. It may be the
+same as the main font, but at larger Scale. Or you may use a stylish font.</p>
+<p><b>desc</b> is the font used by the opening <i>\desc</i> command. It is usually
+the same as the main font, but at larger Scale.</p>
+
+
+</div>
+
+</div>
+</body>
+</html>
+

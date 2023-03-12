@@ -309,20 +309,13 @@
 %% ----------------------------------------------------------------------------
 \AtEndDocument{
   \cleartoend
-%  \if@nvtdraft % Final mode uses XMP, not pdfinfo.
-%    \pdfinfo{%
-%      /Title(\jobname\space- DRAFT) %
-%      /Author(Anonymous Author) %
-%      /Creator(LuaLaTex) %
-%      /Producer(LuaLaTeX) %
-%      /CreationDate(\pdffeedback creationdate) %
-%      /ModDate(\pdffeedback creationdate) %
-%    }
-%  \else
-    \@process@metadata
-    \@process@xmp
-    \ifthenelse{\equal{\@intent}{none}}{}{\@process@intent}
-%  \fi
+  \pdfinfo{%
+    /CreationDate(\pdffeedback creationdate) %
+    /ModDate(\pdffeedback creationdate) %
+  }
+  \@process@metadata
+  \@process@xmp
+  \ifthenelse{\equal{\@intent}{none}}{}{\@process@intent}
 }
 %%
 

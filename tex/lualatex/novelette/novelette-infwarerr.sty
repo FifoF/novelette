@@ -32,14 +32,24 @@
      The bad value was ignored.}%
 }
 
-\def\@warnDEFL{%
-  \ClassWarning{novelette}{Bad value for \string\setlang.^^J%
-    Will use default hyphenation patterns.}%
+\def\@warnDNFH{%
+  \ClassWarning{novelette}{Did not find hyphenation for \nvt@lang.^^J%
+    Document will be processed without hyphenation.^^J%
+    For usenglishmax, british, install `hyphen-english'.^^J%
+    For bokmal, nynorsk, install `hyphen-norwegian'.^^J%
+    For german, ngerman, swissgerman, install `hyphen-german'.^^J%
+    For german-x-latest, ngerman-x-latest, install `dehyph-exptl'.^^J%
+    Otherwise, install `hyphen-LANG' where LANG is the requested language.}%
 }
 
-\def\@warnTML{%
-  \ClassWarning{novelette}{More than one language in \string\setlang.^^J%
-    This language will be used for hyphenation: \nvt@lang.}%
+\def\@errLNOL{%
+  \ClassError{novelette}{Bad value for \string\setlang. Chose only one of:^^J%
+    nohyphenation english usenglishmax british basque finnish^^J%
+    french spanish portuguese catalan occitan italian latin^^J%
+    dutch danish icelandic swedish norwegian bokmal nynorsk^^J%
+    german ngerman swissgerman german-x-latest ngerman-x-latest^^J%
+    For more information, see Novelette documentation.^^J%
+    \@XN}{\@RXN}\nvt@bad%
 }
 
 \def\@warnDINCO{%

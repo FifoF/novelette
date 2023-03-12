@@ -201,7 +201,7 @@
 
 %% MORE PACKAGES
 %% ----------------------------------------------------------------------------
-\RequirePackage{luahyphenrules}
+%%%%%\RequirePackage{luahyphenrules}
 \RequirePackage{novelette-language}
 \RequirePackage[nomessages]{fp} % Calculations.
 \FPmessagesfalse

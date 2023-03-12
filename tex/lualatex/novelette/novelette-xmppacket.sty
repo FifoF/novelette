@@ -27,10 +27,10 @@
 \def\pad@s{\space\space\space\space\space\space\space\space}
 \def\pad@ss{\pad@s\pad@s\pad@s\pad@s\pad@s\pad@s\pad@s\pad@s}
 
-% This packet uses utf-8 BOM.
+% This packet uses utf-8 BOM. All XMP metadata is encoded utf-8.
 % The catcodes allow # _ ~ $ % & to be used as ordinary characters.
 % \edef and \let get rid of escape backslashes in front of those characters.
-% NO COMMENTS AFTER THIS! Until \endgroup.
+% NO COMMENTS AFTER THIS! Do not use % to break lines!  Until \endgroup.
 
 \begingroup
 \catcode`\¤=12\relax
@@ -56,6 +56,7 @@
 \edef\@tildechar{\expandafter\@gobble\string\~}
 \let\~\@tildechar
 
+\if@nvtdraft
 \xdef\@xmpPacket{<?xpacket begin="\@noveletteBOM" id="W5M0MpCehiHzreSzNTczkc9d"?>^^J
 <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 4.2.1-c043 52.372728, 2009/01/18-15:08:04">^^J
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">^^J
@@ -69,12 +70,12 @@
 <dc:format>application/pdf</dc:format>^^J
 <dc:title>^^J
 <rdf:Alt>^^J
-<rdf:li xml:lang="x-default">\thetitle</rdf:li>^^J
+<rdf:li xml:lang="x-default">\@title</rdf:li>^^J
 </rdf:Alt>^^J
 </dc:title>^^J
 <dc:creator>^^J
 <rdf:Bag>^^J
-<rdf:li>\theauthor</rdf:li>^^J
+<rdf:li>\@author</rdf:li>^^J
 </rdf:Bag>^^J
 </dc:creator>^^J
 </rdf:Description>^^J
@@ -84,20 +85,57 @@
 <xmpMM:RenditionClass>default</xmpMM:RenditionClass>^^J
 <xmpMM:VersionID>1</xmpMM:VersionID>^^J
 </rdf:Description>^^J
-<rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.\the\pdfminorversion/">^^J
+<rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.3/">^^J
+<pdf:Producer>\@producer</pdf:Producer>^^J
+<pdf:Trapped>False</pdf:Trapped>^^J
+</x:xmpmeta>^^J
+\pad@ss
+<?xpacket end="w"?>}
+\else
+\xdef\@xmpPacket{<?xpacket begin="\@noveletteBOM" id="W5M0MpCehiHzreSzNTczkc9d"?>^^J
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 4.2.1-c043 52.372728, 2009/01/18-15:08:04">^^J
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">^^J
+<rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/">^^J
+<xmp:ModifyDate>\@modifyDate</xmp:ModifyDate>^^J
+<xmp:CreateDate>\@createDate</xmp:CreateDate>^^J
+<xmp:CreatorTool>\@application</xmp:CreatorTool>^^J
+<xmp:MetadataDate>\@metadataDate</xmp:MetadataDate>^^J
+</rdf:Description>^^J
+<rdf:Description rdf:about="" xmlns:dc="http://purl.org/dc/elements/1.1/">^^J
+<dc:format>application/pdf</dc:format>^^J
+<dc:title>^^J
+<rdf:Alt>^^J
+<rdf:li xml:lang="x-default">\@title</rdf:li>^^J
+</rdf:Alt>^^J
+</dc:title>^^J
+<dc:creator>^^J
+<rdf:Bag>^^J
+<rdf:li>\@author</rdf:li>^^J
+</rdf:Bag>^^J
+</dc:creator>^^J
+</rdf:Description>^^J
+<rdf:Description rdf:about="" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/">^^J
+<xmpMM:DocumentID>\@documentID</xmpMM:DocumentID>^^J
+<xmpMM:InstanceID>\@instanceID</xmpMM:InstanceID>^^J
+<xmpMM:RenditionClass>default</xmpMM:RenditionClass>^^J
+<xmpMM:VersionID>1</xmpMM:VersionID>^^J
+</rdf:Description>^^J
+<rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.3/">^^J
 <pdf:Producer>\@producer</pdf:Producer>^^J
 <pdf:Trapped>False</pdf:Trapped>^^J
 </rdf:Description>^^J
-<rdf:Description rdf:about="" xmlns:pdfx="http://ns.adobe.com/pdfx/1.\the\pdfminorversion/">^^J
-<pdfx:GTS_PDFXVersion>\@PDFXversion</pdfx:GTS_PDFXVersion>^^J
-<pdfx:GTS_PDFXConformance>\@PDFXconformance</pdfx:GTS_PDFXConformance>^^J
+<rdf:Description rdf:about="" xmlns:pdfx="http://ns.adobe.com/pdfx/1.3/">^^J
+<pdfx:GTS_PDFXVersion>PDF/X-1a:2001</pdfx:GTS_PDFXVersion>^^J
+<pdfx:GTS_PDFXConformance>PDF/X-1a:2001</pdfx:GTS_PDFXConformance>^^J
 </rdf:Description>^^J
 <rdf:Description rdf:about="" xmlns:pdfxid="http://www.npes.org/pdfx/ns/id/">^^J
-<pdfxid:GTS_PDFXVersion>\@PDFXversion</pdfxid:GTS_PDFXVersion>^^J
+<pdfxid:GTS_PDFXVersion>PDF/X-1a:2001</pdfxid:GTS_PDFXVersion>^^J
 </rdf:Description>^^J
 </rdf:RDF>^^J
 </x:xmpmeta>^^J
-\pad@ss<?xpacket end="w"?>}
+\pad@ss
+<?xpacket end="w"?>}
+\fi
 \endgroup
 
 

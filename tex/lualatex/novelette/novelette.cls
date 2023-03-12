@@ -55,8 +55,6 @@
 \pdfminorversion=3 % Required for optional PDF/X-1a:2001 conformance.
 \gdef\thepdfminorversion{\pdfminorversion}
 \gdef\@PDFversion{PDF/X-1}
-\gdef\@PDFXversion{PDF/X-1a:2001}
-\gdef\@PDFXconformance{PDF/X-1a:2001}
 %% Novelette uses these in a slightly different way than in other classes:
 \protect\long\gdef\title#1{%
   \if@nvtdraft%
@@ -311,20 +309,20 @@
 %% ----------------------------------------------------------------------------
 \AtEndDocument{
   \cleartoend
-  \if@nvtdraft % Final mode uses XMP, not pdfinfo.
-    \pdfinfo{%
-      /Title(\jobname\space- DRAFT) %
-      /Author(Anonymous Author) %
-      /Creator(LuaLaTex) %
-      /Producer(LuaLaTeX) %
-      /CreationDate(\pdffeedback creationdate) %
-      /ModDate(\pdffeedback creationdate) %
-    }
-  \else
+%  \if@nvtdraft % Final mode uses XMP, not pdfinfo.
+%    \pdfinfo{%
+%      /Title(\jobname\space- DRAFT) %
+%      /Author(Anonymous Author) %
+%      /Creator(LuaLaTex) %
+%      /Producer(LuaLaTeX) %
+%      /CreationDate(\pdffeedback creationdate) %
+%      /ModDate(\pdffeedback creationdate) %
+%    }
+%  \else
     \@process@metadata
     \@process@xmp
     \ifthenelse{\equal{\@intent}{none}}{}{\@process@intent}
-  \fi
+%  \fi
 }
 %%
 

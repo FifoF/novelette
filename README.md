@@ -14,3 +14,23 @@ the code.
 
 Expected release late March 2023.
 
+UPDATE, March 13, 2023: Novelette works in its most essential features.
+The frills also work, but are likely to be revised. In particular, use of
+images is temporarily disabled.
+
+If you would like to try Novelette (Linux, for now), do this: Copy directory
+tex/lualatex/novelette to your home directory. Look inside for file
+sample-document.tex. Build it to PDF with this command:
+```
+lualatex sample-document
+```
+If you are missing any packages in your TeX setup, then you will see the
+usual problems. Novelette does not use a lot of packages, so you should
+not need to install much.
+
+The resulting PDF is in "align" mode. Margins are gray, and text baselines
+are marked. You may edit the *tex file to see other modes.
+
+Development continues. Documentation is very preliminary (what you see
+inside doc directory is really just some basic info).
+

@@ -7,44 +7,46 @@ INTENT
 This determines PDF/X-1a:2001 conformance (or not).
 In Preamble:
 	\intent{choice}
-where the choice is one of: SWOP FOGRA JC none. Case-sensitive. Default SWOP.
+where the choice is one of: SWOP FOGRA39 JC200103 none
+Case-sensitive. Default none.
 
 Explanation:
 
-PDF/X, particularly PDF/X-1a:2001, is a PDF format intended for the most
-reliable exchange to a printing machine. The format requires that certain
-things be in the PDF, and that other things must not be in the PDF.
+When the intent is "none" (default), a good PDF is likely to be accepted by
+most print-on-demand services. However, some services require that the
+PDF contains internal metadata, declaring that it meets the rigorous
+standards of PDF/X. Do not confuse PDF/X, which is used for printing,
+with PDF/A, which is used for digital documents.
 
-Your home or office printer does not need PDF/X, because its technology will
-understand almost anything you provide, and can guess the rest.
-All you really need is font embedding.
-Some commercial print-on-demand services do the same thing.
+When you compile your document in draft|shade|align mode, the intent will
+be automatically set to "none", regardless of your choice.
 
-But other commercial print services require more than font embedding.
-Their printers will not attempt to understand anything vague in the PDF.
-They will not attempt to guess what you mean. This ensures that PDF files
-can be rapidly and accutately exchanged between the producer and the printer,
-with the least delay. PDF/X format is intended for this purpose.
+If there is an error (or some warnings) during compilation, and you continue
+past the problem to create PDF, it will automatically have intent "none"
+regardless of your setting.
 
-There are several varieties of PDF/X. The lowest common denominator, with the
-strictest requirements, is PDF/X-1a:2001. It is all you need for printed
-book interiors. If your print service requires PDF/X-1a:2001, Novelette
-has the built-in capability.
+In other words, an intent other than "none" is only honored in final mode,
+and only when the PDF compiles correctly.
 
-All PDF/X formats require an "output intent" declaration, which states
-the kind of printer expected by the PDF producer. It does not force that
-printer. The output intent is important for accurate color rendition.
-But your book interior will not use color, so the output intent will be
-ignored. Nevertheless, an output intent must be declared, simply because
-it is part of the PDF/X specification.
+If your intent is SWOP|FOGRA39|JC200103 in final mode:
+	Any images are inspected, to ensure that they are monochrome black/white
+png at 1-bit per pixel; that they have an acceptable density (resolution),
+and they do not contain private metadata (such as EXIF). This inspection
+takes time.
+	If the PDF passes inspection, its XMP metadata will have statements
+declaring it to be PDF/X-1a:2001.
+	Its metadata will contain "output intent" metadata, based on your choice.
+This will actually be ignored by the printer, because it is only relevant
+to color accuracy. Nevertheless, the intent must be stated. No *.icc color
+profile will be attached.
 
-Here are your choices:
-	\intent{none}     -> PDF will not be PDF/X.
-	\intent{SWOP}     -> Default PDF/X with "US Web Coated SWOP" output intent.
-	\intent{FOGRA}    -> PDF/X with FOGRA39 output intent (Europe).
-    \intent{JC200103} -> PDF/X with JC200103 output intent (Japan). 
-No *.icc color profile will be attached.
+Technical Explanation:
+	A PDF file may contain many things that are potentially disruptive
+to the workflow of commercial printing. Or, it may omit essential things.
+PDF/X internally labels the file, declaring that it obeys these limitations.
+	If your document has no images, Novelette produces PDF that almost
+meets PDF/X format, except for the internal label. If your document has images,
+they must also meet certain standards. Thanks to the power of LuaLaTeX,
+it is possible to inspect images, without the need to call external software.
+But if an image fails inspection, you will need to correct it externally.
 
-IMPORTANT:
-	If there was an error (and some warnings) during compile, the resulting
-PDF will automatically have \intent{none}, regardless of your setting.

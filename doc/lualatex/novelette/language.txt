@@ -22,7 +22,7 @@ Here are your choices:
 	german ngerman swissgerman german-x-latest ngerman-x-latest (note 2)
 	norwegian bokmal nynorsk (note 3)
 	french (note 4)
-    occitan spanish portutuese italian latin
+    occitan spanish portuguese italian latin
 	basque finnish danish icelandic swedish
 	dutch (note 5)
 	catalan (note 6)
@@ -31,6 +31,12 @@ Most languages use the same hyphenation, regardless of regional differences
 in vocabulary or pronunciation. That is why there are no separate codes for
 Australian English, Canadian French, etc.
 
+No matter which language you use, print services require that title
+and author be written using Latin characters (possibly with diacriticals).
+This is so your book can be properly listed in the distribution database.
+Some print services further limit title and author to Latin-1 characters.
+That excludes curly quotes and curly apostophe, but Novelette will
+automatically use the straight forms, in title and author.
 
 NOTES:
 	1. "english" is the default. It uses an out-of-date hyphenation pattern.
@@ -39,18 +45,27 @@ Better results will be obtained by "usenglishmax" or "british".
 "german-x-latest" and "ngerman-x-latest" are recent updates to the 1901
 and 1996 patterns.
 	3. "norwegian" uses bokmal. "bokmal" and "nynorsk" are specific. 
-	4. "french" does not load spacing patterns, just hyphenantion. Add the
+	4. "french" does not load spacing patterns, just hyphenation. Add the
 command \frenchspacing after \begin{document}, to increase the space between
 sentences. But for increased punctuation space, you must type it yourself.
-	5. Digraphs IJ and ij may not be used in title or author. You may type
-the two separate letters.
-	6. Single-character Ldot and ldot may not be used in title or author.
-Atually, you should not use them anywhere. Use middot when necessary.
-	7. Ycircumflex and y circumflex may not be used in title or author.
-You may not use W or w with any diatritical mark, in title or author.
-
+	5. The print service may forbid using digraphs IJ ij in title or author.
+You may type the two separate letters.
+	6. Single-character Ldot and ldot should not be used in title or author.
+Actually, you should not use them anywhere. Use periodcentered (middot).
+	7. The print service may forbid using circumflex over Y y in title
+or author. It may forbid any diacritical over W w.
 
 You cannot load the `lipsum' package. If you need some text for
-testing layout, the built-in \fillertext command may be used in the
-document body. You may not use \fillertext in final mode.
+testing layout, the built-in \fillertext command may be used
+in the document body. You may not use \fillertext in final mode.
+The text is in American English.
 
+No matter which language you choose, you may write in any language.
+The only restrictions are that all text must be left-to-right, must
+not contain stacked or combined diacritical marks, and must not contain
+context-dependent ligatures or substitutions. These are satisfied by the
+various Western European (and some other) languages.
+	If you select one language, then write in another language, the second
+language will by hyphenated according to the rules of the setting. That is
+not necessarily a problem, unless you have extensive passages in the
+second language.

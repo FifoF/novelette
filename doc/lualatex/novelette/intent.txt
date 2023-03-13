@@ -4,62 +4,47 @@ Subject to change.
 
 INTENT
 
-This determines PDF/X-1a:2001 conformance.
+This determines PDF/X-1a:2001 conformance (or not).
+In Preamble:
+	\intent{choice}
+where the choice is one of: SWOP FOGRA JC none. Case-sensitive. Default SWOP.
+
+Explanation:
 
 PDF/X, particularly PDF/X-1a:2001, is a PDF format intended for the most
 reliable exchange to a printing machine. The format requires that certain
-things be in the PDF, and that other thing must not be in the PDF.
+things be in the PDF, and that other things must not be in the PDF.
 
 Your home or office printer does not need PDF/X, because its technology will
-understand almost anything you provide. The result may or may not be exactly
-what you wanted, but it will be good enough.
+understand almost anything you provide, and can guess the rest.
+All you really need is font embedding.
+Some commercial print-on-demand services do the same thing.
 
-In the commercial printing world, "good enough" is not good enough.
-The printer will not guess what you mean. It will not take time to analyze
-ambiguous PDF instructions. It will require precise definition of colors
-according to printing technology standards (this does not apply to you).
-Some print services will reject a PDF unless it conforms to PDF/X.
-A non-conforming PDF is not necessarily defective, so some other print
-services will accept it.
+But other commercial print services require more than font embedding.
+Their printers will not attempt to understand anything vague in the PDF.
+They will not attempt to guess what you mean. This ensures that PDF files
+can be rapidly and accutately exchanged between the producer and the printer,
+with the least delay. PDF/X format is intended for this purpose.
 
-Novelette allows you to choose among several widely-used PDF/X-1a:2001
-output intent. An output intent is your declaration that your color definitions
-agree with the capabilites of a particular print technology. This is actually
-irrelevant to a black/white book interior, but it is part of the standard.
+There are several varieties of PDF/X. The lowest common denominator, with the
+strictest requirements, is PDF/X-1a:2001. It is all you need for printed
+book interiors. If your print service requires PDF/X-1a:2001, Novelette
+has the built-in capability.
 
-If you choose intent none, your PDF will not be PDF/X. If you are in draft
-mode, it is always intent none, no matter what your setting. The only
-advantage to intent none, is that some inspections are not performed
-udring build, so your document builds faster.
+All PDF/X formats require an "output intent" declaration, which states
+the kind of printer expected by the PDF producer. It does not force that
+printer. The output intent is important for accurate color rendition.
+But your book interior will not use color, so the output intent will be
+ignored. Nevertheless, an output intent must be declared, simply because
+it is part of the PDF/X specification.
 
-\intent{none}
-	-> Not PDF/X conformant.
-	-> Uses PDF /Info instead of XMP metadata.
-	-> Does not rigorously examine images.
-	-> Automatically used in draft mode, regardless of user setting.
+Here are your choices:
+	\intent{none}     -> PDF will not be PDF/X.
+	\intent{SWOP}     -> Default PDF/X with "US Web Coated SWOP" output intent.
+	\intent{FOGRA}    -> PDF/X with FOGRA39 output intent (Europe).
+    \intent{JC200103} -> PDF/X with JC200103 output intent (Japan). 
+No *.icc color profile will be attached.
 
-\intent{SWOP}
-	-> PDF/X-1a:2001 conformant.
-	-> Uses XMP metadata with US Web Coated SWOP output intent.
-	-> Only applied in final mode.
-	-> Rigorously examines images.
-
-\intent{FOGRA39}
-	-> PDF/X-1a:2001 conformant.
-	-> Uses XMP metadata with FOGRA39 output intent.
-	-> Only applied in final mode.
-	-> Rigorously examines images.
-
-\intent{JC200103}
-	-> PDF/X-1a:2001 conformant.
-	-> Uses XMP metadata with JC200203 output intent.
-	-> Only applied in final mode.
-	-> Rigorously examines images.
-
-\intent{custom}
-	-> PDF/X-1a:2001 conformant, if your code is good.
-	-> Uses XMP metadata with do-it-yourself output intent.
-	-> Requires user-provided definitions.
-	-> Only applied in final mode.
-	-> Rigorously examines images.
-
+IMPORTANT:
+	If there was an error (and some warnings) during compile, the resulting
+PDF will automatically have \intent{none}, regardless of your setting.

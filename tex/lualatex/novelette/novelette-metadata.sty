@@ -83,7 +83,6 @@
 \ifthenelse{\equal{\temp@s}{SWOP}}{\@oktrue}{} % Typical for USA.
 \ifthenelse{\equal{\temp@s}{FOGRA39}}{\@oktrue}{} % Typical for Europe.
 \ifthenelse{\equal{\temp@s}{JC200103}}{\@oktrue}{} % Typical for Japan.
-\ifthenelse{\equal{\temp@s}{custom}}{\@oktrue}{} % Something else.
 \if@ok
   \xdef\@intent{\temp@s}
 \else
@@ -141,24 +140,6 @@
       paper type 3 (coated, 105 gsm), screen frequency 69/cm.}
     \gdef\OIinfo{Japan Color 2001 Coated}
     \gdef\OIregistry{http://www.color.org}
-  }{}
-  \ifthenelse{\equal{\@intent}{custom}}{ % Something else.
-    % You must provide this data yourself. In Preamble, do this:
-    %   \def\OIidentifier{NAME}
-    %   \def\OIcondition{various details}
-    %   \def\OIinfo{long name}
-    %   \def\OIregistry{http://www.color.org}
-    % Registry http://www.color.org is most likely. Change it, if necessary..
-    % The "identifier" is also known as "reference name".
-    % TeX special characters must be backslashed in these definitions.
-    % You may see % or # or _ in the data or file names.
-    % Be sure to write them as \% \# \_ or there will be big trouble.
-    \@oktrue
-    \ifdefined\OIidentifier\else\@okfalse\fi
-    \ifdefined\OIcondition\else\@okfalse\fi
-    \ifdefined\OIinfo\else\@okfalse\fi
-    \ifdefined\OIregistry\else\@okfalse\fi
-    \if@ok\else\@errMPDCI\fi% Must provide definitions for custom intent.
   }{}
 }
 %%

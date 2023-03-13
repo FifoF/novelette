@@ -170,14 +170,6 @@
    \@XN}{\@RXN}\@nvtbad%
 }
 
-\def\@errMPDCI{%
-  \ClassError{novelette}{Must provide definitions for custom intent.%
-   You set \string\intent{custom}. This requires you to provide four^^J%
-   values, in Preamble: OIidentifier, OIcondition, OIinfo, OIregistry.^^J%
-   Look in `novelette-metadata.sty' to see how it is done.^^J%
-   \@XN}{\@RXN}\@nvtbad%
-}
-
 \def\@errDNSTA{%
   \ClassError{novelette}{You did not specify both title and author.^^J%
    A document without title and author is only allowed in draft mode.^^J%
@@ -186,8 +178,7 @@
 
 \def\@errBVOI{%
   \ClassError{novelette}{Bad value for \string\intent.^^J%
-   Allowed choices: none SWOP FOGRA39 JC200103 custom ^^J%
-   Case-sensitive. If `custom', see documentation.^^J%
+   Case-sensitive choices: none SWOP FOGRA39 JC200103 ^^J%
    \@XN}{\@RXN}\@nvtbad%
 }
 

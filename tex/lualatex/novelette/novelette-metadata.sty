@@ -93,22 +93,14 @@
 
 %% PROCESS METADATA
 \def\@process@metadata{
-  \@oktrue
-%%%%%  \ifthenelse{\equal{\thetitle}{Untitled Document}}{\@okfalse}{}
-%%%%%  \ifthenelse{\equal{\theauthor}{Anonymous Author}}{\@okfalse}{}
   \if@nvtdraft
+    \ifthenelse{\equal{\nvt@mode}{final}}{\@warnNTOA}{} % No title or author.
     \gdef\@intent{none}
-  \else
-    \if@ok\else\@errDNSTA\fi % Did not specify both title and author.
   \fi
-%%%%%  \ifthenelse{\equal{\@intent}{none}}{
-%%%%%    \gdef\OIidentifier{none}
-%%%%%    \global\@tempnoinspecttrue
-%%%%%  }{}
   \ifthenelse{\equal{\@intent}{none}}{
     \gdef\pdflines{}
   }{
-    \xdef\pdflines{
+    \gdef\pdflines{
       <rdf:Description rdf:about="" xmlns:pdfx="http://ns.adobe.com/pdfx/1.3">^^J
       <pdfx:GTS_PDFXVersion>PDF/X-1a:2001</pdfx:GTS_PDFXVersion>^^J
       <pdfx:GTS_PDFXConformance>PDF/X-1a:2001</pdfx:GTS_PDFXConformance>^^J

@@ -170,10 +170,9 @@
    \@XN}{\@RXN}\@nvtbad%
 }
 
-\def\@errDNSTA{%
-  \ClassError{novelette}{You did not specify both title and author.^^J%
-   A document without title and author is only allowed in draft mode.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+\def\@warnNTOA{%
+  \ClassWarning{novelette}{You did not specify both title and author.^^J%
+   Mode changed from final to draft.}%
 }
 
 \def\@errBVOI{%

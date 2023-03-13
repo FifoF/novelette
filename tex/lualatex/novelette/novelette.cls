@@ -56,19 +56,11 @@
 \gdef\thepdfminorversion{\pdfminorversion}
 \gdef\@PDFversion{PDF/X-1}
 %% Novelette uses these in a slightly different way than in other classes:
-\protect\long\gdef\title#1{%
-  \if@nvtdraft%
-    \gdef\@title{DRAFT - \jobname}%
-    \gdef\thetitle{DRAFT - \jobname}%
-  \else%
-    \gdef\@title{#1}%
-    \gdef\thetitle{#1}%
-  \fi%
-}
-\protect\long\gdef\author#1{\gdef\@author{#1}\gdef\theauthor{#1}}
-\protect\gdef\application#1{\gdef\@application{#1}}
-\protect\gdef\producer#1{\gdef\@producer{#1}}
-\protect\gdef\intent#1{\gdef\@intent{#1}}
+\protect\long\gdef\title#1{\gdef\nvt@title{#1}}
+\protect\long\gdef\author#1{\gdef\nvt@author{#1}}
+\newcommand\application[1]{\gdef\@application{#1}}
+\newcommand\producer[1]{\gdef\@producer{#1}}
+\newcommand\intent[1]{\gdef\@intent{#1}}
 \@onlypreamble\title
 \@onlypreamble\author
 \@onlypreamble\application
@@ -199,7 +191,6 @@
 
 %% MORE PACKAGES
 %% ----------------------------------------------------------------------------
-%%%%%\RequirePackage{luahyphenrules}
 \RequirePackage{novelette-language}
 \RequirePackage[nomessages]{fp} % Calculations.
 \FPmessagesfalse
@@ -234,7 +225,7 @@
 %% ----------------------------------------------------------------------------
 %% Process user settings, set defaults, calculate page design.
 \AtEndPreamble{
-  \ifdefined\nvt@mode\else\mode{draft}\fi
+  \ifdefined\nvt@mode\else\gdef\nvt@mode{draft}\fi
   \ifthenelse{\equal{\nvt@mode}{final}}{
     \global\deflength\overfullrule{0pt}
   }{
@@ -242,11 +233,25 @@
   }
   \LetLtxMacro\RequirePackage\@get@package\relax
   \LetLtxMacro\usepackage\@get@package\relax
-  \ifundef{\thetitle}{\global\@nvtdrafttrue\title{DRAFT - \jobname}}{}
-  \ifundef{\theauthor}{\global\@nvtdrafttrue\author{Anonymous Author}}{}
-  \ifundef{\@application}{\application{Novelette}}{}
-  \ifundef{\@producer}{\producer{Novelette}}{}
-  \ifundef{\@intent}{\intent{none}}{}
+  \ifundef{\nvt@title}{
+    \global\@nvtdrafttrue
+    \gdef\@title{Untitled Document}
+    \gdef\thetitle{Untitled Document}
+  }{
+    \xdef\@title{\nvt@title}
+    \xdef\thetitle{\nvt@title}
+  }
+  \ifundef{\nvt@author}{
+    \global\@nvtdrafttrue
+    \gdef\@author{Anonymous Author}
+    \gdef\theauthor{Anonymous Author}
+  }{
+    \xdef\@author{\nvt@author}
+    \xdef\theauthor{\nvt@author}
+  }
+  \ifundef{\@application}{\gdef\@application{Novelette}}{}
+  \ifundef{\@producer}{\gdef\@producer{Novelette}}{}
+  \ifundef{\@intent}{\gdef\@intent{none}}{}
   \@process@margins
   \@process@design
   \RequirePackage{novelette-fonts}

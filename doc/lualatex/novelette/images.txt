@@ -1,0 +1,13 @@
+
+PLACEHOLDER
+Subject to revision
+
+IMAGES
+
+As of mid-March 2023, Novelette is in testing mode.
+
+The \image command will be used to place images. It has been tested and works,
+but more needs to be done.
+
+Do not use images yet.
+

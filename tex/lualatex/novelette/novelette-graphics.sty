@@ -86,6 +86,12 @@
 \newsavebox\@imagebox
 \def\ftype@figure{1} % Mystery TeX code.
 \DeclareDocumentCommand\image{O{}m}{%
+  \ClassError{novelette}{TESTING PHASE. Do not use images yet.^^J%
+    Novelette is in testing phase, as of mid-March 2023.^^J%
+    Although the macros for image placement are mostly complete, and work,^^J%
+    there is more to do. Meanwhile, use text without images.}{}%
+}
+\DeclareDocumentCommand\NOimage{O{}m}{% Will become \image after testing phase.
   \begingroup%
   \setlength\parindent{0pt}%
   \@TestImagePlacement{#1}%

@@ -22,7 +22,7 @@ Here are your choices:
 	german ngerman swissgerman german-x-latest ngerman-x-latest (note 2)
 	norwegian bokmal nynorsk (note 3)
 	french (note 4)
-    occitan spanish portuguese italian latin
+    occitan spanish portuguese italian
 	basque finnish danish icelandic swedish
 	dutch (note 5)
 	catalan (note 6)
@@ -33,10 +33,10 @@ Australian English, Canadian French, etc.
 
 No matter which language you use, print services require that title
 and author be written using Latin characters (possibly with diacriticals).
-This is so your book can be properly listed in the distribution database.
-Some print services further limit title and author to Latin-1 characters.
 That excludes curly quotes and curly apostophe, but Novelette will
 automatically use the straight forms, in title and author.
+This is so your book can be properly listed in the distribution database.
+Some print services further limit title and author to Latin-1 characters.
 
 NOTES:
 	1. "english" is the default. It uses an out-of-date hyphenation pattern.

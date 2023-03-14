@@ -47,7 +47,7 @@ might simply be the numeral 4, and its description might be At Yorktown.
 If you do not set the desc font yourself, the name font will be used,
 but at about 1.33x its normal size.
 
-The note font is used for footnotes, and for "legalese" passages.
+The note font is used for footnotes.
 It should always be smaller than the main font. If your do not set the note
 font yourself, the main font will be used, but at about 0.88x normal size.
 It is usually best to allow the default.

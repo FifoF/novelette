@@ -318,30 +318,6 @@
 %%
 
 
-%% legalese environment. Certain info, such as Copyright page, customarily is
-% neither justified nor hyphenated. Can be used wherever desired, of course.
-\newenvironment{legalese}{%
-  \vspace*{\@leading}%
-  \vfill% %%%%%
-  \raggedright%
-  \hyphenpenalty=10000%
-  \exhyphenpenalty=10000%
-  \begingroup%
-  \@footnotefont%
-  \setlength\baselineskip{.88\@leading}% %%%%%
-  \parskip=\baselineskip% Not necessarily \@leading.
-}{%
-  \ifdimcomp{\pagegoal}{<}{8000pt}{%
-    \FPdiv{\temp@n}{\strip@pt\pagegoal}{\strip@pt\@leading}%
-    \FPtrunc{\temp@d}{\temp@n}{0}%
-    \FPsub{\temp@n}{\temp@n}{\temp@d}%
-    \vspace{\temp@n\@leading-\@leading}%
-  }{}%
-  \endgroup%
-}
-%%
-
-
 %% \lnum for lining numbers.
 \gdef\lnum#1{{\addfontfeature{Numbers=Lining}#1}}
 %%

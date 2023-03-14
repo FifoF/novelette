@@ -133,7 +133,7 @@
     \null\par%
     \strut\smash{\@namefont #1}\par%
   \else%
-    \@errNOO%
+    {#1}%
   \fi%
 }
 \newcommand\desc[1]{%
@@ -141,14 +141,7 @@
     \null\par%
     \strut\smash{\@descfont #1}\par%
   \else%
-    \@errNOO%
-  \fi%
-}
-\newcommand\icon[1]{% %%%%%
-  \if@inopening%
-    \null\par\strut\smash{\@namefont #1}\strut\par%
-  \else%
-    \@errNOO%
+    {#1}%
   \fi%
 }
 %%
@@ -162,10 +155,9 @@
 %   Each display starts on a new page, and concludes with a new page.
 % Note that TeX disregards multiple requests for a new page, unless there
 % is something (even an intentional blank page) in between.
-%   On the display page, all items are horizontally centered by default.
+%   On a display page, all items are horizontally centered by default.
 % There is no paragraph indent. There is a one-line gap between paragraphs.
 % Header and footer will be empty. No footnotes are allowed.
-%   Within display, you may use the `legalese' and `textblock' environments.
 %%
 \newenvironment{display}{%
   \clearpage%

@@ -15,15 +15,17 @@ p.linesp{line-height: 150%}
 <div id="main">
 <h2>Novelette - Documentation</h2>
 
-<p>Document class <i>novelette</i> is designed for one purpose only: popular fiction,
-printed to paper (not Ebooks), black ink, especially using print-on-demand technology.
-It has what is necessary for that purpose, and no more. Much of the vast LaTeX code
-is disabled or ignored. The result is a small set of commands that have simple names
-and simple usage. They do what you need, allowing you to focus on writing your book,
-instead of manipulating LaTeX code.</p>
+<p>Document class <i>novelette</i> is unlike any other LaTeX document class:
+(a) It requires LuaLaTeX; (b) It does not honor widely-used LaTeX commands;
+(c) It has its own methods for setting layout and other properties,
+specifically written for those who have very little knowledge of LaTeX;
+(d) The resulting PDF is created for printed (to paper) popular fiction,
+such as detective novels, printed in black ink only; (e) There is no capability
+for Ebooks or any kind of academic works.</p> 
 
-<p>Here is a model document template. Each of its commands is a hyperlink within
-this documentation. Click to learn what the commands do, and how to choose their values:</p>
+<p>QUICK START: Here is a model document template. Each of its commands is a
+hyperlink within this documentation. Click to learn what the commands do,
+and how to choose their values:</p>
 
 <div id="doctemplate"><p class="linesp">
 <a href="#lualatex">% !TeX TS-program = lualatex</a><br>
@@ -31,6 +33,9 @@ this documentation. Click to learn what the commands do, and how to choose their
 <a href="#documentclass">\documentclass{novelette}</a><br>
 <a href="#mode">\mode</a>{draft}<br>
 <a href="#intent">\intent</a>{SWOP}<br>
+<a href="#setlang">\setlang</a>{usenglishmax}<br>
+<a href="#title">\title</a>{Your Wonderful Book}<br>
+<a href="#author">\author</a>{Famous Author}<br>
 <a href="#trimsize">\trimsize</a>{width=5.5in,height=8.5in}<br>
 <a href="#sheetfeed">\sheetfeed</a>{trimsize} % Normally not used.<br>
 <a href="#margins">\margins</a>{top=.5in,outside=.5in,bottom=.5in,inside=.625in}<br>
@@ -43,7 +48,7 @@ this documentation. Click to learn what the commands do, and how to choose their
 </div>
 
 
-<a id="lualatex">
+<a id="lualatex"></a>
 <div>
 <h3>% !TeX TS-program = lualatex</h3>
 <p>This is a "magic comment". Some GUI programs (TeXworks, TeXstudio, etc.)
@@ -53,17 +58,17 @@ of what the program uses for its standard compiler.</p>
 Anything else will be rejected.</p>
 </div>
 
-<a id="utf-8">
+<a id="utf-8"></a>
 <div>
 <h3>% !TeX encoding = UTF-8</h3>
 <p>This is a "magic comment". It tells some GUI programs that the characters
 have utf-8 encoding. You must type your document using utf-8, without its
 "byte order mark" (BOM). This is essential. It is the default encoding for
-Linux and Mac. On Windows, be sure to tell configure text editor for
+Linux and Mac. On Windows, be sure to configure your text editor for
 utf-8 without BOM.</p>
 </div>
 
-<a id="documentclass">
+<a id="documentclass"></a>
 <div>
 <h3>\documentclass{novelette}</h3>
 <p>Unlike other LaTeX document classes, Novelette has no class options.
@@ -71,77 +76,119 @@ Anything you need is set by one of the other commands in Preamble,
 or is automatically calculated from other settings.</p>
 </div>
 
-<a id="mode">
+<a id="mode"></a>
 <div>
 <h3>\mode{<i>choose</i>}</h3>
 <p>Novelette has four modes: draft, shade, align, final. If you do not set
 the mode, its default is draft.</p>
 <p><b>draft</b> disables PDF/X conformance (see <a href="#intent">intent</a>).
 It places DRAFT at the top left of each page. The PDF title is changed,
-to include the word DRAFT.</p>
-<p>Otherwise, the layout, line breaks, and page breaks are the same as they
-will be, when you graduate to final mode.</p>
+to include the word DRAFT. Otherwise, the layout, line breaks, and page breaks
+are the same as they will be, when you graduate to final mode.</p>
 <p><b>shade</b> is draft mode, with margins tinted gray.</p>
-<p><b>align</b> is draft mode, with margins tinted gray, and with text baselines marked.</p>
-<p><b>final</b> should only be used when you are ready. In final mode, Novelette
-performs some checks that it would otherwise omit (to save time). If your document
-fails one of the checks, you will be warned. It will automatically revert to draft mode,
-so that the PDF cannot be confused with the final file.</p>
+<p><b>align</b> is shade/draft mode, with text baselines marked.</p>
+<p><b>final</b> should only be used when you are ready. In final mode,
+Novelette performs some checks that it would otherwise omit (to save time).
+If your document fails one of the checks, you will be warned. Then itt will
+automatically revert to draft mode, so that the PDF cannot be confused with
+the final file.</p>
 </div>
 
-<a id="intent">
+<a id="intent"></a>
 <div>
 <h3>\intent{<i>choose</i>}</h3>
-<p>There are five intents: none, SWOP, FOGRA39, JC200103. The default is none.</p>
+<p>There are four intents: none, SWOP, FOGRA39, JC200103. Default is none.</p>
 <p>No matter which intent you choose, fonts are subset embedded. That is enough
 for some print services. But many print services require PDF/X conformance,
 especially <span style="white-space:nowrap">PDF/X-1a:2001.</span></p>
-<p>When a PDF file conforms to PDF/X, it must have a certain internal structure.
-Among the requirements is an "output intent", which states that the PDF was prepared
-according to the requirements of a particular print technology. It does not force
-the printer to use that technology. In fact, your file will be printed by
-entirely different methods. Nevertheless, an intent must be declared, even
-though it is useless.</p>
-<p>You are strongly urged to use an intent, other than <i>none</i>, for the final PDF.
+<p>When a file conforms to PDF/X, it must have a certain internal structure.
+Among the requirements is an "output intent", which states that the PDF was
+prepared according to the requirements of a particular print technology.
+It does not force the printer to use that technology.</p>
+<p>Your file will be printed by an industrial-strength photocopier or inkjet,
+rather than the offset presses declared by intent. In any case, the intent is
+irrelevant for books using only black ink. Nevertheless, an intent must be
+declared, even though it is useless; it is part of the PDF/X standards.</p>
+<p>You are urged to use an intent, other than <i>none</i>, for the final PDF.
 This enables additional checks, hopefully reducing the possibility that your
 file will be rejected by the print service.</p>
-<p><b>none</b> does not produce PDF/X. No matter how you set intent,
-it will be automatically changed to <i>none</i> unless you are in final mode.</p>
+<p><b>none</b> does not produce PDF/X. No matter how you set intent, it will
+automatically be changed to <i>none</i> unless you are in final mode.</p>
 <p><b>SWOP</b> means "US Web Coated SWOP". This is most frequently used in
 the United States.</p>
 <p><b>FOGRA39</b> (actually FOGRA39L) is frequently used in Europe.</p>
 <p><b>JC200103</b> is frequently used in Japan.</p>
 </div>
 
-<a id="trimsize">
+<a id="setlang"></a>
+<div>
+<h3>\setlang{<i>code</i>}</h3>
+<p>This command sets the language hyphenation pattern. Only one language
+may be chosen, from a <a href="#langlist">list</a>. It does not set anything
+other than hyphenation.</p>
+<p>You may write some text in another language; but if you do, it will be
+hyphenated according to the rules chosen by <i>\setlang</i>.</p>
+</div>
+
+<a id="title"></a>
+<div>
+<h3>\title{<i>Title of Your Book</i>}</h3>
+<p>When you use a print-on-demand service, you will provide the book title.
+This </i>\title</i> must be exactly the same. Also, it must be the same
+on the printed title page, on the copyright page, in page headers (if you use
+them), and generally anywhere the title is expected. Novelette does not do
+cover artwork, but the cover must have exactly the same title.</p>
+<p>The title must use the Latin character sets. Some print services limit
+to Latin-1; others allow more extended Latin characters. Curly apostrophe
+and curly quotes are not Latin characters, but Novelette will convert them
+to the acceptable straight variety.</p>
+
+<a id="author"></a>
+<div>
+<h3>\author{<i>Author of Your Book</i>}</h3>
+<p>The considerations for <i>\title</i> apply, with these additional:</p>
+<p>Novelette is not intended for academic works. There should be a single
+author (in some cases, two equal authors, using a single <i>\author</i>).</p>
+<p>Whether the author is your real name, or a pseudonym, is up to you.
+If in doubt, ask the print service.</p>
+<p>If you use a pseudonym, then you should probably use your real name as
+copyright holder, on the copyright page. Then, if someone unlawfully copies
+your book, it will be easier to enforce the copyright. Otherwise, you will
+have to prove that "Fakename Author" is actually "Realname You" before
+distributors will honor your requests.</p>
+<p>And, if you do use a pseudonym, request that distributors (and libraries)
+have it indexed under the desired name (pseudonym or real name).</p>
+
+<a id="trimsize"></a>
 <div>
 <h3>\trimsize{width=<i>W</i>,height=<i>H</i>}</h3>
 <p>Trim Size is the size of your book pages. Be sure to choose cream paper
 (creme, off-white), not white paper. The print service will offer a choice
 of several standard sizes.</p>
 <p>Dimensions <i>W</i> and <i>H</i> are measured in units of inches or
-millimeters (in,mm).<p>
-<p>The name "trim size" comes from the manufacturing process. Softcover books,
-especially print-on-demand, are usually printed using Perfect Print technology.
-The pages are printed on larger paper, roughly cut and assembled with glue,
-the cover is attached with glue, then the entire book is "trimmed" with
-a cutting device. This is why Perfect Print books have all page edges aligned.</p>
+millimeters (in,mm). Examples:<p>
+<p>\trimsize{5.5in,8.5in} % American Digest.</p>
+<p>\trimsize{width=129mm,height=198mm} % British B-Format.</p>
+<p>The name "trim size" comes from the manufacturing process. The pages are
+printed on larger paper, then roughly cut and assembled with glue.
+The cover is attached with glue, then the entire book is "trimmed" with
+a cutting device. This is why such books have all page edges aligned.</p>
 <p>In the case of library hardcover books, trim size refers to the interior
 pages. The cover size is slightly larger.</p>
 </div>
 
-<a id="sheetfeed">
+<a id="sheetfeed"></a>
 <div>
 <h3>\sheetfeed{<i>choose</i>}</h3>
 <p>Do not use the \sheetfeed setting, unless you are certain that you need it.
-If you use this setting incorrectly, big problems will result.
+If you use this setting incorrectly, big problems will result. Do not guess.
 Available choices are trimsize, letter, A4.</p>
-<p><b>trimsize</b> is the default. The PDF page size will be the same as
-the book trim size. This is how nearly all print-on-demand services want it.</p>
-<p><b>letter</b> forces the PDF page size to USletter, 8.5in width, 11in height.
-The book trim size is centered vertically and horizontally.</p>
-<p><b>A4</b> (or a4) forces the PDF page size to European A4, 210mm width,
-297mm height. The book trim size is cenetered vertically and horizontally.</p>
+<p><b>trimsize</b> is the default. The PDF page size will be the same as the
+book trim size. This is how nearly all print-on-demand services want it.</p>
+<p><b>letter</b> centers the trim size, vertically and horizontally, in the
+larger USletter size (8.5in width, 11in height),</p>
+<p><b>A4</b> (or a4) centers the trim size, vertically and horizontally,
+in the larger European A4 size (210mm width, 297mm height).</p>
 <p>If you are printing pages at home, for manual editing, then you might
 use letter or A4, to produce a consistent result from your home printer.
 That might also be the case, if your book will be reviewed by an editor.</p>
@@ -149,7 +196,7 @@ That might also be the case, if your book will be reviewed by an editor.</p>
 internal "TrimBox" metadata to the PDF.</p>
 </div>
 
-<a id="margins">
+<a id="margins"></a>
 <div>
 <h3>\margins{top=<i>T</i>,outside=<i>O</i>,bottom=<i>B</i>,inside=<i>I</i>}</h3>
 <p>In Novelette, margins surround the printable area. Nothing may be printed
@@ -157,7 +204,7 @@ within the margins. The header, main text, and footer all must fit within the
 rectangle surrounded by the margins. This is how the term "margins" is used
 by most print services.</p>
 <p>Word processors usually place header within the top margin, and footer
-within the bottom margin. You cannot do that in Novelette.</p>
+within the bottom margin.</p>
 <p>Margins are measured in units of inches or millimeters (in,mm). It is best
 to use the same units for margins, as you use for trim size.</p>
 <p><b>top</b> margin is the area above the topmost printable item, which
@@ -178,35 +225,36 @@ trim sizes, the margins will be at the minimum required by print services.
 At larger trim size, the margins will be larger.</p>
 </div>
 
-<a id="design">
+<a id="design"></a>
 <div>
 <h3>\design</a>{chars=<i>C</i>,lines=<i>L</i>,style=<i>S</i>,headgap=<i>H</i>,footgap=<i>F</i>}</h3>
 <p>This setting determines page layout. In Novelette, you do not set either the
 font size, or the leading (baselineskip). Instead, they are automatically
 calculated from the trim size, margins, and design.</p>
-<p><b>chars</b> is the typical average number of characters (including spaces) per line of main text.
-More characters means that more text fits on each line. This is achieved by reducing
-the font size to fit. The default value for C is 62 for small to medium trim sizes,
-larger for large trim sizes.</p>
-<p>The value is not precise, and it is only an average. It assumes that the font you use,
-and your style of writing, is "typical" for popular fiction. Do a few test pages,
-to see what value of C works best.</p>
-<p><b>lines</b>is the ineger number of lines in the main text block.
-It does not count header or footer. Default value varies, based on other setings.</p>
-<p><b>style</b> is an integer from 1 to 7. It determines whether page layout has
-header and/or footer, and determines alignment of header content. Other document classes
-require you to write code for the style. Novelette does that for you.</p>
+<p><b>chars</b> is the typical average number of characters (including spaces)
+per line of main text. More characters means that more text fits on each line.
+This is achieved by reducing the font size to fit. The default value for
+C is 62 for small to medium trim sizes, larger for large trim sizes.</p>
+<p>The value is not precise, and it is only an average. It assumes that the
+font you use, and your style of writing, is "typical" for popular fiction.
+Do a few test pages,to see what value of C works best.</p>
+<p><b>lines</b>is the integer number of lines in the main text block. It does
+not count header or footer. Default value varies, based on other setings.</p>
+<p><b>style</b> is an integer from 1 to 7. It determines whether page layout
+has header and/or footer, and determines alignment of header content.
+Other document classes require you to write code for the style. Novelette does
+that for you.</p>
 <p>The default style depends on how much vertical room is available, based on
-other settings. If enough room, style 2 is default. If not enough room, style 4.</p>
+other settings. If enough room, default is 2. If not enough room, 4.</p>
 <p><b>style=1</b> provides only footer. Page number centered in footer.</p>
-<p><b>style=2</b> provides both header and footer. Page number centered in footer.
-Text cenetered in header.</p>
-<p><b>style=3</b> provides both header and footer. Page number in footer,
-aligned to outside margin. Text in header aligned to outside margin.</p>
+<p><b>style=2</b> provides header and footer. Page number centered in footer.
+Text centered in header.</p>
+<p><b>style=3</b> provides header and footer. Page number in footer,
+aligned to outside margin. Text in header, aligned to outside margin.</p>
 <p><b>style=4</b> provides only header. Page number at outside margin.
-Text cenetered.</p>
-<p><b>style=5</b> is like 4. Adds a vertical bar near the page number, at fixed
-distance from the outside margin.</p>
+Text centered.</p>
+<p><b>style=5</b> is like 4. Adds a vertical bar near the page number,
+at fixed distance from the outside margin.</p>
 <p><b>style=6</b> is like 4. Adds a slash next to the page number.</p>
 <p><b>style=7</b> provides only header. Page number and text are centered,
 separated by slash. Page number is toward the outside.</p>
@@ -220,33 +268,92 @@ and footer.</p>
 footgap at the same value. But this is not requird.</p> 
 </div>
 
-<a id="setfont">
+<a id="setfont"></a>
 <div>
 <h3>\setfont{<i>role</i>}{<i>font name</i>}[<i>features</i>]</h3>
 <p>Novelette uses <i>fontspec</i> technology for Open Type fonts. If you are
 a knowledgeable LaTeX user, you may use some aspects of <i>fontspec</i>
 directly. However, do not use <i>\setmainfont</i>.</p>
-<p>The <i>\setfont</i> command has two mandatory arguments, and an optional argument.</p>
-<p><b>role</b> is one of these keywords: <i>main head note name desc deco alt</i>.
+<p><i>\setfont</i> has two mandatory arguments, and an optional argument.</p>
+<p><b>role</b> is a keyword: <i>main head note name desc deco alt</i>.
 It assigns the font to its proper place and purpose.</p>
 <p><b>font name</b> is the Open Type font family name. Examples are Swainson,
-EB Garamond, Libertinus Serif. You cannot use TeX fonts (which use three-letter codes).</p>
-<p><b>features</b> is an optional, comma-separated list of Open Type features, using
-<i>fontspec</i> syntax.</p>
+EB Garamond, Libertinus Serif. No TeX fonts with three-letter codes.</p>
+<p><b>features</b> is an optional, comma-separated list of Open Type features,
+using <i>fontspec</i> syntax.</p>
 <p><b>main</b> role is equivlanet to <i>\setmainfont</i>. The font and features
 will be used for main body text.</p>
 <p><b>head</b> is applied to only the header and footer. In many cases,
 this is the same as the main font, except do not use ligatures. You might
 prefer to use Scale=N where N is a number slightly less than 1.</p>
-<p><b>note</b> is used for footnotes and "legalese" text. It is almost always
-the same as main font, except with Scale less than 1.</p>
-<p><b>name</b> is the font used by the opening <i>\name</i> command. It may be the
+<p><b>note</b> is used for <a href="#footnotes">footnotes</a>. It is almost
+always the same as main font, except with Scale less than 1.</p>
+<p><b>name</b> is the font used by the <a href="#name">\name</a> command,
+in the <a href="#opening">opening</a> environment. It may be the
 same as the main font, but at larger Scale. Or you may use a stylish font.</p>
-<p><b>desc</b> is the font used by the opening <i>\desc</i> command. It is usually
-the same as the main font, but at larger Scale.</p>
-
-
+<p><b>desc</b> is the font used by the <a href="#desc">\desc</a> command,
+in the <a href="#opening">opening</a> environment. It is usually the same
+as the main font, but at larger Scale.</p>
+<p><b>deco</b> is a font providing unusual characters such as dingbats,
+flourishes, or unusually-shaped characters.</p>
+<p><b>alt</b> is a font providing characters that cannot be found in the
+main text font.</p>
 </div>
+
+<a id="openings"></a>
+<div>
+<h3>\openings{top=T,height=H,align=A}</h3>
+<p>The <a href="#opening">opening</a> environment begins such things as
+chapters. The <i>\openings</i> comand defines the style.</p>
+<p><b>top</b> T is an integer, number of lines from top of ordinary main
+text block. It is the baseline position of the highest text in an
+<a href="#opening>opening</a>.</p>
+<p><b>height</b> H is an integer, number of lines from top of ordinary main
+text block. It is the baseline position of the first line of main text,
+folowing the <a href="#opening">opening</a>.</p>
+<p><b>align</b> A is a keyword: left, right, center, inside, outside.
+It sets the default alignment of items in an <a href="#opening">opening</a></p>
+<p>Note that top and height are not enforced. All these do is place markers
+in the side margins, at the expected vertical positions. Whether or not
+these markers are honored, is up to you.</p>
+</div>
+
+<a id="opening"></a>
+<div>
+<h3>\begin{opening} ... \end{opening}</h3>
+<p>The <i>opening</i> environment is used at the start of new chapters,
+and canalos be used at the start of chapter-like portions of your book.
+It does not matter whether the portion is just one page.</p>
+<p>Within an opening, you may use some commands that are not available
+in main text. These are <a href="#name">\name</a> and
+<a href="#desc">desc</a> (description). In essence, those are chapter
+title and subtitle (if any).</p>
+<p>The <a href="#openings">\openings</a> command determines the default
+alignment of items within an opening. It also places markers. To vertically
+position items, use the <i>\null</i> command, as often as necessary,
+to insert blank lines.</p>
+</div>
+
+<a id="name"></a>
+<div>
+<h3>\name{<i>Chapter Title or Number</i>}</h3>
+<p>The content of <i>\name</i> will use whatever font and features you set
+via <a href="#setfont">\setfont{name}{...}[...]</a>. It may only be used
+within the <a href="#opening>opening</a> environment. The <i>name</i>
+is usually chapter title or number.</p>
+</div>
+
+<a id="desc"></a>
+<div>
+<h3>\name{<i>Chapter Subtitle</i>}</h3>
+<p>The content of <i>\desc</i> will use whatever font and features you set
+via <a href="#setfont">\setfont{desc}{...}[...]</a>. It may only be used
+within the <a href="#opening>opening</a> environment. The <i>desc</i>
+(description), if used, is usually a one-line chapter subtitle. This is
+not intended for an extended amount of text.</p>
+</div>
+
+
 
 </div>
 </body>

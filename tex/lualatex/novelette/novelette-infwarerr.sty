@@ -93,7 +93,7 @@
 
 \def\@errBFASF#1{%
   \ClassError{novelette}{Bad first argument `#1' for \string\setfont.^^J%
-    Choices: main head name desc note deco.^^J%
+    Choices: main head name desc note deco alt.^^J%
     \@XN}{\@RXN}\@nvtbad%
 }
 
@@ -238,15 +238,6 @@
    \@XN}{\@RXN}\@nvtbad%
 }
 
-\def\@errBSYN{%
-  \ClassError{novelette}{Bad option for \string\synopsis, page \thepage.^^J%
-   Option may be one of: c integer. Default=3.^^J%
-   Option c centers the text per-line. You must break lines where needed.^^J%
-   Integer option creates a block, indented both sides by that value.^^J%
-   The indented textblock must occupy at least 1/3 main textwidth.^^J%
-   \@XN}{\@RXN}\@nvtbad%
-}
-
 \def\@errBTS{%
   \ClassError{novelette}{Bad entry for \string\trimsize{width=W,height=H}^^J%
    When you use \string\trimsize, you must provide both width and height.^^J%
@@ -266,20 +257,6 @@
    \@XN}{\@RXN}\@nvtbad%
 }
 %%
-
-\def\@errNOO{%
-  \ClassError{novelette}{Incorrect use of \string\name, or \string\desc.^^J%
-   Those commands may only be used within `opening' environment.^^J%
-   \@XN}{\@RXN}\@nvtbad%
-}
-%%
-
-\def\@errNSO{%
-  \ClassError{novelette}{Incorrect use of \string\synopsis.^^J%
-   You may NOT use \string\synopsis, within `opening' environment.^^J%
-   Typically, it is used just after the `opening' environment ends.^^J%
-   \@XN}{\@RXN}\@nvtbad%
-}
 
 \def\@errBVSF{%
   \ClassError{novelette}{Bad value in \string\sheetfeed.^^J%

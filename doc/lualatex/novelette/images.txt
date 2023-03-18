@@ -11,3 +11,42 @@ but more needs to be done.
 
 Do not use images yet.
 
+
+
+Novelette does not use \includegraphics or any other standard TeX command
+for image placement. It uses a custom \image command:
+	\image[placement]{filename.png}
+The placement is at most one of (clr), at most one of (ntbi):
+	c -> horizontally centered (except inline)
+	l -> left-aligned (except inline)
+	r -> right-aligned (except inline)
+	n -> no-float
+	t -> top-float
+	b -> bottom-float
+	i -> inline
+If an image is inline, its size is limited, and any other placement is ignored.
+Only an inline image may be placed within a paragraph. All other placements
+must be between paragraphs.
+	Default horizontal placement is centered, except in an opening, where the
+default placement agrees with the opening.
+	Default vertical placement is no-float. The image will be placed where you
+write the \image command. If it cannot fit on that page, it will move to
+the next page, possibly leaving blank lines behind it. Unless that is what
+you want, you should fix placement using top-float or bottom-float.
+	Experienced TeX users: Notice that there is no "h" (here) placement.
+There is a fundamental difference between the way TeX calculates position,
+when it places the image "here" or floats is somewhere else. There is no easy
+way to maintin the line grid, without re-defining TeX floats. So if you need
+"here", begin with no-float, then manually change to top-float (or bottom)
+as necessary.
+
+
+ICONS
+	In Novelette, an "icon" is a small image placed inline with text.
+It must conform to all other image requirements. In addition, its height
+is limited. The limit is less than or equal to 1.2 x typesize.
+	For example, at 600px/in, with typesize 11.4pt (72.27 TeX pt/in),
+an icon cannot exceed 113 pixels height. The value may be slightly less,
+depending on other factors. The exact limit will be shown in the log Summary,
+which will also show where the surrounding text baseline will be positioned
+relative to the icon bottom.

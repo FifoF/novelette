@@ -20,13 +20,13 @@
 % Ordinary footnotes use \@footnote (with marker).
 % But if \footnote is in opening, no marker.
 \pretocmd\footnote{%
-  \if@indisplay\@errNFID\fi% No footnotes in display pages.
-  \if@inopening\@zmarktrue\fi%
+  \ifnvt@indisplay\nvt@errNFID\fi% No footnotes in display pages.
+  \ifnvt@inopening\nvt@zmarktrue\fi%
 }{}{}
 \def\footnoterule{%
   \vfill{%
-    \vspace{-\@leading}%
-    \noindent\strut\smash{\rule[-2pt]{0.33\textwidth}{0.05\@typesize}}%
+    \vspace{-\nvt@leading}%
+    \noindent\strut\smash{\rule[-2pt]{0.33\textwidth}{0.05\nvt@typesize}}%
   }%
 }
 %%
@@ -34,30 +34,32 @@
 
 %% FOOTNOTE REFERENCE MARKS
 % Also known as markers. Style selection is in novelette-design.
-% \@makefnmark applies to the footnote marker in the flow of main text:
-\def\@makefnmark{\if@zmark\else\@getfnmark\fi}
-\def\@getfnmark{% Places marker in the main text.
-  \ifthenelse{\equal{\@markers}{1}}{%
-    \gdef\@fnm{\the\value{@fnmnum}}%
+% \@makefnmark is an existing LaTeX macro, redefined here. Marker in main text.
+\newcounter{nvt@fnmnum} % Which marker in the list.
+\setcounter{nvt@fnmnum}{1}
+\def\@makefnmark{\ifnvt@zmark\else\nvt@getfnmark\fi}
+\def\nvt@getfnmark{% Places marker in the main text.
+  \ifthenelse{\equal{\nvt@markers}{1}}{%
+    \gdef\nvt@fnm{\the\value{nvt@fnmnum}}%
   }{}%
-  \ifthenelse{\equal{\@markers}{*}}{%
-    \ifthenelse{\equal{\value{@fnmnum}}{1}}{\gdef\@fnm{*}}{}%
-    \ifthenelse{\equal{\value{@fnmnum}}{2}}{\gdef\@fnm{†}}{}%
-    \ifthenelse{\equal{\value{@fnmnum}}{3}}{\gdef\@fnm{‡}}{}%
-    \ifthenelse{\equal{\value{@fnmnum}}{4}}{\gdef\@fnm{§}}{}%
-    \ifthenelse{\equal{\value{@fnmnum}}{5}}{\gdef\@fnm{**}}{}%
-    \ifthenelse{\equal{\value{@fnmnum}}{6}}{\gdef\@fnm{††}}{}%
-    \ifthenelse{\equal{\value{@fnmnum}}{7}}{\gdef\@fnm{‡‡}}{}%
-    \ifthenelse{\equal{\value{@fnmnum}}{8}}{\gdef\@fnm{§§}}{}%
+  \ifthenelse{\equal{\nvt@markers}{*}}{%
+    \ifthenelse{\equal{\value{nvt@fnmnum}}{1}}{\gdef\nvt@fnm{*}}{}%
+    \ifthenelse{\equal{\value{nvt@fnmnum}}{2}}{\gdef\nvt@fnm{†}}{}%
+    \ifthenelse{\equal{\value{nvt@fnmnum}}{3}}{\gdef\nvt@fnm{‡}}{}%
+    \ifthenelse{\equal{\value{nvt@fnmnum}}{4}}{\gdef\nvt@fnm{§}}{}%
+    \ifthenelse{\equal{\value{nvt@fnmnum}}{5}}{\gdef\nvt@fnm{**}}{}%
+    \ifthenelse{\equal{\value{nvt@fnmnum}}{6}}{\gdef\nvt@fnm{††}}{}%
+    \ifthenelse{\equal{\value{nvt@fnmnum}}{7}}{\gdef\nvt@fnm{‡‡}}{}%
+    \ifthenelse{\equal{\value{nvt@fnmnum}}{8}}{\gdef\nvt@fnm{§§}}{}%
   }{}%
-  {\addfontfeature{VerticalPosition=Superior}\@fnm}%
+  {\addfontfeature{VerticalPosition=Superior}\nvt@fnm}%
 }
-\def\@bfnm{%
-  \@fnm\ifthenelse{\equal{\@markers}{1}}{.}{}%
-  \ifthenelse{\equal{\@markers}{*} \AND \equal{\value{@fnmnum}}{8}}{%
-    \setcounter{@fnmnum}{1}%
+\def\nvt@bfnm{%
+  \nvt@fnm\ifthenelse{\equal{\nvt@markers}{1}}{.}{}%
+  \ifthenelse{\equal{\nvt@markers}{*} \AND \equal{\value{nvt@fnmnum}}{8}}{%
+    \setcounter{nvt@fnmnum}{1}%
   }{%
-    \stepcounter{@fnmnum}%
+    \stepcounter{nvt@fnmnum}%
   }%
 }
 %%
@@ -65,9 +67,9 @@
 
 %% FOOTNOTE TEXT
 % The actual footnote, at bottom of textblock, text in \@footnotesize.
-% Not indented. This is the preferrd style.
-\long\def\@makefntext#1{%
-  \if@zmark\noindent{#1}\else\noindent\@bfnm\,{#1}\fi%
+% Not indented. This is the preferred style.
+\long\def\nvt@makefntext#1{%
+  \ifnvt@zmark\noindent{#1}\else\noindent\nvt@bfnm\,{#1}\fi%
 }
 \long\def\@footnotetext#1{
   \insert\footins{%
@@ -78,7 +80,7 @@
     \hsize\columnwidth \@parboxrestore
     \def\@currentcounter{footnote}%
     \protected@edef\@currentlabel{\csname p@footnote\endcsname\@thefnmark}%
-    \@makefntext{\rule{0pt}{\footnotesep}\ignorespaces#1\@finalstrut\strutbox}\par%
+    \nvt@makefntext{\rule{0pt}{\footnotesep}\ignorespaces#1\@finalstrut\strutbox}\par%
   }
 }%
 %%

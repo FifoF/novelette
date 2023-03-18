@@ -23,228 +23,228 @@
 % Minimum P.O.D. margins are usually 0.5in/13mm top, outside, bottom,
 % plus 0.125in/3mm inside. Novelette does not enforce these, but instead
 % enforces much smaller values, just in case you are not using P.O.D.
-\def\@process@margins{
-  \@oktrue
-  \ifdimcomp{\@mtop}{>}{0pt}{ % User set values.
-    \ifdimcomp{\@mtop}{<}{0pt}{\@okfalse}{}
-    \ifdimcomp{\@mtop}{>}{.25\@trimh}{\@okfalse}{}
-    \ifdimcomp{\@mout}{<}{0pt}{\@okfalse}{}
-    \ifdimcomp{\@mout}{>}{.25\@trimw}{\@okfalse}{}
-    \ifdimcomp{\@mbot}{<}{0pt}{\@okfalse}{}
-    \ifdimcomp{\@mbot}{>}{.25\@trimh}{\@okfalse}{}
-    \ifdimcomp{\@mins}{<}{0pt}{\@okfalse}{}
-    \ifdimcomp{\@mins}{>}{.25\@trimw}{\@okfalse}{}
+\def\nvt@process@margins{
+  \nvt@oktrue
+  \ifdimcomp{\nvt@mtop}{>}{0pt}{ % User set values.
+    \ifdimcomp{\nvt@mtop}{<}{0pt}{\nvt@okfalse}{}
+    \ifdimcomp{\nvt@mtop}{>}{.25\nvt@trimh}{\nvt@okfalse}{}
+    \ifdimcomp{\nvt@mout}{<}{0pt}{\nvt@okfalse}{}
+    \ifdimcomp{\nvt@mout}{>}{.25\nvt@trimw}{\nvt@okfalse}{}
+    \ifdimcomp{\nvt@mbot}{<}{0pt}{\nvt@okfalse}{}
+    \ifdimcomp{\nvt@mbot}{>}{.25\nvt@trimh}{\nvt@okfalse}{}
+    \ifdimcomp{\nvt@mins}{<}{0pt}{\nvt@okfalse}{}
+    \ifdimcomp{\nvt@mins}{>}{.25\nvt@trimw}{\nvt@okfalse}{}
   }{}
-  \if@ok\else
-    \@errMOOR % Margins out of range.
-    \global\deflength\@mtop{0pt} % Reset.
+  \ifnvt@ok\else
+    \nvt@errMOOR % Margins out of range.
+    \global\deflength\nvt@mtop{0pt} % Reset.
   \fi
-  \ifdimcomp{\@mtop}{=}{0pt}{ % Unset or reset.
-    \FPsub{\temp@w}{\strip@pt\@trimw}{398} % 398pt is 5.5in.
-    \FPifgt{\temp@w}{0}
-      \FPmul{\temp@d}{\temp@w}{.2}
+  \ifdimcomp{\nvt@mtop}{=}{0pt}{ % Unset or reset.
+    \FPsub{\nvt@temp@w}{\strip@pt\nvt@trimw}{398} % 398pt is 5.5in.
+    \FPifgt{\nvt@temp@w}{0}
+      \FPmul{\nvt@temp@d}{\nvt@temp@w}{.2}
     \else
-      \def\temp@d{0}
+      \def\nvt@temp@d{0}
     \fi
     \IfSubStr*{\log@trimsize}{mm}{ % Using Metric mm units.
-      \FPdiv{\temp@d}{\temp@d}{2.845} % 2.845pt/mm.
-      \FPadd{\temp@n}{\temp@d}{13}
-      \FPround{\temp@n}{\temp@n}{2}
-      \FPclip{\temp@n}{\temp@n}
-      \global\deflength\@mtop{\temp@n mm}
-      \global\deflength\@mout{\temp@n mm}
-      \global\deflength\@mbot{\temp@n mm}
-      \FPadd{\temp@d}{\temp@n}{3}
-      \FPclip{\temp@d}{\temp@d}
-      \global\deflength\@mins{\temp@d mm}
-      \global\deflength\@spinew{3mm}
-      \xdef\log@margins{\string\margins{top=\temp@n mm,outside=\temp@n mm,%
-        bottom=\temp@n mm,inside=\temp@d mm}}
+      \FPdiv{\nvt@temp@d}{\nvt@temp@d}{2.845} % 2.845pt/mm.
+      \FPadd{\nvt@temp@n}{\nvt@temp@d}{13}
+      \FPround{\nvt@temp@n}{\nvt@temp@n}{2}
+      \FPclip{\nvt@temp@n}{\nvt@temp@n}
+      \global\deflength\nvt@mtop{\nvt@temp@n mm}
+      \global\deflength\nvt@mout{\nvt@temp@n mm}
+      \global\deflength\nvt@mbot{\nvt@temp@n mm}
+      \FPadd{\nvt@temp@d}{\nvt@temp@n}{3}
+      \FPclip{\nvt@temp@d}{\nvt@temp@d}
+      \global\deflength\nvt@mins{\nvt@temp@d mm}
+      \global\deflength\nvt@spinew{3mm}
+      \xdef\log@margins{\string\margins{top=\nvt@temp@n mm,outside=\nvt@temp@n mm,%
+        bottom=\nvt@temp@n mm,inside=\nvt@temp@d mm}}
     }{ % Something else, so use in.
-      \FPdiv{\temp@d}{\temp@d}{72.27} % 72.27pt/in.
-      \FPadd{\temp@n}{\temp@d}{.5}
-      \FPround{\temp@n}{\temp@n}{3}
-      \FPclip{\temp@n}{\temp@n}
-      \global\deflength\@mtop{\temp@n in}
-      \global\deflength\@mout{\temp@n in}
-      \global\deflength\@mbot{\temp@n in}
-      \FPadd{\temp@d}{\temp@n}{.125}
-      \FPclip{\temp@d}{\temp@d}
-      \global\deflength\@mins{\temp@d in}
-      \global\deflength\@spinew{.125in}
-      \xdef\log@margins{\string\margins{top=\temp@n in,outside=\temp@n in,%
-        bottom=\temp@n in,inside=\temp@d in}}
+      \FPdiv{\nvt@temp@d}{\nvt@temp@d}{72.27} % 72.27pt/in.
+      \FPadd{\nvt@temp@n}{\nvt@temp@d}{.5}
+      \FPround{\nvt@temp@n}{\nvt@temp@n}{3}
+      \FPclip{\nvt@temp@n}{\nvt@temp@n}
+      \global\deflength\nvt@mtop{\nvt@temp@n in}
+      \global\deflength\nvt@mout{\nvt@temp@n in}
+      \global\deflength\nvt@mbot{\nvt@temp@n in}
+      \FPadd{\nvt@temp@d}{\nvt@temp@n}{.125}
+      \FPclip{\nvt@temp@d}{\nvt@temp@d}
+      \global\deflength\nvt@mins{\nvt@temp@d in}
+      \global\deflength\nvt@spinew{.125in}
+      \xdef\log@margins{\string\margins{top=\nvt@temp@n in,outside=\nvt@temp@n in,%
+        bottom=\nvt@temp@n in,inside=\nvt@temp@d in}}
     }
   }{}
-  \global\deflength\@totalh{\@trimh-\@mtop-\@mbot}
+  \global\deflength\nvt@totalh{\nvt@trimh-\nvt@mtop-\nvt@mbot}
 }
 %%
 
 
 %% EMWIDTH, GAPS, STYLE, TYPESIZE
-\def\@process@design{
-  \FPsub{\temp@n}{\strip@pt\@trimw}{\strip@pt\@mout}
-  \FPsub{\temp@w}{\temp@n}{\strip@pt\@mins}
-  \ifdefined\@textchars\else\gdef\@textchars{62}\fi
-  \FPdiv{\temp@n}{\temp@w}{\@textchars}
-  \FPdiv{\temp@n}{\temp@n}{.45} % Average character width 0.45em.
-  \FPround{\temp@n}{\temp@n}{3}
-  \FPclip{\temp@n}{\temp@n}
-  \global\deflength\@typesize{\temp@n pt}
-  \global\deflength\@spad{0.08\@typesize} % Just a tiny amount.
-  \global\deflength\textwidth{\@trimw-\@mout-\@mins-2\@spad}
-  \ifdefined\@headgap
-    \ifdefined\@footgap\else
-      \gdef\@footgap{\@headgap}
+\def\nvt@process@design{
+  \FPsub{\nvt@temp@n}{\strip@pt\nvt@trimw}{\strip@pt\nvt@mout}
+  \FPsub{\nvt@temp@w}{\nvt@temp@n}{\strip@pt\nvt@mins}
+  \ifdefined\nvt@textchars\else\gdef\nvt@textchars{62}\fi
+  \FPdiv{\nvt@temp@n}{\nvt@temp@w}{\nvt@textchars}
+  \FPdiv{\nvt@temp@n}{\nvt@temp@n}{.45} % Average character width 0.45em.
+  \FPround{\nvt@temp@n}{\nvt@temp@n}{3}
+  \FPclip{\nvt@temp@n}{\nvt@temp@n}
+  \global\deflength\nvt@typesize{\nvt@temp@n pt}
+  \global\deflength\nvt@spad{0.08\nvt@typesize} % Just a tiny amount.
+  \global\deflength\textwidth{\nvt@trimw-\nvt@mout-\nvt@mins-2\nvt@spad}
+  \ifdefined\nvt@headgap
+    \ifdefined\nvt@footgap\else
+      \gdef\nvt@footgap{\nvt@headgap}
     \fi
   \fi
-  \ifdefined\@footgap
-    \ifdefined\@headgap\else
-      \gdef\@headgap{\@footgap}
+  \ifdefined\nvt@footgap
+    \ifdefined\nvt@headgap\else
+      \gdef\nvt@headgap{\nvt@footgap}
     \fi
   \fi
-  \ifdefined\@headgap\else
-    \ifdefined\@footgap\else
-      \gdef\@headgap{0.5}
-      \gdef\@footgap{0.5}
+  \ifdefined\nvt@headgap\else
+    \ifdefined\nvt@footgap\else
+      \gdef\nvt@headgap{0.5}
+      \gdef\nvt@footgap{0.5}
     \fi
   \fi
-  \ifdefined\@hfstyle\else
-    \ifdimcomp{\@totalh}{<}{6.8in}{%
-      \gdef\@hfstyle{1} % Only footer.
+  \ifdefined\nvt@hfstyle\else
+    \ifdimcomp{\nvt@totalh}{<}{6.8in}{%
+      \gdef\nvt@hfstyle{1} % Only footer.
     }{%
-      \ifdimcomp{\@totalh}{<}{7.2in}{%
-        \gdef\@hfstyle{3} % Only header.
-      }{\gdef\@hfstyle{2}} % Both.
+      \ifdimcomp{\nvt@totalh}{<}{7.2in}{%
+        \gdef\nvt@hfstyle{3} % Only header.
+      }{\gdef\nvt@hfstyle{2}} % Both.
     }
   \fi
-  \FPiflt{\@hfstyle}{4}\global\@has@footertrue\fi
-  \FPifgt{\@hfstyle}{1}\global\@has@headertrue\fi
-  \FPifeq{\@hfstyle}{0}\global\@has@footerfalse\fi
-  \if@pnital
+  \FPiflt{\nvt@hfstyle}{4}\global\nvt@footertrue\fi
+  \FPifgt{\nvt@hfstyle}{1}\global\nvt@headertrue\fi
+  \FPifeq{\nvt@hfstyle}{0}\global\nvt@footerfalse\fi
+  \ifnvt@pnital
     \gdef\pagenumber{\textit{\thepage}}
   \else
     \gdef\pagenumber{\thepage}
   \fi
-  \global\deflength\oddsidemargin{\@mins+\@spad+0.5\pagewidth-0.5\@trimw-1in}
-  \global\deflength\evensidemargin{\@mout+\@spad+0.5\pagewidth-0.5\@trimw-1in}
+  \global\deflength\oddsidemargin{\nvt@mins+\nvt@spad+0.5\pagewidth-0.5\nvt@trimw-1in}
+  \global\deflength\evensidemargin{\nvt@mout+\nvt@spad+0.5\pagewidth-0.5\nvt@trimw-1in}
 }
 %%
 
 
 %% CALCULATE LEADING, LINES PER PAGE (four cases, depending on header/footer)
-\def\@calculate@leading{
-  \@start@calc
-  \if@has@header
-    \if@has@footer\@calculate@leading@both\else\@calculate@leading@head\fi
+\def\nvt@calculate@leading{
+  \nvt@start@calc
+  \ifnvt@header
+    \ifnvt@footer\nvt@calculate@leading@both\else\nvt@calculate@leading@head\fi
   \else
-    \if@has@footer\@calculate@leading@foot\else\@calculate@leading@none\fi
+    \ifnvt@footer\nvt@calculate@leading@foot\else\nvt@nvtcalculate@leading@none\fi
   \fi
-  \@finish@calc
-  \@check@leading
+  \nvt@finish@calc
+  \nvt@check@leading
 }
 %%
-\def\@start@calc{
-  \global\deflength\topmargin{\@mtop+0.5\pageheight-0.5\@trimh-1in}
-  \global\deflength\adj@totalh{\@totalh-\@asc-\@desc}
+\def\nvt@start@calc{
+  \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh-1in}
+  \global\deflength\nvtadj@totalh{\nvt@totalh-\nvt@ascn-\nvt@dscn}
 }
 %%
-\def\@calculate@leading@none{ % No header or footer.
-  \ifdefined\@lpp\else
-    \FPmul{\temp@n}{\strip@pt\@typesize}{1.3} % A mid-range leading.
-    \FPdiv{\temp@lpp}{\strip@pt\adj@totalh}{\temp@n}
-    \FPtrunc{\temp@lpp}{\temp@lpp}{0}
-    \xdef\@lpp{\temp@lpp}
+\def\nvt@calculate@leading@none{ % No header or footer.
+  \ifdefined\nvt@lpp\else
+    \FPmul{\nvt@temp@n}{\strip@pt\nvt@typesize}{1.3} % A mid-range leading.
+    \FPdiv{\nvt@temp@lpp}{\strip@pt\nvtadj@totalh}{\nvt@temp@n}
+    \FPtrunc{\nvt@temp@lpp}{\nvt@temp@lpp}{0}
+    \xdef\nvt@lpp{\nvt@temp@lpp}
   \fi
-  \FPsub{\adj@lpp}{\@lpp}{1}
-  \FPdiv{\temp@leading}{\strip@pt\adj@totalh}{\adj@lpp}
-  \FPtrunc{\temp@leading}{\temp@leading}{3}
-  \global\deflength\@leading{\temp@leading pt}
+  \FPsub{\adj@lpp}{\nvt@lpp}{1}
+  \FPdiv{\nvt@temp@leading}{\strip@pt\nvtadj@totalh}{\adj@lpp}
+  \FPtrunc{\nvt@temp@leading}{\nvt@temp@leading}{3}
+  \global\deflength\nvt@leading{\nvt@temp@leading pt}
   \global\deflength\footskip{0pt}
 }
 %%
-\def\@calculate@leading@head{ % Only header.
-  \ifdefined\@lpp\else % User did not set lines.
-    \FPmul{\temp@n}{\strip@pt\@typesize}{1.3}
-    \FPdiv{\temp@lpp}{\strip@pt\adj@totalh}{\temp@n}
-    \FPsub{\temp@lpp}{\temp@lpp}{1} % Header.
-    \FPsub{\temp@lpp}{\temp@lpp}{\@headgap} % Header gap.
-    \FPtrunc{\temp@lpp}{\temp@lpp}{0}
-    \xdef\@lpp{\temp@lpp}
+\def\nvt@calculate@leading@head{ % Only header.
+  \ifdefined\nvt@lpp\else % User did not set lines.
+    \FPmul{\nvt@temp@n}{\strip@pt\nvt@typesize}{1.3}
+    \FPdiv{\nvt@temp@lpp}{\strip@pt\nvtadj@totalh}{\nvt@temp@n}
+    \FPsub{\nvt@temp@lpp}{\nvt@temp@lpp}{1} % Header.
+    \FPsub{\nvt@temp@lpp}{\nvt@temp@lpp}{\nvt@headgap} % Header gap.
+    \FPtrunc{\nvt@temp@lpp}{\nvt@temp@lpp}{0}
+    \xdef\nvt@lpp{\nvt@temp@lpp}
   \fi
-  \FPadd{\adj@lpp}{\@lpp}{\@headgap}
-  \FPdiv{\temp@leading}{\strip@pt\adj@totalh}{\adj@lpp}
-  \FPtrunc{\temp@leading}{\temp@leading}{3}
-  \global\deflength\@leading{\temp@leading pt}
+  \FPadd{\adj@lpp}{\nvt@lpp}{\nvt@headgap}
+  \FPdiv{\nvt@temp@leading}{\strip@pt\nvtadj@totalh}{\adj@lpp}
+  \FPtrunc{\nvt@temp@leading}{\nvt@temp@leading}{3}
+  \global\deflength\nvt@leading{\nvt@temp@leading pt}
   \global\deflength\footskip{0pt}
-  \global\deflength\headheight{\@leading}
-  \global\deflength\headsep{\@headgap\@leading}
+  \global\deflength\headheight{\nvt@leading}
+  \global\deflength\headsep{\nvt@headgap\nvt@leading}
 }
 %%
-\def\@calculate@leading@foot{ % Only footer.
-  \ifdefined\@lpp\else % User did not set lines.
-    \FPmul{\temp@n}{\strip@pt\@typesize}{1.3}
-    \FPdiv{\temp@lpp}{\strip@pt\adj@totalh}{\temp@n}
-    \FPsub{\temp@lpp}{\temp@lpp}{\@footgap} % Footer gap.
-    \FPsub{\temp@lpp}{\temp@lpp}{1} % Footer.
-    \FPtrunc{\temp@lpp}{\temp@lpp}{0}
-    \xdef\@lpp{\temp@lpp}
+\def\nvt@calculate@leading@foot{ % Only footer.
+  \ifdefined\nvt@lpp\else % User did not set lines.
+    \FPmul{\nvt@temp@n}{\strip@pt\nvt@typesize}{1.3}
+    \FPdiv{\nvt@temp@lpp}{\strip@pt\nvtadj@totalh}{\nvt@temp@n}
+    \FPsub{\nvt@temp@lpp}{\nvt@temp@lpp}{\nvt@footgap} % Footer gap.
+    \FPsub{\nvt@temp@lpp}{\nvt@temp@lpp}{1} % Footer.
+    \FPtrunc{\nvt@temp@lpp}{\nvt@temp@lpp}{0}
+    \xdef\nvt@lpp{\nvt@temp@lpp}
   \fi
-  \FPadd{\adj@lpp}{\@lpp}{\@footgap}
-  \FPdiv{\temp@leading}{\strip@pt\adj@totalh}{\adj@lpp}
-  \FPtrunc{\temp@leading}{\temp@leading}{3}
-  \global\deflength\@leading{\temp@leading pt}
-  \global\deflength\footskip{\@footgap\@leading+\@leading}
+  \FPadd{\adj@lpp}{\nvt@lpp}{\nvt@footgap}
+  \FPdiv{\nvt@temp@leading}{\strip@pt\nvtadj@totalh}{\adj@lpp}
+  \FPtrunc{\nvt@temp@leading}{\nvt@temp@leading}{3}
+  \global\deflength\nvt@leading{\nvt@temp@leading pt}
+  \global\deflength\footskip{\nvt@footgap\nvt@leading+\nvt@leading}
 }
-\def\@calculate@leading@both{ % Header and footer.
-  \ifdefined\@lpp\else
-    \FPmul{\temp@n}{\strip@pt\@typesize}{1.3}
-    \FPdiv{\temp@lpp}{\strip@pt\adj@totalh}{\temp@n}
-    \FPsub{\temp@lpp}{\temp@lpp}{2} % Header and footer
-    \FPsub{\temp@lpp}{\temp@lpp}{\@headgap} % Header gap.
-    \FPsub{\temp@lpp}{\temp@lpp}{\@footgap} % Footer gap.
-    \FPtrunc{\temp@lpp}{\temp@lpp}{0}
-    \xdef\@lpp{\temp@lpp}
+\def\nvt@calculate@leading@both{ % Header and footer.
+  \ifdefined\nvt@lpp\else
+    \FPmul{\nvt@temp@n}{\strip@pt\nvt@typesize}{1.3}
+    \FPdiv{\nvt@temp@lpp}{\strip@pt\nvtadj@totalh}{\nvt@temp@n}
+    \FPsub{\nvt@temp@lpp}{\nvt@temp@lpp}{2} % Header and footer
+    \FPsub{\nvt@temp@lpp}{\nvt@temp@lpp}{\nvt@headgap} % Header gap.
+    \FPsub{\nvt@temp@lpp}{\nvt@temp@lpp}{\nvt@footgap} % Footer gap.
+    \FPtrunc{\nvt@temp@lpp}{\nvt@temp@lpp}{0}
+    \xdef\nvt@lpp{\nvt@temp@lpp}
   \fi
-  \FPadd{\adj@lpp}{\@lpp}{1}
-  \FPadd{\adj@lpp}{\adj@lpp}{\@headgap}
-  \FPadd{\adj@lpp}{\adj@lpp}{\@footgap}
-  \FPdiv{\temp@leading}{\strip@pt\adj@totalh}{\adj@lpp}
-  \FPtrunc{\temp@leading}{\temp@leading}{3}
-  \global\deflength\@leading{\temp@leading pt}
-  \global\deflength\headheight{\@leading}
-  \global\deflength\headsep{\@headgap\@leading}
-  \global\deflength\footskip{\@footgap\@leading}
+  \FPadd{\adj@lpp}{\nvt@lpp}{1}
+  \FPadd{\adj@lpp}{\adj@lpp}{\nvt@headgap}
+  \FPadd{\adj@lpp}{\adj@lpp}{\nvt@footgap}
+  \FPdiv{\nvt@temp@leading}{\strip@pt\nvtadj@totalh}{\adj@lpp}
+  \FPtrunc{\nvt@temp@leading}{\nvt@temp@leading}{3}
+  \global\deflength\nvt@leading{\nvt@temp@leading pt}
+  \global\deflength\headheight{\nvt@leading}
+  \global\deflength\headsep{\nvt@headgap\nvt@leading}
+  \global\deflength\footskip{\nvt@footgap\nvt@leading}
 }
 %%
-\def\@finish@calc{
-  \global\deflength\topskip{\@asc}
-  \global\deflength\textheight{\@lpp\@leading-\@leading+\@asc}
-  \global\deflength\baselineskip{\@leading}
+\def\nvt@finish@calc{
+  \global\deflength\topskip{\nvt@ascn}
+  \global\deflength\textheight{\nvt@lpp\nvt@leading-\nvt@leading+\nvt@ascn}
+  \global\deflength\baselineskip{\nvt@leading}
   \xdef\log@design{%
-    \string\design{chars=\@textchars,lines=\@lpp,%
-    headgap=\@headgap,footgap=\@footgap,%
-    style=\@hfstyle\if@pnital i\fi}%
+    \string\design{chars=\nvt@textchars,lines=\nvt@lpp,%
+    headgap=\nvt@headgap,footgap=\nvt@footgap,%
+    style=\nvt@hfstyle\ifnvt@pnital i\fi}%
   }%
 }
 %%
-\def\@check@leading{
-  \FPadd{\temp@d}{\strip@pt\@asc}{\strip@pt\@desc}
-  \FPdiv{\temp@n}{\strip@pt\@leading}{\temp@d}
-  \FPiflt{\temp@n}{1}\@errTMLPP\fi % Too many lines per page.
+\def\nvt@check@leading{
+  \FPadd{\nvt@temp@d}{\strip@pt\nvt@ascn}{\strip@pt\nvt@dscn}
+  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@leading}{\nvt@temp@d}
+  \FPiflt{\nvt@temp@n}{1}\nvt@errTMLPP\fi % Too many lines per page.
 }
 %%
 
 
 %% RENEW NORMALSIZE
-\def\@renew@normalsize{
-  \renewcommand\normalsize{\@setfontsize\normalsize{\@typesize}{\@leading}}
+\def\nvt@renew@normalsize{
+  \renewcommand\normalsize{\@setfontsize\normalsize{\nvt@typesize}{\nvt@leading}}
   \normalsize
   \let\@normalsize\normalsize\relax % Hack for fancyhdr.
-  \global\deflength\normalindent{1.5\@typesize}
-  \global\deflength\footnotesep{0.8\@leading}
+  \global\deflength\normalindent{1.5\nvt@typesize}
+  \global\deflength\footnotesep{0.8\nvt@leading}
   \DeclareRobustCommand\@footnotesize{% For actual footnotes.
-    \@setfontsize\@footnotesize{.92\@typesize}{.92\@leading}%
+    \@setfontsize\@footnotesize{.92\nvt@typesize}{.92\nvt@leading}%
   }
   \let\tiny\normalsize\relax
   \let\scriptsize\normalsize\relax

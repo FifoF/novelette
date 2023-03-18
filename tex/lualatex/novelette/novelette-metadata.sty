@@ -46,26 +46,26 @@
 
 
 %% FIXMETA (utility macro)
-\def\@fixmeta#1{% Converts things such as curly quotes to straight, etc.
-  \StrSubstitute{#1}{``}{"}[\temp@s]%
-  \StrSubstitute{\temp@s}{''}{"}[\temp@s]%
-  \StrSubstitute{\temp@s}{`}{'}[\temp@s]%
-  \StrSubstitute{\temp@s}{‘}{'}[\temp@s]%
-  \StrSubstitute{\temp@s}{’}{'}[\temp@s]%
-  \StrSubstitute{\temp@s}{“}{"}[\temp@s]%
-  \StrSubstitute{\temp@s}{”}{"}[\temp@s]%
-  \StrSubstitute{\temp@s}{^^^^00a0}{ }[\temp@s]% Nonbreaking space.
-  \StrSubstitute{\temp@s}{~}{ }[\temp@s]% TeX nonbreaking space.
-  \StrSubstitute{\temp@s}{^^^^00ad}{}[\temp@s]% Soft hyphen. Remove it.
-  \StrSubstitute{\temp@s}{---}{-}[\temp@s]%
-  \StrSubstitute{\temp@s}{--}{-}[\temp@s]%
-  \StrSubstitute{\temp@s}{‐}{-}[\temp@s]% These next few lines convert various
-  \StrSubstitute{\temp@s}{‑}{-}[\temp@s]% kinds of dashes to hyphen.
-  \StrSubstitute{\temp@s}{‒}{-}[\temp@s]% But on most terminals, the dashes
-  \StrSubstitute{\temp@s}{–}{-}[\temp@s]% all look like the same character,
-  \StrSubstitute{\temp@s}{—}{-}[\temp@s]% due to monospace terminal font.
-  \StrSubstitute{\temp@s}{…}{...}[\temp@s]%
-  \temp@s%
+\def\nvt@fixmeta#1{% Converts things such as curly quotes to straight, etc.
+  \StrSubstitute{#1}{``}{"}[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{''}{"}[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{`}{'}[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{‘}{'}[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{’}{'}[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{“}{"}[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{”}{"}[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{^^^^00a0}{ }[\nvt@temp@s]% Nonbreaking space.
+  \StrSubstitute{\nvt@temp@s}{~}{ }[\nvt@temp@s]% TeX nonbreaking space.
+  \StrSubstitute{\nvt@temp@s}{^^^^00ad}{}[\nvt@temp@s]% Soft hyphen. Remove it.
+  \StrSubstitute{\nvt@temp@s}{---}{-}[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{--}{-}[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{‐}{-}[\nvt@temp@s]% These next few lines convert various
+  \StrSubstitute{\nvt@temp@s}{‑}{-}[\nvt@temp@s]% kinds of dashes to hyphen.
+  \StrSubstitute{\nvt@temp@s}{‒}{-}[\nvt@temp@s]% But on most terminals, the dashes
+  \StrSubstitute{\nvt@temp@s}{–}{-}[\nvt@temp@s]% all look like the same character,
+  \StrSubstitute{\nvt@temp@s}{—}{-}[\nvt@temp@s]% due to monospace terminal font.
+  \StrSubstitute{\nvt@temp@s}{…}{...}[\nvt@temp@s]%
+  \nvt@temp@s%
 }
 %%
 
@@ -77,27 +77,27 @@
 % irrelevant in non-color printing (and will be ignored by the printer).
 % Each named intent has identifier, condition, info, and registry.
 % Novelette does not attach an *.icc color profile.
-\StrDel{\@intent}{ }[\temp@s]
-\@okfalse
-\ifthenelse{\equal{\temp@s}{none}}{\@oktrue}{} % Will not be PDF/X.
-\ifthenelse{\equal{\temp@s}{SWOP}}{\@oktrue}{} % Typical for USA.
-\ifthenelse{\equal{\temp@s}{FOGRA39}}{\@oktrue}{} % Typical for Europe.
-\ifthenelse{\equal{\temp@s}{JC200103}}{\@oktrue}{} % Typical for Japan.
-\if@ok
-  \xdef\@intent{\temp@s}
+\StrDel{\nvt@intent}{ }[\nvt@temp@s]
+\nvt@okfalse
+\ifthenelse{\equal{\nvt@temp@s}{none}}{\nvt@oktrue}{} % Will not be PDF/X.
+\ifthenelse{\equal{\nvt@temp@s}{SWOP}}{\nvt@oktrue}{} % Typical for USA.
+\ifthenelse{\equal{\nvt@temp@s}{FOGRA39}}{\nvt@oktrue}{} % Typical for Europe.
+\ifthenelse{\equal{\nvt@temp@s}{JC200103}}{\nvt@oktrue}{} % Typical for Japan.
+\ifnvt@ok
+  \xdef\nvt@intent{\nvt@temp@s}
 \else
-  \@errBVOI % Bad value for output intent.
+  \nvt@errBVOI % Bad value for output intent.
 \fi
 %%
 
 
 %% PROCESS METADATA
-\def\@process@metadata{
-  \if@nvtdraft
-    \ifthenelse{\equal{\nvt@mode}{final}}{\@warnNTOA}{} % No title or author.
-    \gdef\@intent{none}
+\def\nvt@process@metadata{
+  \ifnvt@draft
+    \ifthenelse{\equal{\nvt@mode}{final}}{\nvt@warnNTOA}{} % No title or author.
+    \gdef\nvt@intent{none}
   \fi
-  \ifthenelse{\equal{\@intent}{none}}{
+  \ifthenelse{\equal{\nvt@intent}{none}}{
     \gdef\pdflines{}
   }{
     \gdef\pdflines{
@@ -110,14 +110,14 @@
       </rdf:Description>^^J
     }
   }
-  \ifthenelse{\equal{\@intent}{SWOP}}{ % Typical for USA.
+  \ifthenelse{\equal{\nvt@intent}{SWOP}}{ % Typical for USA.
     \gdef\OIidentifier{CGATS TR 001}
     \gdef\OIcondition{SWOP (Publication) printing in USA %
       (Printing process definition: ANSI CGATS.6).}
     \gdef\OIinfo{U.S. Web Coated (SWOP) v2}
     \gdef\OIregistry{http://www.color.org}
   }{}
-  \ifthenelse{\equal{\@intent}{FOGRA39}}{ % Typical for Europe.
+  \ifthenelse{\equal{\nvt@intent}{FOGRA39}}{ % Typical for Europe.
     \gdef\OIidentifier{FOGRA39}
     \gdef\OIcondition{Offset commercial and specialty printing %
       according to ISO 12647-2:2004 / Amd 1, paper type 1 or 2 %
@@ -125,7 +125,7 @@
     \gdef\OIinfo{Coated FOGRA39 (ISO 12647-2:2004)}
     \gdef\OIregistry{http://www.color.org}
   }{}
-  \ifthenelse{\equal{\@intent}{JC200103}}{ % Typical for Japan.
+  \ifthenelse{\equal{\nvt@intent}{JC200103}}{ % Typical for Japan.
     \gdef\OIidentifier{JC200103}
     \gdef\OIcondition{Japan Color 2001 Coated: Printing process definition: %
       ISO 12647-2:2004, sheet-fed offset printing, positive plates, %
@@ -139,22 +139,22 @@
 
 %% DATE FORMATS
 % Not the most compact way to change date format, but easy to read:
-\StrBehind{\pdffeedback creationdate}{:}[\temp@s] % Leading D: removed.
-\StrMid{\temp@s}{1}{4}[\@yyear]
-\StrMid{\temp@s}{5}{6}[\@ymon]
-\StrMid{\temp@s}{7}{8}[\@yday]
-\StrMid{\temp@s}{9}{10}[\@yhr]
-\StrMid{\temp@s}{11}{12}[\@ymin]
-\StrMid{\temp@s}{13}{14}[\@ysec]
-\StrGobbleLeft{\temp@s}{14}[\temp@s]
-\def\@ysign{+}
-\IfBeginWith{\temp@s}{-}{\def\@ysign{-}}{}
-\StrMid{\temp@s}{2}{6}[\@yzone]
-\ifthenelse{\equal{\@yzone}{}}{\def\@yzone{00:00}}{}
-\StrSubstitute{\@yzone}{'}{:}[\@yzone]
-\def\@modifyDate{\@yyear-\@ymon-\@yday T\@yhr:\@ymin:\@ysec\@ysign\@yzone}
-\edef\@createDate{\@modifyDate}
-\edef\@metadataDate{\@modifyDate}
+\StrBehind{\pdffeedback creationdate}{:}[\nvt@temp@s] % Leading D: removed.
+\StrMid{\nvt@temp@s}{1}{4}[\nvt@year]
+\StrMid{\nvt@temp@s}{5}{6}[\nvt@mon]
+\StrMid{\nvt@temp@s}{7}{8}[\nvt@day]
+\StrMid{\nvt@temp@s}{9}{10}[\nvt@hr]
+\StrMid{\nvt@temp@s}{11}{12}[\nvt@min]
+\StrMid{\nvt@temp@s}{13}{14}[\nvt@sec]
+\StrGobbleLeft{\nvt@temp@s}{14}[\nvt@temp@s]
+\def\nvt@tzsign{+}
+\IfBeginWith{\nvt@temp@s}{-}{\def\nvt@tzsign{-}}{}
+\StrMid{\nvt@temp@s}{2}{6}[\nvt@zone]
+\ifthenelse{\equal{\nvt@zone}{}}{\def\nvt@zone{00:00}}{}
+\StrSubstitute{\nvt@zone}{'}{:}[\nvt@zone]
+\def\nvt@modifyDate{\nvt@year-\nvt@mon-\nvt@day T\nvt@hr:\nvt@min:\nvt@sec\nvt@tzsign\nvt@zone}
+\edef\nvt@createDate{\nvt@modifyDate}
+\edef\nvt@metadataDate{\nvt@modifyDate}
 %%
 
 
@@ -162,20 +162,20 @@
 % PDF/X is for printing, not digital archives. Required uuid can be simple:
 \edef\xmp@docid{\pdf@mdfivesum{jobname.pdf}}
 \edef\xmp@instid{\pdf@mdfivesum{\pdffeedback creationdate}}
-\def\@documentID{uuid:\xmp@docid}
-\def\@instanceID{uuid:\xmp@instid}
+\def\nvt@documentID{uuid:\xmp@docid}
+\def\nvt@instanceID{uuid:\xmp@instid}
 %%
 
 
 %% PROCESS XMP
-\def\@process@xmp{
+\def\nvt@process@xmp{
   \begingroup
     \makeatletter
     \input{novelette-xmppacket.sty}
-    \global\let\@xmpData\@xmpPacket
+    \global\let\nvt@xmpdata\nvt@xmppacket
     \begingroup
       \pdfcompresslevel=0
-      \immediate\pdfobj stream attr {/Type /Metadata /Subtype /XML} {\@xmpData}
+      \immediate\pdfobj stream attr {/Type /Metadata /Subtype /XML} {\nvt@xmpdata}
       \pdfcatalog{/Metadata \the\pdflastobj\space 0 R}
     \endgroup
   \endgroup
@@ -184,7 +184,7 @@
 
 
 %% PROCESS INTENT
-\def\@process@intent{ % Will not attach any *.icc file.
+\def\nvt@process@intent{ % Will not attach any *.icc file.
     \begingroup
     \edef\@pctchar{\expandafter\@gobble\string\%} % Escaped in TeX, not PDF.
     \edef\@bchar{\expandafter\@gobble\string\\} % For use as escape, below.
@@ -192,18 +192,18 @@
     \edef\({\string\(} % PDF Catalog requires escaped parentheses.
     \edef\){\string\)} % PDF Catalog requires escaped parentheses.
     \catcode`\_ 12 % The codes might contain underscores.
-    \edef\@OIidentifierString{/OutputConditionIdentifier (\OIidentifier)}%
-    \edef\@OIconditionString{/OutputCondition (\OIcondition)}%
-    \edef\@OIinfoString{/Info (\OIinfo)}%
-    \edef\@OIregistryString{/RegistryName (\OIregistry)}%
+    \edef\nvt@OIidentifierString{/OutputConditionIdentifier (\OIidentifier)}%
+    \edef\nvt@OIconditionString{/OutputCondition (\OIcondition)}%
+    \edef\nvt@OIinfoString{/Info (\OIinfo)}%
+    \edef\nvt@OIregistryString{/RegistryName (\OIregistry)}%
     \pdfcatalog{%
       /OutputIntents [ <<%
       /Type/OutputIntent%
       /S/GTS_PDFX%
-      \@OIconditionString%
-      \@OIidentifierString%
-      \@OIinfoString%
-      \@OIregistryString%
+      \nvt@OIconditionString%
+      \nvt@OIidentifierString%
+      \nvt@OIinfoString%
+      \nvt@OIregistryString%
       >> ]%
     }%
     \endgroup
@@ -219,44 +219,44 @@
 % professional PDF software. For that reason, CropBox is created (= MediaBox).
 % The 0.99626401 converts TeX points to PostScript points.
 \def\calc@pdfboxes{
-  \FPmul{\@myMW}{\strip@pt\pagewidth}{0.99626401}
-  \FPround{\@myMW}{\@myMW}{4}
-  \FPclip{\@myMW}{\@myMW}
-  \FPmul{\@myMH}{\strip@pt\pageheight}{0.99626401}
-  \FPround{\@myMH}{\@myMH}{4}
-  \FPclip{\@myMH}{\@myMH}
-  \FPmul{\@myTW}{\strip@pt\@trimw}{0.99626401}
-  \FPround{\@myTW}{\@myTW}{4}
-  \FPclip{\@myTW}{\@myTW}
-  \FPmul{\@myTH}{\strip@pt\@trimh}{0.99626401}
-  \FPround{\@myTH}{\@myTH}{4}
-  \FPclip{\@myTH}{\@myTH}
+  \FPmul{\nvt@MW}{\strip@pt\pagewidth}{0.99626401}
+  \FPround{\nvt@MW}{\nvt@MW}{4}
+  \FPclip{\nvt@MW}{\nvt@MW}
+  \FPmul{\nvt@MH}{\strip@pt\pageheight}{0.99626401}
+  \FPround{\nvt@MH}{\nvt@MH}{4}
+  \FPclip{\nvt@MH}{\nvt@MH}
+  \FPmul{\nvt@TW}{\strip@pt\nvt@trimw}{0.99626401}
+  \FPround{\nvt@TW}{\nvt@TW}{4}
+  \FPclip{\nvt@TW}{\nvt@TW}
+  \FPmul{\nvt@TH}{\strip@pt\nvt@trimh}{0.99626401}
+  \FPround{\nvt@TH}{\nvt@TH}{4}
+  \FPclip{\nvt@TH}{\nvt@TH}
   %
-  \FPsub{\@myTWorigin}{\@myMW}{\@myTW}
-  \FPmul{\@myTWorigin}{\@myTWorigin}{0.5}
-  \FPround{\@myTWorigin}{\@myTWorigin}{4}
-  \FPclip{\@myTWorigin}{\@myTWorigin}
-  \FPadd{\@myTWcorner}{\@myTWorigin}{\@myTW}
-  \FPround{\@myTWcorner}{\@myTWcorner}{4}
-  \FPclip{\@myTWcorner}{\@myTWcorner}
-  \FPsub{\@myTHorigin}{\@myMH}{\@myTH}
-  \FPmul{\@myTHorigin}{\@myTHorigin}{0.5}
-  \FPround{\@myTHorigin}{\@myTHorigin}{4}
-  \FPclip{\@myTHorigin}{\@myTHorigin}
-  \FPadd{\@myTHcorner}{\@myTHorigin}{\@myTH}
-  \FPround{\@myTHcorner}{\@myTHcorner}{4}
-  \FPclip{\@myTHcorner}{\@myTHcorner}
+  \FPsub{\nvt@TWorigin}{\nvt@MW}{\nvt@TW}
+  \FPmul{\nvt@TWorigin}{\nvt@TWorigin}{0.5}
+  \FPround{\nvt@TWorigin}{\nvt@TWorigin}{4}
+  \FPclip{\nvt@TWorigin}{\nvt@TWorigin}
+  \FPadd{\nvt@TWcorner}{\nvt@TWorigin}{\nvt@TW}
+  \FPround{\nvt@TWcorner}{\nvt@TWcorner}{4}
+  \FPclip{\nvt@TWcorner}{\nvt@TWcorner}
+  \FPsub{\nvt@THorigin}{\nvt@MH}{\nvt@TH}
+  \FPmul{\nvt@THorigin}{\nvt@THorigin}{0.5}
+  \FPround{\nvt@THorigin}{\nvt@THorigin}{4}
+  \FPclip{\nvt@THorigin}{\nvt@THorigin}
+  \FPadd{\nvt@THcorner}{\nvt@THorigin}{\nvt@TH}
+  \FPround{\nvt@THcorner}{\nvt@THcorner}{4}
+  \FPclip{\nvt@THcorner}{\nvt@THcorner}
 }
-\def\novelette@CropBox{%
-  /CropBox[ 0\space0\space\@myMW\space\@myMH\space]%
+\def\nvt@CropBox{%
+  /CropBox[ 0\space0\space\nvt@MW\space\nvt@MH\space]%
 }
-\def\novelette@TrimBox{%
-  /TrimBox[ \@myTWorigin\space\@myTHorigin\space\@myTWcorner\space\@myTHcorner\space]%
+\def\nvt@TrimBox{%
+  /TrimBox[ \nvt@TWorigin\space\nvt@THorigin\space\nvt@TWcorner\space\nvt@THcorner\space]%
 }
-\def\@process@pdfboxes{
+\def\nvt@process@pdfboxes{
   \calc@pdfboxes
-  \edef\@placectboxes{\pdfpageattr{\novelette@CropBox^^J\novelette@TrimBox}}
-  \@placectboxes
+  \edef\nvt@placectboxes{\pdfpageattr{\nvt@CropBox^^J\nvt@TrimBox}}
+  \nvt@placectboxes
 }
 %%
 

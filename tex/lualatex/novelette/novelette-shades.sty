@@ -16,21 +16,21 @@
 
 
 %% SHADE MARGINS, SHADE LINES
-% This file is loaded AtEndPreamble, if option shademargins or shadelines.
+% This file is loaded AtEndPreamble, if mode shade or align.
 %   Shading is written into the background. But it must precede other
 % background items (in particular, overfull rules) or it will conceal them.
 % The `etoolbox` command \pretocmd does the trick.
-%   The \textblock does not occupy the entire width beteen \@mins and \@mout.
-% Thin padding \@spad is at either side of \textblock. Although images must
-% be confined to \textblock, text may protrude into \@spad. 
+%   The \textblock does not occupy all width beteen \nvt@mins and \nvt@mout.
+% Thin padding \nvt@spad is at either side of \textblock. Although images must
+% be confined to \textblock, text may protrude into \nvt@spad. 
 %   When line positions are shaded, the top of the shade is at the baseline.
-% The thickness of the shade is \@desc.
+% The thickness of the shade is \nvt@dscn.
 
 
-\newcounter{@mline}
-\newcommand{\@bghook}{}
-\newcommand{\@addbg}{\g@addto@macro\@bghook}
-\AddToHook{shipout/background}{\put(0,-\pageheight){\@bghook}}
+\newcounter{nvt@mline}
+\newcommand{\nvt@bghook}{}
+\newcommand{\nvt@addbg}{\g@addto@macro\nvt@bghook}
+\AddToHook{shipout/background}{\put(0,-\pageheight){\nvt@bghook}}
 \IfHookEmptyTF{shipout/background}{\AddToHook{shipout/background}{\relax}}{}
 
 
@@ -41,70 +41,70 @@
 % areas (if used) remain light gray. (4) Fill spine glue strip with dark gray.
 % (5) If page has an opening environment, place small guides in side margins.
 % (6) If shadelines option, place pale gray lines at each baseline of header,
-% main tex, footer. Top of line is text baseline. Line depth is \@desc.
-% (7) In side margins, place guides at \@opentop and \@openht.
+% main tex, footer. Top of line is text baseline. Line depth is \nvt@dscn.
+% (7) In side margins, place guides at \nvt@opentop and \nvt@openht.
 \pretocmd\@kernel@before@shipout@background{
   % Fill trim area with gray. If sheetfeed, do not extend gray outside trim:
-  \@trim@LL{{\@shade{.6}\rule{\@trimw}{\@trimh}}}
+  \nvt@trim@LL{{\nvt@shadeto{.6}\rule{\nvt@trimw}{\nvt@trimh}}}
   % Fill rectangle, bounded by margins, with light gray:
-  \@print@LL{{\@shade{.75}\rule{\@trimw-\@mout-\@mins}{\@trimh-\@mtop-\@mbot}}}
+  \nvt@print@LL{{\nvt@shadeto{.75}\rule{\nvt@trimw-\nvt@mout-\nvt@mins}{\nvt@trimh-\nvt@mtop-\nvt@mbot}}}
   % Fill main textblock white. Side padding, header, footer remain light gray:
-  \setlength\temp@l{0pt}
-  \if@has@footer\setlength\temp@l{\@leading+\@footgap\@leading}\fi
-  \@print@LL{%
-    \hspace{\@spad}{\@shade{1}\rule[\temp@l]{\textwidth}{\textheight+\@desc}}%
+  \setlength\nvt@temp@l{0pt}
+  \ifnvt@footer\setlength\nvt@temp@l{\nvt@leading+\nvt@footgap\nvt@leading}\fi
+  \nvt@print@LL{%
+    \hspace{\nvt@spad}{\nvt@shadeto{1}\rule[\nvt@temp@l]{\textwidth}{\textheight+\nvt@dscn}}%
   }
   % If shadelines, do it for main, header, footer:
-  \if@shadelines
-    \@shade@main@lines
-    \if@has@header
-      \@print@UL{{\@shade{.8}\rule[-\@asc-\@desc]{\textwidth+2\@spad}{\@desc}}}
+  \ifnvt@shadelines
+    \nvt@shade@main@lines
+    \ifnvt@header
+      \nvt@print@UL{{\nvt@shadeto{.8}\rule[-\nvt@ascn-\nvt@dscn]{\textwidth+2\nvt@spad}{\nvt@dscn}}}
     \fi%
-    \if@has@footer
-      \@print@LL{{\@shade{.8}\rule{\textwidth+2\@spad}{\@desc}}}
+    \ifnvt@footer
+      \nvt@print@LL{{\nvt@shadeto{.8}\rule{\textwidth+2\nvt@spad}{\nvt@dscn}}}
     \fi
   \fi
-  \@place@opening@guides
+  \nvt@place@opening@guides
   % Dark gray area for spine glue:
-  \setlength\temp@l{\@trimw-\@spinew}%
-  \ifodd\c@page\setlength\temp@l{0pt}\fi%
-  \@trim@LL{\rule{\temp@l}{0pt}{\@shade{.4}\rule{\@spinew}{\@trimh}}}%
+  \setlength\nvt@temp@l{\nvt@trimw-\nvt@spinew}%
+  \ifodd\c@page\setlength\nvt@temp@l{0pt}\fi%
+  \nvt@trim@LL{\rule{\nvt@temp@l}{0pt}{\nvt@shadeto{.4}\rule{\nvt@spinew}{\nvt@trimh}}}%
 }{\typeout{Shading applied.}}{\typeout{Shading failed.}}
 %%
 
 
 %% Main text baselines:
-\def\@shade@main@lines{%
-  \setcounter{@mline}{0}%
+\def\nvt@shade@main@lines{%
+  \setcounter{nvt@mline}{0}%
   \loop%
-  \@print@UL{\@shade{.9}%
-    \hspace{\@spad}%
-    \setlength\temp@l{-\value{@mline}\@leading}%
-    \if@has@header\addtolength\temp@l{-\@leading-\@headgap\@leading}\fi%
-    \rule[\temp@l-\@asc-\@desc]{\textwidth}{\@desc}%
+  \nvt@print@UL{\nvt@shadeto{.9}%
+    \hspace{\nvt@spad}%
+    \setlength\nvt@temp@l{-\value{nvt@mline}\nvt@leading}%
+    \ifnvt@header\addtolength\nvt@temp@l{-\nvt@leading-\nvt@headgap\nvt@leading}\fi%
+    \rule[\nvt@temp@l-\nvt@ascn-\nvt@dscn]{\textwidth}{\nvt@dscn}%
   }%
-  \addtocounter{@mline}{1}%
-  \ifnum\value{@mline}<\@lpp%
+  \addtocounter{nvt@mline}{1}%
+  \ifnum\value{nvt@mline}<\nvt@lpp%
   \repeat%
 }
 %%
 
 
 %% Opening guides.
-\def\@place@opening@guides{%
-  \FPsub{\@openht}{\@openht}{1}%
-  \FPsub{\@opentop}{\@opentop}{1}%
-  \@print@UL{{\@shade{.8}
-    \hspace{-16pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@opentop\@leading]{12pt}{\@desc}
+\def\nvt@place@opening@guides{%
+  \FPsub{\nvt@openht}{\nvt@openht}{1}%
+  \FPsub{\nvt@opentop}{\nvt@opentop}{1}%
+  \nvt@print@UL{{\nvt@shadeto{.8}
+    \hspace{-16pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@opentop\nvt@leading]{12pt}{\nvt@dscn}
   }}%
-  \@print@UL{{\@shade{.8}
-    \hspace{-16pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@openht\@leading]{12pt}{\@desc}
+  \nvt@print@UL{{\nvt@shadeto{.8}
+    \hspace{-16pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@openht\nvt@leading]{12pt}{\nvt@dscn}
   }}%
-  \@print@UL{{\@shade{.8}
-    \hspace{\textwidth+2\@spad+4pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@opentop\@leading]{12pt}{\@desc}
+  \nvt@print@UL{{\nvt@shadeto{.8}
+    \hspace{\textwidth+2\nvt@spad+4pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@opentop\nvt@leading]{12pt}{\nvt@dscn}
   }}%
-  \@print@UL{{\@shade{.8}
-    \hspace{\textwidth+2\@spad+4pt}\rule[-\@desc-\@asc-\@leading-\@headgap\@leading-\@openht\@leading]{12pt}{\@desc}
+  \nvt@print@UL{{\nvt@shadeto{.8}
+    \hspace{\textwidth+2\nvt@spad+4pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@openht\nvt@leading]{12pt}{\nvt@dscn}
   }}%
 }
 %%

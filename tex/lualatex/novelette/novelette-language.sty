@@ -49,11 +49,11 @@
 \begingroup
   \toks@{}
   \count@\z@ % 0=start, 1=0th, 2=normal
-  \def\bbl@process@line#1#2 #3 #4 {%
+  \def\bblnvt@process@line#1#2 #3 #4 {%
     \ifx=#1%
-      \bbl@process@synonym{#2}%
+      \bblnvt@process@synonym{#2}%
     \else
-      \bbl@process@language{#1#2}{#3}{#4}%
+      \bblnvt@process@language{#1#2}{#3}{#4}%
     \fi
     \ignorespaces%
   }
@@ -63,7 +63,7 @@
     \fi
     \let\bbl@manylang\relax%
   }
-  \def\bbl@process@language#1#2#3{%
+  \def\bblnvt@process@language#1#2#3{%
     \ifcase\count@
       \@ifundefined{zth@#1}{\count@\tw@}{\count@\@ne}%
     \or
@@ -82,20 +82,20 @@
     \the\toks@
     \toks@{}%
   }
-  \def\bbl@process@synonym@aux#1#2{%
+  \def\bblnvt@process@synonym@aux#1#2{%
     \global\expandafter\chardef\csname l@#1\endcsname#2\relax
     \let\bbl@elt\relax
     \xdef\bbl@languages{%
       \bbl@languages\bbl@elt{#1}{#2}{}{}%
     }%
   }
-  \def\bbl@process@synonym#1{%
+  \def\bblnvt@process@synonym#1{%
     \ifcase\count@
-      \toks@\expandafter{\the\toks@\relax\bbl@process@synonym{#1}}%
+      \toks@\expandafter{\the\toks@\relax\bblnvt@process@synonym{#1}}%
     \or
-      \@ifundefined{zth@#1}{\bbl@process@synonym@aux{#1}{0}}{}%
+      \@ifundefined{zth@#1}{\bblnvt@process@synonym@aux{#1}{0}}{}%
     \else
-      \bbl@process@synonym@aux{#1}{\the\bbl@last}%
+      \bblnvt@process@synonym@aux{#1}{\the\bbl@last}%
     \fi%
   }
   \ifx\bbl@languages\@undefined
@@ -129,7 +129,7 @@
       \if T\ifeof1F\fi T\relax
         \ifx\bbl@line\@empty\else
           \edef\bbl@line{\bbl@line\space\space\space}%
-          \expandafter\bbl@process@line\bbl@line\relax
+          \expandafter\bblnvt@process@line\bbl@line\relax
         \fi
     \repeat
   \fi
@@ -181,7 +181,7 @@
     }%
   }{}%
   \@ifundefined{bbl@hyphendata@\the\language}{
-    \@warnDNFH % Did not find hyphenation.
+    \nvt@warnDNFH % Did not find hyphenation.
     \gdef\nvt@lang{nohyphenation}
   }{}%
 }
@@ -201,18 +201,18 @@
 %%
 \def\nvt@lang{english}
 \newcommand\setlang[1]{
-  \StrDel{#1}{ }[\temp@s]
-  \IfSubStr{\nvt@langlist}{:\temp@s:}{
-    \xdef\nvt@lang{\temp@s}
+  \StrDel{#1}{ }[\nvt@temp@s]
+  \IfSubStr{\nvt@langlist}{:\nvt@temp@s:}{
+    \xdef\nvt@lang{\nvt@temp@s}
   }{
-    \@errLNOL % Language not on list.
+    \nvt@errLNOL % Language not on list.
   }
 }
 %%
 
 
 %% AtEndPreamble:
-\def\@process@language{\HyphenRules{\nvt@lang}}
+\def\nvt@process@language{\HyphenRules{\nvt@lang}}
 %%
 
 

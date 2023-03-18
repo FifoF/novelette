@@ -40,6 +40,13 @@ This will actually be ignored by the printer, because it is only relevant
 to color accuracy. Nevertheless, the intent must be stated. No *.icc color
 profile will be attached.
 
+Novelette uses its own methods for PDF/X, output intent, and metadata.
+It does not load LaTeX packages that are used by other document classes.
+The reason is that current TeX development is focused on PDF/A, rather
+than PDF/X. The PDF/A code is massive, and partly experimental. No reason
+to load the unnecessary code into Novelette.
+
+
 Technical Explanation:
 	A PDF file may contain many things that are potentially disruptive
 to the workflow of commercial printing. Or, it may omit essential things.

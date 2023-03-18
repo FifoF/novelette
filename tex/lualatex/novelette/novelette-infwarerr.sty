@@ -19,12 +19,38 @@
 %% The argument names are arbitrary (because TeX does not have arrays).
 
 
-\def\@XN{Respond x to exit now. Fix the problem}
-\def\@RXN{Really, respond with x and exit now. Else bad things may happen.}
-\def\@nvtbad{\global\@nvterrtrue\gdef\@intent{none}}
+\def\nvt@XN{Respond x to exit now. Fix the problem}
+\def\nvt@RXN{Really, respond with x and exit now. Else bad things may happen.}
+\def\nvt@bad{\global\nvt@errtrue\gdef\nvt@intent{none}}
 
 
-\def\@warnBIK{%
+\def\nvt@errNIPH{%
+  \ClassError{novelette}{Image placement `h' not allowed.^^J%
+    Novelette does not allow image placement "here" (option h).^^J%
+    You may use the no-float option `n' (default), or others.^^J%
+    See Novelette documentation for the possibilities.^^J%
+  \nvt@XN}{\nvt@RXN}\nvt@bad%
+}
+
+\def\nvt@errIWNP#1{%
+  \ClassError{novelette}{Image `#1' was not processed by script.^^J%
+    This is an error in final mode, unless you use \string\intent{none}.^^J%
+    It means that the image may not conform to PDF/X requirements.^^J%
+    See Novelette documentation, regarding how to process images.^^J%
+  \nvt@XN}{\nvt@RXN}\nvt@bad%
+}
+
+\def\nvt@warnIWNP{%
+  \ifnvt@imgwarn\else%
+    \ClassWarning{novelette}{One or more images not processed by script.^^J%
+      This is only a warning in draft mode. It is an error in final mode.^^J%
+      Before using final mode, process all images using novelette script.^^J%
+      See Novelette documentation for details.}%
+  \fi%
+  \global\nvt@imgwarntrue%
+}
+
+\def\nvt@warnBIK{%
   \ClassWarning{novelette}{Bad optional value \string\init, page \thepage.^^J%
      The optional value must be an integer or decimal number.^^J%
      It may not end with period or comma. May be plus or minus.^^J%
@@ -32,7 +58,7 @@
      The bad value was ignored.}%
 }
 
-\def\@warnDNFH{%
+\def\nvt@warnDNFH{%
   \ClassWarning{novelette}{Did not find hyphenation for \nvt@lang.^^J%
     Document will be processed without hyphenation.^^J%
     For usenglishmax, british, install `hyphen-english'.^^J%
@@ -42,242 +68,243 @@
     Otherwise, install `hyphen-LANG' where LANG is the requested language.}%
 }
 
-\def\@errLNOL{%
+\def\nvt@errLNOL{%
   \ClassError{novelette}{Bad value for \string\setlang. Chose only one of:^^J%
     nohyphenation english usenglishmax british basque finnish^^J%
     french spanish portuguese catalan occitan italian^^J%
     dutch danish icelandic swedish norwegian bokmal nynorsk^^J%
     german ngerman swissgerman german-x-latest ngerman-x-latest^^J%
     For more information, see Novelette documentation.^^J%
-    \@XN}{\@RXN}\nvt@bad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@warnDINCO{%
+\def\nvt@warnDINCO{%
   \ClassWarning{novelette}{There is no `draft' class option. Ignored.^^J%
     See novelette docs regarding the \string\mode\space setting.}%
 }
 
-\def\@errCURP{%
+\def\nvt@errCURP{%
   \ClassError{novelette}{No \string\usepackage, or \string\RequirePackage.^^J%
     Novelette does not allow you to add packages. There is a reason.^^J%
     If you need `lipsum' it is not available. But Novelette has built-in^^J%
     nonsense text. For that, use command \string\fillertext, in body.^^J%
-    \@XN}{\@RXN}\@nvtbad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errLINL{%
+\def\nvt@errLINL{%
   \ClassError{novelette}{\string\lipsum\space is not available.^^J%
     But Novelette has built-in nonsense text. To load it, use command^^J%
     \string\fillertext\space in document body.^^J%
-    \@XN}{\@RXN}\@nvtbad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@warnBCO{%
+\def\nvt@warnBCO{%
   \ClassWarning{novelette}{Bad class option. Novelette does not set^^J%
    font size, or paper size, using class options. Your option was ignored.}%
 }
 
-\def\@errIITT{%
-  \ClassError{novelette}{Inline image is too tall, on page \thepage.^^J%
-   The allowed image height is related to the leading (baselineskip)^^J%
-   and typesize. If it is too tall, it cannot fit without spreading lines.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+\def\nvt@errIITT#1#2{%
+  \ClassError{novelette}{\string\icon{#1} is too tall.^^J%
+   At 600 pixels/inch, maximum allowed height #2 pixels.^^J%
+   At 300 pixels/inch, half that. Other pixels/inch, scale accordingly.^^J%
+   The limit is calculated from typesize and leading (baselineskip).^^J%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errRNDMF{%
+\def\nvt@errRNDMF{%
   \ClassError{novelette}{BIG PROBLEM. Could not find a default main font.^^J%
     You did not set main font. Novelette tried to find one, from a list.^^J%
     But nothing on the list was found. Unpredictable result.^^J%
-    \@XN}{\@RXN}\@nvtbad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errBFASF#1{%
+\def\nvt@errBFASF#1{%
   \ClassError{novelette}{Bad first argument `#1' for \string\setfont.^^J%
     Choices: main head name desc note deco alt.^^J%
-    \@XN}{\@RXN}\@nvtbad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@warnNMFF#1{%
+\def\nvt@warnNMFF#1{%
   \ClassWarning{novelette}{BIG BAD WARNING. Main font `#1' not found.^^J%
     Will try to use a default font, but it may not be suitable.}%
 }
 
-\def\@warnNFF#1{%
+\def\nvt@warnNFF#1{%
   \ClassWarning{novelette}{Font `#1' not found. Using main font instead.}%
 }
 
-\def\@errNCOF{%
+\def\nvt@errNCOF{%
   \ClassError{novelette}{Font features `color' and `opacity' not allowed.^^J%
     Novelette is intended for books, printed black ink on paper.^^J%
     Color and opacity are meaningless in this context, and are disallowed^^J%
     by most print services, particularly when PDF/X is required.^^J%
-    \@XN}{\@RXN}\@nvtbad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errTMLPP{%
+\def\nvt@errTMLPP{%
   \ClassError{novelette}{Too many lines per page. Cannot fit. Possible fix:^^J%
    Decrease top|bottom margins; or increase inside|outside margins;^^J%
    or reduce number of lines; or change header|footer style.^^J%
-   \@XN}{\@RXN}\@nvtbad% 
+   \nvt@XN}{\nvt@RXN}\nvt@bad% 
 }
 
-\def\@errNFID{%
+\def\nvt@errNFID{%
   \ClassError{novelette}{No footnotes allowed in display, page \thepage.^^J%
-  \@XN}{\@RXN}\@nvtbad%
+  \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@warnNVRHP{%
+\def\nvt@warnNVRHP{%
   \ClassWarning{novelette}{Commands\string\versohead, \string\rectohead,^^J%
    not allowed in Preamble. Ignored.}%
 }
 
-\def\@errNODO#1{%
+\def\nvt@errNODO#1{%
   \ClassError{novelette}{No command or environment `#1' in this class.^^J%
    Standard LaTeX classes include many commands for academic papers.^^J%
    They fail in Novelette. This is by intent, not a bug.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errMOOR{%
+\def\nvt@errMOOR{%
   \ClassError{novelette}{Margins out of acceptable range.^^J%
    Negative margins, or any margin exceeding 0.25 trim size, disallowed.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errBADMAT{%
+\def\nvt@errBADMAT{%
   \ClassError{novelette}{Bad organization of front, main, or back matter.^^J%
    \string\frontmatter, and \string\mainmatter, may be used at most once.^^J%
    If both are used (standard), front must precede main.^^J%
    If \string\backmatter\space is used (rare), it must follow main.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errLO{%
+\def\nvt@errLO{%
   \ClassError{novelette}{Must compile with lualatex 1.12+^^J%
    Sorry, lualatex only (or via novelette script).^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errTPSNA{%
+\def\nvt@errTPSNA{%
   \ClassError{novelette}{Page \thepage, has \string\thispagestyle,^^J%
    but its argument is not an allowed choice.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errNVRHP{%
+\def\nvt@errNVRHP{%
   \ClassError{novelette}{\string\versohead, and \string\rectohead,^^J%
    are not allowed in Preamble. Only use after \string\begin{document}.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@warnNTOA{%
+\def\nvt@warnNTOA{%
   \ClassWarning{novelette}{You did not specify both title and author.^^J%
    Mode changed from final to draft.}%
 }
 
-\def\@errBVOI{%
+\def\nvt@errBVOI{%
   \ClassError{novelette}{Bad value for \string\intent.^^J%
    Case-sensitive choices: none SWOP FOGRA39 JC200103 ^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errBVFM{%
+\def\nvt@errBVFM{%
   \ClassError{novelette}{Bad value for footnote \string\markers.^^J%
    Value must be one of:  *  1  ^^J%
    Set * for literary markers (default). ^^J%
    Set 1 for numerical markers.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errDNFUF#1{%
+\def\nvt@errDNFUF#1{%
   \ClassError{novelette}{Did not find usable font!^^J%
    None of `#1', `EB Garamond', `Libertinus Serif`, ^^J%
    or `Latin Modern Roman' found installed.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errCOF{%
+\def\nvt@errCOF{%
   \ClassError{novelette}{You defined a font with color or opacity feature.^^J%
    Novelette forbids color and opacity, due to print limitations.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@warnNOC{%
+\def\nvt@warnNOC{%
   \ClassWarningNoLine{novelette}{Only monochrome black ink is allowed.^^J%
    All commands relating to color have been ignored.}%
-  \global\@sent@colormsgtrue%
+  \global\nvt@sent@colormsgtrue%
 }
 
-\def\@errBOIMG{%
+\def\nvt@errBOIMG{%
   \ClassError{novelette}{Bad option for \string\image, page \thepage.^^J%
     Float choices: t b p (top, bottom, full-page). Default no float.^^J%
     Alignment choices: l c r. Default c, except in openeing.^^J%
-    \@XN}{\@RXN}\@nvtbad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errBIMF{%
+\def\nvt@errBIMF{%
   \ClassError{novelette}{Bad image on page \thepage.^^J%
    Real image must be png format, with file extension png or PNG.^^J%
    Must be located in same directory as main document, or a subdirectory,^^J%
    Or a standard location known to TeX. No absolute path, no ../ path.^^J%
    Fake image (draft mode only) is an integer, lines occupied.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errNINCG{%
+\def\nvt@errNING{%
   \ClassError{novelette}{Novelette does not allow \string\includegraphics.^^J%
    Instead, use \string\image. See Novelette documentation.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errNMP{%
+\def\nvt@errNMP{%
   \ClassError{novelette}{You cannot load extra packages in Novelette.^^J%
    Every necessary package is automatically loaded. Then the commands for^^J%
    loading other packages are disabled. This prevents other packages from^^J%
    violating the restrictions imposed by Novelette^^J
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errBTS{%
+\def\nvt@errBTS{%
   \ClassError{novelette}{Bad entry for \string\trimsize{width=W,height=H}^^J%
    When you use \string\trimsize, you must provide both width and height.^^J%
    W and H are lengths (integer|decimal), with units (in|mm).^^J%
    W may not exceed H. Both values must be reasonable for fiction books.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\@errBVO{%
+\def\nvt@errBVO{%
   \ClassError{novelette}{Bad value in \string\openings.^^J%
    Format: \string\openings{top=T,main=M,position=P} with integers T, M.^^J%
    T is baseline of the topmost item in the opening.^^J%
    M is baseline of main text, following the opening.^^J%
-   T and M provide guidelines with class option shadelines. Not enforced.^^J%
+   T and M provide guidelines in align mode. Not enforced.^^J%
    T and M must be within reasonable limits. See Novelette documentation.^^J%
    Position P is one of: left right center outside inside.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 %%
 
-\def\@errBVSF{%
+\def\nvt@errBVSF{%
   \ClassError{novelette}{Bad value in \string\sheetfeed.^^J%
    Defaults to trimsize, or choose one of:  trimsize letter A4.^^J%
    Do not set \string\sheetfeed, unless you know what you are doing.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 %%
 
-\def\@errBVMAR{%
+\def\nvt@errBVMAR{%
   \ClassError{novelette}{Bad entry for \string\margins.^^J%
    Format: \string\margins{top=MT,outside=MO,bottom=MB,inside=MI}^^J%
    where MT,MO,MB,MI are lengths (integer|decimal) with units (in|mm).^^J%
    If you provide any of them, you must provide all of them.^^J%
    Values must be reasonable for fiction books.^^J%
    If you continue, default values will be used. Not always best.^^J%
-   \@XN}{\@RXN}\@nvtbad%
+   \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 %%
 
-\def\@errBVDES{%
+\def\nvt@errBVDES{%
   \ClassError{novelette}{Bad setting for \string\design.^^J%
     You may set all, some, or none of chars, lines, gap, style.^^J%
     Anything you do not set will be assigned a default value.^^J%
@@ -286,7 +313,7 @@
     lines=L where L is integer lines in main textblock (not header/footer).^^J%
     gap=G where G is integer|decimal from 0 to 1. Default .5 if unset.^^J%
     style=S where S is integer, selects header/footer style. See docs.^^J%
-    \@XN}{\@RXN}\@nvtbad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 %%
 

@@ -33,7 +33,7 @@
 \let\old@clearpage\clearpage\relax
 \def\clearpage{%
   \old@clearpage%
-  \ifnow@frontmatter%
+  \ifnvt@frontmatter%
     \versohead{}%
     \rectohead{}%
   \fi%
@@ -44,10 +44,10 @@
 %% FRONTMATTER, MAINMATTER, BACKMATTER
 % These commands can only be used in document body:
 \def\frontmatter{%
-  \ifnow@frontmatter\@errBADMAT\fi% Bad matter command.
-  \ifnow@mainmatter\@errBADMAT\fi%
-  \global\now@frontmattertrue%
-  \global\now@mainmatterfalse%
+  \ifnvt@frontmatter\nvt@errBADMAT\fi% Bad matter command.
+  \ifnvt@mainmatter\nvt@errBADMAT\fi%
+  \global\nvt@frontmattertrue%
+  \global\nvt@mainmatterfalse%
   \clearpage%
   \versohead{}%
   \rectohead{}%
@@ -56,12 +56,12 @@
 }
 %
 \def\mainmatter{ % Restarts page to 1, arabic numbers; freeze frontpagecount.
-  \ifnow@mainmatter\@errBADMAT\fi%
+  \ifnvt@mainmatter\nvt@errBADMAT\fi%
   \cleartorecto%
   \versohead{}
   \rectohead{}
-  \global\now@frontmatterfalse%
-  \global\now@mainmattertrue%
+  \global\nvt@frontmatterfalse%
+  \global\nvt@mainmattertrue%
   \pagenumbering{arabic}%
   \setcounter{page}{1}%
 }
@@ -104,20 +104,20 @@
 \setlength\partopsep{0pt}
 \setlength\parsep{0pt}
 \setlength\parskip{0pt}
-\setlength\floatsep{0pt}
+\setlength\floatsep{0pt plus .01pt minus .01pt}
 \setlength\textfloatsep{0pt}
 \setlength\dbltextfloatsep{0pt}
 \setlength\intextsep{0pt}
 \setlength\lineskip{0pt}
 \setlength\normallineskip{0pt}
-\setlength\lineskiplimit{-1pt} % Allows some limited vertical clash.
+\setlength\lineskiplimit{-.05pt} % Allows some limited vertical clash.
 \renewcommand\baselinestretch{1}
 \widowpenalty 150
 \clubpenalty 150
 \@lowpenalty   51
 \@medpenalty  151
 \@highpenalty 301
-%%%%% \vbadness=99999 % Suppress nuisance warnings.
+\vbadness=99999 % Suppress nuisance warnings.
 \setcounter{topnumber}{2}
 \renewcommand\topfraction{1} % Was .7
 \setcounter{bottomnumber}{1}
@@ -158,29 +158,29 @@
 \long\gdef\paragraph#1{#1}
 \long\gdef\subparagraph#1{#1}
 \long\gdef\appendix#1{#1}
-\DeclareDocumentCommand\@nodocommand{O{}+m}{\@errNODO{#2}}% Do not do it.
+\DeclareDocumentCommand\nvt@nodocommand{O{}+m}{\nvt@errNODO{#2}}% Do not do it.
 % The no-do commands:
-\long\gdef\maketitle{\@nodocommand{maketitle}}
-\long\gdef\makeindex{\@nodocommand{makeindex}}
-\long\gdef\tableofcontents{\@nodocommand{tableofcontents}}
-\long\gdef\listoftables{\@nodocommand{listoftables}}
-\long\gdef\listoffigures{\@nodocommand{listoffigures}}
-\long\gdef\thebibliography{\@nodocommand{thebibliography}}
-\long\gdef\theindex{\@nodocommand{theindex}}
-\long\gdef\abstract{\@nodocommand{abstract}}
-\long\gdef\caption{\@nodocommand{caption}}
-\DeclareDocumentEnvironment{tabular}{sO{}+m}{\@nodocommand{tabular}}{}
-\DeclareDocumentEnvironment{table}{sO{}}{\@nodocommand{table}}{}
-\DeclareDocumentEnvironment{figure}{sO{}}{\@nodocommand{figure}}{}
-\DeclareDocumentEnvironment{itemize}{s}{\@nodocommand{itemize}}{}
-\DeclareDocumentEnvironment{enumerate}{s}{\@nodocommand{enumerate}}{}
-\DeclareDocumentEnvironment{description}{s}{\@nodocommand{description}}{}
-\DeclareDocumentEnvironment{labeling}{s}{\@nodocommand{labeling}}{}
+\long\gdef\maketitle{\nvt@nodocommand{maketitle}}
+\long\gdef\makeindex{\nvt@nodocommand{makeindex}}
+\long\gdef\tableofcontents{\nvt@nodocommand{tableofcontents}}
+\long\gdef\listoftables{\nvt@nodocommand{listoftables}}
+\long\gdef\listoffigures{\nvt@nodocommand{listoffigures}}
+\long\gdef\thebibliography{\nvt@nodocommand{thebibliography}}
+\long\gdef\theindex{\nvt@nodocommand{theindex}}
+\long\gdef\abstract{\nvt@nodocommand{abstract}}
+\long\gdef\caption{\nvt@nodocommand{caption}}
+\DeclareDocumentEnvironment{tabular}{sO{}+m}{\nvt@nodocommand{tabular}}{}
+\DeclareDocumentEnvironment{table}{sO{}}{\nvt@nodocommand{table}}{}
+\DeclareDocumentEnvironment{figure}{sO{}}{\nvt@nodocommand{figure}}{}
+\DeclareDocumentEnvironment{itemize}{s}{\nvt@nodocommand{itemize}}{}
+\DeclareDocumentEnvironment{enumerate}{s}{\nvt@nodocommand{enumerate}}{}
+\DeclareDocumentEnvironment{description}{s}{\nvt@nodocommand{description}}{}
+\DeclareDocumentEnvironment{labeling}{s}{\nvt@nodocommand{labeling}}{}
 %%
 
 
 %%
-\def\@getepoch{% My first lua code!
+\def\nvt@getepoch{% My first lua code!
   \directlua{
     local jack = os.time()
     tex.sprint(jack)
@@ -204,20 +204,20 @@
  }
 \ExplSyntaxOff
 % End code by egreg.
-\getenv[\@invocation]{processedbynovelette}
-\edef\@rightnow{\@getepoch}
-\IfInteger{\@invocation}{%
-  \FPsub{\temp@n}{\@rightnow}{\@invocation}%
-  \FPabs{\temp@n}{\temp@n}%
-  \FPiflt{\temp@n}{20}%
-    \gdef\@signoffmsg{Processed with lualatex by novelette script.}%
+\getenv[\nvt@invocation]{processedbynovelette}
+\edef\nvt@rightnow{\nvt@getepoch}
+\IfInteger{\nvt@invocation}{%
+  \FPsub{\nvt@temp@n}{\nvt@rightnow}{\nvt@invocation}%
+  \FPabs{\nvt@temp@n}{\nvt@temp@n}%
+  \FPiflt{\nvt@temp@n}{20}%
+    \gdef\nvt@signoffmsg{Processed with lualatex by novelette script.}%
   \else%
-    \long\gdef\@signoffmsg{Processed with lualatex.^^J%
+    \long\gdef\nvt@signoffmsg{Processed with lualatex.^^J%
       You may get better results by processing via novelette script.^^J%
       See Novelette documentation for explanation.}%
   \fi%
 }{%
-    \long\gdef\@signoffmsg{Processed with lualatex.^^J%
+    \long\gdef\nvt@signoffmsg{Processed with lualatex.^^J%
       You may get better results by processing via novelette script.^^J%
       See Novelette documentation for explanation.}%
 }
@@ -326,7 +326,7 @@
 %% \init[kern]{Letter}{phrase} for optional styling first line of a chapter.
 \DeclareDocumentCommand\init{O{0}mm}{%
   \noindent\smash{\addfontfeature{ScaleAgain=1.33}#2}%
-  \IfDecimal{#1}{\kern#1em}{\@warnBIK}% Bad init kern.
+  \IfDecimal{#1}{\kern#1em}{\nvt@warnBIK}% Bad init kern.
   \smcp{#3}%
 }
 %%
@@ -353,67 +353,73 @@
   \fi
 }
 \gdef\cleartoend{
-  \if@cleartoend\else
+  \ifnvt@cleartoend\else
     \clearpage
     \ifodd\c@page
       \thispagestyle{empty}\null\clearpage
     \fi
     \thispagestyle{empty}\null\clearpage
   \fi
-  \global\@cleartoendtrue
+  \global\nvt@cleartoendtrue
 }
 %%
 
 
 %% For use with draft, shade, align modes:
-\def\@labeldraft{%
+\def\nvt@labeldraft{%
   \AddToHook{shipout/foreground}{%
-    \@print@UL{\hspace*{\@spad}\raisebox{\@desc}{{\normalfont MODE:DRAFT}}}%
+    \nvt@print@UL{\hspace*{\nvt@spad}\raisebox{\nvt@dscn}{{\normalfont MODE:DRAFT}}}%
   }
 }
-\def\@labelshade{%
+\def\nvt@labelshade{%
   \AddToHook{shipout/foreground}{%
-    \@print@UL{\hspace*{\@spad}\raisebox{\@desc}{{\normalfont MODE:SHADE}}}%
+    \nvt@print@UL{\hspace*{\nvt@spad}\raisebox{\nvt@dscn}{{\normalfont MODE:SHADE}}}%
   }
 }
-\def\@labelalign{%
+\def\nvt@labelalign{%
   \AddToHook{shipout/foreground}{%
-    \@print@UL{\hspace*{\@spad}\raisebox{\@desc}{{\normalfont MODE:ALIGN}}}%
+    \nvt@print@UL{\hspace*{\nvt@spad}\raisebox{\nvt@dscn}{{\normalfont MODE:ALIGN}}}%
   }
 }
-\newcommand\@trim@LL[1]{% Lower left of trimsize.
-  \put(.5\pagewidth-.5\@trimw,-.5\pageheight-.5\@trimh){#1}%
+\newcommand\nvt@trim@LL[1]{% Lower left of trimsize.
+  \put(.5\pagewidth-.5\nvt@trimw,-.5\pageheight-.5\nvt@trimh){#1}%
 }
-% The printable area extends \@spad beyond left and right sides of \textwidth.
-\newcommand\@print@UL[1]{% Upper left of printable area.
+% The printable area extends \nvt@spad beyond left and right sides of \textwidth.
+\newcommand\nvt@print@UL[1]{% Upper left of printable area.
   \ifodd\c@page%
-    \put(.5\pagewidth-.5\@trimw+\@mins,-.5\pageheight+.5\@trimh-\@mtop){#1}%
+    \put(.5\pagewidth-.5\nvt@trimw+\nvt@mins,-.5\pageheight+.5\nvt@trimh-\nvt@mtop){#1}%
   \else%
-    \put(.5\pagewidth-.5\@trimw+\@mout,-.5\pageheight+.5\@trimh-\@mtop){#1}%
+    \put(.5\pagewidth-.5\nvt@trimw+\nvt@mout,-.5\pageheight+.5\nvt@trimh-\nvt@mtop){#1}%
   \fi%
 }
-\newcommand\@print@LL[1]{% Lower left of printable area.
+\newcommand\nvt@print@LL[1]{% Lower left of printable area.
   \ifodd\c@page%
-    \put(.5\pagewidth-.5\@trimw+\@mins,-.5\pageheight-.5\@trimh+\@mbot){#1}%
+    \put(.5\pagewidth-.5\nvt@trimw+\nvt@mins,-.5\pageheight-.5\nvt@trimh+\nvt@mbot){#1}%
   \else%
-    \put(.5\pagewidth-.5\@trimw+\@mout,-.5\pageheight-.5\@trimh+\@mbot){#1}%
+    \put(.5\pagewidth-.5\nvt@trimw+\nvt@mout,-.5\pageheight-.5\nvt@trimh+\nvt@mbot){#1}%
   \fi%
 }
 %%
 
 
 %% Lua side bearings:
-\def\mylsb#1{
-  \setlength\mylsblen{\lsidebearing{#1}}
-  \FPdiv{\myratio}{\strip@pt\mylsblen}{\strip@pt\@leading}
-  \FPtrunc{\myratio}{\myratio}{3}
-  #1=\myratio,
+\def\nvt@getlsb#1{
+  \setlength\nvt@temp@l{\lsidebearing{#1}}
+  \FPdiv{\nvt@temp@r}{\strip@pt\nvt@temp@l}{\strip@pt\nvt@leading}
+  \FPtrunc{\nvt@temp@r}{\nvt@temp@r}{3}
+  #1=\nvt@temp@r, %%%%% Really comma?
+}
+\def\nvt@getrsb#1{
+  \setlength\nvt@temp@l{\rsidebearing{#1}}
+  \FPdiv{\nvt@temp@r}{\strip@pt\nvt@temp@l}{\strip@pt\nvt@leading}
+  \FPtrunc{\nvt@temp@r}{\nvt@temp@r}{3}
+  #1=\nvt@temp@r, %%%%% Really comma?
 }
 %%
 
 
 %% Detect whether an error was thrown, regardless of its source.
-\newif\if@error@thrown
+\newif\ifnvt@error@thrown
 \directlua{
   local error_seen = false
   local true_cmd = token.create'use_i:nn'

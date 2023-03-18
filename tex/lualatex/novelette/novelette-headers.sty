@@ -41,55 +41,55 @@
 
 
 %%
-\def\@headily#1{%
-  \raisebox{2\@desc-\@leading}{\rule{0pt}{\@asc+\@leading}}%
-  \raisebox{2\@desc}{{\@headfont\addfontfeature{ScaleAgain=\@headrescale}#1}}%
+\def\nvt@headily#1{%
+  \raisebox{2\nvt@dscn-\nvt@leading}{\rule{0pt}{\nvt@ascn+\nvt@leading}}%
+  \raisebox{2\nvt@dscn}{{\nvt@headfont\addfontfeature{ScaleAgain=\nvt@headrescale}#1}}%
 }
-\def\@widebar{%
-  \rule[-\@headrescale\@desc]{.08em}{\@headrescale\@desc+\@headrescale\@asc}%
+\def\nvt@widebar{%
+  \rule[-\nvt@headrescale\nvt@dscn]{.08em}{\nvt@headrescale\nvt@dscn+\nvt@headrescale\nvt@ascn}%
 }
 %%
 
 
 %% PROCESS HFSTYLE
-\def\@process@hfstyle{ % Called AtEndPreamble.
-  \ifthenelse{\equal{\@hfstyle}{1}}{
-    \fancyfoot[CO,CE]{\rule{0pt}{\@asc}%
-      {\@headfont\addfontfeature{ScaleAgain=\@headrescale}\pagenumber}}
+\def\nvt@processnvt@hfstyle{ % Called AtEndPreamble.
+  \ifthenelse{\equal{\nvt@hfstyle}{1}}{
+    \fancyfoot[CO,CE]{\rule{0pt}{\nvt@ascn}%
+      {\nvt@headfont\addfontfeature{ScaleAgain=\nvt@headrescale}\pagenumber}}
   }{}
-  \ifthenelse{\equal{\@hfstyle}{2}}{
-    \fancyhead[CE]{\@headily{\versoheadtext}}
-    \fancyhead[CO]{\@headily{\rectoheadtext}}
-    \fancyfoot[CO,CE]{\vfil\leavevmode\rule{0pt}{\@leading}%
-     {\@headfont\addfontfeature{ScaleAgain=\@headrescale}\pagenumber}}
+  \ifthenelse{\equal{\nvt@hfstyle}{2}}{
+    \fancyhead[CE]{\nvt@headily{\versoheadtext}}
+    \fancyhead[CO]{\nvt@headily{\rectoheadtext}}
+    \fancyfoot[CO,CE]{\vfil\leavevmode\rule{0pt}{\nvt@leading}%
+     {\nvt@headfont\addfontfeature{ScaleAgain=\nvt@headrescale}\pagenumber}}
   }{}
-  \ifthenelse{\equal{\@hfstyle}{3}}{
-    \fancyhead[LE]{\@headily{\versoheadtext}}
-    \fancyhead[RO]{\@headily{\rectoheadtext}}
-    \fancyfoot[LE,RO]{\vfil\leavevmode\rule{0pt}{\@leading}%
-     {\@headfont\addfontfeature{ScaleAgain=\@headrescale}\pagenumber}}
+  \ifthenelse{\equal{\nvt@hfstyle}{3}}{
+    \fancyhead[LE]{\nvt@headily{\versoheadtext}}
+    \fancyhead[RO]{\nvt@headily{\rectoheadtext}}
+    \fancyfoot[LE,RO]{\vfil\leavevmode\rule{0pt}{\nvt@leading}%
+     {\nvt@headfont\addfontfeature{ScaleAgain=\nvt@headrescale}\pagenumber}}
   }{}
-  \ifthenelse{\equal{\@hfstyle}{4}}{
-    \fancyhead[LE]{\@headily{\pagenumber}}
-    \fancyhead[RO]{\@headily{\pagenumber}}
-    \fancyhead[CE]{\@headily{\versoheadtext}}
-    \fancyhead[CO]{\@headily{\rectoheadtext}}
+  \ifthenelse{\equal{\nvt@hfstyle}{4}}{
+    \fancyhead[LE]{\nvt@headily{\pagenumber}}
+    \fancyhead[RO]{\nvt@headily{\pagenumber}}
+    \fancyhead[CE]{\nvt@headily{\versoheadtext}}
+    \fancyhead[CO]{\nvt@headily{\rectoheadtext}}
   }{}
-  \ifthenelse{\equal{\@hfstyle}{5}}{
-    \fancyhead[LE]{\@headily{\makebox[2\normalindent][l]{\pagenumber}\@widebar}}
-    \fancyhead[CE]{\@headily{\versoheadtext}}
-    \fancyhead[CO]{\@headily{\rectoheadtext}}
-    \fancyhead[RO]{\@headily{\@widebar\makebox[2\normalindent][r]{\pagenumber}}}
+  \ifthenelse{\equal{\nvt@hfstyle}{5}}{
+    \fancyhead[LE]{\nvt@headily{\makebox[2\normalindent][l]{\pagenumber}\nvt@widebar}}
+    \fancyhead[CE]{\nvt@headily{\versoheadtext}}
+    \fancyhead[CO]{\nvt@headily{\rectoheadtext}}
+    \fancyhead[RO]{\nvt@headily{\nvt@widebar\makebox[2\normalindent][r]{\pagenumber}}}
   }{}
-  \ifthenelse{\equal{\@hfstyle}{6}}{
-    \fancyhead[LE]{\@headily{\pagenumber~/}}
-    \fancyhead[CE]{\@headily{\versoheadtext}}
-    \fancyhead[CO]{\@headily{\rectoheadtext}}
-    \fancyhead[RO]{\@headily{/~\pagenumber}}
+  \ifthenelse{\equal{\nvt@hfstyle}{6}}{
+    \fancyhead[LE]{\nvt@headily{\pagenumber~/}}
+    \fancyhead[CE]{\nvt@headily{\versoheadtext}}
+    \fancyhead[CO]{\nvt@headily{\rectoheadtext}}
+    \fancyhead[RO]{\nvt@headily{/~\pagenumber}}
   }{}
-  \ifthenelse{\equal{\@hfstyle}{7}}{
-    \fancyhead[CE]{\@headily{\pagenumber~/~\versoheadtext}}
-    \fancyhead[CO]{\@headily{\rectoheadtext~/~\pagenumber}}
+  \ifthenelse{\equal{\nvt@hfstyle}{7}}{
+    \fancyhead[CE]{\nvt@headily{\pagenumber~/~\versoheadtext}}
+    \fancyhead[CO]{\nvt@headily{\rectoheadtext~/~\pagenumber}}
   }{}
   \pagestyle{fancy} % Unless over-ridden by \thispagestyle.
 }

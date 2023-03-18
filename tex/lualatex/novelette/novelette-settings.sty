@@ -28,53 +28,53 @@
 % they are read. The values are not activated until AtEndPreamble or later,
 % since they must be processed in a certain order. See novelette-design.sty.
 %%
-% \@trimws, \@trimhs -> Strings parsed from \trimsize{} command, units in|mm.
-% \@trimw, \@trimh   -> Corresponding lengths, stored as TeX pt.
-% \@mtop, \@mout, \@mbot, \@min -> Margins (top,outside,bottom,inside). TeX pt.
+% \nvt@trimws, \nvt@trimhs -> Strings parsed from \trimsize{} command, units in|mm.
+% \nvt@trimw, \nvt@trimh   -> Corresponding lengths, stored as TeX pt.
+% \nvt@mtop, \nvt@mout, \nvt@mbot, \nvt@min -> Margins (top,outside,bottom,inside). TeX pt.
 %   Margins exclude all printed material. Header/footer do not sit within
 %   the margins, but sit within the same rectangle as main text. 
-% \@lpp -> Integer lines per page, main textblock (not counting header/footer).
-% \@headgap, \@footgap -> Increases line space from main to header|footer.
+% \nvt@lpp -> Integer lines per page, main textblock (not counting header/footer).
+% \nvt@headgap, \nvt@footgap -> Increases line space from main to header|footer.
 %          Range 0-1, may be decimal. Value 1 means one full blank line gap.
-% \@hfstyle -> Chooses the style of header/footer.
+% \nvt@hfstyle -> Chooses the style of header/footer.
 % Settings for fonts, and header style formats, are in other files.
 %%
 
 
 %% Utility: Check if string can be used to set a length (number with units).
-\newcommand\@checklength[1]{
-  \@okfalse
-  \IfEndWith{#1}{in}{\@oktrue}{}
-  \IfEndWith{#1}{mm}{\@oktrue}{}
-  \IfEndWith{#1}{cm}{\@oktrue}{}
-  \IfEndWith{#1}{pt}{\@oktrue}{}
-  \IfEndWith{#1}{bp}{\@oktrue}{}
-  \StrGobbleRight{#1}{2}[\temp@ckln]
-  \IfDecimal{\temp@ckln}{}{\@okfalse}
+\newcommand\nvt@checklength[1]{
+  \nvt@okfalse
+  \IfEndWith{#1}{in}{\nvt@oktrue}{}
+  \IfEndWith{#1}{mm}{\nvt@oktrue}{}
+  \IfEndWith{#1}{cm}{\nvt@oktrue}{}
+  \IfEndWith{#1}{pt}{\nvt@oktrue}{}
+  \IfEndWith{#1}{bp}{\nvt@oktrue}{}
+  \StrGobbleRight{#1}{2}[\nvt@temp@ckln]
+  \IfDecimal{\nvt@temp@ckln}{}{\nvt@okfalse}
 }
 %%
 
 
 %% TRIM SIZE (Finished page size of the book.)
 \newcommand\trimsize[1]{
-  \StrDel{#1,}{ }[\temp@s]
-  \StrBehind{\temp@s}{width=}[\temp@w]
-  \StrBefore{\temp@w}{,}[\temp@w]
-  \@checklength{\temp@w}
-  \StrDel{#1,}{ }[\temp@h]
-  \StrBehind{\temp@h}{height=}[\temp@h]
-  \StrBefore{\temp@h}{,}[\temp@h]
-  \@checklength{\temp@h}
-  \ifdimcomp{\temp@w}{<}{4in}{\@okfalse}{}
-  \ifdimcomp{\temp@w}{>}{12in}{\@okfalse}{}
-  \ifdimcomp{\temp@h}{<}{6in}{\@okfalse}{}
-  \ifdimcomp{\temp@h}{>}{18in}{\@okfalse}{}
-  \ifdimcomp{\temp@h}{<}{\temp@w}{\@okfalse}{}
-  \if@ok
-    \global\deflength\@trimw{\temp@w}
-    \global\deflength\@trimh{\temp@h}
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{width=}[\nvt@temp@w]
+  \StrBefore{\nvt@temp@w}{,}[\nvt@temp@w]
+  \nvt@checklength{\nvt@temp@w}
+  \StrDel{#1,}{ }[\nvt@temp@h]
+  \StrBehind{\nvt@temp@h}{height=}[\nvt@temp@h]
+  \StrBefore{\nvt@temp@h}{,}[\nvt@temp@h]
+  \nvt@checklength{\nvt@temp@h}
+  \ifdimcomp{\nvt@temp@w}{<}{4in}{\nvt@okfalse}{}
+  \ifdimcomp{\nvt@temp@w}{>}{12in}{\nvt@okfalse}{}
+  \ifdimcomp{\nvt@temp@h}{<}{6in}{\nvt@okfalse}{}
+  \ifdimcomp{\nvt@temp@h}{>}{18in}{\nvt@okfalse}{}
+  \ifdimcomp{\nvt@temp@h}{<}{\nvt@temp@w}{\nvt@okfalse}{}
+  \ifnvt@ok
+    \global\deflength\nvt@trimw{\nvt@temp@w}
+    \global\deflength\nvt@trimh{\nvt@temp@h}
   \else
-    \@errBTS % Bad trim size.
+    \nvt@errBTS % Bad trim size.
   \fi
   \xdef\log@trimsize{\string\trimsize{#1}}
 }
@@ -85,24 +85,24 @@
 
 %% SHEETFEED (Normally not used. See Novelette documentation.)
 \newcommand\sheetfeed[1]{
-  \@okfalse
-  \StrDel{#1}{ }[\temp@s]
-  \ifthenelse{\equal{\temp@s}{trimsize}}{
-    \@oktrue
-    \global\deflength\pagewidth{\@trimw}
-    \global\deflength\pageheight{\@trimh}
+  \nvt@okfalse
+  \StrDel{#1}{ }[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{trimsize}}{
+    \nvt@oktrue
+    \global\deflength\pagewidth{\nvt@trimw}
+    \global\deflength\pageheight{\nvt@trimh}
   }{}
-  \ifthenelse{\equal{\temp@s}{letter}}{
-    \@oktrue
+  \ifthenelse{\equal{\nvt@temp@s}{letter}}{
+    \nvt@oktrue
     \global\deflength\pagewidth{8.5in}
     \global\deflength\pageheight{11in}
   }{}
-  \ifthenelse{\equal{\temp@s}{a4} \OR \equal{\temp@s}{A4}}{
-    \@oktrue
+  \ifthenelse{\equal{\nvt@temp@s}{a4} \OR \equal{\nvt@temp@s}{A4}}{
+    \nvt@oktrue
     \global\deflength\pagewidth{210mm}
     \global\deflength\pageheight{297mm}
   }{}
-  \if@ok\else\@errBVSF\fi % Bad value sheetfeed.
+  \ifnvt@ok\else\nvt@errBVSF\fi % Bad value sheetfeed.
   \xdef\log@sheetfeed{\string\sheetfeed{#1}}
 }
 \sheetfeed{trimsize} % Default.
@@ -112,48 +112,48 @@
 
 %% MARGINS (Excludes all printable material. Inside is at spine.)
 \newcommand\margins[1]{
-  \StrDel{#1,}{ }[\temp@s]
-  \StrBehind{\temp@s}{top=}[\temp@t]
-  \StrBefore{\temp@t}{,}[\temp@t]
-  \@checklength{\temp@t}
-  \StrDel{#1,}{ }[\temp@o]
-  \StrBehind{\temp@o}{outside=}[\temp@o]
-  \StrBefore{\temp@o}{,}[\temp@o]
-  \@checklength{\temp@o}
-  \StrDel{#1,}{ }[\temp@b]
-  \StrBehind{\temp@b}{bottom=}[\temp@b]
-  \StrBefore{\temp@b}{,}[\temp@b]
-  \@checklength{\temp@b}
-  \StrDel{#1,}{ }[\temp@i]
-  \StrBehind{\temp@i}{inside=}[\temp@i]
-  \StrBefore{\temp@i}{,}[\temp@i]
-  \@checklength{\temp@i}
-  \if@ok
-    \global\deflength\@mtop{\temp@t}
-    \global\deflength\@mout{\temp@o}
-    \global\deflength\@mbot{\temp@b}
-    \global\deflength\@mins{\temp@i}
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{top=}[\nvt@temp@t]
+  \StrBefore{\nvt@temp@t}{,}[\nvt@temp@t]
+  \nvt@checklength{\nvt@temp@t}
+  \StrDel{#1,}{ }[\nvt@temp@o]
+  \StrBehind{\nvt@temp@o}{outside=}[\nvt@temp@o]
+  \StrBefore{\nvt@temp@o}{,}[\nvt@temp@o]
+  \nvt@checklength{\nvt@temp@o}
+  \StrDel{#1,}{ }[\nvt@temp@b]
+  \StrBehind{\nvt@temp@b}{bottom=}[\nvt@temp@b]
+  \StrBefore{\nvt@temp@b}{,}[\nvt@temp@b]
+  \nvt@checklength{\nvt@temp@b}
+  \StrDel{#1,}{ }[\nvt@temp@i]
+  \StrBehind{\nvt@temp@i}{inside=}[\nvt@temp@i]
+  \StrBefore{\nvt@temp@i}{,}[\nvt@temp@i]
+  \nvt@checklength{\nvt@temp@i}
+  \ifnvt@ok
+    \global\deflength\nvt@mtop{\nvt@temp@t}
+    \global\deflength\nvt@mout{\nvt@temp@o}
+    \global\deflength\nvt@mbot{\nvt@temp@b}
+    \global\deflength\nvt@mins{\nvt@temp@i}
   \else
-    \StrDel{#1}{ }[\temp@t]
-    \@checklength{\temp@t}
-    \if@ok
-      \global\deflength\@mtop{\temp@t}
-      \global\deflength\@mout{\temp@t}
-      \global\deflength\@mbot{\temp@t}
-      \IfSubStr*{\temp@t}{mm}{
-        \global\deflength\@mins{\@mtop+3mm}
+    \StrDel{#1}{ }[\nvt@temp@t]
+    \nvt@checklength{\nvt@temp@t}
+    \ifnvt@ok
+      \global\deflength\nvt@mtop{\nvt@temp@t}
+      \global\deflength\nvt@mout{\nvt@temp@t}
+      \global\deflength\nvt@mbot{\nvt@temp@t}
+      \IfSubStr*{\nvt@temp@t}{mm}{
+        \global\deflength\nvt@mins{\nvt@mtop+3mm}
       }{
-        \global\deflength\@mins{\@mtop+.125in}
+        \global\deflength\nvt@mins{\nvt@mtop+.125in}
       }
     \else
-      \@errBVMAR % Bad value margins.
+      \nvt@errBVMAR % Bad value margins.
     \fi
   \fi
   \xdef\log@margins{\string\margins{#1}}
   \IfSubStr{\log@margins}{mm}{
-    \global\deflength\@spinew{3mm}
+    \global\deflength\nvt@spinew{3mm}
   }{
-    \global\deflength\@spinew{.125in}
+    \global\deflength\nvt@spinew{.125in}
   }
 }
 \@onlypreamble\margins % Default will be calculated, based on trim size.
@@ -166,90 +166,90 @@
 % headgap, footgap = integer|decimal 0-1. Extra line space at header/footer.
 % style = integer 1-7. Selects header/footer style. i = italics page number.
 \newcommand\design[1]{
-  \@oktrue
-  \StrDel{#1,}{ }[\temp@s]
-  \StrBehind{\temp@s}{chars=}[\temp@s]
-  \StrBefore{\temp@s}{,}[\temp@s]
-  \ifthenelse{\equal{\temp@s}{}}{}{
-    \IfInteger{\temp@s}{
-      \FPiflt{\temp@s}{20}
-        \@okfalse
+  \nvt@oktrue
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{chars=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{}}{}{
+    \IfInteger{\nvt@temp@s}{
+      \FPiflt{\nvt@temp@s}{20}
+        \nvt@okfalse
       \else
-        \FPifgt{\temp@s}{80}
-          \@okfalse
+        \FPifgt{\nvt@temp@s}{80}
+          \nvt@okfalse
         \else
-          \xdef\@textchars{\temp@s}
+          \xdef\nvt@textchars{\nvt@temp@s}
         \fi
      \fi
-    }{\@okfalse}
+    }{\nvt@okfalse}
   }
-  \StrDel{#1,}{ }[\temp@s]
-  \StrBehind{\temp@s}{lines=}[\temp@s]
-  \StrBefore{\temp@s}{,}[\temp@s]
-  \ifthenelse{\equal{\temp@s}{}}{}{
-    \IfInteger{\temp@s}{
-      \FPiflt{\temp@s}{12}
-        \@okfalse
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{lines=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{}}{}{
+    \IfInteger{\nvt@temp@s}{
+      \FPiflt{\nvt@temp@s}{12}
+        \nvt@okfalse
       \else
-        \FPifgt{\temp@s}{72}
-          \@okfalse
+        \FPifgt{\nvt@temp@s}{72}
+          \nvt@okfalse
         \else
-          \xdef\@lpp{\temp@s}
+          \xdef\nvt@lpp{\nvt@temp@s}
         \fi
      \fi
-    }{\@okfalse}
+    }{\nvt@okfalse}
   }
-  \StrDel{#1,}{ }[\temp@s]
-  \StrBehind{\temp@s}{headgap=}[\temp@s]
-  \StrBefore{\temp@s}{,}[\temp@s]
-  \ifthenelse{\equal{\temp@s}{}}{}{
-    \IfDecimal{\temp@s}{
-      \FPiflt{\temp@s}{0}
-        \@okfalse
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{headgap=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{}}{}{
+    \IfDecimal{\nvt@temp@s}{
+      \FPiflt{\nvt@temp@s}{0}
+        \nvt@okfalse
       \else
-        \FPifgt{\temp@s}{1}
-          \@okfalse
+        \FPifgt{\nvt@temp@s}{1}
+          \nvt@okfalse
         \else
-          \xdef\@headgap{\temp@s}
+          \xdef\nvt@headgap{\nvt@temp@s}
         \fi
      \fi
-    }{\@okfalse}
+    }{\nvt@okfalse}
   }
-  \StrDel{#1,}{ }[\temp@s]
-  \StrBehind{\temp@s}{footgap=}[\temp@s]
-  \StrBefore{\temp@s}{,}[\temp@s]
-  \ifthenelse{\equal{\temp@s}{}}{}{
-    \IfDecimal{\temp@s}{
-      \FPiflt{\temp@s}{0}
-        \@okfalse
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{footgap=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{}}{}{
+    \IfDecimal{\nvt@temp@s}{
+      \FPiflt{\nvt@temp@s}{0}
+        \nvt@okfalse
       \else
-        \FPifgt{\temp@s}{1}
-          \@okfalse
+        \FPifgt{\nvt@temp@s}{1}
+          \nvt@okfalse
         \else
-          \xdef\@footgap{\temp@s}
+          \xdef\nvt@footgap{\nvt@temp@s}
         \fi
      \fi
-    }{\@okfalse}
+    }{\nvt@okfalse}
   }
-  \StrDel{#1,}{ }[\temp@s]
-  \StrBehind{\temp@s}{style=}[\temp@s]
-  \StrBefore{\temp@s}{,}[\temp@s]
-  \IfSubStr{\temp@s}{i}{\global\@pnitaltrue\StrDel{\temp@s}{i}[\temp@s]}{}
-  \ifthenelse{\equal{\temp@s}{}}{}{
-    \IfInteger{\temp@s}{
-      \FPiflt{\temp@s}{0}
-        \@okfalse
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{style=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \IfSubStr{\nvt@temp@s}{i}{\global\nvt@pnitaltrue\StrDel{\nvt@temp@s}{i}[\nvt@temp@s]}{}
+  \ifthenelse{\equal{\nvt@temp@s}{}}{}{
+    \IfInteger{\nvt@temp@s}{
+      \FPiflt{\nvt@temp@s}{0}
+        \nvt@okfalse
       \else
-        \FPifgt{\temp@s}{7}
-          \@okfalse
+        \FPifgt{\nvt@temp@s}{7}
+          \nvt@okfalse
         \else
-          \xdef\@hfstyle{\temp@s}
+          \xdef\nvt@hfstyle{\nvt@temp@s}
         \fi
      \fi
-    }{\@okfalse}
+    }{\nvt@okfalse}
   }
-  \if@ok\else
-    \@errBVDES % Bad value for design.
+  \ifnvt@ok\else
+    \nvt@errBVDES % Bad value for design.
   \fi
 }
 \@onlypreamble\design % Defaults will be calculated. Also \log@design.
@@ -257,15 +257,13 @@
 
 
 %% FOOTNOTE REFERENCE MARKS (Literary or numerical.)
-\newcounter{@fnmnum} % Which marker in the list.
-\setcounter{@fnmnum}{1}
 \newcommand\markers[1]{
-  \@okfalse
-  \StrDel{#1}{ }[\temp@s]
-  \ifthenelse{\equal{\temp@s}{*}}{\@oktrue\gdef\@markers{*}}{}
-  \ifthenelse{\equal{\temp@s}{1}}{\@oktrue\gdef\@markers{1}}{}
-  \if@ok\else\@errBVFM\fi% Bad value for footnote markers.
-  \xdef\log@markers{\string\markers{#1}}
+  \nvt@okfalse
+  \StrDel{#1}{ }[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{*}}{\nvt@oktrue\gdef\nvt@markers{*}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{1}}{\nvt@oktrue\gdef\nvt@markers{1}}{}
+  \ifnvt@ok\else\nvt@errBVFM\fi% Bad value for footnote markers.
+  \xdef\lognvt@markers{\string\markers{#1}}
 }
 \markers{*} % Default.
 \@onlypreamble\markers
@@ -274,23 +272,28 @@
 
 %% MICROTYPE OPTIONS
 % Novelette loads microtype automatically, AtEndPreamble. This is equivalent
-% to \PassOptionsToPackage{microtype}, but passes \@setmtoptions instead:
-\DeclareDocumentCommand\setmtoptions{m}{ % Disallow draft, prefer silent.
-  \StrDel{#1}{ifdraft}[\temp@s]
-  \StrDel{\temp@s}{draft}[\temp@s]
-  \StrDel{\temp@s}{final}[\temp@s]
-  \IfSubStr{\temp@s}{config}{}{
-    \g@addto@macro\temp@s{,config=novelette-microtype}
+% to \PassOptionsToPackage{microtype}, but passes \nvt@MT instead:
+\DeclareDocumentCommand\setmicrotype{m}{% Undefined before loading microtype.
+  \StrDel{#1}{ifdraft}[\nvt@temp@s]
+  \StrDel{\nvt@temp@s}{draft}[\nvt@temp@s]
+  \StrDel{\nvt@temp@s}{final}[\nvt@temp@s]
+  \IfSubStr{\nvt@temp@s}{config}{}{
+    \g@addto@macro\nvt@temp@s{,config=novelette-microtype}
   }
-  \IfSubStr{\temp@s}{verbose}{}{\g@addto@macro\temp@s{,verbose=silent}}
-  \xdef\@setmtoptions{\temp@s}
+  \IfSubStr{\nvt@temp@s}{verbose}{}{\g@addto@macro\nvt@temp@s{,verbose=silent}}
+  \xdef\nvt@MT{\nvt@temp@s}
 }
-\setmtoptions{stretch=20,shrink=20,protrusion=true} % And others. Default.
-\@onlypreamble\setmtoptions
-\def\@process@mtoptions{
-  \xdef\log@mto{\string\setmtoptions{\@setmtoptions}}
+\setmicrotype{stretch=20,shrink=20,protrusion=true} % And others. Default.
+\@onlypreamble\setmicrotype
+\def\nvt@process@MT{ % AtEndPreamble.
+  \ifundef\nvt@MT{
+    \setmicrotype{config=novelette-microtype,stretch=20,shrink=20,%
+      protrusion=true,verbose=silent}
+  }{}
+  \xdef\log@mto{\string\microtypesetup{\nvt@MT}}
 }
 %%
+
 
 
 %%

@@ -54,13 +54,12 @@
 \pdfobjcompresslevel=0
 \pdfminorversion=3 % Required for optional PDF/X-1a:2001 conformance.
 \gdef\thepdfminorversion{\pdfminorversion}
-\gdef\@PDFversion{PDF/X-1}
 %% Novelette uses these in a slightly different way than in other classes:
 \protect\long\gdef\title#1{\gdef\nvt@title{#1}}
 \protect\long\gdef\author#1{\gdef\nvt@author{#1}}
-\newcommand\application[1]{\gdef\@application{#1}}
-\newcommand\producer[1]{\gdef\@producer{#1}}
-\newcommand\intent[1]{\gdef\@intent{#1}}
+\newcommand\application[1]{\gdef\nvt@application{#1}}
+\newcommand\producer[1]{\gdef\nvt@producer{#1}}
+\newcommand\intent[1]{\gdef\nvt@intent{#1}}
 \@onlypreamble\title
 \@onlypreamble\author
 \@onlypreamble\application
@@ -72,59 +71,59 @@
 \subtitle{} % Default empty.
 %%
 
+
 %% BOOLEANS (Used here, and in other Novelette files.)
-\newif\if@ok % Local scratch boolean. Typically used for and/or series.
-\newif\ifcolors@ % Always false.
-\newif\if@sent@colormsg % When true, prevents color warning duplicates.
-\newif\if@inopening % True within opening environment.
-\newif\if@indisplay % True within display environment.
-\newif\if@nvterr % True if Novelette (not LaTeX) issued an error.
-\newif\if@has@header % True if design style has header.
-\newif\if@has@footer % True if design style has footer.
-\newif\if@pnital % True if page numbers are italicized.
-\newif\if@zmark % True if footnote is in opening. Omits the marker. 
-\newif\ifnow@frontmatter % True in frontmatter.
-\newif\ifnow@mainmatter % True in mainmatter or backmatter.
-\newif\if@cleartoend % True if cleartoend issued. Prevents duplicate.
-\newif\if@shadelines % True if class option shadelines.
-\newif\if@shademargins % True if class option shademargins.
-\newif\ifmsdoc % Manuscript, always false. Compatibility with some packages.
-\newif\if@nvtdraft % True unless final mode.
+\newif\ifcolors@ % Always false. Compatibility.
+\newif\ifmsdoc % Always false. Compatibility with some packages.
+\newif\ifnvt@ok % Local scratch boolean. Typically used for and/or series.
+\newif\ifnvt@sent@colormsg % When true, prevents color warning duplicates.
+\newif\ifnvt@inopening % True within opening environment.
+\newif\ifnvt@indisplay % True within display environment.
+\newif\ifnvt@err % True if Novelette (not LaTeX) issued an error.
+\newif\ifnvt@header % True if design style has header.
+\newif\ifnvt@footer % True if design style has footer.
+\newif\ifnvt@pnital % True if page numbers are italicized.
+\newif\ifnvt@zmark % True if footnote is in opening. Omits the marker. 
+\newif\ifnvt@frontmatter % True in frontmatter.
+\newif\ifnvt@mainmatter % True in mainmatter or backmatter.
+\newif\ifnvt@cleartoend % True if cleartoend issued. Prevents duplicate.
+\newif\ifnvt@shadelines % True in align mode.
+\newif\ifnvt@shademargins % True in shade mode.
+\newif\ifnvt@draft % True unless final mode.
+\newif\ifnvt@imgwarn % True if image warning issued.
 %%
 
 
 %% LENGTHS (Used in various Novelette files.)
-\newlength\temp@l % Local scratch length.
-\newlength\@totalh % Printable height, between top/bottom margins.
-\newlength\adj@totalh % Printable height, minus font ascender and descender.
-\newlength\@typesize % Main font size.
-\newlength\@leading % Standard baseline skip.
-\newlength\@desc % Main font descender (depth of JQgjpqy).
-\newlength\@asc % Main font ascender (height of accented Latin-1 capitals).
-\newlength\@spad % Padding at sides of textblock, to allow for protrusion.
-\newlength\@trimw % Trim width.
-\newlength\@trimh % Trim height.
 \newlength\normalindent % Standard paragraph indent.
-\newlength\@mtop % Margin top.
-\newlength\@mout % Margin outside.
-\newlength\@mbot % Margin bottom.
-\newlength\@mins % Margin inside. At spine (binding).
-\newlength\@imagewidth % Image width (TeX pt).
-\newlength\@imageheight % Image height (TeX pt).
-\newlength\@imgadj % Pads image height to integer number of lines.
-\newlength\@trimleft % Pagesize position of left edge of trimsize.
-\newlength\@spinew % Nominal width of spine glue area.
-\newlength\mylsblen % Used by Lua code. Character left side bearing.
-\newlength\myrsblen % Used by Lua code. Character right side bearing.
+\newlength\nvt@totalh % Printable height, between top/bottom margins.
+\newlength\nvtadj@totalh % Printable height, minus font ascender and descender.
+\newlength\nvt@typesize % Main font size.
+\newlength\nvt@leading % Standard baseline skip.
+\newlength\nvt@dscn % Main font descender (depth of JQgjpqy).
+\newlength\nvt@ascn % Main font ascender (height of accented Latin-1 capitals).
+\newlength\nvt@spad % Padding at sides of textblock, to allow for protrusion.
+\newlength\nvt@trimw % Trim width.
+\newlength\nvt@trimh % Trim height.
+\newlength\nvt@mtop % Margin top.
+\newlength\nvt@mout % Margin outside.
+\newlength\nvt@mbot % Margin bottom.
+\newlength\nvt@mins % Margin inside. At spine (binding).
+\newlength\nvt@imgwidth % Image width (TeX pt).
+\newlength\nvt@imgheight % Image height (TeX pt).
+\newlength\nvt@intht % Integer multiple of \nvt@leading >= \nvt@imgheight.
+\newlength\nvt@trimleft % Pagesize position of left edge of trimsize.
+\newlength\nvt@spinew % Nominal width of spine glue area.
 %%
 
 
-%% NUMBERS AND STRINGS (`23' could be treated as number or string.)
-\def\temp@s{} % Local scratch, usually string.
-\def\temp@n{} \def\temp@d{} \def\temp@r{} % Local scratch, usually numbers.
-\def\temp@t{} \def\temp@o{} \def\temp@b{} \def\temp@i{} % Special-purpose.
-\def\temp@w{} \def\temp@h{} % Special-purpose.
-\def\temp@ckln{} % Special-purpose.
+%% SCRATCH STRINGS, NUMBERS, LENGTHS.
+\newlength\nvt@temp@l % Local scratch length.
+\def\nvt@temp@s{} % Usually string, may be processed to number or length.
+\def\nvt@temp@n{} \def\nvt@temp@d{} \def\nvt@temp@r{}
+\def\nvt@temp@t{} \def\nvt@temp@o{} \def\nvt@temp@b{} \def\nvt@temp@i{}
+\def\nvt@temp@w{} \def\nvt@temp@h{}
+\def\nvt@temp@ckln{}
 %%
 
 
@@ -156,32 +155,32 @@
 \def\@raw@classoptionslist{}
 \def\@classoptionslist{}
 \newcommand\mode[1]{
-  \@okfalse
-  \StrDel{#1}{ }[\temp@s]
+  \nvt@okfalse
+  \StrDel{#1}{ }[\nvt@temp@s]
   \ifdefined\nvt@mode % Prevent duplicates.
-    \def\temp@s{draft}
+    \def\nvt@temp@s{draft}
     \ClassWarning{novelette}{Multiple usage of \string\mode^^J%
       All ignored. Using draft mode instead.}
   \fi
-  \ifthenelse{\equal{\temp@s}{draft}}{
-    \@oktrue\@nvtdrafttrue\gdef\nvt@mode{draft}
-    \@shademarginsfalse\@shadelinesfalse
+  \ifthenelse{\equal{\nvt@temp@s}{draft}}{
+    \nvt@oktrue\nvt@drafttrue\gdef\nvt@mode{draft}
+    \nvt@shademarginsfalse\nvt@shadelinesfalse
   }{}
-  \ifthenelse{\equal{\temp@s}{shade}}{
-    \@oktrue\@nvtdrafttrue\gdef\nvt@mode{shade}
-    \@shademarginstrue\@shadelinesfalse
+  \ifthenelse{\equal{\nvt@temp@s}{shade}}{
+    \nvt@oktrue\nvt@drafttrue\gdef\nvt@mode{shade}
+    \nvt@shademarginstrue\nvt@shadelinesfalse
   }{}
-  \ifthenelse{\equal{\temp@s}{align}}{
-    \@oktrue\@nvtdrafttrue\gdef\nvt@mode{align}
-    \@shademarginstrue\@shadelinestrue
+  \ifthenelse{\equal{\nvt@temp@s}{align}}{
+    \nvt@oktrue\nvt@drafttrue\gdef\nvt@mode{align}
+    \nvt@shademarginstrue\nvt@shadelinestrue
   }{}
-  \ifthenelse{\equal{\temp@s}{final}}{
-    \@oktrue\@nvtdraftfalse\gdef\nvt@mode{final}
-    \@shademarginsfalse\@shadelinesfalse
+  \ifthenelse{\equal{\nvt@temp@s}{final}}{
+    \nvt@oktrue\nvt@draftfalse\gdef\nvt@mode{final}
+    \nvt@shademarginsfalse\nvt@shadelinesfalse
   }{}
-  \if@ok\else
+  \ifnvt@ok\else
     \gdef\nvt@mode{draft}
-    \ClassWarning{novelette}{Unknown \string\mode{\temp@s}.^^J%
+    \ClassWarning{novelette}{Unknown \string\mode{\nvt@temp@s}.^^J%
       Ignored. Using draft mode instead.}
   \fi
 }
@@ -214,8 +213,8 @@
 %% ----------------------------------------------------------------------------
 % Many packages introduce code that disrupts the uniform line grid,
 % or writes information disallowed by PDF/X. Solution: No user-added packages.
-\LetLtxMacro\@get@package\RequirePackage\relax
-\NewDocumentCommand\out@of@luck{O{}m}{\@errCURP} % Cannot use \RequirePackage.
+\LetLtxMacro\nvt@get@package\RequirePackage\relax
+\NewDocumentCommand\out@of@luck{O{}m}{\nvt@errCURP} % Cannot use \RequirePackage.
 \LetLtxMacro\RequirePackage\out@of@luck\relax
 \LetLtxMacro\usepackage\out@of@luck\relax
 %%
@@ -231,10 +230,10 @@
   }{
     \global\deflength\overfullrule{6pt}
   }
-  \LetLtxMacro\RequirePackage\@get@package\relax
-  \LetLtxMacro\usepackage\@get@package\relax
+  \LetLtxMacro\RequirePackage\nvt@get@package\relax
+  \LetLtxMacro\usepackage\nvt@get@package\relax
   \ifundef{\nvt@title}{
-    \global\@nvtdrafttrue
+    \global\nvt@drafttrue
     \gdef\@title{Untitled Document}
     \gdef\thetitle{Untitled Document}
   }{
@@ -242,47 +241,49 @@
     \xdef\thetitle{\nvt@title}
   }
   \ifundef{\nvt@author}{
-    \global\@nvtdrafttrue
+    \global\nvt@drafttrue
     \gdef\@author{Anonymous Author}
     \gdef\theauthor{Anonymous Author}
   }{
     \xdef\@author{\nvt@author}
     \xdef\theauthor{\nvt@author}
   }
-  \ifundef{\@application}{\gdef\@application{Novelette}}{}
-  \ifundef{\@producer}{\gdef\@producer{Novelette}}{}
-  \ifundef{\@intent}{\gdef\@intent{none}}{}
-  \@process@margins
-  \@process@design
+  \ifundef{\nvt@application}{\gdef\nvt@application{Novelette}}{}
+  \ifundef{\nvt@producer}{\gdef\nvt@producer{Novelette}}{}
+  \ifundef{\nvt@intent}{\gdef\nvt@intent{none}}{}
+  \nvt@process@margins
+  \nvt@process@design
   \RequirePackage{novelette-fonts}
-  \@process@mainfont
-  \@rescale@mainfont
-  \@calculate@leading
-  \@renew@normalsize % The real value.
-  \DeclareDocumentCommand\lipsum{sO{}o}{\@errLINL} % Lipsum is not loaded.
-  \@process@language
-  \RequirePackage[\@setmtoptions]{microtype}
+  \nvt@process@mainfont
+  \nvt@rescale@mainfont
+  \nvt@calculate@leading
+  \nvt@renew@normalsize % The real value.
+  \DeclareDocumentCommand\lipsum{sO{}o}{\nvt@errLINL} % Lipsum is not loaded.
+  \nvt@process@language
+  \nvt@process@MT
+  \gundef\setmicrotype
+  \RequirePackage[\nvt@MT]{microtype}
   \def\MT@find@file#1{} % Prevents loading mt-*.cfg files AtBeginDocument.
-  \@process@headfont
-  \@rescale@headfont
-  \@process@otherfonts
+  \nvt@process@headfont
+  \nvt@rescale@headfont
+  \nvt@process@otherfonts
   \RequirePackage{novelette-footnotes}
   \RequirePackage{novelette-opendisp}
   \RequirePackage{novelette-graphics}
   \RequirePackage{fancyhdr}
   \RequirePackage{novelette-headers}
-  \@process@hfstyle
-  \@process@openings
+  \nvt@processnvt@hfstyle
+  \nvt@process@openings
   \RequirePackage{novelette-fillertext}
 %  \directlua{require "novelette-sidebearings"}
 %  \def\lsidebearing#1{\directlua{packagedata.sidebearings.left [[#1]]}}
 %  \def\rsidebearing#1{\directlua{packagedata.sidebearings.right [[#1]]}}
-  \if@shademargins\RequirePackage{novelette-shades}\fi
-  \ifthenelse{\equal{\nvt@mode}{draft}}{\@labeldraft}{}
-  \ifthenelse{\equal{\nvt@mode}{shade}}{\@labelshade}{}
-  \ifthenelse{\equal{\nvt@mode}{align}}{\@labelalign}{}
+  \ifnvt@shademargins\RequirePackage{novelette-shades}\fi
+  \ifthenelse{\equal{\nvt@mode}{draft}}{\nvt@labeldraft}{}
+  \ifthenelse{\equal{\nvt@mode}{shade}}{\nvt@labelshade}{}
+  \ifthenelse{\equal{\nvt@mode}{align}}{\nvt@labelalign}{}
   \RequirePackage{novelette-metadata}
-  \@process@pdfboxes
+  \nvt@process@pdfboxes
 }
 %%
 
@@ -290,7 +291,7 @@
 %% AT BEGIN DOCUMENT (Finish the setup. Some values not available until here.)
 %% ----------------------------------------------------------------------------
 \AtBeginDocument{
-  \global\deflength\textfloatsep{0pt plus \@leading minus \@leading}
+  \global\deflength\textfloatsep{0pt plus \nvt@leading minus \nvt@leading}
   \global\deflength\parindent{\normalindent}
   \gdef\forceindent{\ifvmode\else\unskip\fi\stake\hspace{\normalindent}}
   \gdef\backindent{\ifvmode\else\unskip\fi\hspace{-\normalindent}}
@@ -318,9 +319,9 @@
     /CreationDate(\pdffeedback creationdate) %
     /ModDate(\pdffeedback creationdate) %
   }
-  \@process@metadata
-  \@process@xmp
-  \ifthenelse{\equal{\@intent}{none}}{}{\@process@intent}
+  \nvt@process@metadata
+  \nvt@process@xmp
+  \ifthenelse{\equal{\nvt@intent}{none}}{}{\nvt@processnvt@intent}
 }
 %%
 
@@ -330,16 +331,16 @@
 \AfterEndDocument{
   \typeout{^^J}
   \typeout{*******************************************************************}
-  \typeout{SUMMARY FOR JOBNAME \jobname\space\if@nvtdraft DRAFT MODE\fi}
+  \typeout{SUMMARY FOR JOBNAME \jobname\space\ifnvt@draft DRAFT MODE\fi}
   \typeout{*******************************************************************}
   \typeout{These are the actual values used. If different from your settings,}
   \typeout{it means Novelette used defaults, or needed to over-ride yours:}
   \typeout{\string\title{\@title}}
   \typeout{\string\subtitle{\@subtitle}}
   \typeout{\string\author{\@author}}
-  \typeout{\string\application{\@application}}
-  \typeout{\string\producer{\@producer}}
-  \typeout{\string\intent{\@intent}}
+  \typeout{\string\application{\nvt@application}}
+  \typeout{\string\producer{\nvt@producer}}
+  \typeout{\string\intent{\nvt@intent}}
   \typeout{\string\mode{\nvt@mode}}
   \typeout{\string\setlang{\nvt@lang}}
   \typeout{\log@trimsize}
@@ -347,24 +348,24 @@
   \typeout{\log@margins}
   \typeout{\log@design}
   \typeout{\log@openings}
-  \typeout{\log@markers}
-  \FPround{\temp@n}{\strip@pt\@typesize}{2}
-  \FPclip{\temp@n}{\temp@n}
-  \FPmul{\temp@d}{\temp@n}{.996264}
-  \FPround{\temp@d}{\temp@d}{2}
-  \FPclip{\temp@d}{\temp@d}
-  \typeout{Calculated main font size: \temp@n pt TeX (\temp@d pt PostScript)}
-  \FPround{\temp@n}{\strip@pt\@leading}{2}
-  \FPclip{\temp@n}{\temp@n}
-  \FPmul{\temp@d}{\temp@n}{.996264}
-  \FPround{\temp@d}{\temp@d}{2}
-  \FPclip{\temp@d}{\temp@d}
+  \typeout{\lognvt@markers}
+  \FPround{\nvt@temp@n}{\strip@pt\nvt@typesize}{2}
+  \FPclip{\nvt@temp@n}{\nvt@temp@n}
+  \FPmul{\nvt@temp@d}{\nvt@temp@n}{.996264}
+  \FPround{\nvt@temp@d}{\nvt@temp@d}{2}
+  \FPclip{\nvt@temp@d}{\nvt@temp@d}
+  \typeout{Calculated main font size: \nvt@temp@n pt TeX (\nvt@temp@d pt PostScript)}
+  \FPround{\nvt@temp@n}{\strip@pt\nvt@leading}{2}
+  \FPclip{\nvt@temp@n}{\nvt@temp@n}
+  \FPmul{\nvt@temp@d}{\nvt@temp@n}{.996264}
+  \FPround{\nvt@temp@d}{\nvt@temp@d}{2}
+  \FPclip{\nvt@temp@d}{\nvt@temp@d}
   \typeout{Calculated leading (baselineskip): %
-    \temp@n pt TeX (\temp@d pt PostScript)}
-  \FPdiv{\temp@n}{\strip@pt\@leading}{\strip@pt\@typesize}
-  \FPround{\temp@n}{\temp@n}{2}
-  \FPclip{\temp@n}{\temp@n}
-  \typeout{Calculated ratio leading/fontsize: \temp@n}
+    \nvt@temp@n pt TeX (\nvt@temp@d pt PostScript)}
+  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@leading}{\strip@pt\nvt@typesize}
+  \FPround{\nvt@temp@n}{\nvt@temp@n}{2}
+  \FPclip{\nvt@temp@n}{\nvt@temp@n}
+  \typeout{Calculated ratio leading/fontsize: \nvt@temp@n}
   \typeout{\log@mainfont}
   \typeout{\log@headfont}
   \typeout{\log@namefont}
@@ -372,8 +373,8 @@
   \typeout{\log@notefont}
   \typeout{\log@decofont}
   \log@imagespecs
-  \typeout{\@signoffmsg}
-  \if@nvterr
+  \typeout{\nvt@signoffmsg}
+  \ifnvt@err
     \typeout{*** NOVELETTE ERROR. OUTPUT IS INVALID. ***}
     \typeout{*** PDF CANNOT MEET PDF/X REQUIREMENTS. ***}
   \fi

@@ -42,54 +42,58 @@
 
 %% OPENINGS STYLE
 % Global setting, In Preamble. Local changes: \thisopeningstyle{}.
-\def\@opentop{0} % At top. 
-\def\@openht{0} % Number of lines shaded, when shadelines.
+\def\nvt@opentop{0} % At top. 
+\def\nvt@openht{0} % Number of lines shaded, when shadelines.
 \newcommand\openings[1]{
-  \@oktrue
-  \StrDel{#1,}{ }[\temp@s]
-  \StrBehind{\temp@s}{top=}[\temp@n]
-  \StrBefore{\temp@n}{,}[\temp@n]
-  \IfInteger{\temp@n}{
-    \FPiflt{\temp@n}{2}\def\temp@n{2}\@okfalse\fi
-    \FPmul{\temp@d}{\@lpp}{.33}
-    \FPtrunc{\temp@d}{\temp@d}{0}
-    \FPifgt{\temp@n}{\temp@d}\def\temp@n{\temp@d}\@okfalse\fi
+  \nvt@oktrue
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{top=}[\nvt@temp@n]
+  \StrBefore{\nvt@temp@n}{,}[\nvt@temp@n]
+  \IfInteger{\nvt@temp@n}{
+    \FPiflt{\nvt@temp@n}{2}\def\nvt@temp@n{2}\nvt@okfalse\fi
+    \FPmul{\nvt@temp@d}{\nvt@lpp}{.33}
+    \FPtrunc{\nvt@temp@d}{\nvt@temp@d}{0}
+    \FPifgt{\nvt@temp@n}{\nvt@temp@d}\def\nvt@temp@n{\nvt@temp@d}\nvt@okfalse\fi
   }{}
-  \ifthenelse{\equal{\temp@n}{}}{
-    \FPmul{\temp@n}{\@lpp}{.25}
-    \FPtrunc{\temp@n}{\temp@n}{0}
+  \ifthenelse{\equal{\nvt@temp@n}{}}{
+    \FPmul{\nvt@temp@n}{\nvt@lpp}{.25}
+    \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
   }{}
-  \xdef\@opentop{\temp@n}
-  \StrBehind{\temp@s}{height=}[\temp@n]
-  \StrBefore{\temp@n}{,}[\temp@n]
-  \IfInteger{\temp@n}{
-    \FPiflt{\temp@n}{4}\def\temp@n{4}\@okfalse\fi
-    \FPmul{\temp@d}{\@lpp}{.6}
-    \FPtrunc{\temp@d}{\temp@d}{0}
-    \FPifgt{\temp@n}{\temp@d}\def\temp@n{\temp@d}\@okfalse\fi
+  \xdef\nvt@opentop{\nvt@temp@n}
+  \StrBehind{\nvt@temp@s}{height=}[\nvt@temp@n]
+  \StrBefore{\nvt@temp@n}{,}[\nvt@temp@n]
+  \IfInteger{\nvt@temp@n}{
+    \FPiflt{\nvt@temp@n}{4}\def\nvt@temp@n{4}\nvt@okfalse\fi
+    \FPmul{\nvt@temp@d}{\nvt@lpp}{.6}
+    \FPtrunc{\nvt@temp@d}{\nvt@temp@d}{0}
+    \FPifgt{\nvt@temp@n}{\nvt@temp@d}\def\nvt@temp@n{\nvt@temp@d}\nvt@okfalse\fi
   }{}
-  \ifthenelse{\equal{\temp@n}{}}{
-    \FPmul{\temp@n}{\@lpp}{.5}
-    \FPtrunc{\temp@n}{\temp@n}{0}
+  \ifthenelse{\equal{\nvt@temp@n}{}}{
+    \FPmul{\nvt@temp@n}{\nvt@lpp}{.5}
+    \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
   }{}
-  \xdef\@openht{\temp@n}
-  \StrBehind{\temp@s}{align=}[\temp@s]
-  \StrBefore{\temp@s}{,}[\temp@s]
-  \gdef\@openalign{oops}
-  \ifthenelse{\equal{\temp@s}{left}}{\gdef\@openalign{left}}{}
-  \ifthenelse{\equal{\temp@s}{right}}{\gdef\@openalign{right}}{}
-  \ifthenelse{\equal{\temp@s}{center}}{\gdef\@openalign{center}}{}
-  \ifthenelse{\equal{\temp@s}{outside}}{\gdef\@openalign{outside}}{}
-  \ifthenelse{\equal{\temp@s}{inside}}{\gdef\@openalign{inside}}{}
-  \ifthenelse{\equal{\temp@s}{}}{\gdef\@openalign{center}}{}
-  \ifthenelse{\equal{\@openalign}{oops}}{\gdef\@openalign{left}\@okfalse}{}
-  \if@ok\else\@errBVO\fi
-  \xdef\log@openings{\string\openings{top=\@opentop,height=\@openht,%
-    alignment=\@openalign}}
+  \xdef\nvt@openht{\nvt@temp@n}
+  \StrBehind{\nvt@temp@s}{align=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \gdef\nvt@openalign{oops}
+  \ifthenelse{\equal{\nvt@temp@s}{left}}{\gdef\nvt@openalign{left}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{right}}{\gdef\nvt@openalign{right}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{center}}{\gdef\nvt@openalign{center}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{outside}}{\gdef\nvt@openalign{outside}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{inside}}{\gdef\nvt@openalign{inside}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{}}{\gdef\nvt@openalign{center}}{}
+  \ifthenelse{\equal{\nvt@openalign}{oops}}{\gdef\nvt@openalign{left}\nvt@okfalse}{}
+  \ifnvt@ok\else\nvt@errBVO\fi
+  \xdef\log@openings{\string\openings{top=\nvt@opentop,height=\nvt@openht,%
+    alignment=\nvt@openalign}}
 }
 \@onlypreamble\openings
-\def\@process@openings{
-  \ifthenelse{\equal{\@openht}{0}}{
+%%
+
+
+%%
+\def\nvt@process@openings{ % AtEndPreamle.
+  \ifthenelse{\equal{\nvt@openht}{0}}{
     \openings{} % Defaults.
   }{}
 }
@@ -99,8 +103,8 @@
 %% OPENING ENVIRONMENT
 \newenvironment{opening}{%
   \clearpage%
-  \if@has@header%
-    \if@has@footer%
+  \ifnvt@header%
+    \ifnvt@footer%
       \thispagestyle{footer}% %%%%%
     \else%
       \thispagestyle{empty}%
@@ -109,17 +113,19 @@
   \suppressfloats[t]% Ensures that a floated image does not go above opening.
   \suppressfloats[b]% Or beneath.
   \begingroup%
-  \@inopeningtrue%
+  \nvt@zmarktrue%
+  \nvt@inopeningtrue%
   \setlength\parindent{0pt}% Just within this environment.
-  \ifthenelse{\equal{\@openalign}{left}}{}{}%
-  \ifthenelse{\equal{\@openalign}{right}}{\raggedleft}{}%
-  \ifthenelse{\equal{\@openalign}{center}}{\begin{center}}{}%
-  \ifthenelse{\equal{\@openalign}{outside}}{\ifodd\c@page\raggedleft\fi}{}%
-  \ifthenelse{\equal{\@openalign}{inside}}{\ifodd\c@page\else\raggedleft\fi}{}%
+  \ifthenelse{\equal{\nvt@openalign}{left}}{}{}%
+  \ifthenelse{\equal{\nvt@openalign}{right}}{\raggedleft}{}%
+  \ifthenelse{\equal{\nvt@openalign}{center}}{\begin{center}}{}%
+  \ifthenelse{\equal{\nvt@openalign}{outside}}{\ifodd\c@page\raggedleft\fi}{}%
+  \ifthenelse{\equal{\nvt@openalign}{inside}}{\ifodd\c@page\else\raggedleft\fi}{}%
 }{% Close the environment:
-  \ifthenelse{\equal{\@openalign}{center}}{\end{center}}{}%
-  \setcounter{@fnmnum}{1}% Footnote markers.
+  \ifthenelse{\equal{\nvt@openalign}{center}}{\end{center}}{}%
+  \setcounter{nvt@fnmnum}{1}% Footnote markers.
   \endgroup%
+  \nvt@zmarkfalse%
   \setlength\parindent{\normalindent}% Restored.
 }
 \AfterEndEnvironment{opening}{%
@@ -129,17 +135,17 @@
 
 
 \newcommand\name[1]{%
-  \if@inopening%
+  \ifnvt@inopening%
     \null\par%
-    \strut\smash{\@namefont #1}\par%
+    \strut\smash{\nvt@namefont #1}\par%
   \else%
     {#1}%
   \fi%
 }
 \newcommand\desc[1]{%
-  \if@inopening%
+  \ifnvt@inopening%
     \null\par%
-    \strut\smash{\@descfont #1}\par%
+    \strut\smash{\nvt@descfont #1}\par%
   \else%
     {#1}%
   \fi%
@@ -163,9 +169,9 @@
   \clearpage%
   \thispagestyle{empty}%
   \begingroup%
-  \@indisplaytrue%
+  \nvt@indisplaytrue%
   \setlength\parindent{0pt}%
-  \setlength\parskip{\@leading}%
+  \setlength\parskip{\nvt@leading}%
   \begin{center}%
 }{% End the environment:
   \end{center}%

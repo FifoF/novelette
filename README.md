@@ -14,15 +14,16 @@ the code.
 
 Expected release late March 2023.
 
-UPDATE, March 13, 2023: Novelette works in its most essential features.
-The frills also work, but are likely to be revised. In particular, use of
-images is temporarily disabled.
+UPDATE, March 20, 2023: Novelette works in its most essential features.
+The frills also work, but are likely to be revised. Since TeXlive 2023
+will soon be available, I will delay Novelette until my own system has
+both 2022 and 2023 running.
 
 If you would like to try Novelette (Linux, for now), do this: Copy directory
 tex/lualatex/novelette to your home directory. Look inside for file
-sample-document.tex. Build it to PDF with this command:
+novelette-samplefile.tex. Build it to PDF with this command:
 ```
-lualatex sample-document
+lualatex novelette-samplefile
 ```
 If you are missing any packages in your TeX setup, then you will see the
 usual problems. Novelette does not use a lot of packages, so you should

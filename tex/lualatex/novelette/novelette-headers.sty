@@ -42,11 +42,13 @@
 
 %%
 \def\nvt@headily#1{%
-  \raisebox{2\nvt@dscn-\nvt@leading}{\rule{0pt}{\nvt@ascn+\nvt@leading}}%
-  \raisebox{2\nvt@dscn}{{\nvt@headfont\addfontfeature{ScaleAgain=\nvt@headrescale}#1}}%
+  \rule{4pt}{\nvt@leading-\nvt@dscn}{{\nvt@headfont #1}}%
+%  \raisebox{2\nvt@dscn-\nvt@leading}{\rule{0pt}{\nvt@ascn+\nvt@leading}}%
+%  \raisebox{2\nvt@dscn}{{\nvt@headfont#1}}%
+%{\nvt@gray{0}\rule{4pt}{\nvt@leading-\nvt@dscn}}%
 }
 \def\nvt@widebar{%
-  \rule[-\nvt@headrescale\nvt@dscn]{.08em}{\nvt@headrescale\nvt@dscn+\nvt@headrescale\nvt@ascn}%
+  \rule[-\nvt@dscn]{.08em}{\nvt@dscn+\nvt@ascn}%
 }
 %%
 
@@ -55,19 +57,19 @@
 \def\nvt@processnvt@hfstyle{ % Called AtEndPreamble.
   \ifthenelse{\equal{\nvt@hfstyle}{1}}{
     \fancyfoot[CO,CE]{\rule{0pt}{\nvt@ascn}%
-      {\nvt@headfont\addfontfeature{ScaleAgain=\nvt@headrescale}\pagenumber}}
+      {\nvt@headfont\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{2}}{
     \fancyhead[CE]{\nvt@headily{\versoheadtext}}
     \fancyhead[CO]{\nvt@headily{\rectoheadtext}}
-    \fancyfoot[CO,CE]{\vfil\leavevmode\rule{0pt}{\nvt@leading}%
-     {\nvt@headfont\addfontfeature{ScaleAgain=\nvt@headrescale}\pagenumber}}
+    \fancyfoot[CO,CE]{\rule{0pt}{\nvt@ascn}%
+      {\nvt@headfont\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{3}}{
     \fancyhead[LE]{\nvt@headily{\versoheadtext}}
     \fancyhead[RO]{\nvt@headily{\rectoheadtext}}
     \fancyfoot[LE,RO]{\vfil\leavevmode\rule{0pt}{\nvt@leading}%
-     {\nvt@headfont\addfontfeature{ScaleAgain=\nvt@headrescale}\pagenumber}}
+     {\nvt@headfont\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{4}}{
     \fancyhead[LE]{\nvt@headily{\pagenumber}}

@@ -146,7 +146,7 @@
 %%
 \def\nvt@start@calc{
   \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh-1in}
-  \global\deflength\nvtadj@totalh{\nvt@totalh-\nvt@ascn-\nvt@dscn}
+  \global\deflength\nvtadj@totalh{\nvt@totalh}
 }
 %%
 \def\nvt@calculate@leading@none{ % No header or footer.
@@ -160,7 +160,6 @@
   \FPdiv{\nvt@temp@leading}{\strip@pt\nvtadj@totalh}{\adj@lpp}
   \FPtrunc{\nvt@temp@leading}{\nvt@temp@leading}{3}
   \global\deflength\nvt@leading{\nvt@temp@leading pt}
-  \global\deflength\footskip{0pt}
 }
 %%
 \def\nvt@calculate@leading@head{ % Only header.
@@ -176,9 +175,6 @@
   \FPdiv{\nvt@temp@leading}{\strip@pt\nvtadj@totalh}{\adj@lpp}
   \FPtrunc{\nvt@temp@leading}{\nvt@temp@leading}{3}
   \global\deflength\nvt@leading{\nvt@temp@leading pt}
-  \global\deflength\footskip{0pt}
-  \global\deflength\headheight{\nvt@leading}
-  \global\deflength\headsep{\nvt@headgap\nvt@leading}
 }
 %%
 \def\nvt@calculate@leading@foot{ % Only footer.
@@ -194,7 +190,6 @@
   \FPdiv{\nvt@temp@leading}{\strip@pt\nvtadj@totalh}{\adj@lpp}
   \FPtrunc{\nvt@temp@leading}{\nvt@temp@leading}{3}
   \global\deflength\nvt@leading{\nvt@temp@leading pt}
-  \global\deflength\footskip{\nvt@footgap\nvt@leading+\nvt@leading}
 }
 \def\nvt@calculate@leading@both{ % Header and footer.
   \ifdefined\nvt@lpp\else
@@ -212,15 +207,11 @@
   \FPdiv{\nvt@temp@leading}{\strip@pt\nvtadj@totalh}{\adj@lpp}
   \FPtrunc{\nvt@temp@leading}{\nvt@temp@leading}{3}
   \global\deflength\nvt@leading{\nvt@temp@leading pt}
-  \global\deflength\headheight{\nvt@leading}
-  \global\deflength\headsep{\nvt@headgap\nvt@leading}
-  \global\deflength\footskip{\nvt@footgap\nvt@leading}
 }
 %%
 \def\nvt@finish@calc{
-  \global\deflength\topskip{\nvt@ascn}
-  \global\deflength\textheight{\nvt@lpp\nvt@leading-\nvt@leading+\nvt@ascn}
   \global\deflength\baselineskip{\nvt@leading}
+  \global\deflength\textheight{\nvt@lpp\nvt@leading-\nvt@leading}
   \xdef\log@design{%
     \string\design{chars=\nvt@textchars,lines=\nvt@lpp,%
     headgap=\nvt@headgap,footgap=\nvt@footgap,%
@@ -229,9 +220,9 @@
 }
 %%
 \def\nvt@check@leading{
-  \FPadd{\nvt@temp@d}{\strip@pt\nvt@ascn}{\strip@pt\nvt@dscn}
-  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@leading}{\nvt@temp@d}
-  \FPiflt{\nvt@temp@n}{1}\nvt@errTMLPP\fi % Too many lines per page.
+%  \FPadd{\nvt@temp@d}{\strip@pt\nvt@ascn}{\strip@pt\nvt@dscn}
+%  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@leading}{\nvt@temp@d}
+%  \FPiflt{\nvt@temp@n}{1}\nvt@errTMLPP\fi % Too many lines per page.
 }
 %%
 
@@ -256,6 +247,26 @@
   \let\huge\normalsize\relax
   \let\Huge\normalsize\relax
   \let\HUGE\normalsize\relax
+  \sbox0{\mainfont 3456789JÀÁÂÃÄÅÇçjfhlygpqþ} % Highest and lowest Latin-1.
+  \FPadd{\nvt@temp@d}{\strip@pt\ht0}{\strip@pt\dp0}
+  \FPmul{\nvt@temp@n}{\strip@pt\nvt@typesize}{1.2}
+  \FPifgt{\nvt@temp@d}{\nvt@temp@n}
+    \FPdiv{\nvt@temp@r}{\nvt@temp@n}{\nvt@temp@d}
+  \else
+    \def\nvt@temp@r{1}
+  \fi
+  \FPtrunc{\nvt@temp@r}{\nvt@temp@r}{3}
+  \FPclip{\nvt@temp@r}{\nvt@temp@r}
+  \global\deflength\nvt@ascn{\ht0}
+  \global\deflength\nvt@dscn{\dp0}
+  \global\deflength\topskip{\nvt@leading}
+  \ifnvt@header
+    \global\deflength\headheight{\nvt@leading}
+    \global\deflength\headsep{\nvt@headgap\nvt@leading-\nvt@dscn}
+  \fi
+  \ifnvt@footer
+    \global\deflength\footskip{\nvt@footgap\nvt@leading+\nvt@leading}
+  \fi
 }
 %%
 

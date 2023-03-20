@@ -255,7 +255,6 @@
   \nvt@process@design
   \RequirePackage{novelette-fonts}
   \nvt@process@mainfont
-  \nvt@rescale@mainfont
   \nvt@calculate@leading
   \nvt@renew@normalsize % The real value.
   \DeclareDocumentCommand\lipsum{sO{}o}{\nvt@errLINL} % Lipsum is not loaded.
@@ -265,7 +264,6 @@
   \RequirePackage[\nvt@MT]{microtype}
   \def\MT@find@file#1{} % Prevents loading mt-*.cfg files AtBeginDocument.
   \nvt@process@headfont
-  \nvt@rescale@headfont
   \nvt@process@otherfonts
   \RequirePackage{novelette-footnotes}
   \RequirePackage{novelette-opendisp}
@@ -278,7 +276,7 @@
 %  \directlua{require "novelette-sidebearings"}
 %  \def\lsidebearing#1{\directlua{packagedata.sidebearings.left [[#1]]}}
 %  \def\rsidebearing#1{\directlua{packagedata.sidebearings.right [[#1]]}}
-  \ifnvt@shademargins\RequirePackage{novelette-shades}\fi
+  \ifnvt@shademargins\RequirePackage{novelette-shading}\fi
   \ifthenelse{\equal{\nvt@mode}{draft}}{\nvt@labeldraft}{}
   \ifthenelse{\equal{\nvt@mode}{shade}}{\nvt@labelshade}{}
   \ifthenelse{\equal{\nvt@mode}{align}}{\nvt@labelalign}{}

@@ -22,6 +22,7 @@ The placement is at most one of (clr), at most one of (ntbi):
 	r -> right-aligned (except inline)
 	n -> no-float
 	t -> top-float
+	h -> here-float (n if possible, or t if not).
 	b -> bottom-float
 	i -> inline
 If an image is inline, its size is limited, and any other placement is ignored.
@@ -32,13 +33,9 @@ default placement agrees with the opening.
 	Default vertical placement is no-float. The image will be placed where you
 write the \image command. If it cannot fit on that page, it will move to
 the next page, possibly leaving blank lines behind it. Unless that is what
-you want, you should fix placement using top-float or bottom-float.
-	Experienced TeX users: Notice that there is no "h" (here) placement.
-There is a fundamental difference between the way TeX calculates position,
-when it places the image "here" or floats is somewhere else. There is no easy
-way to maintin the line grid, without re-defining TeX floats. So if you need
-"here", begin with no-float, then manually change to top-float (or bottom)
-as necessary.
+you want, you should fix placement using here-float, top-float or bottom-float.
+	The bottom of the image will sit at a text baseline. It will be
+automatically padded at its top, to occupy an integral number of lines.
 
 
 ICONS
@@ -50,3 +47,5 @@ an icon cannot exceed 113 pixels height. The value may be slightly less,
 depending on other factors. The exact limit will be shown in the log Summary,
 which will also show where the surrounding text baseline will be positioned
 relative to the icon bottom.
+	Unlike other images, an icon is vertically positioned with its bottom
+at the text descender. This allows better blending with surrounding text.

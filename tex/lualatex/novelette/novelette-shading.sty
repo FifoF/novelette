@@ -1,4 +1,4 @@
-%% This is file `novelette-shades.sty',
+%% This is file `novelette-shading.sty',
 %% part of `novelette' document class.
 %% Copyright 2023 Robert Allgeyer.
 %%
@@ -10,7 +10,7 @@
 %% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2005/12/01 or later.
 %%
-\ProvidesFile{novelette-shades.sty}%
+\ProvidesFile{novelette-shading.sty}%
 [2023/01/20 v0.2 LaTeX file (shadings for margins and lines)]
 %%
 
@@ -45,30 +45,31 @@
 % (7) In side margins, place guides at \nvt@opentop and \nvt@openht.
 \pretocmd\@kernel@before@shipout@background{
   % Fill trim area with gray. If sheetfeed, do not extend gray outside trim:
-  \nvt@trim@LL{{\nvt@shadeto{.6}\rule{\nvt@trimw}{\nvt@trimh}}}
-  % Fill rectangle, bounded by margins, with light gray:
-  \nvt@print@LL{{\nvt@shadeto{.75}\rule{\nvt@trimw-\nvt@mout-\nvt@mins}{\nvt@trimh-\nvt@mtop-\nvt@mbot}}}
-  % Fill main textblock white. Side padding, header, footer remain light gray:
+  \nvt@trim@LL{{\nvt@gray{.6}\rule{\nvt@trimw}{\nvt@trimh}}}
+%  % Fill rectangle, bounded by margins, with light gray:
+%  \nvt@print@LL{{\nvt@gray{.75}\rule{\nvt@trimw-\nvt@mout-\nvt@mins}{\nvt@trimh-\nvt@mtop-\nvt@mbot}}}
+%  % Fill main textblock white. Side padding, header, footer remain light gray:
   \setlength\nvt@temp@l{0pt}
   \ifnvt@footer\setlength\nvt@temp@l{\nvt@leading+\nvt@footgap\nvt@leading}\fi
   \nvt@print@LL{%
-    \hspace{\nvt@spad}{\nvt@shadeto{1}\rule[\nvt@temp@l]{\textwidth}{\textheight+\nvt@dscn}}%
+%    \hspace{\nvt@spad}{\nvt@gray{1}\rule[\nvt@temp@l]{\textwidth}{\textheight+\nvt@dscn}}%
+    {\nvt@gray{1}\rule{\textwidth+2\nvt@spad}{\nvt@totalh}}%
   }
   % If shadelines, do it for main, header, footer:
   \ifnvt@shadelines
     \nvt@shade@main@lines
     \ifnvt@header
-      \nvt@print@UL{{\nvt@shadeto{.8}\rule[-\nvt@ascn-\nvt@dscn]{\textwidth+2\nvt@spad}{\nvt@dscn}}}
+      \nvt@print@UL{{\nvt@gray{.8}\rule[-\nvt@leading]{\textwidth+2\nvt@spad}{\nvt@dscn}}}
     \fi%
     \ifnvt@footer
-      \nvt@print@LL{{\nvt@shadeto{.8}\rule{\textwidth+2\nvt@spad}{\nvt@dscn}}}
+      \nvt@print@LL{{\nvt@gray{.8}\rule{\textwidth+2\nvt@spad}{\nvt@dscn}}}
     \fi
   \fi
   \nvt@place@opening@guides
   % Dark gray area for spine glue:
   \setlength\nvt@temp@l{\nvt@trimw-\nvt@spinew}%
   \ifodd\c@page\setlength\nvt@temp@l{0pt}\fi%
-  \nvt@trim@LL{\rule{\nvt@temp@l}{0pt}{\nvt@shadeto{.4}\rule{\nvt@spinew}{\nvt@trimh}}}%
+  \nvt@trim@LL{\rule{\nvt@temp@l}{0pt}{\nvt@gray{.4}\rule{\nvt@spinew}{\nvt@trimh}}}%
 }{\typeout{Shading applied.}}{\typeout{Shading failed.}}
 %%
 
@@ -77,11 +78,12 @@
 \def\nvt@shade@main@lines{%
   \setcounter{nvt@mline}{0}%
   \loop%
-  \nvt@print@UL{\nvt@shadeto{.9}%
+  \nvt@print@UL{\nvt@gray{.9}%
     \hspace{\nvt@spad}%
     \setlength\nvt@temp@l{-\value{nvt@mline}\nvt@leading}%
     \ifnvt@header\addtolength\nvt@temp@l{-\nvt@leading-\nvt@headgap\nvt@leading}\fi%
-    \rule[\nvt@temp@l-\nvt@ascn-\nvt@dscn]{\textwidth}{\nvt@dscn}%
+%    \rule[\nvt@temp@l-\nvt@ascn-\nvt@dscn]{\textwidth}{\nvt@dscn}%
+    \rule[\nvt@temp@l]{\textwidth}{\nvt@dscn}%
   }%
   \addtocounter{nvt@mline}{1}%
   \ifnum\value{nvt@mline}<\nvt@lpp%
@@ -94,16 +96,16 @@
 \def\nvt@place@opening@guides{%
   \FPsub{\nvt@openht}{\nvt@openht}{1}%
   \FPsub{\nvt@opentop}{\nvt@opentop}{1}%
-  \nvt@print@UL{{\nvt@shadeto{.8}
+  \nvt@print@UL{{\nvt@gray{.8}
     \hspace{-16pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@opentop\nvt@leading]{12pt}{\nvt@dscn}
   }}%
-  \nvt@print@UL{{\nvt@shadeto{.8}
+  \nvt@print@UL{{\nvt@gray{.8}
     \hspace{-16pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@openht\nvt@leading]{12pt}{\nvt@dscn}
   }}%
-  \nvt@print@UL{{\nvt@shadeto{.8}
+  \nvt@print@UL{{\nvt@gray{.8}
     \hspace{\textwidth+2\nvt@spad+4pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@opentop\nvt@leading]{12pt}{\nvt@dscn}
   }}%
-  \nvt@print@UL{{\nvt@shadeto{.8}
+  \nvt@print@UL{{\nvt@gray{.8}
     \hspace{\textwidth+2\nvt@spad+4pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@openht\nvt@leading]{12pt}{\nvt@dscn}
   }}%
 }
@@ -113,4 +115,4 @@
 %%
 \endinput
 %%
-%% End of file `novelette-shades.sty'.
+%% End of file `novelette-shading.sty'.

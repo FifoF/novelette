@@ -15,15 +15,6 @@
 %%
 
 
-%% CHARACTER SET
-% Novelette measures tallest (above baseline) and deepest (below baseline)
-% characters in Latin-1. If your main language uses taller|deeper characters,
-% you should add them to the string. This prevents too many lines per page.
-\newcommand\charmeasure[1]{\gdef\nvt@charmeasure{3456789JÀÁÂÃÄÅÇçjfhlygpqþ#1}}
-\charmeasure{}
-%%
-
-
 %% Developer tool, for testing fonts. If used, must precede any \setfont.
 \newcommand\kernoff{\gdef\nvt@maybekern{}}
 \def\nvt@maybekern{Kerning=On,}
@@ -88,37 +79,7 @@
   \fi
   \setmainfont{\nvt@main@font}[\nvt@main@feat]
   \let\mainfont\rmfamily\relax % Backwards compatibility.
-}
-%%
-
-
-%% A "well-behaved" font has a Latin-1 character set in which the total height
-% from lowest descender (gjy) to heightest ascender (accents over capitals)
-% does not exceed 1.2em. If font is not well-behaved, it is scaled to fit.
-\def\nvt@rescale@mainfont{
-  \sbox0{\mainfont \nvt@charmeasure}
-  \FPadd{\nvt@temp@d}{\strip@pt\ht0}{\strip@pt\dp0}
-  \FPmul{\nvt@temp@n}{\strip@pt\nvt@typesize}{1.2}
-  \FPifgt{\nvt@temp@d}{\nvt@temp@n}
-    \FPdiv{\nvt@temp@r}{\nvt@temp@n}{\nvt@temp@d}
-  \else
-    \def\nvt@temp@r{1}
-  \fi
-  \FPtrunc{\nvt@temp@r}{\nvt@temp@r}{3}
-  \FPclip{\nvt@temp@r}{\nvt@temp@r}
-  \xdef\nvt@mainrescale{\nvt@temp@r}
-  \global\deflength\nvt@ascn{\nvt@mainrescale\ht0}
-  \global\deflength\nvt@dscn{\nvt@mainrescale\dp0}
-  \FPifeq{\nvt@mainrescale}{1}\else
-    \xdef\nvt@temp@s{\nvt@main@feat}
-    \xdef\nvt@main@feat{\nvt@temp@s,ScaleAgain=\nvt@mainrescale}
-  \fi
-  \StrSubstitute{\nvt@main@feat}{,,}{,}[\nvt@main@feat]
-  \IfBeginWith{\nvt@main@feat}{,}{\StrGobbleLeft{\nvt@main@feat}{1}[\nvt@main@feat]}{}
-  \setmainfont{\nvt@main@font}[\nvt@main@feat]
-  \ifthenelse{\equal{\nvt@main@feat}{}}{\def\nvt@temp@s{}}{\def\nvt@temp@s{[\nvt@main@feat]}}
-  \xdef\log@mainfont{\string\setfont{main}{\nvt@main@font}\nvt@temp@s}
-  \let\mainfont\rmfamily\relax % Backwards compatibility.
+  \xdef\log@mainfont{\string\setfont{main}{\nvt@main@font}\nvt@main@feat}
 }
 %%
 
@@ -131,31 +92,9 @@
     \newfontfamily\nvt@headfont{\nvt@head@font}[\nvt@head@feat]
   }{
     \nvt@warnNFF{\nvt@head@font}
-    \newfontfamily\nvt@headfont{\nvt@main@font}[ScaleAgain=\nvt@mainrescale]
+    \newfontfamily\nvt@headfont{\nvt@main@font}
   }
-}
-%%
-
-
-%%
-\def\nvt@rescale@headfont{
-  \sbox0{{\nvt@headfont \nvt@charmeasure}}
-  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@ascn}{\strip@pt\ht0}
-  \FPdiv{\nvt@temp@d}{\strip@pt\nvt@ascn}{\strip@pt\dp0}
-  \FPmin{\nvt@temp@n}{\nvt@temp@n}{\nvt@temp@d}
-  \FPmin{\nvt@temp@n}{\nvt@temp@n}{1}
-  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{3}
-  \FPclip{\nvt@temp@n}{\nvt@temp@n}
-  \xdef\nvt@headrescale{\nvt@temp@n}
-  \FPifeq{\nvt@headrescale}{1}\else
-    \xdef\nvt@temp@s{\nvt@head@feat}
-    \xdef\nvt@head@feat{\nvt@temp@s,ScaleAgain=\nvt@headrescale}
-  \fi
-  \StrSubstitute{\nvt@head@feat}{,,}{,}[\nvt@head@feat]
-  \IfBeginWith{\nvt@head@feat}{,}{\StrGobbleLeft{\nvt@head@feat}{1}[\nvt@head@feat]}{}
-  \renewfontfamily\nvt@headfont{\nvt@head@font}[\nvt@head@feat]
-  \ifthenelse{\equal{\nvt@head@feat}{}}{\def\nvt@temp@s{}}{\def\nvt@temp@s{[\nvt@head@feat]}}
-  \xdef\log@headfont{\string\setfont{head}{\nvt@head@font}\nvt@temp@s}
+  \xdef\log@headfont{\string\setfont{head}{\nvt@head@font}\nvt@head@feat}
 }
 %%
 

@@ -50,8 +50,8 @@
   \aftergroup\@prevcolor%
 }
 \def\@prevcolor{\pdfextension colorstack 0 pop\relax}
-\DeclareRobustCommand\nvt@shadeto[1]{\def\nvt@shade{#1 g #1 G}\@newcolor\ignorespaces}
-\protected\def\nvt@textshadeto#1#2{{\nvt@shade{#1}#2}}
+\DeclareRobustCommand\nvt@gray[1]{\def\nvt@shade{#1 g #1 G}\@newcolor\ignorespaces}
+\protected\def\nvt@textgray#1#2{{\nvt@shade{#1}#2}}
 %%
 
 
@@ -85,6 +85,7 @@
 \newsavebox\nvt@imgbox
 \def\ftype@figure{1} % Mystery TeX code.
 \DeclareDocumentCommand\image{O{}m}{%
+\vspace*{-\nvt@leading}\null%
   \begingroup%
   \def\nvt@imgfilename{#2}%
   \setlength\parindent{0pt}%
@@ -96,7 +97,7 @@
     \saveimageresource attr{/Interpolate true } cropbox {#2}%
     \sbox\nvt@imgbox{\useimageresource\the\lastsavedimageresourceindex}%
   }{%
-    \sbox\nvt@imgbox{\nvt@shadeto{.5}%
+    \sbox\nvt@imgbox{\nvt@gray{.5}%
       \rule[\nvt@ascn]{.5\textwidth}%
         {\nvt@dscn+\nvt@intht\nvt@leading-\nvt@leading+\nvt@ascn}%
     }%
@@ -110,6 +111,7 @@
   \ifthenelse{\equal{\nvt@floatpos}{n}}{\nvt@nofloatimg}{}%
   \ifthenelse{\equal{\nvt@floatpos}{t}}{\nvt@topfloatimg}{}%
   \ifthenelse{\equal{\nvt@floatpos}{b}}{\nvt@botfloatimg}{}%
+  \ifthenelse{\equal{\nvt@floatpos}{h}}{\nvt@herefloatimg}{}%
   \ifthenelse{\equal{\nvt@floatpos}{p}}{\nvt@pgfloatimg}{}%
   \ifthenelse{\equal{\nvt@floatpos}{i}}{\nvt@inlineimg}{}%
   \endgroup%
@@ -141,8 +143,7 @@
   \IfSubStr{#1}{t}{\def\nvt@floatpos{t}}{}%
   \IfSubStr{#1}{b}{\def\nvt@floatpos{b}}{}%
   \IfSubStr{#1}{p}{\def\nvt@floatpos{p}}{}%
-  \IfSubStr{#1}{i}{\def\nvt@floatpos{i}}{}%
-  \IfSubStr{#1}{h}{\nvt@errNIPH}{}% No image placement here.
+  \IfSubStr{#1}{h}{\def\nvt@floatpos{h}}{}% Actually ht.
 }
 %%
 
@@ -186,15 +187,13 @@
 
 %% UNFLOATED IMAGE
 \def\nvt@nofloatimg{%
-  \vspace*{-\nvt@leading}%
-  \null%
   \ifthenelse{\equal{\nvt@imgpos}{c}}{\hfil}{}%
   \ifthenelse{\equal{\nvt@imgpos}{r}}{\hfill}{}%
-  \raisebox{\nvt@ascn-\nvt@imgheight}{\usebox\nvt@imgbox}%
+  \rule{0pt}{\nvt@intht}%
+  \usebox\nvt@imgbox%
   \ifthenelse{\equal{\nvt@imgpos}{c}}{\hfil}{}%
   \ifthenelse{\equal{\nvt@imgpos}{l}}{\hfill}{}%
   \par%
-  \vspace*{\nvt@intht-\nvt@leading}%
 }
 %%
 
@@ -206,6 +205,24 @@
   \leavevmode%
   \ifthenelse{\equal{\nvt@imgpos}{c}}{\hfil}{}%
   \ifthenelse{\equal{\nvt@imgpos}{r}}{\hfill}{}%
+  \rule{0pt}{\nvt@intht}%
+  \usebox{\nvt@imgbox}%
+  \ifthenelse{\equal{\nvt@imgpos}{c}}{\hfil}{}%
+  \ifthenelse{\equal{\nvt@imgpos}{l}}{\hfill}{}%
+  \par%
+  \end@float%
+}
+%%
+
+
+%% HERE FLOAT
+\def\nvt@herefloatimg{%
+  \def\fps@figure{ht}%
+  \@float{figure}%
+  \leavevmode%
+  \ifthenelse{\equal{\nvt@imgpos}{c}}{\hfil}{}%
+  \ifthenelse{\equal{\nvt@imgpos}{r}}{\hfill}{}%
+  \rule{0pt}{\nvt@intht}%
   \usebox{\nvt@imgbox}%
   \ifthenelse{\equal{\nvt@imgpos}{c}}{\hfil}{}%
   \ifthenelse{\equal{\nvt@imgpos}{l}}{\hfill}{}%
@@ -222,6 +239,7 @@
   \leavevmode%
   \ifthenelse{\equal{\nvt@imgpos}{c}}{\hfil}{}%
   \ifthenelse{\equal{\nvt@imgpos}{r}}{\hfill}{}%
+%%%  \rule{0pt}{\nvt@intht}%
   \usebox{\nvt@imgbox}%
   \ifthenelse{\equal{\nvt@imgpos}{c}}{\hfil}{}%
   \ifthenelse{\equal{\nvt@imgpos}{l}}{\hfill}{}%

@@ -42,10 +42,7 @@
 
 %%
 \def\nvt@headily#1{%
-  \rule{4pt}{\nvt@leading-\nvt@dscn}{{\nvt@headfont #1}}%
-%  \raisebox{2\nvt@dscn-\nvt@leading}{\rule{0pt}{\nvt@ascn+\nvt@leading}}%
-%  \raisebox{2\nvt@dscn}{{\nvt@headfont#1}}%
-%{\nvt@gray{0}\rule{4pt}{\nvt@leading-\nvt@dscn}}%
+  {{\nvt@headfont #1}}%
 }
 \def\nvt@widebar{%
   \rule[-\nvt@dscn]{.08em}{\nvt@dscn+\nvt@ascn}%

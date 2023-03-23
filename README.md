@@ -33,5 +33,7 @@ The resulting PDF is in "align" mode. Margins are gray, and text baselines
 are marked. You may edit the *tex file to see other modes.
 
 Development continues. Documentation is very preliminary (what you see
-inside doc directory is really just some basic info).
+inside doc directory is really just some basic info). Currently, I am tweaking
+some of the alignment settings. The included Swainson fonts are not yet
+ready for building to *.otf.
 

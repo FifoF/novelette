@@ -91,14 +91,15 @@
 \newif\ifnvt@shademargins % True in shade mode.
 \newif\ifnvt@draft % True unless final mode.
 \newif\ifnvt@imgwarn % True if image warning issued.
+\newif\ifnvt@imgdrop % True if image aligned to descender, instead of baseline.
+\newif\ifnvt@error@thrown % True if any error detected during compile.
 %%
 
 
 %% LENGTHS (Used in various Novelette files.)
 \newlength\normalindent % Standard paragraph indent.
 \newlength\nvt@totalh % Printable height, between top/bottom margins.
-\newlength\nvtadj@totalh % Printable height, minus font ascender and descender.
-\newlength\nvt@typesize % Main font size.
+\newlength\nvt@fontsize % Main font size.
 \newlength\nvt@leading % Standard baseline skip.
 \newlength\nvt@dscn % Main font descender (depth of JQgjpqy).
 \newlength\nvt@ascn % Main font ascender (height of accented Latin-1 capitals).
@@ -114,16 +115,7 @@
 \newlength\nvt@intht % Integer multiple of \nvt@leading >= \nvt@imgheight.
 \newlength\nvt@trimleft % Pagesize position of left edge of trimsize.
 \newlength\nvt@spinew % Nominal width of spine glue area.
-%%
-
-
-%% SCRATCH STRINGS, NUMBERS, LENGTHS.
 \newlength\nvt@temp@l % Local scratch length.
-\def\nvt@temp@s{} % Usually string, may be processed to number or length.
-\def\nvt@temp@n{} \def\nvt@temp@d{} \def\nvt@temp@r{}
-\def\nvt@temp@t{} \def\nvt@temp@o{} \def\nvt@temp@b{} \def\nvt@temp@i{}
-\def\nvt@temp@w{} \def\nvt@temp@h{}
-\def\nvt@temp@ckln{}
 %%
 
 
@@ -204,8 +196,8 @@
 \RequirePackage{noindentafter} % For unindented chapter and scene starts.
 \RequirePackage{novelette-utilities}
 \RequirePackage{novelette-settings}
-\RequirePackage{novelette-design}
 \RequirePackage{novelette-fonts}
+\RequirePackage{novelette-design}
 %%
 
 
@@ -273,10 +265,7 @@
   \nvt@processnvt@hfstyle
   \nvt@process@openings
   \RequirePackage{novelette-fillertext}
-%  \directlua{require "novelette-sidebearings"}
-%  \def\lsidebearing#1{\directlua{packagedata.sidebearings.left [[#1]]}}
-%  \def\rsidebearing#1{\directlua{packagedata.sidebearings.right [[#1]]}}
-  \ifnvt@shademargins\RequirePackage{novelette-shading}\fi
+  \RequirePackage{novelette-shading}
   \ifthenelse{\equal{\nvt@mode}{draft}}{\nvt@labeldraft}{}
   \ifthenelse{\equal{\nvt@mode}{shade}}{\nvt@labelshade}{}
   \ifthenelse{\equal{\nvt@mode}{align}}{\nvt@labelalign}{}
@@ -347,12 +336,15 @@
   \typeout{\log@design}
   \typeout{\log@openings}
   \typeout{\lognvt@markers}
-  \FPround{\nvt@temp@n}{\strip@pt\nvt@typesize}{2}
-  \FPclip{\nvt@temp@n}{\nvt@temp@n}
+  \FPclip{\nvt@temp@n}{\strip@pt\nvt@fontsize}
   \FPmul{\nvt@temp@d}{\nvt@temp@n}{.996264}
-  \FPround{\nvt@temp@d}{\nvt@temp@d}{2}
+  \FPround{\nvt@temp@d}{\nvt@temp@d}{3}
   \FPclip{\nvt@temp@d}{\nvt@temp@d}
-  \typeout{Calculated main font size: \nvt@temp@n pt TeX (\nvt@temp@d pt PostScript)}
+  \typeout{Size of main font: \nvt@temp@n pt TeX (\nvt@temp@d pt PostScript)}
+  \FPmul{\nvt@temp@n}{\nvt@temp@n}{.45}
+  \FPdiv{\nvt@temp@n}{\strip@pt\textwidth}{\nvt@temp@n}
+  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
+  \typeout{Estimated average \nvt@temp@n\space characters/line (incl. spaces)}
   \FPround{\nvt@temp@n}{\strip@pt\nvt@leading}{2}
   \FPclip{\nvt@temp@n}{\nvt@temp@n}
   \FPmul{\nvt@temp@d}{\nvt@temp@n}{.996264}
@@ -360,7 +352,7 @@
   \FPclip{\nvt@temp@d}{\nvt@temp@d}
   \typeout{Calculated leading (baselineskip): %
     \nvt@temp@n pt TeX (\nvt@temp@d pt PostScript)}
-  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@leading}{\strip@pt\nvt@typesize}
+  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@leading}{\strip@pt\nvt@fontsize}
   \FPround{\nvt@temp@n}{\nvt@temp@n}{2}
   \FPclip{\nvt@temp@n}{\nvt@temp@n}
   \typeout{Calculated ratio leading/fontsize: \nvt@temp@n}

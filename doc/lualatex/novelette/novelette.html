@@ -37,9 +37,9 @@ and how to choose their values:</p>
 <a href="#title">\title</a>{Your Wonderful Book}<br>
 <a href="#author">\author</a>{Famous Author}<br>
 <a href="#trimsize">\trimsize</a>{width=5.5in,height=8.5in}<br>
-<a href="#sheetfeed">\sheetfeed</a>{trimsize} % Normally not used.<br>
+<a href="#sheetfeed">\sheetfeed</a>{choice} % Normally not used.<br>
 <a href="#margins">\margins</a>{top=.5in,outside=.5in,bottom=.5in,inside=.625in}<br>
-<a href="#design">\design</a>{chars=62,lines=30,style=2,headgap=1.5,footgap=1.5}<br>
+<a href="#design">\design</a>{fontsize=11.6pt,lines=30,style=2,headgap=1.5,footgap=1.5}<br>
 <a href="#setfont">\setfont</a>{main}{EB Garamond}[liga]<br>
 <a href="#openings">\openings</a>{top=5,height=14,align=center}<br>
 \begin{document}<br>
@@ -179,11 +179,11 @@ pages. The cover size is slightly larger.</p>
 
 <a id="sheetfeed"></a>
 <div>
-<h3>\sheetfeed{<i>choose</i>}</h3>
+<h3>\sheetfeed{<i>choice</i>}</h3>
 <p>Do not use the \sheetfeed setting, unless you are certain that you need it.
 If you use this setting incorrectly, big problems will result. Do not guess.
-Available choices are trimsize, letter, A4.</p>
-<p><b>trimsize</b> is the default. The PDF page size will be the same as the
+Available choices are <i>letter</i> and <i>A4</i>.</p>
+<p><b>If you do not use \sheetfeed, the PDF page size will be the same as the
 book trim size. This is how nearly all print-on-demand services want it.</p>
 <p><b>letter</b> centers the trim size, vertically and horizontally, in the
 larger USletter size (8.5in width, 11in height),</p>
@@ -227,17 +227,15 @@ At larger trim size, the margins will be larger.</p>
 
 <a id="design"></a>
 <div>
-<h3>\design</a>{chars=<i>C</i>,lines=<i>L</i>,style=<i>S</i>,headgap=<i>H</i>,footgap=<i>F</i>}</h3>
+<h3>\design</a>{fontsize=<i>M</i>,lines=<i>L</i>,style=<i>S</i>,headgap=<i>H</i>,footgap=<i>F</i>}</h3>
 <p>This setting determines page layout. In Novelette, you do not set either the
 font size, or the leading (baselineskip). Instead, they are automatically
 calculated from the trim size, margins, and design.</p>
-<p><b>chars</b> is the typical average number of characters (including spaces)
-per line of main text. More characters means that more text fits on each line.
-This is achieved by reducing the font size to fit. The default value for
-C is 62 for small to medium trim sizes, larger for large trim sizes.</p>
-<p>The value is not precise, and it is only an average. It assumes that the
-font you use, and your style of writing, is "typical" for popular fiction.
-Do a few test pages,to see what value of C works best.</p>
+<p><b>fontsize</b> is the size of main body text, with units pt (TeX points)
+or bp (PostScript points). The value may be integer or decimal. Typical value
+is 11.6pt. Run a test document and look at the log Summary. It will tell you
+the estimated average characters per line. Best readability is somewhere near
+65 characters. This number is inversely proportional to font size.</p>
 <p><b>lines</b>is the integer number of lines in the main text block. It does
 not count header or footer. Default value varies, based on other setings.</p>
 <p><b>style</b> is an integer from 1 to 7. It determines whether page layout
@@ -265,7 +263,7 @@ large book sizes. Value 0.5 is a nice compromise for smaller books.</p>
 <p><b>footgap</b> works like headgap, except it applies between main text
 and footer.</p>
 <p>If your design has both header and footer, it is best to set headgap and
-footgap at the same value. But this is not requird.</p> 
+footgap at the same value. But this is not required.</p> 
 </div>
 
 <a id="setfont"></a>

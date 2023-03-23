@@ -107,7 +107,7 @@
   \ClassError{novelette}{\string\icon{#1} is too tall.^^J%
    At 600 pixels/inch, maximum allowed height #2 pixels.^^J%
    At 300 pixels/inch, half that. Other pixels/inch, scale accordingly.^^J%
-   The limit is calculated from typesize and leading (baselineskip).^^J%
+   The limit is calculated from fontsize and leading (baselineskip).^^J%
    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
@@ -287,7 +287,7 @@
 
 \def\nvt@errBVSF{%
   \ClassError{novelette}{Bad value in \string\sheetfeed.^^J%
-   Defaults to trimsize, or choose one of:  trimsize letter A4.^^J%
+   Defaults to trimsize, or choose one of: letter A4.^^J%
    Do not set \string\sheetfeed, unless you know what you are doing.^^J%
    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
@@ -306,12 +306,13 @@
 
 \def\nvt@errBVDES{%
   \ClassError{novelette}{Bad setting for \string\design.^^J%
-    You may set all, some, or none of chars, lines, gap, style.^^J%
+    You may set all|some|none of fontsize, lines, headgap, footgap, style.^^J%
     Anything you do not set will be assigned a default value.^^J%
     Syntax is comma-separated key=value pairs.^^J%
-    chars=C where C is integer|decimal from 20 to 80. Typical 28.^^J%
+    fontsize=M where M is integer|decimal main font size, units pt|bp.^^J%
     lines=L where L is integer lines in main textblock (not header/footer).^^J%
-    gap=G where G is integer|decimal from 0 to 1. Default .5 if unset.^^J%
+    headgap=H where H is integer|decimal 0-1. Default=.5 if unset.^^J%
+    footgap=F where F is integer|decimal 0-1. Default=H if unset.^^J%
     style=S where S is integer, selects header/footer style. See docs.^^J%
     \nvt@XN}{\nvt@RXN}\nvt@bad%
 }

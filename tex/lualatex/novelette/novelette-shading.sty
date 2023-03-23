@@ -15,62 +15,125 @@
 %%
 
 
-%% SHADE MARGINS, SHADE LINES
-% This file is loaded AtEndPreamble, if mode shade or align.
-%   Shading is written into the background. But it must precede other
-% background items (in particular, overfull rules) or it will conceal them.
-% The `etoolbox` command \pretocmd does the trick.
-%   The \textblock does not occupy all width beteen \nvt@mins and \nvt@mout.
-% Thin padding \nvt@spad is at either side of \textblock. Although images must
-% be confined to \textblock, text may protrude into \nvt@spad. 
-%   When line positions are shaded, the top of the shade is at the baseline.
-% The thickness of the shade is \nvt@dscn.
+%% LABEL MODE, SHADE MARGINS, SHADE LINES, CHECK SIDEBEARINGS
+% Novelette provides several methods for ensuring that your printed content
+% is aligned with your page layout.
+%   In \mode{shade}, the four margins are shaded gray. In \mode{align}
+% the margins are shaded gray, and text baselines are also shaded, with the
+% top of the shade at baseline, and the bottom of shade at text descender.
+% Both of these modes also automatically invoke draft mode.
+%   Novelette allows a small amount of padding at the side margins, so that
+% protruding text does not infringe the margins. Using Lua, it is possible
+% to detect whether particular font characters have excessive protrusion.
+% That may occur for letters such as "J" at left, "f" at right, and is more
+% likely when using Italics. Although this file and the associated *.lua
+% files contain the necessary code, it is not yet enabled (needs more testing).
+%   In any mode except final, each page is labeled by mode, the title changes,
+% and the PDF metadata will be modified to exclude PDF/X conformance. The page
+% labels are provided here. Novelette automatically switches out of final mode
+% if errors or some warnings are detected, but by then it is too late to
+% label the pages.
+%%
 
 
+%% PAGE POSITIONS
+\newcommand\nvt@trim@LL[1]{% Lower left of trimsize.
+  \put(.5\pagewidth-.5\nvt@trimw,-.5\pageheight-.5\nvt@trimh){#1}%
+}
+% Printable area extends \nvt@spad beyond left and right sides of \textwidth.
+\newcommand\nvt@print@UL[1]{% Upper left of printable area.
+  \setlength\nvt@temp@l{.5\pagewidth-.5\nvt@trimw}%
+  \ifodd\c@page%
+    \put(\nvt@temp@l+\nvt@mins,-.5\pageheight+.5\nvt@trimh-\nvt@mtop){#1}%
+  \else%
+    \put(\nvt@temp@l+\nvt@mout,-.5\pageheight+.5\nvt@trimh-\nvt@mtop){#1}%
+  \fi%
+}
+\newcommand\nvt@print@LL[1]{% Lower left of printable area.
+  \setlength\nvt@temp@l{.5\pagewidth-.5\nvt@trimw}%
+  \ifodd\c@page%
+    \put(\nvt@temp@l+\nvt@mins,-.5\pageheight-.5\nvt@trimh+\nvt@mbot){#1}%
+  \else%
+    \put(\nvt@temp@l+\nvt@mout,-.5\pageheight-.5\nvt@trimh+\nvt@mbot){#1}%
+  \fi%
+}
+%%
+
+
+%% PAGE LABELS
+\def\nvt@labeldraft{%
+  \AddToHook{shipout/foreground}{%
+    \nvt@print@UL{%
+      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{{\normalfont MODE:DRAFT}}%
+    }%
+  }%
+}
+\def\nvt@labelshade{%
+  \AddToHook{shipout/foreground}{%
+    \nvt@print@UL{%
+      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{{\normalfont MODE:SHADE}}%
+    }%
+  }%
+}
+\def\nvt@labelalign{%
+  \AddToHook{shipout/foreground}{%
+    \nvt@print@UL{%
+      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{{\normalfont MODE:ALIGN}}%
+    }%
+  }%
+}
+%%
+
+
+%% SHADE MARGINS. SHADE LINES, OPENING GUIDES
 \newcounter{nvt@mline}
 \newcommand{\nvt@bghook}{}
 \newcommand{\nvt@addbg}{\g@addto@macro\nvt@bghook}
 \AddToHook{shipout/background}{\put(0,-\pageheight){\nvt@bghook}}
 \IfHookEmptyTF{shipout/background}{\AddToHook{shipout/background}{\relax}}{}
-
-
-%% SHADE MARGINS. SHADE LINES, OPENING GUIDES
-% (1) Fill entire trim area with gray. If using \sheetfeed, does not fill area
-% beyond the trimbox. (2) Fill rectangle bounded by margins with light gray.
-% (3) Fill main textbox with white. Thin side paddings, and the header/footer
-% areas (if used) remain light gray. (4) Fill spine glue strip with dark gray.
-% (5) If page has an opening environment, place small guides in side margins.
-% (6) If shadelines option, place pale gray lines at each baseline of header,
-% main tex, footer. Top of line is text baseline. Line depth is \nvt@dscn.
-% (7) In side margins, place guides at \nvt@opentop and \nvt@openht.
 \pretocmd\@kernel@before@shipout@background{
   % Fill trim area with gray. If sheetfeed, do not extend gray outside trim:
-  \nvt@trim@LL{{\nvt@gray{.6}\rule{\nvt@trimw}{\nvt@trimh}}}
-%  % Fill rectangle, bounded by margins, with light gray:
-%  \nvt@print@LL{{\nvt@gray{.75}\rule{\nvt@trimw-\nvt@mout-\nvt@mins}{\nvt@trimh-\nvt@mtop-\nvt@mbot}}}
-%  % Fill main textblock white. Side padding, header, footer remain light gray:
-  \setlength\nvt@temp@l{0pt}
-  \ifnvt@footer\setlength\nvt@temp@l{\nvt@leading+\nvt@footgap\nvt@leading}\fi
-  \nvt@print@LL{%
-%    \hspace{\nvt@spad}{\nvt@gray{1}\rule[\nvt@temp@l]{\textwidth}{\textheight+\nvt@dscn}}%
-    {\nvt@gray{1}\rule{\textwidth+2\nvt@spad}{\nvt@totalh}}%
-  }
-  % If shadelines, do it for main, header, footer:
+  \nvt@trim@LL{{\nvt@gray{.6}%
+    \rule{\nvt@trimw}{\nvt@mbot}%
+  }}
+  \nvt@trim@LL{{\nvt@gray{.6}%
+    \rule[\nvt@trimh-\nvt@mtop]{\nvt@trimw}{\nvt@mtop}%
+  }}
+  \ifodd\c@page
+    \nvt@trim@LL{{\nvt@gray{.6}%
+      \rule{\nvt@mins}{\nvt@trimh}%
+    }}
+    \nvt@trim@LL{\hspace*{\nvt@trimw-\nvt@mout}{\nvt@gray{.6}%
+      \rule{\nvt@mout}{\nvt@trimh}%
+    }}
+  \else
+    \nvt@trim@LL{{\nvt@gray{.6}%
+      \rule{\nvt@mout}{\nvt@trimh}%
+    }}
+    \nvt@trim@LL{\hspace*{\nvt@trimw-\nvt@mins}{\nvt@gray{.6}%
+      \rule{\nvt@mins}{\nvt@trimh}%
+    }}
+  \fi
   \ifnvt@shadelines
     \nvt@shade@main@lines
     \ifnvt@header
-      \nvt@print@UL{{\nvt@gray{.8}\rule[-\nvt@leading]{\textwidth+2\nvt@spad}{\nvt@dscn}}}
+      \nvt@print@UL{{\nvt@gray{.8}%
+        \rule[-\nvt@leading]{\textwidth+2\nvt@spad}{\nvt@dscn}%
+      }}
     \fi%
     \ifnvt@footer
-      \nvt@print@LL{{\nvt@gray{.8}\rule{\textwidth+2\nvt@spad}{\nvt@dscn}}}
+      \nvt@print@LL{{\nvt@gray{.8}%
+        \rule{\textwidth+2\nvt@spad}{\nvt@dscn}%
+      }}
     \fi
   \fi
   \nvt@place@opening@guides
-  % Dark gray area for spine glue:
   \setlength\nvt@temp@l{\nvt@trimw-\nvt@spinew}%
   \ifodd\c@page\setlength\nvt@temp@l{0pt}\fi%
-  \nvt@trim@LL{\rule{\nvt@temp@l}{0pt}{\nvt@gray{.4}\rule{\nvt@spinew}{\nvt@trimh}}}%
-}{\typeout{Shading applied.}}{\typeout{Shading failed.}}
+  \nvt@trim@LL{\rule{\nvt@temp@l}{0pt}{\nvt@gray{.4}%
+    \rule{\nvt@spinew}{\nvt@trimh}% Spine glue zone.
+  }}%
+}{\typeout{Shading applied.}}{\typeout{Shading failed.}} % Part of \pretocmd.
 %%
 
 
@@ -81,8 +144,11 @@
   \nvt@print@UL{\nvt@gray{.9}%
     \hspace{\nvt@spad}%
     \setlength\nvt@temp@l{-\value{nvt@mline}\nvt@leading}%
-    \ifnvt@header\addtolength\nvt@temp@l{-\nvt@leading-\nvt@headgap\nvt@leading}\fi%
-%    \rule[\nvt@temp@l-\nvt@ascn-\nvt@dscn]{\textwidth}{\nvt@dscn}%
+    \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@ascn}%
+    \ifnvt@header%
+      \addtolength\nvt@temp@l{-\nvt@leading-\nvt@headgap\nvt@leading}%
+      \addtolength\nvt@temp@l{-\nvt@dscn}%
+    \fi%
     \rule[\nvt@temp@l]{\textwidth}{\nvt@dscn}%
   }%
   \addtocounter{nvt@mline}{1}%
@@ -92,23 +158,69 @@
 %%
 
 
-%% Opening guides.
+%% OPENING GUIDES
 \def\nvt@place@opening@guides{%
   \FPsub{\nvt@openht}{\nvt@openht}{1}%
   \FPsub{\nvt@opentop}{\nvt@opentop}{1}%
-  \nvt@print@UL{{\nvt@gray{.8}
-    \hspace{-16pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@opentop\nvt@leading]{12pt}{\nvt@dscn}
+  \nvt@print@UL{{\nvt@gray{.8}%
+    \hspace{-16pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading%
+      -\nvt@headgap\nvt@leading-\nvt@opentop\nvt@leading]{12pt}{\nvt@dscn}%
   }}%
-  \nvt@print@UL{{\nvt@gray{.8}
-    \hspace{-16pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@openht\nvt@leading]{12pt}{\nvt@dscn}
+  \nvt@print@UL{{\nvt@gray{.8}%
+    \hspace{-16pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading%
+      -\nvt@headgap\nvt@leading-\nvt@openht\nvt@leading]{12pt}{\nvt@dscn}%
   }}%
-  \nvt@print@UL{{\nvt@gray{.8}
-    \hspace{\textwidth+2\nvt@spad+4pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@opentop\nvt@leading]{12pt}{\nvt@dscn}
+  \nvt@print@UL{{\nvt@gray{.8}%
+    \hspace{\textwidth+2\nvt@spad+4pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading%
+      -\nvt@headgap\nvt@leading-\nvt@opentop\nvt@leading]{12pt}{\nvt@dscn}%
   }}%
-  \nvt@print@UL{{\nvt@gray{.8}
-    \hspace{\textwidth+2\nvt@spad+4pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading-\nvt@headgap\nvt@leading-\nvt@openht\nvt@leading]{12pt}{\nvt@dscn}
+  \nvt@print@UL{{\nvt@gray{.8}%
+    \hspace{\textwidth+2\nvt@spad+4pt}\rule[-\nvt@dscn-\nvt@ascn-\nvt@leading%
+      -\nvt@headgap\nvt@leading-\nvt@openht\nvt@leading]{12pt}{\nvt@dscn}%
   }}%
 }
+%%
+
+
+%% LUA SIDEBEARINGS (not yet enabled)
+\def\lsidebearing#1{.08em} % Testing.
+\def\rsidebearing#1{.08em} % Testing.
+%  \directlua{require "novelette-sidebearings"}
+%  \def\lsidebearing#1{\directlua{packagedata.sidebearings.left [[#1]]}}
+%  \def\rsidebearing#1{\directlua{packagedata.sidebearings.right [[#1]]}}
+\def\nvt@getlsb#1{
+  \setlength\nvt@temp@l{\lsidebearing{#1}}
+  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@temp@l}{\strip@pt\nvt@leading}
+  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{3}
+  #1=\nvt@temp@n, %%%%% Really comma?
+}
+\def\nvt@getrsb#1{
+  \setlength\nvt@temp@l{\rsidebearing{#1}}
+  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@temp@l}{\strip@pt\nvt@leading}
+  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{3}
+  #1=\nvt@temp@n, %%%%% Really comma?
+}
+%%
+
+
+%% CHANGE MODE ON ERROR (not yet fully enabled)
+%% Detect whether an error was thrown, regardless of its source:
+\directlua{
+  local error_seen = false
+  local true_cmd = token.create'use_i:nn'
+  local false_cmd = token.create'use_ii:nn'
+  local id = luatexbase.new_luafunction'iferrorsissued'
+  token.set_lua('iferrorsissued', id)
+  lua.get_functions_table()[id] = function()
+    token.put_next(error_seen and true_cmd or false_cmd)
+  end
+  luatexbase.add_to_callback('show_error_hook', function()
+    error_seen = true
+    texio.write('.')
+    tex.show_context()
+  end, 'track_errors')
+}
+%% Do something about that: (TODO)
 %%
 
 

@@ -2,7 +2,7 @@
 PLACEHOLDER
 Subject to revision
 
-IMAGES
+IMAGES AND ICONS
 
 As of mid-March 2023, Novelette is in testing mode.
 
@@ -12,40 +12,52 @@ but more needs to be done.
 Do not use images yet.
 
 
+IMAGE COMMAND
 
 Novelette does not use \includegraphics or any other standard TeX command
-for image placement. It uses a custom \image command:
-	\image[placement]{filename.png}
-The placement is at most one of (clr), at most one of (ntbi):
-	c -> horizontally centered (except inline)
-	l -> left-aligned (except inline)
-	r -> right-aligned (except inline)
-	n -> no-float
-	t -> top-float
-	h -> here-float (n if possible, or t if not).
-	b -> bottom-float
-	i -> inline
-If an image is inline, its size is limited, and any other placement is ignored.
-Only an inline image may be placed within a paragraph. All other placements
-must be between paragraphs.
-	Default horizontal placement is centered, except in an opening, where the
-default placement agrees with the opening.
-	Default vertical placement is no-float. The image will be placed where you
-write the \image command. If it cannot fit on that page, it will move to
-the next page, possibly leaving blank lines behind it. Unless that is what
-you want, you should fix placement using here-float, top-float or bottom-float.
-	The bottom of the image will sit at a text baseline. It will be
-automatically padded at its top, to occupy an integral number of lines.
+for image insertion. It uses a custom \image command, with or without star:
+	\image[placement]{filename.png} % Image bottom at text baseline.
+	\image*[placement]{filename.png} % Image bottom at text descender.
+
+The placement may contain at most one of l,c,r, for horizontal alignment.
+Default is c, except in the opening environment, where the default may be
+set by the \openings command in Preamble.
+	l -> left-aligned
+	c -> horizontally centered
+	r -> right-aligned
+
+The placement may contain at most one of h,t,b, for insertion relative to
+the flow of main text. These are "similar but different" to standard LaTeX
+float definitions.
+	h -> Place image "here" where the \image command is written, anywhere on
+		the page. But if it cannot fit, move it to the top of the following
+		page. Main text will flow to fill the lines left behind.
+		If you do not wish text to flow, use \clearpage to break pages.
+	t -> Place image at "top" of the page where command is written, which
+		is usually above the command. In some cases, if the command is too
+		late, or if other material is at the top, then the image is moved
+		to the top of the following page.
+	b -> Place image at "bottom" of the page where command is written.
+		If it cannot fit there, place it at bottom of following page.
+The \image command must occupy its own paragraph. If you need an inline image,
+see the \emblem command.
 
 
-ICONS
-	In Novelette, an "icon" is a small image placed inline with text.
-It must conform to all other image requirements. In addition, its height
-is limited. The limit is less than or equal to 1.2 x typesize.
-	For example, at 600px/in, with typesize 11.4pt (72.27 TeX pt/in),
-an icon cannot exceed 113 pixels height. The value may be slightly less,
-depending on other factors. The exact limit will be shown in the log Summary,
-which will also show where the surrounding text baseline will be positioned
-relative to the icon bottom.
-	Unlike other images, an icon is vertically positioned with its bottom
-at the text descender. This allows better blending with surrounding text.
+EMBLEM COMMAND
+
+A Novelette "emblem" is an inline image. Unlike an ordinary image, the
+vertical height of an emblem is limited by the surrounding text size.
+The maximum width is limited by the available width of wherever you place
+the emblem. With care, you could use an emblem as a line by itself.
+	\emblem{filename.png} % Bottom of emblem at text baseline.
+	\emblem*{filename.png} % Bottom of emblem at text descender.
+Without the star, an \emblem may not be taller than the height of Latin-1
+uppercase letters with diacritical marks. With the star, an \emblem* may
+be that height plus the descender height. These values are measured and
+enforced.
+	Since \emblem* can occupy as much height, above and below the baseline,
+as the main font, it is a useful way to insert an unusual character as
+an image. At 600 pixels/inch it will be almost as sharp as text.
+Remember that Novelette is for print to paper, and thus does not benefit
+from scalable vector graphics.
+

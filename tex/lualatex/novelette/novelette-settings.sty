@@ -81,7 +81,6 @@
   \fi
   \xdef\log@trimsize{\string\trimsize{#1}}
 }
-\trimsize{width=5.5in,height=8.5in} % Default.
 \@onlypreamble\trimsize
 %%
 
@@ -90,21 +89,19 @@
 \newcommand\sheetfeed[1]{
   \nvt@okfalse
   \StrDel{#1}{ }[\nvt@temp@s]
-  \ifthenelse{\equal{\nvt@temp@s}{letter}}{
-    \nvt@oktrue
-    \global\deflength\pagewidth{8.5in}
-    \global\deflength\pageheight{11in}
-    \xdef\log@sheetfeed{\string\sheetfeed{letter}}
-  }{}
-  \ifthenelse{\equal{\nvt@temp@s}{a4} \OR \equal{\nvt@temp@s}{A4}}{
-    \nvt@oktrue
-    \global\deflength\pagewidth{210mm}
-    \global\deflength\pageheight{297mm}
-    \xdef\log@sheetfeed{\string\sheetfeed{A4}}
-  }{}
-  \ifnvt@ok\else\nvt@errBVSF\fi % Bad value sheetfeed.
+  \ifthenelse{\equal{\nvt@temp@s}{}}{\nvt@oktrue\gdef\nvt@temp@s{trimsize}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{trimsize}}{\nvt@oktrue}{}
+  \ifthenelse{\equal{\nvt@temp@s}{letter}}{\nvt@oktrue}{}
+  \ifthenelse{\equal{\nvt@temp@s}{A4}}{\nvt@oktrue}{}
+  \ifthenelse{\equal{\nvt@temp@s}{a4}}{\nvt@oktrue\gdef\nvt@temp@s{A4}}{}
+  \ifnvt@ok
+    \xdef\nvt@sheetfeed{\nvt@temp@s}
+  \else
+    \nvt@errBVSF % Bad value sheetfeed.
+    \gdef\nvt@sheetfeed{trimsize}
+  \fi
+  \gdef\log@sheetfeed{\string\sheetfeed{\nvt@sheetfeed}}
 }
-\def\log@sheetfeed{\string\sheetfeed\space unused. Good. Default is trimsize.}
 \@onlypreamble\sheetfeed
 %%
 
@@ -159,11 +156,12 @@
 %%
 
 
-%% PAGE DESIGN (fontsize, lines, headgap, footgap, style)
+%% PAGE DESIGN (fontsize, lines, headgap, footgap, style, opening)
 % fontsize = integer|decimal, main font size, with units pt|bp.
 % lines = integer lines per page, main textblock (not counting header/footer).
 % headgap, footgap = integer|decimal 0-1. Extra line space at header/footer.
 % style = integer 1-7. Selects header/footer style. i = italics page number.
+% opening = l|c|r. Sets default horizontal alignment of items in openings.
 \newcommand\design[1]{
   \nvt@oktrue
   \StrDel{#1,}{ }[\nvt@temp@s]
@@ -238,15 +236,30 @@
      \fi
     }{\nvt@okfalse}
   }
-  \ifnvt@ok\else
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{opening=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{}}{\def\nvt@temp@s{c}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{c} \OR %
+    \equal{\nvt@temp@s}{l} \OR \equal{\nvt@temp@s}{r} \OR %
+    \equal{\nvt@temp@s}{o} \OR \equal{\nvt@temp@s}{i}}{
+      \xdef\nvt@openalign{\nvt@temp@s}
+  }{
     \nvt@errBVDES % Bad value for design.
-  \fi
+    \gdef\nvt@openalign{c}    
+  }
 }
 \@onlypreamble\design % Defaults will be calculated. Also \log@design.
 %%
 
 
-%% FOOTNOTE REFERENCE MARKS (Literary or numerical.)
+%% GUIDES (up to two guides, visible in margin with mode shade|align)
+\newcommand\guides[1]{\gdef\nvt@guides{#1}}
+\@onlypreamble\guides % Default is no guides.
+%%
+
+
+%% FOOTNOTE REFERENCE MARKS (literary or numerical)
 \newcommand\markers[1]{
   \nvt@okfalse
   \StrDel{#1}{ }[\nvt@temp@s]

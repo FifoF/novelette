@@ -31,72 +31,8 @@
 % is palegray. The number of lines is set by height. The baseline of the
 % topmost opening line is set by top. Note that the height and top are not
 % enforced; they are only provided for visualization.
-%   In Preamble, setting \openings{top=T,height=H,align=A} Integer T, H.
-% A is one of center, left, right, outside, inside.
-%   Note that the setting is `openings' (plural) but the individual page
-% environment is 'opening' (singular), which may be locally modified.
 %   Within an opening environment, commands \name and \desc provide
 % styled text. Ordinary text and images may also be used.
-%%
-
-
-%% OPENINGS STYLE
-% Global setting, In Preamble. Local changes: \thisopeningstyle{}.
-\def\nvt@opentop{0} % At top. 
-\def\nvt@openht{0} % Number of lines shaded, when shadelines.
-\newcommand\openings[1]{
-  \nvt@oktrue
-  \StrDel{#1,}{ }[\nvt@temp@s]
-  \StrBehind{\nvt@temp@s}{top=}[\nvt@temp@n]
-  \StrBefore{\nvt@temp@n}{,}[\nvt@temp@n]
-  \IfInteger{\nvt@temp@n}{
-    \FPiflt{\nvt@temp@n}{2}\def\nvt@temp@n{2}\nvt@okfalse\fi
-    \FPmul{\nvt@temp@d}{\nvt@lpp}{.33}
-    \FPtrunc{\nvt@temp@d}{\nvt@temp@d}{0}
-    \FPifgt{\nvt@temp@n}{\nvt@temp@d}\def\nvt@temp@n{\nvt@temp@d}\nvt@okfalse\fi
-  }{}
-  \ifthenelse{\equal{\nvt@temp@n}{}}{
-    \FPmul{\nvt@temp@n}{\nvt@lpp}{.25}
-    \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
-  }{}
-  \xdef\nvt@opentop{\nvt@temp@n}
-  \StrBehind{\nvt@temp@s}{height=}[\nvt@temp@n]
-  \StrBefore{\nvt@temp@n}{,}[\nvt@temp@n]
-  \IfInteger{\nvt@temp@n}{
-    \FPiflt{\nvt@temp@n}{4}\def\nvt@temp@n{4}\nvt@okfalse\fi
-    \FPmul{\nvt@temp@d}{\nvt@lpp}{.6}
-    \FPtrunc{\nvt@temp@d}{\nvt@temp@d}{0}
-    \FPifgt{\nvt@temp@n}{\nvt@temp@d}\def\nvt@temp@n{\nvt@temp@d}\nvt@okfalse\fi
-  }{}
-  \ifthenelse{\equal{\nvt@temp@n}{}}{
-    \FPmul{\nvt@temp@n}{\nvt@lpp}{.5}
-    \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
-  }{}
-  \xdef\nvt@openht{\nvt@temp@n}
-  \StrBehind{\nvt@temp@s}{align=}[\nvt@temp@s]
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
-  \gdef\nvt@openalign{oops}
-  \ifthenelse{\equal{\nvt@temp@s}{left}}{\gdef\nvt@openalign{left}}{}
-  \ifthenelse{\equal{\nvt@temp@s}{right}}{\gdef\nvt@openalign{right}}{}
-  \ifthenelse{\equal{\nvt@temp@s}{center}}{\gdef\nvt@openalign{center}}{}
-  \ifthenelse{\equal{\nvt@temp@s}{outside}}{\gdef\nvt@openalign{outside}}{}
-  \ifthenelse{\equal{\nvt@temp@s}{inside}}{\gdef\nvt@openalign{inside}}{}
-  \ifthenelse{\equal{\nvt@temp@s}{}}{\gdef\nvt@openalign{center}}{}
-  \ifthenelse{\equal{\nvt@openalign}{oops}}{\gdef\nvt@openalign{left}\nvt@okfalse}{}
-  \ifnvt@ok\else\nvt@errBVO\fi
-  \xdef\log@openings{\string\openings{top=\nvt@opentop,height=\nvt@openht,%
-    alignment=\nvt@openalign}}
-}
-\@onlypreamble\openings
-%%
-
-
-%%
-\def\nvt@process@openings{ % AtEndPreamle.
-  \ifthenelse{\equal{\nvt@openht}{0}}{
-    \openings{} % Defaults.
-  }{}
-}
 %%
 
 
@@ -116,13 +52,13 @@
   \nvt@zmarktrue%
   \nvt@inopeningtrue%
   \setlength\parindent{0pt}% Just within this environment.
-  \ifthenelse{\equal{\nvt@openalign}{left}}{}{}%
-  \ifthenelse{\equal{\nvt@openalign}{right}}{\raggedleft}{}%
-  \ifthenelse{\equal{\nvt@openalign}{center}}{\begin{center}}{}%
-  \ifthenelse{\equal{\nvt@openalign}{outside}}{\ifodd\c@page\raggedleft\fi}{}%
-  \ifthenelse{\equal{\nvt@openalign}{inside}}{\ifodd\c@page\else\raggedleft\fi}{}%
+  \ifthenelse{\equal{\nvt@openalign}{l}}{}{}%
+  \ifthenelse{\equal{\nvt@openalign}{r}}{\raggedleft}{}%
+  \ifthenelse{\equal{\nvt@openalign}{c}}{\begin{center}}{}%
+  \ifthenelse{\equal{\nvt@openalign}{o}}{\ifodd\c@page\raggedleft\fi}{}%
+  \ifthenelse{\equal{\nvt@openalign}{i}}{\ifodd\c@page\else\raggedleft\fi}{}%
 }{% Close the environment:
-  \ifthenelse{\equal{\nvt@openalign}{center}}{\end{center}}{}%
+  \ifthenelse{\equal{\nvt@openalign}{c}}{\end{center}}{}%
   \setcounter{nvt@fnmnum}{1}% Footnote markers.
   \endgroup%
   \nvt@zmarkfalse%

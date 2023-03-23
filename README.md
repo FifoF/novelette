@@ -14,7 +14,7 @@ the code.
 
 Expected release late March 2023.
 
-UPDATE, March 20, 2023: Novelette works in its most essential features.
+UPDATE, March 23, 2023: Novelette works in its most essential features.
 The frills also work, but are likely to be revised. Since TeXlive 2023
 will soon be available, I will delay Novelette until my own system has
 both 2022 and 2023 running.

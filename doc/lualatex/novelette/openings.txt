@@ -20,26 +20,12 @@ there will be no header on that page.
 Commands \name and \desc may only be used within the opening. They will
 style the text according to \setfont{name} and \setfont{desc}.
 
-In the Preamble, you may use this command (note plural openings):
-	\openings{top=T,height=H,align=A}
-T and H are integers. T is the line from top of textblock, where the baseline
-of topmost opening content (usually name) should be placed. H is the line from
-top of textblock, where the first line of main content should be placed.
-	T and H are not enforced. You can place things where you wish. When you
-use shade or align mode, markers are placed in the margins at T and H.
-Then you can manually get the desired vertical positions by writing as many
-\null commands (blank lines) as you need.
-	Novelette default values for T and H are calculated, based on other
-settings.
-	A is the horizontal alignment of material in the opening.
-Choices are left, center, right. Default center.
-
-To change the defaults to your own values, use this in Preamble:
-	\openings{top=T,height=H,align=A}
-Note the plural "openings".
-
-To locally change a specific opening, write this just above \begin{opening}:
-	\thisopeningstyle{top=T,height=H,align=A} %%%%% Subject to change.
+Default alignment l|c|r|0|i within an opening, is set by the \design command.
+	l -> Items in opening are left-aligned.
+	c -> Items in opening are centered (default).
+	r -> Items in opening are right-aligned.
+	o -> Items in opening are aligned to outside margin.
+	i -> Items in opening are aligned to inside margin.
 
 The first line of main text may have special styling. A common practice is
 to enlarge the first letter, and put a few words in small caps.

@@ -243,6 +243,7 @@
   \ifundef{\nvt@application}{\gdef\nvt@application{Novelette}}{}
   \ifundef{\nvt@producer}{\gdef\nvt@producer{Novelette}}{}
   \ifundef{\nvt@intent}{\gdef\nvt@intent{none}}{}
+  \nvt@process@trimsize
   \nvt@process@margins
   \nvt@process@design
   \RequirePackage{novelette-fonts}
@@ -263,8 +264,8 @@
   \RequirePackage{fancyhdr}
   \RequirePackage{novelette-headers}
   \nvt@processnvt@hfstyle
-  \nvt@process@openings
   \RequirePackage{novelette-fillertext}
+  \nvt@process@guides
   \RequirePackage{novelette-shading}
   \ifthenelse{\equal{\nvt@mode}{draft}}{\nvt@labeldraft}{}
   \ifthenelse{\equal{\nvt@mode}{shade}}{\nvt@labelshade}{}
@@ -334,7 +335,6 @@
   \typeout{\log@sheetfeed}
   \typeout{\log@margins}
   \typeout{\log@design}
-  \typeout{\log@openings}
   \typeout{\lognvt@markers}
   \FPclip{\nvt@temp@n}{\strip@pt\nvt@fontsize}
   \FPmul{\nvt@temp@d}{\nvt@temp@n}{.996264}

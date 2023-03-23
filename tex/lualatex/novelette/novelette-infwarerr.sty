@@ -24,6 +24,13 @@
 \def\nvt@bad{\global\nvt@errtrue\gdef\nvt@intent{none}}
 
 
+\def\nvt@errTBFP{%
+  \ClassError{novelette}{Requested \string\sheetfeed\space is too small.^^J%
+    You are trying to squeeze trimsize onto smaller paper. Cannot do it.^^J%
+    Either change trimsize, or remove \string\sheetfeed.^^J%
+  \nvt@XN}{\nvt@RXN}\nvt@bad%
+}
+
 \def\nvt@errNIPH{%
   \ClassError{novelette}{Image placement `h' not allowed.^^J%
     Novelette does not allow image placement "here" (option h).^^J%
@@ -273,18 +280,6 @@
    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
-\def\nvt@errBVO{%
-  \ClassError{novelette}{Bad value in \string\openings.^^J%
-   Format: \string\openings{top=T,main=M,position=P} with integers T, M.^^J%
-   T is baseline of the topmost item in the opening.^^J%
-   M is baseline of main text, following the opening.^^J%
-   T and M provide guidelines in align mode. Not enforced.^^J%
-   T and M must be within reasonable limits. See Novelette documentation.^^J%
-   Position P is one of: left right center outside inside.^^J%
-   \nvt@XN}{\nvt@RXN}\nvt@bad%
-}
-%%
-
 \def\nvt@errBVSF{%
   \ClassError{novelette}{Bad value in \string\sheetfeed.^^J%
    Defaults to trimsize, or choose one of: letter A4.^^J%
@@ -306,7 +301,7 @@
 
 \def\nvt@errBVDES{%
   \ClassError{novelette}{Bad setting for \string\design.^^J%
-    You may set all|some|none of fontsize, lines, headgap, footgap, style.^^J%
+    You may set all|some|none of these.^^J%
     Anything you do not set will be assigned a default value.^^J%
     Syntax is comma-separated key=value pairs.^^J%
     fontsize=M where M is integer|decimal main font size, units pt|bp.^^J%
@@ -314,6 +309,7 @@
     headgap=H where H is integer|decimal 0-1. Default=.5 if unset.^^J%
     footgap=F where F is integer|decimal 0-1. Default=H if unset.^^J%
     style=S where S is integer, selects header/footer style. See docs.^^J%
+    opening=O where O is l|c|r, default alignment of items in openings.^^J%
     \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 %%

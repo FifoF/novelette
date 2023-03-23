@@ -19,6 +19,22 @@
 %% ----------------------------------------------------------------------------
 
 
+%% TRIMSIZE AND SHEETFEED
+\def\nvt@process@trimsize{
+  \ifdimcomp{\nvt@trimw}{>}{0pt}{}{\trimsize{width=5.5in,height=8.5in}}
+  \ifdefined\nvt@sheetfeed\else\sheetfeed{trimsize}\fi
+  \nvt@oktrue
+  \ifdimcomp{\nvt@trimw}{>}{\pagewidth}{\nvt@okfalse}{}
+  \ifdimcomp{\nvt@trimh}{>}{\pageheight}{\nvt@okfalse}{}
+  \ifnvt@ok\else
+    \nvt@errTBFP % Too big for page.
+    \global\setlength\pagewidth{\nvt@trimw}
+    \global\setlength\pageheight{\nvt@trimh}
+  \fi
+}
+%%
+
+
 %% MARGINS
 % Minimum P.O.D. margins are usually 0.5in/13mm top, outside, bottom,
 % plus 0.125in/3mm inside. Novelette does not enforce these, but instead
@@ -58,8 +74,8 @@
       \FPclip{\nvt@temp@d}{\nvt@temp@d}
       \global\deflength\nvt@mins{\nvt@temp@d mm}
       \global\deflength\nvt@spinew{3mm}
-      \xdef\log@margins{\string\margins{top=\nvt@temp@n mm,outside=\nvt@temp@n mm,%
-        bottom=\nvt@temp@n mm,inside=\nvt@temp@d mm}}
+      \xdef\log@margins{\string\margins{top=\nvt@temp@n mm, %
+        outside=\nvt@temp@n mm, bottom=\nvt@temp@n mm, inside=\nvt@temp@d mm}}
     }{ % Something else, so use in.
       \FPdiv{\nvt@temp@d}{\nvt@temp@d}{72.27} % 72.27pt/in.
       \FPadd{\nvt@temp@n}{\nvt@temp@d}{.5}
@@ -72,8 +88,8 @@
       \FPclip{\nvt@temp@d}{\nvt@temp@d}
       \global\deflength\nvt@mins{\nvt@temp@d in}
       \global\deflength\nvt@spinew{.125in}
-      \xdef\log@margins{\string\margins{top=\nvt@temp@n in,outside=\nvt@temp@n in,%
-        bottom=\nvt@temp@n in,inside=\nvt@temp@d in}}
+      \xdef\log@margins{\string\margins{top=\nvt@temp@n in, %
+        outside=\nvt@temp@n in, bottom=\nvt@temp@n in, inside=\nvt@temp@d in}}
     }
   }{}
   \global\deflength\nvt@totalh{\nvt@trimh-\nvt@mtop-\nvt@mbot}
@@ -99,6 +115,7 @@
       \gdef\nvt@footgap{\nvt@headgap}
     \fi
   \fi
+  \ifdefined\nvt@openalign\else\gdef\nvt@openalign{c}\fi
   \ifdefined\nvt@footgap
     \ifdefined\nvt@headgap\else
       \gdef\nvt@headgap{\nvt@footgap}
@@ -127,8 +144,10 @@
   \else
     \gdef\pagenumber{\thepage}
   \fi
-  \global\deflength\oddsidemargin{\nvt@mins+\nvt@spad+0.5\pagewidth-0.5\nvt@trimw-1in}
-  \global\deflength\evensidemargin{\nvt@mout+\nvt@spad+0.5\pagewidth-0.5\nvt@trimw-1in}
+  \global\deflength\oddsidemargin{%
+    \nvt@mins+\nvt@spad+0.5\pagewidth-0.5\nvt@trimw-1in}
+  \global\deflength\evensidemargin{%
+    \nvt@mout+\nvt@spad+0.5\pagewidth-0.5\nvt@trimw-1in}
 }
 %%
 
@@ -136,7 +155,8 @@
 %% CALCULATE LEADING, LINES PER PAGE
 \def\nvt@calculate@leading{
   \setlength\nvt@temp@l{1.3\nvt@fontsize}
-  \renewcommand\normalsize{\@setfontsize\normalsize{\nvt@fontsize}{\nvt@temp@l}}
+  \renewcommand\normalsize{%
+    \@setfontsize\normalsize{\nvt@fontsize}{\nvt@temp@l}}
   \normalsize % Temporary.
   \sbox0{\mainfont 3456789JÀÁÂÃÄÅÇçjfhlygpqþ} % Highest and lowest Latin-1.
   \global\deflength\nvt@ascn{\ht0}
@@ -166,6 +186,7 @@
   \global\deflength\nvt@leading{\nvt@temp@n pt}
   \global\deflength\baselineskip{\nvt@leading}
 
+%%%%%
 \ifnvt@header
   \ifnvt@footer
     \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh-1in}
@@ -177,16 +198,21 @@
   \ifnvt@footer
 
   \else
-    \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh-1in-\nvt@leading+\nvt@ascn}
+    \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh%
+      -1in-\nvt@leading+\nvt@ascn}
     \global\deflength\topskip{\nvt@leading}
   \fi
 \fi
+%%%%%
 
   \global\deflength\textheight{\nvt@lpp\nvt@leading}
+  \FPround{\nvt@temp@n}{\strip@pt\nvt@fontsize}{4}%
+  \FPclip{\nvt@temp@n}{\nvt@temp@n}%
   \xdef\log@design{%
-    \string\design{fontsize=\nvt@fontsize,lines=\nvt@lpp,%
+    \string\design{fontsize=\nvt@temp@n pt,lines=\nvt@lpp,%
     headgap=\nvt@headgap,footgap=\nvt@footgap,%
-    style=\nvt@hfstyle\ifnvt@pnital i\fi}%
+    style=\nvt@hfstyle\ifnvt@pnital i\fi,%
+    opening=\nvt@openalign}%
   }
 }
 %%
@@ -207,9 +233,34 @@
 %%
 
 
+%% GUIDES
+\def\nvt@process@guides{
+  \StrDel{\nvt@guides,}{ }[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@n]
+  \ifthenelse{\equal{\nvt@temp@n}{}}{}{
+    \IfInteger{\nvt@temp@n}{
+      \xdef\nvt@guidea{\nvt@temp@n}
+      \StrBehind{\nvt@temp@s}{,}[\nvt@temp@s]
+      \StrBefore{\nvt@temp@s}{,}[\nvt@temp@d]
+      \ifthenelse{\equal{\nvt@temp@d}{}}{}{
+        \IfInteger{\nvt@temp@d}{
+          \xdef\nvt@guideb{\nvt@temp@d}
+        }{
+          \nvt@warnBVG % Bad value in guides.
+        }
+      }
+    }{
+      \nvt@warnBVG
+    }
+  }
+}
+%%
+
+
 %% RENEW NORMALSIZE
 \def\nvt@renew@normalsize{
-  \renewcommand\normalsize{\@setfontsize\normalsize{\nvt@fontsize}{\nvt@leading}}
+  \renewcommand\normalsize{%
+    \@setfontsize\normalsize{\nvt@fontsize}{\nvt@leading}}
   \normalsize
   \let\@normalsize\normalsize\relax % Hack for fancyhdr.
   \global\deflength\normalindent{1.5\nvt@fontsize}

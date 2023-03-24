@@ -156,8 +156,14 @@
 %%
 
 
+%% SIDE PADDING (normally not a user setting)
+\gdef\nvt@spadval{.1} % em
+%%
+
 %% PAGE DESIGN (fontsize, lines, headgap, footgap, style, opening)
-% fontsize = integer|decimal, main font size, with units pt|bp.
+% fontsize = integer|decimal main font size, with units pt|bp.
+% emperline = integer|decimal em per line of main text.
+%   You may set at most one of fontsize|emperline. The other is calculated. 
 % lines = integer lines per page, main textblock (not counting header/footer).
 % headgap, footgap = integer|decimal 0-1. Extra line space at header/footer.
 % style = integer 1-7. Selects header/footer style. i = italics page number.
@@ -171,6 +177,19 @@
     \nvt@checklength{\nvt@temp@s}
     \ifnvt@ok\global\deflength\nvt@fontsize{\nvt@temp@s}\fi
   }
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{emperline=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{}}{}{
+    \xdef\nvt@emperline{\nvt@temp@s}
+    \global\nvt@epltrue
+  }
+  \ifdimcomp{\nvt@fontsize}{>}{0pt}{
+    \ifnvt@epl
+       \nvt@errCSBFE % Cannot set both fontsize and emperline.
+       \global\nvt@eplfalse % Priority to fontsize or default.
+    \fi
+  }{}
   \StrDel{#1,}{ }[\nvt@temp@s]
   \StrBehind{\nvt@temp@s}{lines=}[\nvt@temp@s]
   \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]

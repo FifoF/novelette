@@ -11,13 +11,17 @@ LAYOUT
 	T, O, B, I are measured in units of in or mm.
 	Inside means at the spine (binding). Usually larger than the others.
 
-\design{fontsize=M,lines=L,style=S,headgap=H,footgap=F,opening=O}
-	M is the main font size, with units pt|bp.
+\design{fontsize=P,lines=L,style=S,headgap=H,footgap=F,opening=O}
+	P is the main font size, with units pt|bp.
 	L is integer lines per page, main body text (not counting header/footer).
 	S is integer style number, which sets whether running-body pages
 have header/footer/both, and the position of items in the header.
 	H and F adjust the vertical space between header/body and body/footer.
 	O is l|c|r for the alignment if items in an opening.
+Alternative to fontsize=P is emperline=M, where M is integer|decimal number.
+M is the number of font em in the text width. Typically 28-30 for fiction.
+If you set both fontsize and emperline, error. The product of P and M is the
+textwidth, which is very slightly less than the distance between side margins.
 
 \guides{integer,integer}
 	Guides appear in the side margins, when mode is shade or align. If unset,

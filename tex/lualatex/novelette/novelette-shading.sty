@@ -40,7 +40,6 @@
 \newcommand\nvt@trim@LL[1]{% Lower left of trimsize.
   \put(.5\pagewidth-.5\nvt@trimw,-.5\pageheight-.5\nvt@trimh){#1}%
 }
-% Printable area extends \nvt@spad beyond left and right sides of \textwidth.
 \newcommand\nvt@print@UL[1]{% Upper left of printable area.
   \setlength\nvt@temp@l{.5\pagewidth-.5\nvt@trimw}%
   \ifodd\c@page%
@@ -64,23 +63,23 @@
 \def\nvt@labeldraft{%
   \AddToHook{shipout/foreground}{%
     \nvt@print@UL{%
-      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{{\normalfont MODE:DRAFT}}%
-    }%
-  }%
+      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{%
+        {\normalfont\addfontfeature{ScaleAgain=.75} MODE:DRAFT}%
+  }}}%
 }
 \def\nvt@labelshade{%
   \AddToHook{shipout/foreground}{%
     \nvt@print@UL{%
-      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{{\normalfont MODE:SHADE}}%
-    }%
-  }%
+      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{%
+        {\normalfont\addfontfeature{Scale=.75} MODE:SHADE}%
+  }}}%
 }
 \def\nvt@labelalign{%
   \AddToHook{shipout/foreground}{%
     \nvt@print@UL{%
-      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{{\normalfont MODE:ALIGN}}%
-    }%
-  }%
+      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{%
+        {\normalfont\addfontfeature{Scale=.75} MODE:ALIGN}%
+  }}}%
 }
 %%
 
@@ -91,49 +90,45 @@
 \newcommand{\nvt@addbg}{\g@addto@macro\nvt@bghook}
 \AddToHook{shipout/background}{\put(0,-\pageheight){\nvt@bghook}}
 \IfHookEmptyTF{shipout/background}{\AddToHook{shipout/background}{\relax}}{}
-\pretocmd\@kernel@before@shipout@background{
-  % Fill trim area with gray. If sheetfeed, do not extend gray outside trim:
-  \nvt@trim@LL{{\nvt@gray{.6}%
-    \rule{\nvt@trimw}{\nvt@mbot}%
-  }}
-  \nvt@trim@LL{{\nvt@gray{.6}%
-    \rule[\nvt@trimh-\nvt@mtop]{\nvt@trimw}{\nvt@mtop}%
-  }}
-  \ifodd\c@page
+\ifnvt@shademargins
+  \pretocmd\@kernel@before@shipout@background{
+    % Fill trim area with gray. If sheetfeed, do not extend gray outside trim:
+    \nvt@trim@LL{{\nvt@gray{.6}\rule{\nvt@trimw}{\nvt@mbot}}}%
     \nvt@trim@LL{{\nvt@gray{.6}%
-      \rule{\nvt@mins}{\nvt@trimh}%
+      \rule[\nvt@trimh-\nvt@mtop]{\nvt@trimw}{\nvt@mtop}%
     }}
-    \nvt@trim@LL{\hspace*{\nvt@trimw-\nvt@mout}{\nvt@gray{.6}%
-      \rule{\nvt@mout}{\nvt@trimh}%
-    }}
-  \else
-    \nvt@trim@LL{{\nvt@gray{.6}%
-      \rule{\nvt@mout}{\nvt@trimh}%
-    }}
-    \nvt@trim@LL{\hspace*{\nvt@trimw-\nvt@mins}{\nvt@gray{.6}%
-      \rule{\nvt@mins}{\nvt@trimh}%
-    }}
-  \fi
-  \ifnvt@shadelines
-    \nvt@shade@main@lines
-    \ifnvt@header
-      \nvt@print@UL{{\nvt@gray{.8}%
-        \rule[-\nvt@leading]{\textwidth+2\nvt@spad}{\nvt@dscn}%
+    \ifodd\c@page
+      \nvt@trim@LL{{\nvt@gray{.6}\rule{\nvt@mins}{\nvt@trimh}}}
+      \nvt@trim@LL{\hspace*{\nvt@trimw-\nvt@mout}{\nvt@gray{.6}%
+        \rule{\nvt@mout}{\nvt@trimh}%
       }}
-    \fi%
-    \ifnvt@footer
-      \nvt@print@LL{{\nvt@gray{.8}%
-        \rule{\textwidth+2\nvt@spad}{\nvt@dscn}%
+    \else
+      \nvt@trim@LL{{\nvt@gray{.6}\rule{\nvt@mout}{\nvt@trimh}}}
+      \nvt@trim@LL{\hspace*{\nvt@trimw-\nvt@mins}{\nvt@gray{.6}%
+        \rule{\nvt@mins}{\nvt@trimh}%
       }}
     \fi
-  \fi
-  \nvt@place@opening@guides
-  \setlength\nvt@temp@l{\nvt@trimw-\nvt@spinew}%
-  \ifodd\c@page\setlength\nvt@temp@l{0pt}\fi%
-  \nvt@trim@LL{\rule{\nvt@temp@l}{0pt}{\nvt@gray{.4}%
-    \rule{\nvt@spinew}{\nvt@trimh}% Spine glue zone.
-  }}%
-}{\typeout{Shading applied.}}{\typeout{Shading failed.}} % Part of \pretocmd.
+    \ifnvt@shadelines
+      \nvt@shade@main@lines
+      \ifnvt@header
+        \nvt@print@UL{{\nvt@gray{.8}%
+          \rule[-\nvt@leading]{\textwidth+2\nvt@spad}{\nvt@dscn}%
+        }}
+      \fi%
+      \ifnvt@footer
+        \nvt@print@LL{{\nvt@gray{.8}%
+          \rule{\textwidth+2\nvt@spad}{\nvt@dscn}%
+        }}
+      \fi
+    \fi
+    \nvt@place@opening@guides
+    \setlength\nvt@temp@l{\nvt@trimw-\nvt@spinew}%
+    \ifodd\c@page\setlength\nvt@temp@l{0pt}\fi%
+    \nvt@trim@LL{\rule{\nvt@temp@l}{0pt}{\nvt@gray{.4}%
+      \rule{\nvt@spinew}{\nvt@trimh}% Spine glue zone.
+    }}%
+  }{\typeout{Shading applied.}}{\typeout{Shading failed.}} % Part of \pretocmd.
+\fi
 %%
 
 
@@ -195,8 +190,8 @@
 
 
 %% LUA SIDEBEARINGS (not yet enabled)
-\def\lsidebearing#1{.08em} % Testing.
-\def\rsidebearing#1{.08em} % Testing.
+\def\lsidebearing#1{.1em} % Testing.
+\def\rsidebearing#1{.1em} % Testing.
 %  \directlua{require "novelette-sidebearings"}
 %  \def\lsidebearing#1{\directlua{packagedata.sidebearings.left [[#1]]}}
 %  \def\rsidebearing#1{\directlua{packagedata.sidebearings.right [[#1]]}}

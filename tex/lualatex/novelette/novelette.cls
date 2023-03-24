@@ -90,6 +90,7 @@
 \newif\ifnvt@shadelines % True in align mode.
 \newif\ifnvt@shademargins % True in shade mode.
 \newif\ifnvt@draft % True unless final mode.
+\newif\ifnvt@epl % True if design using emperline.
 \newif\ifnvt@imgwarn % True if image warning issued.
 \newif\ifnvt@imgdrop % True if image aligned to descender, instead of baseline.
 \newif\ifnvt@error@thrown % True if any error detected during compile.
@@ -335,16 +336,14 @@
   \typeout{\log@sheetfeed}
   \typeout{\log@margins}
   \typeout{\log@design}
+  \typeout{\log@altdesign}
+  \typeout{\log@charsperline}
   \typeout{\lognvt@markers}
   \FPclip{\nvt@temp@n}{\strip@pt\nvt@fontsize}
   \FPmul{\nvt@temp@d}{\nvt@temp@n}{.996264}
   \FPround{\nvt@temp@d}{\nvt@temp@d}{3}
   \FPclip{\nvt@temp@d}{\nvt@temp@d}
   \typeout{Size of main font: \nvt@temp@n pt TeX (\nvt@temp@d pt PostScript)}
-  \FPmul{\nvt@temp@n}{\nvt@temp@n}{.45}
-  \FPdiv{\nvt@temp@n}{\strip@pt\textwidth}{\nvt@temp@n}
-  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
-  \typeout{Estimated average \nvt@temp@n\space characters/line (incl. spaces)}
   \FPround{\nvt@temp@n}{\strip@pt\nvt@leading}{2}
   \FPclip{\nvt@temp@n}{\nvt@temp@n}
   \FPmul{\nvt@temp@d}{\nvt@temp@n}{.996264}

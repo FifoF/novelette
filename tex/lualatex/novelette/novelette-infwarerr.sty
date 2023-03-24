@@ -24,11 +24,27 @@
 \def\nvt@bad{\global\nvt@errtrue\gdef\nvt@intent{none}}
 
 
+\def\nvt@errFSTS{%
+  \ClassError{novelette}{Set or calculated main font size less than 7pt.^^J%
+    Will be rejected by print services. Most require at least 8bp (8.03pt).^^J%
+    This happens if \string\design{emperline=X} where X is too large.^^J%
+    Also may happen when using default fontsize in a very narrow book.^^J%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
+}
+
+\def\nvt@errCSBFE{%
+  \ClassError{novelette}{You cannot set both fontsize and emperline.^^J%
+    You may set one of them (or neither) in \string\design.^^J%
+    If you set one of them, the other is automatically calculated.^^J%
+    If you set neither of them, Novelette will use default.^^J%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
+}
+
 \def\nvt@errTBFP{%
   \ClassError{novelette}{Requested \string\sheetfeed\space is too small.^^J%
     You are trying to squeeze trimsize onto smaller paper. Cannot do it.^^J%
     Either change trimsize, or remove \string\sheetfeed.^^J%
-  \nvt@XN}{\nvt@RXN}\nvt@bad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
 \def\nvt@errNIPH{%
@@ -36,7 +52,7 @@
     Novelette does not allow image placement "here" (option h).^^J%
     You may use the no-float option `n' (default), or others.^^J%
     See Novelette documentation for the possibilities.^^J%
-  \nvt@XN}{\nvt@RXN}\nvt@bad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
 \def\nvt@errIWNP#1{%
@@ -44,7 +60,7 @@
     This is an error in final mode, unless you use \string\intent{none}.^^J%
     It means that the image may not conform to PDF/X requirements.^^J%
     See Novelette documentation, regarding how to process images.^^J%
-  \nvt@XN}{\nvt@RXN}\nvt@bad%
+    \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
 \def\nvt@warnIWNP{%

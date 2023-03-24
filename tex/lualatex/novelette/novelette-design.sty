@@ -99,17 +99,38 @@
 
 %% FONT SIZE, GAPS, STYLE
 \def\nvt@process@design{
-  \FPsub{\nvt@temp@n}{\strip@pt\nvt@trimw}{\strip@pt\nvt@mout}
-  \FPsub{\nvt@temp@n}{\nvt@temp@n}{\strip@pt\nvt@mins}
-  \ifdimcomp{\nvt@fontsize}{>}{0pt}{}{
-    \FPdiv{\nvt@temp@n}{\nvt@temp@n}{65} % Typical characters per line.
-	\FPdiv{\nvt@temp@n}{\nvt@temp@n}{.45} % Typical character em width.
+  \ifnvt@epl\else
+    \ifdimcomp{\nvt@fontsize}{=}{0pt}{
+      \gdef\nvt@emperline{28}
+      \global\nvt@epltrue
+    }{}
+  \fi
+  \ifnvt@epl
+    \setlength\nvt@temp@l{\nvt@trimw-\nvt@mout-\nvt@mins}
+    \FPadd{\nvt@temp@d}{\nvt@emperline}{\nvt@spadval}
+    \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@spadval}
+    \FPdiv{\nvt@temp@n}{\strip@pt\nvt@temp@l}{\nvt@temp@d}
     \FPround{\nvt@temp@n}{\nvt@temp@n}{3}
     \FPclip{\nvt@temp@n}{\nvt@temp@n}
-    \global\deflength\nvt@fontsize{\nvt@temp@n pt} 
-  }
-  \global\deflength\nvt@spad{0.08\nvt@fontsize} % Just a tiny amount.
-  \global\deflength\textwidth{\nvt@trimw-\nvt@mout-\nvt@mins-2\nvt@spad}
+    \global\deflength\nvt@fontsize{\nvt@temp@n pt}
+    \addtolength\nvt@temp@l{0pt-\nvt@spadval\nvt@fontsize}
+    \addtolength\nvt@temp@l{0pt-\nvt@spadval\nvt@fontsize}
+    \global\deflength\textwidth{\nvt@temp@l}
+  \else
+    \setlength\nvt@temp@l{\nvt@trimw-\nvt@mout-\nvt@mins}
+    \addtolength\nvt@temp@l{0pt-\nvt@spadval\nvt@fontsize}
+    \addtolength\nvt@temp@l{0pt-\nvt@spadval\nvt@fontsize}
+    \global\deflength\textwidth{\nvt@temp@l}
+    \FPdiv{\nvt@temp@n}{\strip@pt\textwidth}{\strip@pt\nvt@fontsize}
+    \FPround{\nvt@temp@n}{\nvt@temp@n}{3}
+    \FPclip{\nvt@temp@n}{\nvt@temp@n}
+    \xdef\nvt@emperline{\nvt@temp@n}
+  \fi
+  \global\deflength\nvt@spad{\nvt@spadval\nvt@fontsize}
+  \ifdimcomp{\nvt@fontsize}{<}{7pt}{\nvt@errFSTS}{} % Fontsize too small.
+  \FPdiv{\nvt@temp@n}{\nvt@emperline}{.42} % Typical character/space em width.
+  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
+  \xdef\nvt@charsperline{\nvt@temp@n}
   \ifdefined\nvt@headgap
     \ifdefined\nvt@footgap\else
       \gdef\nvt@footgap{\nvt@headgap}
@@ -206,14 +227,24 @@
 %%%%%
 
   \global\deflength\textheight{\nvt@lpp\nvt@leading}
-  \FPround{\nvt@temp@n}{\strip@pt\nvt@fontsize}{4}%
-  \FPclip{\nvt@temp@n}{\nvt@temp@n}%
-  \xdef\log@design{%
-    \string\design{fontsize=\nvt@temp@n pt,lines=\nvt@lpp,%
-    headgap=\nvt@headgap,footgap=\nvt@footgap,%
-    style=\nvt@hfstyle\ifnvt@pnital i\fi,%
-    opening=\nvt@openalign}%
-  }
+  \ifnvt@epl
+    \xdef\log@design{%
+      \string\design{emperline=\nvt@emperline,lines=\nvt@lpp,%
+      headgap=\nvt@headgap,footgap=\nvt@footgap,%
+      style=\nvt@hfstyle\ifnvt@pnital i\fi,%
+      opening=\nvt@openalign}%
+    }
+    \xdef\log@altdesign{\space\space Equivalent fontsize=\the\nvt@fontsize}
+  \else
+    \xdef\log@design{%
+      \string\design{fontsize=\the\nvt@fontsize,lines=\nvt@lpp,%
+      headgap=\nvt@headgap,footgap=\nvt@footgap,%
+      style=\nvt@hfstyle\ifnvt@pnital i\fi,%
+      opening=\nvt@openalign}%
+    }
+    \xdef\log@altdesign{\space\space Equivalent emperline=\nvt@emperline}
+  \fi
+  \xdef\log@charsperline{Estimated characters per line = \nvt@charsperline}
 }
 %%
 \def\nvt@default@lpp{

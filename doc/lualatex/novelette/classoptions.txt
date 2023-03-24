@@ -7,3 +7,5 @@ CLASS OPTIONS
 Novelette has no class options. Again: NO class options.
 
 Instead, the \mode command lets you choose draft, shade, align, or final.
+
+The \design command lets you choose font size.

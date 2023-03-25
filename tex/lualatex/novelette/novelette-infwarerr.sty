@@ -25,10 +25,10 @@
 
 
 \def\nvt@errFSTS{%
-  \ClassError{novelette}{Set or calculated main font size less than 7pt.^^J%
-    Will be rejected by print services. Most require at least 8bp (8.03pt).^^J%
-    This happens if \string\design{emperline=X} where X is too large.^^J%
-    Also may happen when using default fontsize in a very narrow book.^^J%
+  \ClassError{novelette}{Set or calculated main font size too small.^^J%
+    Main text must be at least 8bp (PostScript points) = 8.03pt (TeX pt).^^J%
+    That value sets footnotes and legalese at 7bp, the printer minimum.^^J%
+    Anything smaller will be rejected by most major print services.^^J%
     \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
@@ -169,11 +169,6 @@
    Decrease top|bottom margins; or increase inside|outside margins;^^J%
    or reduce number of lines; or change header|footer style.^^J%
    \nvt@XN}{\nvt@RXN}\nvt@bad% 
-}
-
-\def\nvt@errNFID{%
-  \ClassError{novelette}{No footnotes allowed in display, page \thepage.^^J%
-  \nvt@XN}{\nvt@RXN}\nvt@bad%
 }
 
 \def\nvt@warnNVRHP{%

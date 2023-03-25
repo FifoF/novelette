@@ -127,7 +127,7 @@
     \xdef\nvt@emperline{\nvt@temp@n}
   \fi
   \global\deflength\nvt@spad{\nvt@spadval\nvt@fontsize}
-  \ifdimcomp{\nvt@fontsize}{<}{7pt}{\nvt@errFSTS}{} % Fontsize too small.
+  \ifdimcomp{\nvt@fontsize}{<}{8bp}{\nvt@errFSTS}{} % Fontsize too small.
   \FPdiv{\nvt@temp@n}{\nvt@emperline}{.42} % Typical character/space em width.
   \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
   \xdef\nvt@charsperline{\nvt@temp@n}
@@ -206,46 +206,41 @@
   \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{3}
   \global\deflength\nvt@leading{\nvt@temp@n pt}
   \global\deflength\baselineskip{\nvt@leading}
-
-%%%%%
-\ifnvt@header
-  \ifnvt@footer
-    \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh-1in}
-    \global\deflength\topskip{\nvt@leading}
+  \ifnvt@header
+    \ifnvt@footer
+      \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh-1in}
+      \global\deflength\topskip{\nvt@leading}
+    \fi
   \else
-
+    \ifnvt@footer\else
+      \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh%
+        -1in-\nvt@leading+\nvt@ascn}
+      \global\deflength\topskip{\nvt@leading}
+    \fi
   \fi
-\else
-  \ifnvt@footer
-
-  \else
-    \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh%
-      -1in-\nvt@leading+\nvt@ascn}
-    \global\deflength\topskip{\nvt@leading}
-  \fi
-\fi
-%%%%%
-
   \global\deflength\textheight{\nvt@lpp\nvt@leading}
   \ifnvt@epl
-    \xdef\log@design{%
+    \xdef\log@designa{%
       \string\design{emperline=\nvt@emperline,lines=\nvt@lpp,%
-      headgap=\nvt@headgap,footgap=\nvt@footgap,%
-      style=\nvt@hfstyle\ifnvt@pnital i\fi,%
-      opening=\nvt@openalign}%
+        opening=\nvt@openalign}%
     }
     \xdef\log@altdesign{\space\space Equivalent fontsize=\the\nvt@fontsize}
   \else
-    \xdef\log@design{%
+    \xdef\log@designa{%
       \string\design{fontsize=\the\nvt@fontsize,lines=\nvt@lpp,%
-      headgap=\nvt@headgap,footgap=\nvt@footgap,%
-      style=\nvt@hfstyle\ifnvt@pnital i\fi,%
-      opening=\nvt@openalign}%
+        opening=\nvt@openalign}%
     }
     \xdef\log@altdesign{\space\space Equivalent emperline=\nvt@emperline}
   \fi
   \xdef\log@charsperline{Estimated characters per line = \nvt@charsperline}
+  \xdef\log@designb{%
+    \string\design{headgap=\nvt@headgap,footgap=\nvt@footgap,%
+      style=\nvt@hfstyle\ifnvt@pnital i\fi}%
+  }
 }
+%%
+
+
 %%
 \def\nvt@default@lpp{
   \FPmul{\nvt@temp@n}{\strip@pt\nvt@fontsize}{1.3}
@@ -264,26 +259,50 @@
 %%
 
 
+%% FOOTNOTES
+\def\nvt@process@footnotes{
+  \ifdefined\nvt@fnmarkers\else\gdef\nvt@fnmarkers{*}\fi
+  \ifdefined\nvt@fnrulepos\else\gdef\nvt@fnrulepos{c}\fi
+  \ifdefined\nvt@fnindent\else\gdef\nvt@fnindent{f}\fi
+  \xdef\log@footnotes{\string\design{footnotes=\nvt@fnmarkers%
+    \nvt@fnrulepos\nvt@fnindent}%
+  }
+}
+%%
+
+
 %% GUIDES
 \def\nvt@process@guides{
+  \nvt@oktrue
   \StrDel{\nvt@guides,}{ }[\nvt@temp@s]
   \StrBefore{\nvt@temp@s}{,}[\nvt@temp@n]
   \ifthenelse{\equal{\nvt@temp@n}{}}{}{
     \IfInteger{\nvt@temp@n}{
       \xdef\nvt@guidea{\nvt@temp@n}
-      \StrBehind{\nvt@temp@s}{,}[\nvt@temp@s]
-      \StrBefore{\nvt@temp@s}{,}[\nvt@temp@d]
-      \ifthenelse{\equal{\nvt@temp@d}{}}{}{
-        \IfInteger{\nvt@temp@d}{
-          \xdef\nvt@guideb{\nvt@temp@d}
-        }{
-          \nvt@warnBVG % Bad value in guides.
-        }
-      }
-    }{
-      \nvt@warnBVG
-    }
+    }{\nvt@okfalse}
   }
+  \StrBehind{\nvt@temp@s}{,}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@n]
+  \ifthenelse{\equal{\nvt@temp@n}{}}{}{
+    \IfInteger{\nvt@temp@n}{
+      \xdef\nvt@guideb{\nvt@temp@n}
+    }{\nvt@okfalse}
+  }
+  \StrBehind{\nvt@temp@s}{,}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@n]
+  \ifthenelse{\equal{\nvt@temp@n}{}}{}{
+    \IfInteger{\nvt@temp@n}{
+      \xdef\nvt@guidec{\nvt@temp@n}
+    }{\nvt@okfalse}
+  }
+  \StrBehind{\nvt@temp@s}{,}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@n]
+  \ifthenelse{\equal{\nvt@temp@n}{}}{}{
+    \IfInteger{\nvt@temp@n}{
+      \xdef\nvt@guided{\nvt@temp@n}
+    }{\nvt@okfalse}
+  }
+  \ifnvt@ok\else\nvt@warnBVG\fi % Warn bad value for guides.
 }
 %%
 
@@ -297,7 +316,7 @@
   \global\deflength\normalindent{1.5\nvt@fontsize}
   \global\deflength\footnotesep{0.8\nvt@leading}
   \DeclareRobustCommand\@footnotesize{% For actual footnotes.
-    \@setfontsize\@footnotesize{.92\nvt@fontsize}{.92\nvt@leading}%
+    \@setfontsize\@footnotesize{.875\nvt@fontsize}{.875\nvt@leading}%
   }
   \let\tiny\normalsize\relax
   \let\scriptsize\normalsize\relax

@@ -49,7 +49,7 @@
   \suppressfloats[t]% Ensures that a floated image does not go above opening.
   \suppressfloats[b]% Or beneath.
   \begingroup%
-  \nvt@zmarktrue%
+  \nvt@fnzmarktrue%
   \nvt@inopeningtrue%
   \setlength\parindent{0pt}% Just within this environment.
   \ifthenelse{\equal{\nvt@openalign}{l}}{}{}%
@@ -61,7 +61,7 @@
   \ifthenelse{\equal{\nvt@openalign}{c}}{\end{center}}{}%
   \setcounter{nvt@fnmnum}{1}% Footnote markers.
   \endgroup%
-  \nvt@zmarkfalse%
+  \nvt@fnzmarkfalse%
   \setlength\parindent{\normalindent}% Restored.
 }
 \AfterEndEnvironment{opening}{%
@@ -99,7 +99,7 @@
 % is something (even an intentional blank page) in between.
 %   On a display page, all items are horizontally centered by default.
 % There is no paragraph indent. There is a one-line gap between paragraphs.
-% Header and footer will be empty. No footnotes are allowed.
+% Header and footer will be empty.
 %%
 \newenvironment{display}{%
   \clearpage%

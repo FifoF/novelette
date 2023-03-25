@@ -157,8 +157,9 @@
 
 
 %% SIDE PADDING (normally not a user setting)
-\gdef\nvt@spadval{.1} % em
+\gdef\nvt@spadval{.1} % em. Allows for some protrusion.
 %%
+
 
 %% PAGE DESIGN (fontsize, lines, headgap, footgap, style, opening)
 % fontsize = integer|decimal main font size, with units pt|bp.
@@ -241,7 +242,9 @@
   \StrDel{#1,}{ }[\nvt@temp@s]
   \StrBehind{\nvt@temp@s}{style=}[\nvt@temp@s]
   \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
-  \IfSubStr{\nvt@temp@s}{i}{\global\nvt@pnitaltrue\StrDel{\nvt@temp@s}{i}[\nvt@temp@s]}{}
+  \IfSubStr{\nvt@temp@s}{i}{%
+    \global\nvt@pnitaltrue\StrDel{\nvt@temp@s}{i}[\nvt@temp@s]%
+  }{}
   \ifthenelse{\equal{\nvt@temp@s}{}}{}{
     \IfInteger{\nvt@temp@s}{
       \FPiflt{\nvt@temp@s}{0}
@@ -256,6 +259,7 @@
     }{\nvt@okfalse}
   }
   \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrSubstitute{\nvt@temp@s}{openings=}{opening=}[\nvt@temp@s]
   \StrBehind{\nvt@temp@s}{opening=}[\nvt@temp@s]
   \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
   \ifthenelse{\equal{\nvt@temp@s}{}}{\def\nvt@temp@s{c}}{}
@@ -267,28 +271,21 @@
     \nvt@errBVDES % Bad value for design.
     \gdef\nvt@openalign{c}    
   }
+  \StrDel{#1,}{ }[\nvt@temp@s] % No error or warning for bad footnote design.
+  \StrSubstitute{\nvt@temp@s}{footnotes=}{footnote=}[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{footnote=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \IfSubStr{\nvt@temp@s}{n}{\global\nvt@fnseqtrue}{}
+  \IfSubStr{\nvt@temp@s}{l}{\global\nvt@fnlefttrue}{}
+  \IfSubStr{\nvt@temp@s}{i}{\global\nvt@fnindenttrue}{}
 }
 \@onlypreamble\design % Defaults will be calculated. Also \log@design.
 %%
 
 
-%% GUIDES (up to two guides, visible in margin with mode shade|align)
+%% GUIDES (up to four guide pairs, visible in margin with mode shade|align)
 \newcommand\guides[1]{\gdef\nvt@guides{#1}}
 \@onlypreamble\guides % Default is no guides.
-%%
-
-
-%% FOOTNOTE REFERENCE MARKS (literary or numerical)
-\newcommand\markers[1]{
-  \nvt@okfalse
-  \StrDel{#1}{ }[\nvt@temp@s]
-  \ifthenelse{\equal{\nvt@temp@s}{*}}{\nvt@oktrue\gdef\nvt@markers{*}}{}
-  \ifthenelse{\equal{\nvt@temp@s}{1}}{\nvt@oktrue\gdef\nvt@markers{1}}{}
-  \ifnvt@ok\else\nvt@errBVFM\fi% Bad value for footnote markers.
-  \xdef\lognvt@markers{\string\markers{#1}}
-}
-\markers{*} % Default.
-\@onlypreamble\markers
 %%
 
 

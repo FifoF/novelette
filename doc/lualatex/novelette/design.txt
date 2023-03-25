@@ -1,0 +1,65 @@
+
+PLACEHOLDER
+Subject to revision.
+
+
+DESIGN
+	The \design command is used in Preamble. You may combine various settings
+as comma-separated key=value pairs. Or, you may use \design more than once,
+and let Novelette combine them.
+	Anything you do not design, Novelette will design for you.
+
+\design{fontsize=V}
+	V is the main font size, integer|decimal with units pt or bp.
+	Example: \design{fontsize=11.6pt}
+	You do not set the leading (baselineskip). Novelette calculates it.
+	Default V is based on printable width.
+	Alternative: emperline.
+
+\design{emperline=V}
+	V is the integer|decimal number of font em per line of main text.
+	Example: \design{emperline=28.74}
+	Useful V is somewhere near 28. Depends on font, trim size, margins.
+	Alternative: fontsize.
+	Usually, emperline is only used when changing book dimensions.
+	See Novelette documentation for explanation.
+
+\design{lines=V}
+	V is the integer number of lines in main body text (not header|footer).
+	Example: \design{lines=32}
+	Default V is based on main text height.
+
+\design{style=V}
+	V is integer 1-7. It selects header/footer style from a list.
+	See Novelette documentation for the styles.
+	Default V is based on page printable height.
+
+\design{headgap=V}
+	V is the integer|decimal gap between header and main text. Range 0-1.
+	Ignored if design does not use a header.
+	When V=0, the header is at the baseline immediately above main text.
+	In most cases, V=0 does not look good.
+	When V=1, an empty line is inserted between header and main text.
+	Compromisee V=.5 may be satisfactory, especially for small trim sizes.
+	Default V is based on page printable height.
+
+\design{footgap=V}
+	As with headgap, except applies between main text and footer.
+	Ignored if design does not use a footer.
+	If footgap is not set, then footgap=headgap.
+
+\design{openings=V}
+	V is one of: l c r o i.
+	Aligns items in opening environment: left center right outside inside.
+	Default V=c.
+
+\design{footnotes=V}
+	V is one or more of:  n l i
+	Default footnotes use literary reference marks (asterisk, dagger, etc.).
+	V=n changes them to numererical marks (1, 2, etc.).
+	Default separator rule (line between main text and footnotes) is centered.
+	V=l changes the rule to left alignment.
+	Default footnotes do not indent at their beginning.
+	V=i changes to indent, at same value as for main text.
+	Whether or not V=i, multi-paragraph footnotes indent the extra paragraphs.
+	Example: \design{footnotes=il}

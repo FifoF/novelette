@@ -83,7 +83,10 @@
 \newif\ifnvt@header % True if design style has header.
 \newif\ifnvt@footer % True if design style has footer.
 \newif\ifnvt@pnital % True if page numbers are italicized.
-\newif\ifnvt@zmark % True if footnote is in opening. Omits the marker. 
+\newif\ifnvt@fnzmark % True if footnote is in opening. Omits the marker. 
+\newif\ifnvt@fnindent % True if design footnote indent.
+\newif\ifnvt@fnseq % True if using numerical footnote reference marks.
+\newif\ifnvt@fnleft % True if footnote rule is aligned left.
 \newif\ifnvt@frontmatter % True in frontmatter.
 \newif\ifnvt@mainmatter % True in mainmatter or backmatter.
 \newif\ifnvt@cleartoend % True if cleartoend issued. Prevents duplicate.
@@ -247,6 +250,7 @@
   \nvt@process@trimsize
   \nvt@process@margins
   \nvt@process@design
+  \nvt@process@footnotes
   \RequirePackage{novelette-fonts}
   \nvt@process@mainfont
   \nvt@calculate@leading
@@ -335,10 +339,11 @@
   \typeout{\log@trimsize}
   \typeout{\log@sheetfeed}
   \typeout{\log@margins}
-  \typeout{\log@design}
+  \typeout{\log@designa}
   \typeout{\log@altdesign}
   \typeout{\log@charsperline}
-  \typeout{\lognvt@markers}
+  \typeout{\log@designb}
+  \typeout{\log@footnotes}
   \FPclip{\nvt@temp@n}{\strip@pt\nvt@fontsize}
   \FPmul{\nvt@temp@d}{\nvt@temp@n}{.996264}
   \FPround{\nvt@temp@d}{\nvt@temp@d}{3}

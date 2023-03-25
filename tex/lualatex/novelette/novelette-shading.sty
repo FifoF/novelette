@@ -139,7 +139,7 @@
   \nvt@print@UL{\nvt@gray{.9}%
     \hspace{\nvt@spad}%
     \setlength\nvt@temp@l{-\value{nvt@mline}\nvt@leading}%
-    \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@ascn}%
+    \addtolength\nvt@temp@l{\nvt@dscn-\nvt@leading}%
     \ifnvt@header%
       \addtolength\nvt@temp@l{-\nvt@leading-\nvt@headgap\nvt@leading}%
       \addtolength\nvt@temp@l{-\nvt@dscn}%
@@ -172,6 +172,36 @@
   \fi%
   \ifdefined\nvt@guideb%
     \setlength\nvt@temp@l{-\nvt@dscn-\nvt@ascn-\nvt@guideb\nvt@leading}%
+    \ifnvt@header%
+      \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
+    \else%
+      \addtolength\nvt@temp@l{\nvt@leading}%
+    \fi%
+    \edef\nvt@temp@s{\the\nvt@temp@l}
+    \nvt@print@UL{{\nvt@gray{.8}%
+      \hspace{-16pt}\rule[\nvt@temp@s]{12pt}{\nvt@dscn}%
+    }}%
+    \nvt@print@UL{{\nvt@gray{.8}%
+      \hspace{\textwidth+2\nvt@spad+4pt}\rule[\nvt@temp@s]{12pt}{\nvt@dscn}%
+    }}%
+  \fi%
+  \ifdefined\nvt@guidec%
+    \setlength\nvt@temp@l{-\nvt@dscn-\nvt@ascn-\nvt@guidec\nvt@leading}%
+    \ifnvt@header%
+      \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
+    \else%
+      \addtolength\nvt@temp@l{\nvt@leading}%
+    \fi%
+    \edef\nvt@temp@s{\the\nvt@temp@l}
+    \nvt@print@UL{{\nvt@gray{.8}%
+      \hspace{-16pt}\rule[\nvt@temp@s]{12pt}{\nvt@dscn}%
+    }}%
+    \nvt@print@UL{{\nvt@gray{.8}%
+      \hspace{\textwidth+2\nvt@spad+4pt}\rule[\nvt@temp@s]{12pt}{\nvt@dscn}%
+    }}%
+  \fi%
+  \ifdefined\nvt@guided%
+    \setlength\nvt@temp@l{-\nvt@dscn-\nvt@ascn-\nvt@guided\nvt@leading}%
     \ifnvt@header%
       \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
     \else%

@@ -44,7 +44,6 @@ and how to choose their values:</p>
 <a href="#margins">\margins</a>{top=.5in,outside=.5in,bottom=.5in,inside=.625in}<br>
 <a href="#design">\design</a>{fontsize=11.6pt,lines=30,style=2,headgap=1.5,footgap=1.5}<br>
 <a href="#setfont">\setfont</a>{main}{EB Garamond}[liga]<br>
-<a href="#openings">\openings</a>{top=5,height=14,align=center}<br>
 \begin{document}<br>
 % Your writing goes here.<br>
 \end{document}</p>
@@ -299,24 +298,6 @@ as the main font, but at larger Scale.</p>
 flourishes, or unusually-shaped characters.</p>
 <p><b>alt</b> is a font providing characters that cannot be found in the
 main text font.</p>
-</div>
-
-<a id="openings"></a>
-<div>
-<h3>\openings{top=T,height=H,align=A}</h3>
-<p>The <a href="#opening">opening</a> environment begins such things as
-chapters. The <i>\openings</i> comand defines the style.</p>
-<p><b>top</b> T is an integer, number of lines from top of ordinary main
-text block. It is the baseline position of the highest text in an
-<a href="#opening>opening</a>.</p>
-<p><b>height</b> H is an integer, number of lines from top of ordinary main
-text block. It is the baseline position of the first line of main text,
-folowing the <a href="#opening">opening</a>.</p>
-<p><b>align</b> A is a keyword: left, right, center, inside, outside.
-It sets the default alignment of items in an <a href="#opening">opening</a></p>
-<p>Note that top and height are not enforced. All these do is place markers
-in the side margins, at the expected vertical positions. Whether or not
-these markers are honored, is up to you.</p>
 </div>
 
 <a id="opening"></a>

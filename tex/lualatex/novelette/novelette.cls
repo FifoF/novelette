@@ -11,7 +11,8 @@
 %% version 2005/12/01 or later.
 %% 
 \NeedsTeXFormat{LaTeX2e}[2020/10/01]
-\ProvidesClass{novelette}[2023/01/20 v0.2 LuaLaTeX document class]
+\ProvidesClass{novelette}%
+[2023/01/20 v0.2 LuaLaTeX document class]
 %%
 
 
@@ -79,7 +80,6 @@
 \newif\ifnvt@sent@colormsg % When true, prevents color warning duplicates.
 \newif\ifnvt@inopening % True within opening environment.
 \newif\ifnvt@indisplay % True within display environment.
-\newif\ifnvt@err % True if Novelette (not LaTeX) issued an error.
 \newif\ifnvt@header % True if design style has header.
 \newif\ifnvt@footer % True if design style has footer.
 \newif\ifnvt@pnital % True if page numbers are italicized.
@@ -93,10 +93,9 @@
 \newif\ifnvt@shadelines % True in align mode.
 \newif\ifnvt@shademargins % True in shade mode.
 \newif\ifnvt@draft % True unless final mode.
-\newif\ifnvt@epl % True if design using emperline.
 \newif\ifnvt@imgwarn % True if image warning issued.
 \newif\ifnvt@imgdrop % True if image aligned to descender, instead of baseline.
-\newif\ifnvt@error@thrown % True if any error detected during compile.
+\newif\ifnvt@err % True if Novelette (not LaTeX) issued an error.
 %%
 
 
@@ -127,14 +126,16 @@
 %% ----------------------------------------------------------------------------
 \RequirePackage{xparse} % For writing cool-looking commands.
 \RequirePackage{letltxmacro} % For re-defining some macros.
-\RequirePackage{etoolbox} % general good stuff
-\RequirePackage{xifthen} % improved ifthenelse handling
-\RequirePackage{xstring} % parses strings
-\RequirePackage{novelette-infwarerr}
+\RequirePackage{etoolbox} % General good stuff.
+\RequirePackage{xifthen} % Improved ifthenelse handling.
+\RequirePackage{xstring} % Parses strings.
 % Package fontspec requires normalsize. Trick: Tentative normalsize.
 % Novelette calculates real normalsize AtEndPreamble.
 \renewcommand\normalsize{\@setfontsize\normalsize{11pt}{14pt}}\normalsize
 \RequirePackage[no-math,quiet]{fontspec}
+\defaultfontfeatures{} % Reset.
+\defaultfontfeatures[\rmfamily,\sffamily]{Kerning=On, Numbers=OldStyle,%
+  Ligatures=TeX,}
 %%
 
 
@@ -181,6 +182,9 @@
   \fi
 }
 \@onlypreamble\mode
+\def\nvt@XN{Respond x to exit now. Fix the problem}
+\def\nvt@RXN{Really, respond with x and exit now. Else bad things may happen.}
+\def\nvt@bad{\global\nvt@errtrue\gdef\nvt@intent{none}}
 %%
 
 
@@ -210,7 +214,12 @@
 % Many packages introduce code that disrupts the uniform line grid,
 % or writes information disallowed by PDF/X. Solution: No user-added packages.
 \LetLtxMacro\nvt@get@package\RequirePackage\relax
-\NewDocumentCommand\out@of@luck{O{}m}{\nvt@errCURP} % Cannot use \RequirePackage.
+\NewDocumentCommand\out@of@luck{O{}m}{%
+  \ClassError{novelette}{You cannot load packages via \string\usepackage^^J%
+    or \string\RequirePackage. Novelette pre-loads only what is necessary.^^J%
+    Novelette does one thing well, not many things.^^J%
+    \nvt@XN}{\nvt@RXN}\nvt@bad
+}
 \LetLtxMacro\RequirePackage\out@of@luck\relax
 \LetLtxMacro\usepackage\out@of@luck\relax
 %%
@@ -250,20 +259,24 @@
   \nvt@process@trimsize
   \nvt@process@margins
   \nvt@process@design
-  \nvt@process@footnotes
   \RequirePackage{novelette-fonts}
   \nvt@process@mainfont
   \nvt@calculate@leading
   \nvt@renew@normalsize % The real value.
-  \DeclareDocumentCommand\lipsum{sO{}o}{\nvt@errLINL} % Lipsum is not loaded.
+  \DeclareDocumentCommand\lipsum{sO{}o}{%
+    \ClassError{novelette}{Novelette cannot load package \string\lipsum.^^J%
+      This is intentional. Use built-in \string\fillertext\space instead.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
+  }
   \nvt@process@language
   \nvt@process@MT
   \gundef\setmicrotype
   \RequirePackage[\nvt@MT]{microtype}
   \def\MT@find@file#1{} % Prevents loading mt-*.cfg files AtBeginDocument.
-  \nvt@process@headfont
+  \nvt@process@decofont
   \nvt@process@otherfonts
   \RequirePackage{novelette-footnotes}
+  \gundef\opening
   \RequirePackage{novelette-opendisp}
   \RequirePackage{novelette-graphics}
   \RequirePackage{fancyhdr}
@@ -308,6 +321,7 @@
 %% ----------------------------------------------------------------------------
 \AtEndDocument{
   \cleartoend
+  \iferrorsissued{\global\nvt@errtrue}{}
   \pdfinfo{%
     /CreationDate(\pdffeedback creationdate) %
     /ModDate(\pdffeedback creationdate) %
@@ -339,11 +353,9 @@
   \typeout{\log@trimsize}
   \typeout{\log@sheetfeed}
   \typeout{\log@margins}
-  \typeout{\log@designa}
-  \typeout{\log@altdesign}
-  \typeout{\log@charsperline}
-  \typeout{\log@designb}
-  \typeout{\log@footnotes}
+  \typeout{\log@layout}
+  \typeout{\log@text}
+  \typeout{\space\space\log@charsperline}
   \FPclip{\nvt@temp@n}{\strip@pt\nvt@fontsize}
   \FPmul{\nvt@temp@d}{\nvt@temp@n}{.996264}
   \FPround{\nvt@temp@d}{\nvt@temp@d}{3}
@@ -361,16 +373,11 @@
   \FPclip{\nvt@temp@n}{\nvt@temp@n}
   \typeout{Calculated ratio leading/fontsize: \nvt@temp@n}
   \typeout{\log@mainfont}
-  \typeout{\log@headfont}
-  \typeout{\log@namefont}
-  \typeout{\log@descfont}
-  \typeout{\log@notefont}
   \typeout{\log@decofont}
   \log@imagespecs
   \typeout{\nvt@signoffmsg}
   \ifnvt@err
     \typeout{*** NOVELETTE ERROR. OUTPUT IS INVALID. ***}
-    \typeout{*** PDF CANNOT MEET PDF/X REQUIREMENTS. ***}
   \fi
   \typeout{*******************************************************************}
   \typeout{^^J}

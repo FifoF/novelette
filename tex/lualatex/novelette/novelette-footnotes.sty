@@ -55,7 +55,7 @@
     \ifthenelse{\equal{\value{nvt@fnmnum}}{7}}{\gdef\nvt@fnm{‡‡}}{}%
     \ifthenelse{\equal{\value{nvt@fnmnum}}{8}}{\gdef\nvt@fnm{§§}}{}%
   \fi%
-  {\addfontfeature{VerticalPosition=Superior}\nvt@fnm}%
+  {\nvt@mark@font\addfontfeature{VerticalPosition=Superior}\nvt@fnm}%
 }
 \def\nvt@bfnm{% Bottom footnote marker.
   \nvt@fnm%
@@ -73,10 +73,20 @@
 %% FOOTNOTE TEXT
 % The actual footnote, at bottom of textblock, text in \@footnotesize.
 \long\def\nvt@makefntext#1{%
+  \noindent\rule[.88\nvt@dscn]{0pt}{.88\nvt@dscn+.88\nvt@ascn}%
   \ifnvt@fnindent%
-    \ifnvt@fnzmark\forceindent{#1}\else\forceindent\nvt@bfnm\,{#1}\fi%
+    \forceindent%
+    \ifnvt@fnzmark%
+      \forceindent{{\addfontfeature{FakeStretch=1.1}#1}}%
+    \else%
+      \forceindent\nvt@bfnm\,{{\addfontfeature{FakeStretch=1.1}#1}}%
+    \fi%
   \else%
-    \ifnvt@fnzmark\noindent{#1}\else\noindent\nvt@bfnm\,{#1}\fi%
+    \ifnvt@fnzmark%
+      {{\addfontfeature{FakeStretch=1.1}#1}}%
+    \else%
+      \nvt@bfnm\,{{\addfontfeature{FakeStretch=1.1}#1}}%
+    \fi%
   \fi%
 }
 \long\def\@footnotetext#1{

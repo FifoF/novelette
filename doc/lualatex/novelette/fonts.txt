@@ -5,65 +5,36 @@ Subject to revision.
 FONTS
 
 Novelette uses only utf-8 character encoding. Fonts are handled by the
-fontspec package, which is loaded automatically.
+fontspec package, which is loaded automatically. You must use Open Type fonts,
+or in some cases TrueType fonts. Never use the older TeX Type 1 fonts,
+or any other technology.
 
-There are several pre-defined fonts, created by the \setfont command:
-	\setfont{main}{font name}[font features]
-	\setfont{head}{font name}[font features]
-	\setfont{name}{font name}[font features]
-	\setfont{desc}{font name}[font features]
-	\setfont{note}{font name}[font features]
-	\setfont{deco}{font name}[font features]
-	\setfont{alt}{font name}[font features]
-Note that the optional argument [font features] comes at the end.
+Novelette uses its own \setfont command:
+	\setfont{main}{Font Name}[features]
+	\setfont{deco}{Font Name}[features]
+The main font is set only once, in Preamble. Do not use \setmainfont.
+	If you do not set the main font, a default will be chosen. If you attempt
+to set a font that is not installed where TeX can find it, a default will
+be chosen, and a warning is issued. If no suitable default is found, error.
+	The main font is used for main body text. With certain automatic
+modifications (such as Scale) it is used in header/footer, footnotes,
+and opening name/desc.
+	The deco font may be used on the book title and half-title pages,
+for dramatic effect. If may also be used on a "Part" separator page.
+If you do not set the deco font, it will be the main font, with modifications.
+The deco font is used like this:
+	{\decofont Decorative Text}
 
-You must use Open Type fonts, or in some cases TrueType fonts. Never use the
-older TeX Type 1 fonts, or any other technology.
+If you are familiar with fontspec syntax, you may define and use your own
+fonts. This is discouraged. There are potential layout issues that may
+arise when using font commands. They are not bugs; they are font mis-use.
 
-If you do not set the main font yourself, Novelette will look for EB Garamond,
-Swainson, or Libertinus Serif. If none are found, it will use Latin Modern
-Roman as last resort.
-
-If you do not set one or more of the other fonts, it will be a variation
-of the main font.
-
-You may also use fontspec commands to define your own fonts. But in most cases,
-this is unnecessary.
-
-The main font is used for the body of your text.
-
-The head font is used for headers and footers. If you do not set it yourself,
-it will be the main font, but at slightly smaller scale, and slightly looser
-tracking (letter spacing).
-
-The name font is used for the name of an "opening" page. An example would
-be chapter numbers, Introduction, Prologue, or similar purposes.
-If you do not set the name font yourself, the main font will be used,
-but at about 1.8x its normal size.
-
-The desc (description) font is also used on an "opening" page, if you need
-to provide a few words under the name. For example, the name of a chapter
-might simply be the numeral 4, and its description might be At Yorktown.
-If you do not set the desc font yourself, the name font will be used,
-but at about 1.33x its normal size.
-
-The note font is used for footnotes.
-It should always be smaller than the main font. If your do not set the note
-font yourself, the main font will be used, but at about 0.88x normal size.
-It is usually best to allow the default.
-
-Not every book will need a deco font. It is intended for something unusual,
-to provide dingbats or special characters. If you do not set the deco font
-yourself, it will be the same as the main font.
-
-Not every book will need an alt font. It might be useful if your main font
-has a limited character set, and you need to occasionally insert another
-character, which is provided by the alt font. If you do not set the alt font
-yourself, then the main font will be used.
-
-Novelette does not use sans-serif, monospace, or math fonts. If you use
-TeX commands for that purpose, the result is unpredictable. Of course,
-you could use almost any font for head, name, desc, or deco fonts.
-
-
-
+Novelette uses Libertinus Serif as an alternative font.
+It may be installed as package 'libertinus-fonts'. If you need characters
+that are not in the chosen main font, you may request them from the altfont.
+For example, suppose the main font has no Greek letters, but you need pi,
+which is Unicode hex 0030. Sample code:
+	I want my {\altfont ^^^^0030}, and I want it now.
+Libertinus Serif is a moderately-designed font, which is likely to be
+unobtrusive when an occasional character is interted within main text.
+It is automatically scaled to fit its surroundings.

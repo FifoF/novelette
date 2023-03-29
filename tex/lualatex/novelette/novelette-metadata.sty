@@ -86,7 +86,8 @@
 \ifnvt@ok
   \xdef\nvt@intent{\nvt@temp@s}
 \else
-  \nvt@errBVOI % Bad value for output intent.
+  \ClassError{novelette}{Bad value for \string\intent.^^J%
+  \@XN}{\@RXN}\nvt@bad
 \fi
 %%
 
@@ -94,7 +95,6 @@
 %% PROCESS METADATA
 \def\nvt@process@metadata{
   \ifnvt@draft
-    \ifthenelse{\equal{\nvt@mode}{final}}{\nvt@warnNTOA}{} % No title or author.
     \gdef\nvt@intent{none}
   \fi
   \ifthenelse{\equal{\nvt@intent}{none}}{

@@ -15,169 +15,153 @@
 %%
 
 
-%% Developer tool, for testing fonts. If used, must precede any \setfont.
-\newcommand\kernoff{\gdef\nvt@maybekern{}}
-\def\nvt@maybekern{Kerning=On,}
+%% FONTS
+% Novelette uses fontspec technology, with Open Type (or some TrueType) fonts.
+%   The main font is used for body text. With modifications (such as Scale)
+% it is also used for header/footer, footnotes, and opening name/desc.
+%   The deco font may only be used on the book Title page, half-title, and
+% Part separator pages. It is intended for dramatic effect. If you do not
+% set the deco font, then the main font willbe used, with modifications.
+%   The alt font is automatically set to Libertinus Serif, if installed.
+% It can provide many characters (such as Greek and Cyrillic) that may not
+% be available in the main font. The fonts are in package 'libertinus-fonts'.
+% If you do not have Libertinus Serif, then alt default to main.
+%   Some special characters, such as footnote reference marks in literary
+% format (asterisk, dagger, etc.) do not look nice in most fonts. Swainson
+% has special designs for this purpose. It is automatically invoked as the
+% mark font, if installed. Otherwise defaults to main font.
+%   Note that unless you do code hacks, you have very little choice for how
+% fonts are used. In the past, authors never chose (metal) fonts; they were
+% chosen by the printer. Good enough for Victor Hugo, good enough for you!
 %%
 
 
-%% FONT SELECTION (before fontspec loads)
-% These commands may be used in Preamble. They merely save the settings.
-% Later, fonts are created by \nvt@process@ macros.
+%% DO NOT USE DIRECTLY
+\pretocmd\setmainfont{%
+  \ifdefined\nvt@main@font\else%
+    \ClassError{novelette}{Do not use command \string\setmainfont.^^J%
+      Novelette uses \string\setfont{main}{Font Name}[features] instead.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad%
+  \fi%
+}{}{}
+%%
+
+
+%% FONT SELECTION
 \DeclareDocumentCommand\setfont{mmO{}}{
-  \def\nvt@temp@s{main head name desc note deco alt init}
-  \IfSubStr{\nvt@temp@s}{#1}{}{\nvt@errBFASF{#1}} % Bad first argument for setfont.
-  \def\nvt@temp@s{Color color Colour colour Opacity opacity}
-  \IfSubStr{\nvt@temp@s}{#3}{\nvt@errNCOF}{} % No color or opacity in font.
-  \ifthenelse{\equal{#1}{main}}{\gdef\nvt@main@font{#2}\gdef\nvt@main@feat{#3}}{}
-  \ifthenelse{\equal{#1}{head}}{\gdef\nvt@head@font{#2}\gdef\nvt@head@feat{#3}}{}
-  \ifthenelse{\equal{#1}{name}}{\gdef\nvt@name@font{#2}\gdef\nvt@name@feat{#3}}{}
-  \ifthenelse{\equal{#1}{desc}}{\gdef\nvt@desc@font{#2}\gdef\nvt@desc@feat{#3}}{}
-  \ifthenelse{\equal{#1}{note}}{\gdef\nvt@note@font{#2}\gdef\nvt@note@feat{#3}}{}
-  \ifthenelse{\equal{#1}{deco}}{\gdef\nvt@deco@font{#2}\gdef\nvt@deco@feat{#3}}{}
-  \ifthenelse{\equal{#1}{alt}}{\gdef\nvt@alt@font{#2}\gdef\nvt@alt@feat{#3}}{}
-  \ifthenelse{\equal{#1}{init}}{\gdef\nvt@init@font{#2}\gdef\nvt@init@feat{#3}}{}
+  \nvt@okfalse
+  \StrDel{#1}{ }[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{main}}{
+    \nvt@oktrue\gdef\nvt@main@font{#2}\gdef\nvt@main@feat{#3}
+  }{}
+  \ifthenelse{\equal{\nvt@temp@s}{deco}}{
+    \nvt@oktrue\gdef\nvt@deco@font{#2}\gdef\nvt@deco@feat{#3}
+  }{}
+  \ifnvt@ok\else
+    \ClassError{novelette}{Bad first argument in \string\setfont.^^J%
+      Choices: main deco^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
+  \fi
 }
 \@onlypreamble\setfont
 %%
 
 
 %%
-\def\nvt@pickdefaultfont{
-  \gdef\nvt@main@feat{}
-  \IfFontExistsTF{Swainson}{
-    \gdef\nvt@main@font{Swainson}
-  }{
-    \IfFontExistsTF{EB Garamond}{
-      \gdef\nvt@main@font{EB Garamond}
+\def\nvt@process@mainfont{
+  \ifdefined\nvt@main@feat\else\gdef\nvt@main@feat{}\fi
+  \ifdefined\nvt@main@font\else
+    \IfFontExistsTF{Swainson}{
+      \gdef\nvt@main@font{Swainson}
     }{
-      \IfFontExistsTF{Libertinus Serif}{
-        \gdef\nvt@main@font{Libertinus Serif}
+      \IfFontExistsTF{EB Garamond}{
+        \gdef\nvt@main@font{EB Garamond}
       }{
-        \IfFontExistsTF{Latin Modern Roman}{ % Almost all TeX has it.
-          \gdef\nvt@main@font{Latin Modern Roman}
-        }{\nvt@errRNDMF} % Really no default main font.
+        \IfFontExistsTF{Libertinus Serif}{
+          \gdef\nvt@main@font{Libertinus Serif}
+        }{
+          \IfFontExistsTF{Latin Modern Roman}{
+            \gdef\nvt@main@font{Latin Modern Roman}
+            \ClassWarning{novelette}{Did not find suitable default font.^^J%
+              Using Latin Modern Roman. For best appearance, select another.}
+          }{
+            \ClassError{novelette}{Looked for Latin Modern Roman^^J%
+              as last-choice default main font, but did not find it.^^J
+              Your TeX system may be missing some standard files.^^J%
+              \nvt@XN}{\nvt@RXN}\nvt@bad%
+          }
+        }
       }
     }
-  }
-}
-%%
-
-
-%%
-\def\nvt@process@mainfont{ % After fontspec loads.
-  \defaultfontfeatures{} % Reset.
-  \defaultfontfeatures[\rmfamily,\sffamily]{\nvt@maybekern Numbers=OldStyle,%
-    Ligatures=TeX,}
-  \ifdefined\nvt@main@font
-    \IfFontExistsTF{\nvt@main@font}{}{
-      \nvt@warnNMFF{\nvt@main@font} % No main font found.
-      \nvt@pickdefaultfont
-    }
-  \else
-    \nvt@pickdefaultfont
   \fi
-  \setmainfont{\nvt@main@font}[\nvt@main@feat]
-  \let\mainfont\rmfamily\relax % Backwards compatibility.
-  \xdef\log@mainfont{\string\setfont{main}{\nvt@main@font}\nvt@main@feat}
+  \setmainfont{\nvt@main@font}[\nvt@main@feat,RawFeature={colr=0}]
+  \let\mainfont\rmfamily\relax
+  \def\nvt@temp@n{}
+  \ifthenelse{\equal{\nvt@main@feat}{}}{}{\def\nvt@temp@n{[\nvt@main@feat]}}
+  \xdef\log@mainfont{\string\setfont{main}{\nvt@main@font}\nvt@temp@n}
 }
 %%
 
 
 %%
-\def\nvt@process@headfont{
-  \ifdefined\nvt@head@font\else\xdef\nvt@head@font{\nvt@main@font}\fi
-  \ifdefined\nvt@head@feat\else\gdef\nvt@head@feat{}\fi
-  \IfFontExistsTF{\nvt@head@font}{
-    \newfontfamily\nvt@headfont{\nvt@head@font}[\nvt@head@feat]
+\def\nvt@process@decofont{
+  \ifdefined\nvt@deco@font\else\xdef\nvt@deco@font{\nvt@main@font}\fi
+  \ifdefined\nvt@deco@feat\else\xdef\nvt@deco@feat{\nvt@main@feat}\fi
+  \IfFontExistsTF{\nvt@deco@font}{
+    \newfontfamily\decofont{\nvt@deco@font}[\nvt@deco@feat,%
+      Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0}]
   }{
-    \nvt@warnNFF{\nvt@head@font}
-    \newfontfamily\nvt@headfont{\nvt@main@font}
+    \ClassWarning{novelette}{Did not find deco font \nvt@deco@font.^^J%
+      Will use main font instead. Results will not be as intended.}
+    \newfontfamily\decofont{\nvt@main@font}[\nvt@main@feat,%
+      Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0}]
   }
-  \xdef\log@headfont{\string\setfont{head}{\nvt@head@font}\nvt@head@feat}
+  \def\nvt@temp@n{}
+  \ifthenelse{\equal{\nvt@deco@feat}{}}{}{\def\nvt@temp@s{[\nvt@deco@feat]}}
+  \xdef\log@decofont{\string\setfont{deco}{\nvt@deco@font}\nvt@temp@n}
 }
 %%
 
 
 %%
 \def\nvt@process@otherfonts{
-  % name font:
-  \ifdefined\nvt@name@font\else\xdef\nvt@name@font{\nvt@main@font}\fi
-  \ifdefined\nvt@name@feat\else\gdef\nvt@name@feat{Scale=1.8}\fi
-  \IfFontExistsTF{\nvt@name@font}{}{
-    \nvt@warnNFF{\nvt@name@font}
-    \xdef\nvt@name@font{\nvt@main@font}
+  % \altfont (always Libertinus Serif, if available)
+  \IfFontExistsTF{Libertinus Serif}{
+    \newfontfamily\altfont{Libertinus Serif}[Scale=MatchLowercase,%
+      RawFeature={colr=0}]
+  }{
+    \let\altfont\relax
   }
-  \newfontfamily\nvt@namefont{\nvt@name@font}[\nvt@name@feat]
-  \ifthenelse{\equal{\nvt@name@feat}{}}{\def\nvt@temp@s{}}{\def\nvt@temp@s{[\nvt@name@feat]}}
-  \xdef\log@namefont{\string\setfont{name}{\nvt@name@font}\nvt@temp@s}
-  % desc font:
-  \ifdefined\nvt@desc@font\else\xdef\nvt@desc@font{\nvt@main@font}\fi
-  \ifdefined\nvt@desc@feat\else\gdef\nvt@desc@feat{Scale=1.33}\fi
-  \IfFontExistsTF{\nvt@desc@font}{}{
-    \nvt@warnNFF{\nvt@desc@font} % No font found.
-    \xdef\desc@font{\nvt@main@font}
+  % \nvt@headfont
+  \ifthenelse{\equal{\nvt@hfscale}{1}}{
+    \gdef\nvt@hfstretch{}
+  }{
+    \FPsub{\nvt@temp@n}{1}{\nvt@hfscale}
+    \FPdiv{\nvt@temp@n}{\nvt@temp@n}{2}
+    \FPadd{\nvt@temp@n}{\nvt@temp@n}{\nvt@hfscale}
+    \xdef\nvt@hfstretch{FakeStretch=\nvt@temp@n}
   }
-  \newfontfamily\nvt@descfont{\nvt@desc@font}[\nvt@desc@feat]
-  \ifthenelse{\equal{\nvt@desc@feat}{}}{\def\nvt@temp@s{}}{\def\nvt@temp@s{[\nvt@desc@feat]}}
-  \xdef\log@descfont{\string\setfont{desc}{\nvt@desc@font}\nvt@temp@s}
-  % note font:
-  \ifdefined\nvt@note@font\else\xdef\nvt@note@font{\nvt@main@font}\fi
-  \ifdefined\nvt@note@feat\else\gdef\nvt@note@feat{}\fi
-  \IfFontExistsTF{\nvt@note@font}{}{
-    \nvt@warnNFF{\nvt@note@font} % No font found.
-    \xdef\nvt@note@font{\nvt@main@font}
+  \newfontfamily\nvt@headfont{\nvt@main@font}[\nvt@main@feat,%
+    Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0},%
+    Scale=\nvt@hfscale,\nvt@hfstretch]
+  % \nvt@mark@font (always Swainson, if available)
+  \IfFontExistsTF{Swainson}{
+    \newfontfamily\nvt@mark@font{Swainson}[Scale=MatchLowercase,%
+      RawFeature={colr=0}]
+  }{
+    \let\nvt@mark@font\relax
   }
-  \newfontfamily\nvt@notefont{\nvt@note@font}[\nvt@note@feat]
-  \ifthenelse{\equal{\nvt@desc@feat}{}}{\def\nvt@temp@s{}}{\def\nvt@temp@s{[\nvt@desc@feat]}}
-  \xdef\log@notefont{\string\setfont{note}{\nvt@note@font}\nvt@temp@s}
-  % deco font:
-  \ifdefined\nvt@deco@font\else\xdef\nvt@deco@font{\nvt@main@font}\fi
-  \ifdefined\nvt@deco@feat\else\gdef\nvt@deco@feat{}\fi
-  \IfFontExistsTF{\nvt@deco@font}{}{
-    \nvt@warnNFF{\nvt@deco@font} % No font found.
-    \xdef\deco@font{\nvt@main@font}
-  }
-  \newfontfamily\nvt@decofont{\nvt@deco@font}[\nvt@deco@feat]
-  \ifthenelse{\equal{\nvt@deco@feat}{}}{\def\nvt@temp@s{}}{\def\nvt@temp@s{[\nvt@deco@feat]}}
-  \xdef\log@decofont{\string\setfont{deco}{\nvt@deco@font}\nvt@temp@s}
-  % alt font:
-  \ifdefined\nvt@alt@font\else\xdef\nvt@alt@font{\nvt@main@font}\fi
-  \ifdefined\nvt@alt@feat\else\gdef\nvt@alt@feat{}\fi
-  \IfFontExistsTF{\nvt@alt@font}{}{
-    \nvt@warnNFF{\nvt@alt@font} % No font found.
-    \xdef\nvt@alt@font{\nvt@main@font}
-  }
-  \newfontfamily\nvt@altfont{\nvt@alt@font}[\nvt@alt@feat]
-  \ifthenelse{\equal{\nvt@alt@feat}{}}{\def\nvt@temp@s{}}{\def\nvt@temp@s{[\nvt@alt@feat]}}
-  \xdef\log@altfont{\string\setfont{alt}{\nvt@alt@font}\nvt@temp@s}
-  % init font:
-  \ifdefined\nvt@init@font\else\xdef\nvt@init@font{\nvt@main@font}\fi
-  \ifdefined\nvt@init@feat\else\gdef\nvt@init@feat{}\fi
-  \IfFontExistsTF{\nvt@init@font}{}{
-    \nvt@warnNFF{\nvt@init@font} % No font found.
-    \xdef\nvtinit@font{\nvt@main@font}
-  }
-  \newfontfamily\nvt@initfont{\nvt@init@font}[\nvt@init@feat]
-  \ifthenelse{\equal{\nvt@init@feat}{}}{\def\nvt@temp@s{}}{\def\nvt@temp@s{[\nvt@init@feat]}}
-  \xdef\log@initfont{\string\setfont{init}{\nvt@init@font}\nvt@temp@s}
+  % \nvt@name@font
+  \newfontfamily\nvt@namefont{\nvt@main@font}[\nvt@main@feat,Scale=1.8,%
+    Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0},%
+    FakeStretch=.9,LetterSpace=2]
+  % \nvt@desc@font
+  \newfontfamily\nvt@descfont{\nvt@main@font}[\nvt@main@feat,Scale=1.33,%
+    Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0},%
+    FakeStretch=.94,LetterSpace=2]
 }
 %%
 
-
-%%
-\newcommand\fontclass[1]{%
-  \IfInteger{#1}{%
-    \gdef\nvt@fontclass{#1}%
-  }{%
-    \ClassWarning{novelette}{\string\fontclass\space accepts only integer.^^J%
-      Using default fontclass 0.}%
-    \gdef\nvt@fontclass{0}%
-  }%
-}
-\fontclass{0} % Default
-\@onlypreamble\fontclass
-%%
 
 
 %%

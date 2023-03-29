@@ -181,7 +181,8 @@
     }%
   }{}%
   \@ifundefined{bbl@hyphendata@\the\language}{
-    \nvt@warnDNFH % Did not find hyphenation.
+    \ClassWarning{novelette}{Did not find hyphenation for \string\setlang.^^J%
+      It is not installed in your TeX system. Proceeding without hyphenation.}
     \gdef\nvt@lang{nohyphenation}
   }{}%
 }
@@ -202,10 +203,9 @@
 \def\nvt@lang{english}
 \newcommand\setlang[1]{
   \StrDel{#1}{ }[\nvt@temp@s]
-  \IfSubStr{\nvt@langlist}{:\nvt@temp@s:}{
-    \xdef\nvt@lang{\nvt@temp@s}
-  }{
-    \nvt@errLNOL % Language not on list.
+  \xdef\nvt@lang{\nvt@temp@s}
+  \IfSubStr{\nvt@langlist}{:\nvt@temp@s:}{}{
+    \ClassWarning{novelette}{Language #1 not on approved list.}
   }
 }
 %%

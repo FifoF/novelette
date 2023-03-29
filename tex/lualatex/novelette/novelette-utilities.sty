@@ -25,8 +25,6 @@
 % -----------------------------------------------------------------------------
 % TeX "helpfully" provides many settings and commands that are inappropriate
 % in Novelette. This file unsets, changes, or re-defines things.
-%   There are five ways to do things: the right way, the wrong way,
-% the Army way, the TeX way, and the Novelette way.
 
 
 %% CLEARPAGE %%%%% maybe \addtocmd\clearpage{...}{}{}
@@ -44,8 +42,14 @@
 %% FRONTMATTER, MAINMATTER, BACKMATTER
 % These commands can only be used in document body:
 \def\frontmatter{%
-  \ifnvt@frontmatter\nvt@errBADMAT\fi% Bad matter command.
-  \ifnvt@mainmatter\nvt@errBADMAT\fi%
+  \ifnvt@frontmatter%
+    \ClassError{novelette}{Duplicate \string\frontmatter.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad%
+  \fi% Bad matter command.
+  \ifnvt@mainmatter%
+    \ClassError{novelette}{No more frontmatter after mainmatter.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad%
+  \fi%
   \global\nvt@frontmattertrue%
   \global\nvt@mainmatterfalse%
   \clearpage%
@@ -56,7 +60,10 @@
 }
 %
 \def\mainmatter{ % Restarts page to 1, arabic numbers; freeze frontpagecount.
-  \ifnvt@mainmatter\nvt@errBADMAT\fi%
+  \ifnvt@mainmatter%
+    \ClassError{novelette}{Cannot use \string\mainmatter\space twice.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad%
+  \fi%
   \cleartorecto%
   \versohead{}
   \rectohead{}
@@ -81,7 +88,7 @@
 \global\deflength\headheight{0pt}
 \global\deflength\headsep{0pt}
 \global\deflength\footskip{0pt}
-\global\deflength\footnotesep{0pt} %%%%%
+\global\deflength\footnotesep{0pt}
 \global\deflength\fboxrule{0pt}
 \global\deflength\fboxsep{0pt}
 \@twocolumnfalse
@@ -158,7 +165,10 @@
 \long\gdef\paragraph#1{#1}
 \long\gdef\subparagraph#1{#1}
 \long\gdef\appendix#1{#1}
-\DeclareDocumentCommand\nvt@nodocommand{O{}+m}{\nvt@errNODO{#2}}% Do not do it.
+\DeclareDocumentCommand\nvt@nodocommand{O{}+m}{%
+  \ClassError{novelette}{Command `#2' cannot be used in Novelette.^^J%
+    \@XN}{\@RXN}\nvt@bad
+}
 % The no-do commands:
 \long\gdef\maketitle{\nvt@nodocommand{maketitle}}
 \long\gdef\makeindex{\nvt@nodocommand{makeindex}}
@@ -220,6 +230,27 @@
     \long\gdef\nvt@signoffmsg{Processed with lualatex.^^J%
       You may get better results by processing via novelette script.^^J%
       See Novelette documentation for explanation.}%
+}
+%%
+
+
+%% CHANGE MODE ON ERROR (not yet fully enabled)
+% Detect whether an error was thrown, regardless of its source.
+% If thrown, AtEndDocument changes to draft mode.
+\directlua{
+  local error_seen = false
+  local true_cmd = token.create'use_i:nn'
+  local false_cmd = token.create'use_ii:nn'
+  local id = luatexbase.new_luafunction'iferrorsissued'
+  token.set_lua('iferrorsissued', id)
+  lua.get_functions_table()[id] = function()
+    token.put_next(error_seen and true_cmd or false_cmd)
+  end
+  luatexbase.add_to_callback('show_error_hook', function()
+    error_seen = true
+    texio.write('.')
+    tex.show_context()
+  end, 'track_errors')
 }
 %%
 
@@ -326,7 +357,10 @@
 %% \init[kern]{Letter}{phrase} for optional styling first line of a chapter.
 \DeclareDocumentCommand\init{O{0}mm}{%
   \noindent\smash{\addfontfeature{ScaleAgain=1.33}#2}%
-  \IfDecimal{#1}{\kern#1em}{\nvt@warnBIK}% Bad init kern.
+  \IfDecimal{#1}{\kern#1em}{%
+    \ClassWarning{novelette}{Bad kern value in \string\init, page \thepage.^^J%
+      This kern does not use units, just the number (units will be em).}%
+  }%
   \smcp{#3}%
 }
 %%

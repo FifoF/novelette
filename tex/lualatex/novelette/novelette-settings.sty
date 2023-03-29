@@ -21,7 +21,6 @@
 % Fonts, openings, and metadata are defined in other files.
 %   If you set \trimsize, you must set both width,height.
 %   If you set \margins, you must set all of top,outside,bottom,inside.
-%   If you set \design, you may set some or all of its values.
 % Novelette provides defaults for anything you do not set. In some cases,
 % the defaults are based on other settings or defaults.
 %   These settings are parsed for syntax and acceptable values, at the time
@@ -77,7 +76,8 @@
     \global\deflength\pagewidth{\nvt@trimw}
     \global\deflength\pageheight{\nvt@trimh}
   \else
-    \nvt@errBTS % Bad trim size.
+    \ClassError{novelette}{Bad value for \string\trimsize.^^J%
+      \@XN}{\@RXN}\nvt@bad
   \fi
   \xdef\log@trimsize{\string\trimsize{#1}}
 }
@@ -97,7 +97,8 @@
   \ifnvt@ok
     \xdef\nvt@sheetfeed{\nvt@temp@s}
   \else
-    \nvt@errBVSF % Bad value sheetfeed.
+    \ClassError{novelette}{Bad value for \string\sheetfeed.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
     \gdef\nvt@sheetfeed{trimsize}
   \fi
   \gdef\log@sheetfeed{\string\sheetfeed{\nvt@sheetfeed}}
@@ -142,7 +143,8 @@
         \global\deflength\nvt@mins{\nvt@mtop+.125in}
       }
     \else
-      \nvt@errBVMAR % Bad value margins.
+      \ClassError{novelette}{Bad value for \string\margins.^^J%
+        \nvt@XN}{\nvt@RXN}\nvt@bad
     \fi
   \fi
   \xdef\log@margins{\string\margins{#1}}
@@ -161,15 +163,12 @@
 %%
 
 
-%% PAGE DESIGN (fontsize, lines, headgap, footgap, style, opening)
-% fontsize = integer|decimal main font size, with units pt|bp.
-% emperline = integer|decimal em per line of main text.
-%   You may set at most one of fontsize|emperline. The other is calculated. 
-% lines = integer lines per page, main textblock (not counting header/footer).
-% headgap, footgap = integer|decimal 0-1. Extra line space at header/footer.
-% style = integer 1-7. Selects header/footer style. i = italics page number.
-% opening = l|c|r. Sets default horizontal alignment of items in openings.
-\newcommand\design[1]{
+%% TEXT (fontsize, and lines in main textblock)
+% fontsize -> Main text. Size in pt or bp.
+% lines -> Lines per page in main textblock (not counting header/footer).
+% openings -> Horizontal alignment of items in openings.
+% footnotes -> Various settings for footnotes.
+\newcommand\text[1]{
   \nvt@oktrue
   \StrDel{#1,}{ }[\nvt@temp@s]
   \StrBehind{\nvt@temp@s}{fontsize=}[\nvt@temp@s]
@@ -178,19 +177,6 @@
     \nvt@checklength{\nvt@temp@s}
     \ifnvt@ok\global\deflength\nvt@fontsize{\nvt@temp@s}\fi
   }
-  \StrDel{#1,}{ }[\nvt@temp@s]
-  \StrBehind{\nvt@temp@s}{emperline=}[\nvt@temp@s]
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
-  \ifthenelse{\equal{\nvt@temp@s}{}}{}{
-    \xdef\nvt@emperline{\nvt@temp@s}
-    \global\nvt@epltrue
-  }
-  \ifdimcomp{\nvt@fontsize}{>}{0pt}{
-    \ifnvt@epl
-       \nvt@errCSBFE % Cannot set both fontsize and emperline.
-       \global\nvt@eplfalse % Priority to fontsize or default.
-    \fi
-  }{}
   \StrDel{#1,}{ }[\nvt@temp@s]
   \StrBehind{\nvt@temp@s}{lines=}[\nvt@temp@s]
   \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
@@ -205,6 +191,63 @@
           \xdef\nvt@lpp{\nvt@temp@s}
         \fi
      \fi
+    }{\nvt@okfalse}
+  }
+  \nvt@oktrue
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrSubstitute{\nvt@temp@s}{footnotes=}{footnote=}[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{footnote=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \IfSubStr{\nvt@temp@s}{n}{%
+    \global\nvt@fnseqtrue
+    \StrDel{\nvt@temp@s}{n}[\nvt@temp@s]
+  }{}
+  \IfSubStr{\nvt@temp@s}{l}{%
+    \global\nvt@fnlefttrue
+    \StrDel{\nvt@temp@s}{l}[\nvt@temp@s]
+  }{}
+  \IfSubStr{\nvt@temp@s}{i}{%
+    \global\nvt@fnindenttrue
+    \StrDel{\nvt@temp@s}{i}[\nvt@temp@s]
+  }{}
+  \ifthenelse{\equal{\nvt@temp@s}{}}{}{\nvt@okfalse}
+  \nvt@oktrue
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrSubstitute{\nvt@temp@s}{openings=}{opening=}[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{opening=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{}}{\def\nvt@temp@s{c}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{c} \OR %
+    \equal{\nvt@temp@s}{l} \OR \equal{\nvt@temp@s}{r} \OR %
+    \equal{\nvt@temp@s}{o} \OR \equal{\nvt@temp@s}{i}}{
+      \xdef\nvt@openalign{\nvt@temp@s}
+  }{
+    \nvt@okfalse
+    \gdef\nvt@openalign{c}
+  }
+  \ifnvt@ok\else
+    \ClassError{novelette}{Bad value for \string\text.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
+  \fi
+}
+\@onlypreamble\text
+%%
+
+
+%% LAYOUT (headers and footers)
+% scale -> Relative to main text. Min 0.75, max 1.
+% headgap -> Extra space between header and main text (if style has header).
+% footgap -> Extra space between main text and footer (if style has footer).
+% style -> Integer 1-7, chooses header/footer style from a list.
+\newcommand\layout[1]{
+  \nvt@oktrue
+  \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{scale=}[\nvt@temp@s]
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{}}{}{
+    \IfDecimal{\nvt@temp@s}{
+      \FPmax{\nvt@hfscale}{\nvt@hfscale}{.75}
+      \FPmin{\nvt@hfscale}{\nvt@hfscale}{1}
     }{\nvt@okfalse}
   }
   \StrDel{#1,}{ }[\nvt@temp@s]
@@ -258,28 +301,8 @@
      \fi
     }{\nvt@okfalse}
   }
-  \StrDel{#1,}{ }[\nvt@temp@s]
-  \StrSubstitute{\nvt@temp@s}{openings=}{opening=}[\nvt@temp@s]
-  \StrBehind{\nvt@temp@s}{opening=}[\nvt@temp@s]
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
-  \ifthenelse{\equal{\nvt@temp@s}{}}{\def\nvt@temp@s{c}}{}
-  \ifthenelse{\equal{\nvt@temp@s}{c} \OR %
-    \equal{\nvt@temp@s}{l} \OR \equal{\nvt@temp@s}{r} \OR %
-    \equal{\nvt@temp@s}{o} \OR \equal{\nvt@temp@s}{i}}{
-      \xdef\nvt@openalign{\nvt@temp@s}
-  }{
-    \nvt@errBVDES % Bad value for design.
-    \gdef\nvt@openalign{c}    
-  }
-  \StrDel{#1,}{ }[\nvt@temp@s] % No error or warning for bad footnote design.
-  \StrSubstitute{\nvt@temp@s}{footnotes=}{footnote=}[\nvt@temp@s]
-  \StrBehind{\nvt@temp@s}{footnote=}[\nvt@temp@s]
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
-  \IfSubStr{\nvt@temp@s}{n}{\global\nvt@fnseqtrue}{}
-  \IfSubStr{\nvt@temp@s}{l}{\global\nvt@fnlefttrue}{}
-  \IfSubStr{\nvt@temp@s}{i}{\global\nvt@fnindenttrue}{}
 }
-\@onlypreamble\design % Defaults will be calculated. Also \log@design.
+\@onlypreamble\layout
 %%
 
 

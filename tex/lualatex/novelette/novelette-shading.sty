@@ -156,7 +156,7 @@
 %% OPENING GUIDES
 \def\nvt@place@opening@guides{%
   \ifdefined\nvt@guidea%
-    \setlength\nvt@temp@l{-\nvt@dscn-\nvt@ascn-\nvt@guidea\nvt@leading}%
+    \setlength\nvt@temp@l{\nvt@dscn-\nvt@guidea\nvt@leading}%
     \ifnvt@header%
       \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
     \else%
@@ -171,7 +171,7 @@
     }}%
   \fi%
   \ifdefined\nvt@guideb%
-    \setlength\nvt@temp@l{-\nvt@dscn-\nvt@ascn-\nvt@guideb\nvt@leading}%
+    \setlength\nvt@temp@l{\nvt@dscn-\nvt@guideb\nvt@leading}%
     \ifnvt@header%
       \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
     \else%
@@ -186,7 +186,7 @@
     }}%
   \fi%
   \ifdefined\nvt@guidec%
-    \setlength\nvt@temp@l{-\nvt@dscn-\nvt@ascn-\nvt@guidec\nvt@leading}%
+    \setlength\nvt@temp@l{\nvt@dscn-\nvt@guidec\nvt@leading}%
     \ifnvt@header%
       \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
     \else%
@@ -201,7 +201,7 @@
     }}%
   \fi%
   \ifdefined\nvt@guided%
-    \setlength\nvt@temp@l{-\nvt@dscn-\nvt@ascn-\nvt@guided\nvt@leading}%
+    \setlength\nvt@temp@l{\nvt@dscn-\nvt@guided\nvt@leading}%
     \ifnvt@header%
       \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
     \else%
@@ -237,27 +237,6 @@
   \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{3}
   #1=\nvt@temp@n, %%%%% Really comma?
 }
-%%
-
-
-%% CHANGE MODE ON ERROR (not yet fully enabled)
-%% Detect whether an error was thrown, regardless of its source:
-\directlua{
-  local error_seen = false
-  local true_cmd = token.create'use_i:nn'
-  local false_cmd = token.create'use_ii:nn'
-  local id = luatexbase.new_luafunction'iferrorsissued'
-  token.set_lua('iferrorsissued', id)
-  lua.get_functions_table()[id] = function()
-    token.put_next(error_seen and true_cmd or false_cmd)
-  end
-  luatexbase.add_to_callback('show_error_hook', function()
-    error_seen = true
-    texio.write('.')
-    tex.show_context()
-  end, 'track_errors')
-}
-%% Do something about that: (TODO)
 %%
 
 

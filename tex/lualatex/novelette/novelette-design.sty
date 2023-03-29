@@ -27,7 +27,8 @@
   \ifdimcomp{\nvt@trimw}{>}{\pagewidth}{\nvt@okfalse}{}
   \ifdimcomp{\nvt@trimh}{>}{\pageheight}{\nvt@okfalse}{}
   \ifnvt@ok\else
-    \nvt@errTBFP % Too big for page.
+    \ClassError{novelette}{\string\sheetfeed\space too small for trimsize.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
     \global\setlength\pagewidth{\nvt@trimw}
     \global\setlength\pageheight{\nvt@trimh}
   \fi
@@ -37,8 +38,8 @@
 
 %% MARGINS
 % Minimum P.O.D. margins are usually 0.5in/13mm top, outside, bottom,
-% plus 0.125in/3mm inside. Novelette does not enforce these, but instead
-% enforces much smaller values, just in case you are not using P.O.D.
+% plus 0.125in/3mm inside. Novelette does not enforce these, because some
+% services allow much smaller values.
 \def\nvt@process@margins{
   \nvt@oktrue
   \ifdimcomp{\nvt@mtop}{>}{0pt}{ % User set values.
@@ -52,7 +53,8 @@
     \ifdimcomp{\nvt@mins}{>}{.25\nvt@trimw}{\nvt@okfalse}{}
   }{}
   \ifnvt@ok\else
-    \nvt@errMOOR % Margins out of range.
+    \ClassError{novelette}{Margins not within reasonable range.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
     \global\deflength\nvt@mtop{0pt} % Reset.
   \fi
   \ifdimcomp{\nvt@mtop}{=}{0pt}{ % Unset or reset.
@@ -99,48 +101,45 @@
 
 %% FONT SIZE, GAPS, STYLE
 \def\nvt@process@design{
-  \ifnvt@epl\else
-    \ifdimcomp{\nvt@fontsize}{=}{0pt}{
-      \gdef\nvt@emperline{28}
-      \global\nvt@epltrue
-    }{}
-  \fi
-  \ifnvt@epl
+ \ifdimcomp{\nvt@fontsize}{=}{0pt}{
     \setlength\nvt@temp@l{\nvt@trimw-\nvt@mout-\nvt@mins}
-    \FPadd{\nvt@temp@d}{\nvt@emperline}{\nvt@spadval}
+    \FPadd{\nvt@temp@d}{28}{\nvt@spadval}
     \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@spadval}
     \FPdiv{\nvt@temp@n}{\strip@pt\nvt@temp@l}{\nvt@temp@d}
+    \FPmax{\nvt@temp@n}{\nvt@temp@n}{8.03}
+    \FPmin{\nvt@temp@n}{\nvt@temp@n}{12.045}
     \FPround{\nvt@temp@n}{\nvt@temp@n}{3}
     \FPclip{\nvt@temp@n}{\nvt@temp@n}
     \global\deflength\nvt@fontsize{\nvt@temp@n pt}
-    \addtolength\nvt@temp@l{0pt-\nvt@spadval\nvt@fontsize}
-    \addtolength\nvt@temp@l{0pt-\nvt@spadval\nvt@fontsize}
+    \global\deflength\nvt@spad{\nvt@spadval\nvt@fontsize}
+    \addtolength\nvt@temp@l{-2\nvt@spad}
     \global\deflength\textwidth{\nvt@temp@l}
-  \else
+  }{
+    \ifdimcomp{\nvt@fontsize}{<}{8.03pt}{
+      \ClassError{novelette}{Main font size is too small. Must be at least^^J%
+        8.03pt, equivalent to 8bp (PostScript points).^^J%
+        \nvt@XN}{nvt@RXN}\nvt@bad
+    }{}
     \setlength\nvt@temp@l{\nvt@trimw-\nvt@mout-\nvt@mins}
-    \addtolength\nvt@temp@l{0pt-\nvt@spadval\nvt@fontsize}
-    \addtolength\nvt@temp@l{0pt-\nvt@spadval\nvt@fontsize}
+    \global\deflength\nvt@spad{\nvt@spadval\nvt@fontsize}
+    \addtolength\nvt@temp@l{-2\nvt@spad}
     \global\deflength\textwidth{\nvt@temp@l}
-    \FPdiv{\nvt@temp@n}{\strip@pt\textwidth}{\strip@pt\nvt@fontsize}
-    \FPround{\nvt@temp@n}{\nvt@temp@n}{3}
-    \FPclip{\nvt@temp@n}{\nvt@temp@n}
-    \xdef\nvt@emperline{\nvt@temp@n}
-  \fi
-  \global\deflength\nvt@spad{\nvt@spadval\nvt@fontsize}
-  \ifdimcomp{\nvt@fontsize}{<}{8bp}{\nvt@errFSTS}{} % Fontsize too small.
-  \FPdiv{\nvt@temp@n}{\nvt@emperline}{.42} % Typical character/space em width.
+  }
+  \FPdiv{\nvt@temp@n}{\strip@pt\textwidth}{\strip@pt\nvt@fontsize}
   \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
   \xdef\nvt@charsperline{\nvt@temp@n}
-  \ifdefined\nvt@headgap
-    \ifdefined\nvt@footgap\else
-      \gdef\nvt@footgap{\nvt@headgap}
-    \fi
-  \fi
   \ifdefined\nvt@openalign\else\gdef\nvt@openalign{c}\fi
+  \ifdefined\nvt@hfscale\else\gdef\nvt@hfscale{.92}\fi
+  \setlength\nvt@temp@l{\nvt@hfscale\nvt@fontsize}
+  \ifdimcomp{\nvt@temp@l}{<}{7.0263pt}{
+    \FPdiv{\nvt@temp@n}{7.0263}{\strip@pt\nvt@fontsize}
+    \xdef\nvt@hfscale{\nvt@temp@n}
+  }{}
+  \ifdefined\nvt@headgap
+    \ifdefined\nvt@footgap\else\gdef\nvt@footgap{\nvt@headgap}\fi
+  \fi
   \ifdefined\nvt@footgap
-    \ifdefined\nvt@headgap\else
-      \gdef\nvt@headgap{\nvt@footgap}
-    \fi
+    \ifdefined\nvt@headgap\else\gdef\nvt@headgap{\nvt@footgap}\fi
   \fi
   \ifdefined\nvt@headgap\else
     \ifdefined\nvt@footgap\else
@@ -149,12 +148,14 @@
     \fi
   \fi
   \ifdefined\nvt@hfstyle\else
-    \ifdimcomp{\nvt@totalh}{<}{6.8in}{%
+    \ifdimcomp{\nvt@totalh}{<}{6.8in}{
       \gdef\nvt@hfstyle{1} % Only footer.
-    }{%
-      \ifdimcomp{\nvt@totalh}{<}{7.2in}{%
+    }{
+      \ifdimcomp{\nvt@totalh}{<}{7.2in}{
         \gdef\nvt@hfstyle{3} % Only header.
-      }{\gdef\nvt@hfstyle{2}} % Both.
+      }{
+        \gdef\nvt@hfstyle{2} % Both.
+      }
     }
   \fi
   \FPiflt{\nvt@hfstyle}{4}\global\nvt@footertrue\fi
@@ -165,10 +166,12 @@
   \else
     \gdef\pagenumber{\thepage}
   \fi
-  \global\deflength\oddsidemargin{%
-    \nvt@mins+\nvt@spad+0.5\pagewidth-0.5\nvt@trimw-1in}
-  \global\deflength\evensidemargin{%
-    \nvt@mout+\nvt@spad+0.5\pagewidth-0.5\nvt@trimw-1in}
+  \global\deflength\oddsidemargin{
+    \nvt@mins+\nvt@spad+0.5\pagewidth-0.5\nvt@trimw-1in
+  }
+  \global\deflength\evensidemargin{
+    \nvt@mout+\nvt@spad+0.5\pagewidth-0.5\nvt@trimw-1in
+  }
 }
 %%
 
@@ -219,23 +222,15 @@
     \fi
   \fi
   \global\deflength\textheight{\nvt@lpp\nvt@leading}
-  \ifnvt@epl
-    \xdef\log@designa{%
-      \string\design{emperline=\nvt@emperline,lines=\nvt@lpp,%
-        opening=\nvt@openalign}%
-    }
-    \xdef\log@altdesign{\space\space Equivalent fontsize=\the\nvt@fontsize}
-  \else
-    \xdef\log@designa{%
-      \string\design{fontsize=\the\nvt@fontsize,lines=\nvt@lpp,%
-        opening=\nvt@openalign}%
-    }
-    \xdef\log@altdesign{\space\space Equivalent emperline=\nvt@emperline}
-  \fi
+  \xdef\log@text{%
+    \string\text{fontsize=\the\nvt@fontsize,lines=\nvt@lpp,%
+      openings=\nvt@openalign,footnotes=\ifnvt@fnseq n\fi%
+      \ifnvt@fnleft l\fi\ifnvt@fnindent i\fi}%
+  }
   \xdef\log@charsperline{Estimated characters per line = \nvt@charsperline}
-  \xdef\log@designb{%
-    \string\design{headgap=\nvt@headgap,footgap=\nvt@footgap,%
-      style=\nvt@hfstyle\ifnvt@pnital i\fi}%
+  \xdef\log@layout{%
+    \string\layout{style=\nvt@hfstyle\ifnvt@pnital i\fi,scale=\nvt@hfscale,%
+      headgap=\nvt@headgap,footgap=\nvt@footgap}%
   }
 }
 %%
@@ -255,18 +250,6 @@
   \fi
   \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
   \xdef\nvt@lpp{\nvt@temp@n}
-}
-%%
-
-
-%% FOOTNOTES
-\def\nvt@process@footnotes{
-  \ifdefined\nvt@fnmarkers\else\gdef\nvt@fnmarkers{*}\fi
-  \ifdefined\nvt@fnrulepos\else\gdef\nvt@fnrulepos{c}\fi
-  \ifdefined\nvt@fnindent\else\gdef\nvt@fnindent{f}\fi
-  \xdef\log@footnotes{\string\design{footnotes=\nvt@fnmarkers%
-    \nvt@fnrulepos\nvt@fnindent}%
-  }
 }
 %%
 
@@ -302,7 +285,9 @@
       \xdef\nvt@guided{\nvt@temp@n}
     }{\nvt@okfalse}
   }
-  \ifnvt@ok\else\nvt@warnBVG\fi % Warn bad value for guides.
+  \ifnvt@ok\else
+    \ClassWarning{novelette}{Bad value in \string\guides.}
+  \fi
 }
 %%
 
@@ -314,9 +299,13 @@
   \normalsize
   \let\@normalsize\normalsize\relax % Hack for fancyhdr.
   \global\deflength\normalindent{1.5\nvt@fontsize}
-  \global\deflength\footnotesep{0.8\nvt@leading}
   \DeclareRobustCommand\@footnotesize{% For actual footnotes.
-    \@setfontsize\@footnotesize{.875\nvt@fontsize}{.875\nvt@leading}%
+    \setlength\nvt@temp@l{.88\nvt@fontsize}
+    \ifdimcomp{\nvt@temp@l}{<}{7.0263pt}{
+      \@setfontsize\@footnotesize{7.0263pt}{9pt}%
+    }{
+      \@setfontsize\@footnotesize{.88\nvt@fontsize}{.88\nvt@leading}%
+    }
   }
   \let\tiny\normalsize\relax
   \let\scriptsize\normalsize\relax
@@ -333,7 +322,12 @@
   \global\deflength\nvt@dscn{\dp0}
   \setlength\nvt@temp@l{\nvt@ascn+\nvt@dscn}
   \FPdiv{\nvt@temp@n}{\strip@pt\nvt@temp@l}{\strip@pt\nvt@leading}
-  \FPifgt{\nvt@temp@n}{1}\nvt@errTMLPP\fi
+  \FPifgt{\nvt@temp@n}{1}%
+    \ClassError{novelette}{Too many lines per page. The requested number^^J%
+      cannot fit. If you need that exact number, change something else.^^J%
+      See Novelette documentation for possibilities.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
+  \fi
   \ifnvt@header
     \global\deflength\headheight{\nvt@leading}
     \global\deflength\headsep{\nvt@headgap\nvt@leading-\nvt@dscn}

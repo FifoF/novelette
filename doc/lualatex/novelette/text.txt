@@ -1,0 +1,36 @@
+
+PLACEHOLDER
+Subject to revision.
+
+
+TEXT
+
+\text{fontsize=size,lines=integer,openings=code,footnotes=code}
+- OR -
+\text{emperline=number,lines=integer,openings=code,footnotes=code}
+
+fontsize
+	Size of main text, with units pt or bp. May be integer or decimal.
+	Typical value 11.5pt.
+	Default is calculated from other settings and defaults.
+	Leading (baseline skip) is calculated, not set.
+
+lines
+	Integer number of lines per page, in main textblock.
+	Not counting header/footer.
+	Default is calculated from other settings and defaults.
+
+openings
+	Code is one of l,c,r,o,i. Default c.
+	Aligns items in opening environment: left, center, right, outside, inside.
+
+footnotes
+	Code is up to three letters.
+	l -> Aligns separator to left (default is centered).
+	i -> Indent first line of each footnote (default is no indent).
+	n -> Numerical footnote markers (default is literary).
+
+emperline
+	Number integer|decimal of em per line of main text.
+	Alternative to fontsize. You may not set both emperline and fontsize.
+	Typical emperline 28.

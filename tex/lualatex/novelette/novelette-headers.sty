@@ -33,7 +33,7 @@
 
 %% THISPAGESTYLE COMMANDS
 % Re-define \thispagestyle based on design. When it requests only the page
-% number, decide what to do based on this command and whether footer is used:
+% number, decide based on this command and whether footer is used:
 \fancypagestyle{footer}{\fancyhead[LO,RE,LE,RO,CE,CO]{}}
 \fancypagestyle{plain}{\fancyhead[LO,RE,LE,RO,CE,CO]{}}
 \fancypagestyle{fancyplain}{\fancyhead[LO,RE,LE,RO,CE,CO]{}}
@@ -42,7 +42,7 @@
 
 %%
 \def\nvt@headily#1{%
-  {\rule{0pt}{\nvt@leading-\nvt@dscn}{\nvt@headfont #1}}%
+  {\rule{0pt}{\nvt@leading-\nvt@dscn}{\nvt@headfont\addfontfeature{LetterSpace=2}#1}}%
 }
 \def\nvt@widebar{%
   \rule[-\nvt@dscn]{.08em}{\nvt@dscn+\nvt@ascn}%

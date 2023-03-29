@@ -17,20 +17,25 @@
 
 %% LIMITED GRAPHICS, LIMITED GRAY COLOR
 %% ----------------------------------------------------------------------------
-% Standard LaTeX color management is contained in the graphics bundle,
+%   Standard LaTeX color and graphics are contained in the graphics bundle,
 % by David Carlisle, Sebastian Rahtz, and other members of the LaTeX project,
 % and individual authors. Shout-out to them!
-%   However, Novelette only allows monochrome black/white, except limited
-% grayscale shades, for alignment purposes, in draft mode. And, Novelette
-% restricts images to monochrome 1-bit per pixels black/white png format,
-% without the ability to rotate, scale, crop, or otherwise transform.
-%   Thus, the standard LaTeX color files are not loaded. Novelette uses its
-% own code for (non-) color.
+%   But Novelette has very restricted use of color and graphics. All text must
+% be black, all images monochrome black/white png without transforms. The only
+% exception is use of background grays, when in shade|align mode.
+%   For those reasons, Novelette does not load standard LaTeX graphics. It is
+% much easier to define only what is needed, instead of loading LaTeX graphics
+% then un-defining most of its numerous commands.
 %%
 
 
-%% WARN WHEN ATTEMPTING TO USE STANDARD COLOR COMMANDS
-\def\nvt@colormsg{\ifnvt@sent@colormsg\else\nvt@warnNOC\fi}
+%% WARN OR ERROR WHEN ATTEMPTING TO USE STANDARD GRAPHICS COMMANDS
+\def\nvt@colormsg{%
+  \ifnvt@sent@colormsg\else%
+    \ClassWarning{novelette}{Cannot use color or grayscale in Novelette.^^J%
+      Any color-related commands will be ignored.}%
+  \fi%
+}
 \DeclareDocumentCommand\color{O{}m}{\nvt@colormsg\ignorespaces}
 \def\textcolor#1#2{\leavevmode\nvt@colormsg #2}
 \def\colorbox#1#2{\leavevmode\nvt@colormsg #2}
@@ -39,10 +44,15 @@
 \def\definecolor#1#2#3{\nvt@colormsg}
 \def\DefineNamedColor#1#2#3#4{\nvt@colormsg}
 \def\normalcolor{}
+\DeclareDocumentCommand\includegraphics{sO{}m}{%
+  \ClassError{novelette}{You cannot use \string\includegraphics.^^J%
+    Novelette has its own \string\image\space command.^^J%
+    \@XN}{\@RXN}\nvt@bad%
+}
 %%
 
 
-%% DRAFT MODE GRAY SHADES
+%% BLACK AND GRAY SHADES
 \def\@black{0 g 0 G}
 \def\nvt@shade{0 g 0 G}
 \def\@newcolor{%
@@ -57,38 +67,11 @@
 %%
 
 
-%% IMAGES IN NOVELETTE
-% Standard LaTeX graphics uses the graphics bundle, which has several files.
-% Those files were written by David Carlisle, Sebastian Rahtz, and other
-% members of the LaTeX project and individual authors. Shout-out to them!
-%   However, Novelette uses its own graphics code. In particular: You may only
-% use png images (or fake box, in draft mode). You may not rotate, scale, crop.
-% No frames. No captions. No 2-column.
-%   Why not simply load the graphics package? It contains many commands that
-% cannot be used in Novelette, and places things somewhat differently than
-% Novelette wants to place them.
-%   If you attempt to use the standard \includegraphics command, then instead
-% Novelette will throw a rude error.
-%%
-\DeclareDocumentCommand\includegraphics{sO{}m}{\nvt@errNING}% Cannot use.
-\def\nvt@imgfilename{}
-\newsavebox\nvt@imgbox
-\def\ftype@figure{1} % Mystery TeX code.
-%%
-
-
-% The \image command also has the starred \image* version.
-% Without star, the image has its bottom at a text baseline.
-% With star, the image is slightly lowered, so its bottom is at text descender.
-
-
-
 %% IMAGE
 % \image[options]{integer or filename.png}
-% \image*[options]{integer or filename.png}
-%   Options may be at most one of l c r, and/or at most one of h, t, b, p, i.
-% Option l c r sets horizontal alignment left|center|right. Default c, except
-% in opening environment, where default may be set by \openings in Preamble.
+%   Options may be at most one of l c r o i, and/or at most one of h, t, b, p.
+% Option l c r o i sets horizontal alignment left|center|right|outside|inside.
+% Default c, except in opening environment, which has its own default..
 %   Option h t b p sets vertical placement, relative to surrounding text,
 % as h=here (where command is written), t=top (same page above command),
 % b=bottom (bottom of page below command), or p=page (page by itself).
@@ -96,43 +79,33 @@
 % page cannot accomodate t, then image moves to top of following page.
 % If placement b cannot fit, image moves to bottom of following page.
 % Placement p always fits unless image is too large for page by itself.
-%   The unstarred \image command places image bottom at text baseline.
-% The starred \image* command lower placement slightly, to text descender.
-%   Except with option i, each image must be in a paragraph by itself.
-% Option i (=inline) may be used within a paragraph. In this case, horizontal
-% alignment l c r is ignored.
-%   An inline image is limited in height. The unstarred \image[i]{} command
-% limits the height of a real image to the height of uppercase Latin-1 with
-% diacritical (Aacute or Aring). The starred \image*[i]{} puts the image
-% bottom at text descender, so it allows an additional descender height.
-% Either way, to use a fake image, the integer must be 1.
-%   You may use an inline image as a line by itself.
-%%
-
-
-%% IMAGE
-\DeclareDocumentCommand\image{sO{}m}{%
-  \IfBooleanTF{#1}{\nvt@imgdroptrue}{\nvt@imgdropfalse}%
-  \IfSubStr{#2}{i}{}{\vspace*{-\nvt@leading}\null}% Uniform descender above.
+%   Each \image must be in a paragraph by itself.
+\def\nvt@imgfilename{}
+\newsavebox\nvt@imgbox
+\def\ftype@figure{1} % Mystery TeX code.
+\DeclareDocumentCommand\image{O{}m}{%
+  \vspace*{-\nvt@leading}\null% Uniform descender above.
   \begingroup%
-  \def\nvt@imgfilename{#3}%
+  \StrDel{#1}{ }[\nvt@temp@s]%
+  \nvt@TestImagePlacement{\nvt@temp@s}%
+  \StrDel{#2}{ }[\nvt@temp@s]%
+  \def\nvt@imgfilename{\nvt@temp@s}%
   \setlength\parindent{0pt}%
-  \nvt@TestImagePlacement{#2}%
-  \nvt@TestImageFormat{#3}%
+  \nvt@TestImageFormat{\nvt@temp@s}%
   \ifthenelse{\equal{\nvt@imgformat}{real}}{%
-    \nvt@ValidateImageFile{#3}%
-    \@addtofilelist{#3}\ProvidesFile{#3}[png image]%
-    \saveimageresource attr{/Interpolate true } cropbox {#3}%
+    \nvt@ValidateImageFile{\nvt@temp@s}%
+    \@addtofilelist{\nvt@temp@s}\ProvidesFile{\nvt@temp@s}[png image]%
+    \saveimageresource attr{/Interpolate true } cropbox {\nvt@temp@s}%
     \sbox\nvt@imgbox{\useimageresource\the\lastsavedimageresourceindex}%
   }{%
     \sbox\nvt@imgbox{\nvt@gray{.5}%
-      \rule[\nvt@ascn]{.5\textwidth}%
-        {\nvt@dscn+\nvt@intht\nvt@leading-\nvt@leading+\nvt@ascn}%
+      \rule{.5\textwidth}{\nvt@intht-\nvt@leading+\nvt@ascn}%
     }%
   }%
   \setlength\nvt@imgwidth{\wd\nvt@imgbox}%
   \setlength\nvt@imgheight{\ht\nvt@imgbox}%
-  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@imgheight}{\strip@pt\nvt@leading}%
+  \FPadd{\nvt@temp@n}{\strip@pt\nvt@imgheight}{\strip@pt\nvt@dscn}%
+  \FPdiv{\nvt@temp@n}{\nvt@temp@n}{\strip@pt\nvt@leading}%
   \FPadd{\nvt@temp@n}{\nvt@temp@n}{1}%
   \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}%
   \setlength\nvt@intht{\nvt@temp@n\nvt@leading}%
@@ -140,47 +113,18 @@
   \ifthenelse{\equal{\nvt@floatpos}{b}}{\nvt@imgfloat{b}}{}%
   \ifthenelse{\equal{\nvt@floatpos}{h}}{\nvt@imgfloat{ht}}{}%
   \ifthenelse{\equal{\nvt@floatpos}{p}}{\nvt@imgfloat{p}}{}%
-  \ifthenelse{\equal{\nvt@floatpos}{i}}{\nvt@imginline}{}%
   \endgroup%
-}
-%%
-
-
-%% EMBLEM (inline image)
-\DeclareDocumentCommand\emblem{sm}{%
-  \IfBooleanTF{#1}{\nvt@imgdroptrue}{\nvt@imgdropfalse}%
-  \rule{0pt}{\nvt@ascn}%
-  \begingroup%
-  \def\nvt@imgfilename{#2}%
-  \setlength\parindent{0pt}%
-  \nvt@TestImageFormat{#2}%
-  \ifthenelse{\equal{\nvt@imgformat}{real}}{%
-    \nvt@ValidateImageFile{#2}%
-    \@addtofilelist{#2}\ProvidesFile{#2}[png image]%
-    \saveimageresource attr{/Interpolate true } cropbox {#2}%
-    \sbox\nvt@imgbox{\useimageresource\the\lastsavedimageresourceindex}%
-  }{%
-    \sbox\nvt@imgbox{\nvt@gray{.5}%
-      \rule[\nvt@ascn]{.5\textwidth}%
-        {\nvt@dscn+\nvt@intht\nvt@leading-\nvt@leading+\nvt@ascn}%
-    }%
-  }%
-  \setlength\nvt@imgwidth{\wd\nvt@imgbox}%
-  \setlength\nvt@imgheight{\ht\nvt@imgbox}%
-  \ifnvt@imgdrop%
-    %%%%%
-  \else%
-    %%%%%
-  \fi%
 }
 %%
 
 
 %% TEST IMAGE PLACEMENT
 \newcommand\nvt@TestImagePlacement[1]{% No error or warning, if bad value.
-  \def\nvt@imgpos{c}%
+  \ifnvt@inopening\def\nvt@imgpos{\nvt@openalign}\else\def\nvt@imgpos{c}\fi%
   \IfSubStr{#1}{l}{\def\nvt@imgpos{l}}{}%
   \IfSubStr{#1}{r}{\def\nvt@imgpos{r}}{}%
+  \IfSubStr{#1}{o}{\def\nvt@imgpos{o}}{}%
+  \IfSubStr{#1}{i}{\def\nvt@imgpos{i}}{}%
   \def\nvt@floatpos{h}% Default here/top.
   \IfSubStr{#1}{t}{\def\nvt@floatpos{t}}{}%
   \IfSubStr{#1}{b}{\def\nvt@floatpos{b}}{}%
@@ -205,11 +149,15 @@
   \ifnvt@ok%
     \def\nvt@imgformat{real}%
   \else%
-    \StrDel{#1}{ }[\nvt@temp@n]%
-    \IfInteger{\nvt@intht}{\nvt@oktrue\setlength\nvt@intht{\nvt@temp@n}}{}%
+    \IfInteger{#1}{%
+      \nvt@oktrue%
+      \setlength\nvt@intht{#1\nvt@leading}%
+  }{}%
   \fi%
   \ifnvt@ok\else%
-    \setlength\nvt@intht{2\nvt@leading}\nvt@errBIMF% Bad image format.
+    \setlength\nvt@intht{2\nvt@leading}%
+    \ClassError{novelette}{Bad value in \string\image, page \thepage.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad%
   \fi%
 }
 %%
@@ -220,7 +168,14 @@
   \nvt@oktrue%
     %%%%% Put validation routine here.
   \ifnvt@ok\else%
-    \ifnvt@draft\nvt@warnIWNP\else\nvt@errIWNP\fi%
+    \ifnvt@draft%
+      \ClassWarning{novelette}{Image #1 did not pass validation.^^J%
+        This is a warning in draft mode, an error in final mode.}%
+    \else%
+       \ClassError{novelette}{Image #1 did not pass validation.^^J%
+         Must be processed to specific standards. See Novelette docs.^^J
+         \nvt@XN}{\nvt@RXN}\nvt@bad%
+    \fi%
   \fi%
 }
 %%
@@ -233,18 +188,12 @@
   \leavevmode%
   \ifthenelse{\equal{\nvt@imgpos}{c}}{\hfil}{}%
   \ifthenelse{\equal{\nvt@imgpos}{r}}{\hfill}{}%
-  \ifthenelse{\equal{#1}{b}}{%
-    \rule{0pt}{\nvt@intht-\nvt@dscn}%
-  }{%
-    \rule{0pt}{\nvt@intht}%
-  }%
-  \ifnvt@imgdrop%
-    \smash{\raisebox{-\nvt@dscn}{\usebox\nvt@imgbox}}%
-  \else%
-    \usebox\nvt@imgbox%
-  \fi%
+  \ifthenelse{\equal{\nvt@imgpos}{o}}{\ifodd\c@page\hfill\fi}{}%
+  \rule{0pt}{\nvt@intht}%
+  \usebox\nvt@imgbox%
   \ifthenelse{\equal{\nvt@imgpos}{c}}{\hfil}{}%
   \ifthenelse{\equal{\nvt@imgpos}{l}}{\hfill}{}%
+  \ifthenelse{\equal{\nvt@imgpos}{o}}{\ifodd\c@page\else\hfill\fi}{}%
   \par%
   \end@float%
 }
@@ -253,31 +202,22 @@
 
 %% IMAGE SPECIFICATIONS (suggest image sizes)
 \def\log@imagespecs{
-  \FPsub{\nvt@temp@n}{\strip@pt\textwidth}{.1}%
-  \FPdiv{\nvt@temp@n}{\nvt@temp@n}{72.27}%
-  \FPmul{\nvt@temp@n}{\nvt@temp@n}{600}%
-  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}%
-  \typeout{Max image width, @600ppi: \nvt@temp@n\space pixels.}%
-  \FPadd{\nvt@temp@n}{\strip@pt\nvt@ascn}{\strip@pt\nvt@dscn}%
+  \FPsub{\nvt@temp@n}{\strip@pt\textwidth}{.1}
   \FPmul{\nvt@temp@n}{\nvt@temp@n}{8.3022} % TeX pt to 600ppi.
-  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}%
-  \typeout{Max height of emblem, @600ppi: \nvt@temp@n\space pixels.}%
-  \FPmul{\nvt@temp@d}{\strip@pt\nvt@dscn}{8.3022}%
-  \FPtrunc{\nvt@temp@d}{\nvt@temp@d}{0}%
-  \typeout{Text baseline above emblem image bottom, %
-    @600ppi: \nvt@temp@d\space pixels.}%
-  \FPdiv{\nvt@temp@d}{\strip@pt\nvt@leading}{72.27}%
-  \FPmul{\nvt@temp@d}{\nvt@temp@d}{600}%
-  \FPtrunc{\nvt@temp@d}{\nvt@temp@d}{0}%
-  \FPadd{\nvt@temp@s}{\nvt@temp@d}{\nvt@temp@n}%
-  \FPtrunc{\nvt@temp@s}{\nvt@temp@s}{0}%
-  \typeout{Max height of two-line image, @600ppi: \nvt@temp@s\space pixels.}%
-  \typeout{Each additional line @600ppi: add \nvt@temp@d\space pixels.}%
-  \FPmul{\nvt@temp@n}{\strip@pt\nvt@dscn}{1.004}%
-  \FPsub{\nvt@temp@n}{\strip@pt\textheight}{\nvt@temp@n}%
-  \FPdiv{\nvt@temp@n}{\nvt@temp@n}{72.27}%
-  \FPmul{\nvt@temp@n}{\nvt@temp@n}{600}%
-  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}%
+  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
+  \typeout{Maximum image width, @600ppi: \nvt@temp@n\space pixels.}
+  \FPmul{\nvt@temp@n}{\strip@pt\nvt@ascn}{8.3022}
+  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
+  \typeout{Max height of one-line image, @600ppi: \nvt@temp@n\space pixels.}
+  \FPadd{\nvt@temp@n}{\strip@pt\nvt@ascn}{\strip@pt\nvt@leading}
+  \FPmul{\nvt@temp@n}{\nvt@temp@n}{8.3022}
+  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
+  \typeout{Max height of two-line image, @600ppi: \nvt@temp@n\space pixels.}
+  \FPmul{\nvt@temp@d}{\strip@pt\nvt@leading}{8.3022}
+  \FPtrunc{\nvt@temp@d}{\nvt@temp@d}{0}
+  \typeout{\space\space Each additional line, add \nvt@temp@d\space pixels.}
+  \FPmul{\nvt@temp@n}{\strip@pt\textheight}{8.3022}
+  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
   \typeout{Max height of full-page image, @600ppi: \nvt@temp@n\space pixels.}
 }
 %%

@@ -34,19 +34,26 @@ and how to choose their values:</p>
 <a href="#lualatex">% !TeX TS-program = lualatex</a><br>
 <a href="#utf8">% !TeX encoding = UTF-8</a><br>
 <a href="#documentclass">\documentclass{novelette}</a><br>
-<a href="#mode">\mode</a>{draft}<br>
-<a href="#intent">\intent</a>{SWOP}<br>
-<a href="#setlang">\setlang</a>{usenglishmax}<br>
-<a href="#title">\title</a>{Your Wonderful Book}<br>
-<a href="#author">\author</a>{Famous Author}<br>
-<a href="#trimsize">\trimsize</a>{width=5.5in,height=8.5in}<br>
-<a href="#sheetfeed">\sheetfeed</a>{choice} % Normally not used.<br>
-<a href="#margins">\margins</a>{top=.5in,outside=.5in,bottom=.5in,inside=.625in}<br>
-<a href="#design">\design</a>{fontsize=11.6pt,lines=30,style=2,headgap=1.5,footgap=1.5}<br>
-<a href="#setfont">\setfont</a>{main}{EB Garamond}[liga]<br>
-\begin{document}<br>
-% Your writing goes here.<br>
-\end{document}</p>
+<a href="#mode">\mode</a>{<i>choice</i>}<br>
+<a href="#intent">\intent</a>{<i>choice</i>}<br>
+<a href="#setlang">\setlang</a>{<i>choice</i>}<br>
+<a href="#title">\title</a>{<i>title</i>}<br>
+<a href="#author">\author</a>{</i>author</i>}<br>
+<a href="#trimsize">\trimsize</a>{width=<i>size</i>,height=<i>size</i>}<br>
+<a href="#sheetfeed">\sheetfeed</a>{<i>choice</i>} % Normally not used.<br>
+<a href="#margins">\margins</a>{top=<i>size</i>,outside=<i>size</i>,bottom=<i>size</i>,inside=<i>size</i>}<br>
+<a href="#layout">\layout</a>{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}<br>
+<a href="#text">\text</a>{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}<br>
+<a href="#setfont">\setfont</a>{main}{<i>Font Name</i>}[<i>features</i>]<br>
+<a href="#setfont">\setfont</a>{<i>deco</i>}{<i>Font Name</i>}[<i>features</i>]<br>
+<a href="#guides">\guides</a>{<i>integer,integer,integer,integer</i>}<br>
+<a href="#begindoc">\begin{document}</a><br>
+<a href="#frontmatter">\frontmatter</a><br>
+% Various pages go here.
+<a href="#mainmatter">\mainmatter</a><br>
+% Various pages go here.
+<a href="#cleartoend">\cleartoend</a><br>
+<a href="#enddoc">\end{document}</a></p>
 </div>
 
 
@@ -76,11 +83,12 @@ utf-8 without BOM.</p>
 <p>Unlike other LaTeX document classes, Novelette has no class options.
 Anything you need is set by one of the other commands in Preamble,
 or is automatically calculated from other settings.</p>
+<p>The \documentclass begins the Preamble, where you place settings.</p>
 </div>
 
 <a id="mode"></a>
 <div>
-<h3>\mode{<i>choose</i>}</h3>
+<h3>\mode{<i>choice</i>}</h3>
 <p>Novelette has four modes: draft, shade, align, final. If you do not set
 the mode, its default is draft.</p>
 <p><b>draft</b> disables PDF/X conformance (see <a href="#intent">intent</a>).
@@ -98,7 +106,7 @@ the final file.</p>
 
 <a id="intent"></a>
 <div>
-<h3>\intent{<i>choose</i>}</h3>
+<h3>\intent{<i>choice</i>}</h3>
 <p>There are four intents: none, SWOP, FOGRA39, JC200103. Default is none.</p>
 <p>No matter which intent you choose, fonts are subset embedded. That is enough
 for some print services. But many print services require PDF/X conformance,
@@ -130,6 +138,10 @@ may be chosen, from a <a href="#langlist">list</a>. It does not set anything
 other than hyphenation.</p>
 <p>You may write some text in another language; but if you do, it will be
 hyphenated according to the rules chosen by <i>\setlang</i>.</p>
+<p>The available languages all use Latin-based characters. This includes all
+well-known Western European languages, and some from Eastern Europe.
+Any language with non-Latin characters (Greek, Cyrillic), or stacked
+diacritical marks (Vietnamese), or right-to-left text, is not supported.</p>
 </div>
 
 <a id="title"></a>
@@ -144,6 +156,12 @@ cover artwork, but the cover must have exactly the same title.</p>
 to Latin-1; others allow more extended Latin characters. Curly apostrophe
 and curly quotes are not Latin characters, but Novelette will convert them
 to the acceptable straight variety.</p>
+<p>You may not use TeX code, such as requesting Italics. You may not use code
+such as \`A for Agrave, but you may directly place À from a Unicode character
+map.</p>
+<p>Exception: If any of characters @ # $ % & { } appear in the title, they must
+be preceded by a backslash, as in \title{The \$20 Balloon}.</p>
+</div>
 
 <a id="author"></a>
 <div>
@@ -160,16 +178,17 @@ have to prove that "Fakename Author" is actually "Realname You" before
 distributors will honor your requests.</p>
 <p>And, if you do use a pseudonym, request that distributors (and libraries)
 have it indexed under the desired name (pseudonym or real name).</p>
+</div>
 
 <a id="trimsize"></a>
 <div>
-<h3>\trimsize{width=<i>W</i>,height=<i>H</i>}</h3>
+<h3>\trimsize{width=<i>size</i>,height=<i>size</i>}</h3>
 <p>Trim Size is the size of your book pages. Be sure to choose cream paper
 (creme, off-white), not white paper. The print service will offer a choice
 of several standard sizes.</p>
-<p>Dimensions <i>W</i> and <i>H</i> are measured in units of inches or
-millimeters (in,mm). Examples:<p>
-<p>\trimsize{5.5in,8.5in} % American Digest.</p>
+<p>Dimensions are measured in units of inches or millimeters (in,mm).
+Examples:<p>
+<p>\trimsize{width=5.5in,height=8.5in} % American Digest.</p>
 <p>\trimsize{width=129mm,height=198mm} % British B-Format.</p>
 <p>The name "trim size" comes from the manufacturing process. The pages are
 printed on larger paper, then roughly cut and assembled with glue.
@@ -185,14 +204,14 @@ pages. The cover size is slightly larger.</p>
 <p>Do not use the \sheetfeed setting, unless you are certain that you need it.
 If you use this setting incorrectly, big problems will result. Do not guess.
 Available choices are <i>letter</i> and <i>A4</i>.</p>
-<p><b>If you do not use \sheetfeed, the PDF page size will be the same as the
+<p>If you do not use \sheetfeed, the PDF page size will be the same as the
 book trim size. This is how nearly all print-on-demand services want it.</p>
 <p><b>letter</b> centers the trim size, vertically and horizontally, in the
 larger USletter size (8.5in width, 11in height),</p>
 <p><b>A4</b> (or a4) centers the trim size, vertically and horizontally,
 in the larger European A4 size (210mm width, 297mm height).</p>
 <p>If you are printing pages at home, for manual editing, then you might
-use letter or A4, to produce a consistent result from your home printer.
+use letter or A4, to produce consistent results from your home printer.
 That might also be the case, if your book will be reviewed by an editor.</p>
 <p>Novelette does not produce crop marks or trim marks. It does write the
 internal "TrimBox" metadata to the PDF.</p>
@@ -200,7 +219,7 @@ internal "TrimBox" metadata to the PDF.</p>
 
 <a id="margins"></a>
 <div>
-<h3>\margins{top=<i>T</i>,outside=<i>O</i>,bottom=<i>B</i>,inside=<i>I</i>}</h3>
+<h3>\margins{top=<i>size</i>,outside=<i>size</i>,bottom=<i>size</i>,inside=<i>size</i>}</h3>
 <p>In Novelette, margins surround the printable area. Nothing may be printed
 within the margins. The header, main text, and footer all must fit within the
 rectangle surrounded by the margins. This is how the term "margins" is used
@@ -227,91 +246,133 @@ trim sizes, the margins will be at the minimum required by print services.
 At larger trim size, the margins will be larger.</p>
 </div>
 
-<a id="design"></a>
+<a id="layout"></a>
 <div>
-<h3>\design</a>{fontsize=<i>M</i>,lines=<i>L</i>,style=<i>S</i>,headgap=<i>H</i>,footgap=<i>F</i>}</h3>
-<p>This setting determines page layout. In Novelette, you do not set either the
-font size, or the leading (baselineskip). Instead, they are automatically
-calculated from the trim size, margins, and design.</p>
-<p><b>fontsize</b> is the size of main body text, with units pt (TeX points)
-or bp (PostScript points). The value may be integer or decimal. Typical value
-is 11.6pt. Run a test document and look at the log Summary. It will tell you
-the estimated average characters per line. Best readability is somewhere near
-65 characters. This number is inversely proportional to font size.</p>
-<p><b>lines</b>is the integer number of lines in the main text block. It does
-not count header or footer. Default value varies, based on other setings.</p>
-<p><b>style</b> is an integer from 1 to 7. It determines whether page layout
-has header and/or footer, and determines alignment of header content.
-Other document classes require you to write code for the style. Novelette does
-that for you.</p>
-<p>The default style depends on how much vertical room is available, based on
-other settings. If enough room, default is 2. If not enough room, 4.</p>
-<p><b>style=1</b> provides only footer. Page number centered in footer.</p>
-<p><b>style=2</b> provides header and footer. Page number centered in footer.
-Text centered in header.</p>
-<p><b>style=3</b> provides header and footer. Page number in footer,
-aligned to outside margin. Text in header, aligned to outside margin.</p>
-<p><b>style=4</b> provides only header. Page number at outside margin.
-Text centered.</p>
-<p><b>style=5</b> is like 4. Adds a vertical bar near the page number,
-at fixed distance from the outside margin.</p>
-<p><b>style=6</b> is like 4. Adds a slash next to the page number.</p>
-<p><b>style=7</b> provides only header. Page number and text are centered,
-separated by slash. Page number is toward the outside.</p>
-<p><b>headgap</b> is a number (integer or decimal) from 0 to 1. It defines
-how much of a "gap" appears between the header and the top of main text.
-Value 0 is rarely useful. Value 1 skips a whole line, and is best for the
-large book sizes. Value 0.5 is a nice compromise for smaller books.</p>
-<p><b>footgap</b> works like headgap, except it applies between main text
-and footer.</p>
-<p>If your design has both header and footer, it is best to set headgap and
-footgap at the same value. But this is not required.</p> 
+<h3>\layout{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}</h3>
+<p>The \layout command accepts one or more comma-separated key=value pairs.</p>
+<p><b>style=<i>integer</i></b><br>Integer from 1 to 7 selects page style,
+(header and/or footer) from a menu of available styles. The default style
+depends on other page design settings.</p>
+<p><b>headgap=<i>number</i></b><br>Number is integer|decimal from 0 to 1.
+Value 0 (rarely used) places header at the line immediately above main text.
+Value 1 skips a whole line between header and main text, and is best for
+large books. Value 0.5 is a nice compromise for smaller books.
+The headgap is ignored if style has no header.</p>
+<p><b>footgap=<i>number</i></b><br>As with headgap, but pertains to gap
+between main text and footer. Ignored if style has no footer.</p>
+<p><b>scale=<i>number</i></b><br>
+Sets the scale of header/footer text, relative to size of main font.
+Acceptable range is 0.75 to 1, but must evaluate to at least 8.03pt.</p>
 </div>
+
+<a id="text"></a>
+<div>
+<h3>\text{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}</h3>
+<p>The \text command accepts one or more comma-separated key=value pairs.</p>
+<p><b>fontsize=<i>size</i></b><br>Sets the size of main text font. Integer
+or decimal. Typical value near 11.5pt. Must have units pt (TeX points) or
+bp (PostScript points). Instead of fontsize, you may set emperline.</p>
+<p><b>emperline=<i>number</i></b><br>Number of font em per line of main text.
+Alternative to fontsize. Typical value near 28.</p>
+<p><b>lines=<i>integer</i></b><br>Number of lines in main text block, not
+counting header or footer. The default number depends on page sizes.</p>
+<p><b>openings=<i>code</i></b><br>Sets the style of "opening" environments,
+which are used at places such as the start of chapters. The code may be
+one of l c r o i for left, center, right, outside, inside alignment of items
+in the opening.</p>
+<p><b>footnotes=<i>code</i></b><br>Sets the style of footnotes. Default style
+uses literary markers (asterisk, dagger, etc.), first line of each footnote
+is not indented, line separating footnotes from main text is centered.
+Code n sets markers to numerals. Code i indents first line of each footnote.
+Code l aligns the separator to left. Total code 1-3 letters.</p>
+</div>
+
 
 <a id="setfont"></a>
 <div>
-<h3>\setfont{<i>role</i>}{<i>font name</i>}[<i>features</i>]</h3>
+<h3>\setfont{<i>role</i>}{<i>Font Name</i>}[<i>features</i>]</h3>
 <p>Novelette uses <i>fontspec</i> technology for Open Type fonts. If you are
 a knowledgeable LaTeX user, you may use some aspects of <i>fontspec</i>
-directly. However, do not use <i>\setmainfont</i>.</p>
+directly, but that is strongly discouraged, due to potential layout conflict.
+Do not use <i>\setmainfont</i>.</p>
 <p><i>\setfont</i> has two mandatory arguments, and an optional argument.</p>
-<p><b>role</b> is a keyword: <i>main head note name desc deco alt</i>.
+<p><b>role</b> is a keyword, one of: <i>main deco</i>.
 It assigns the font to its proper place and purpose.</p>
-<p><b>font name</b> is the Open Type font family name. Examples are Swainson,
+<p><b>Font Name</b> is the Open Type font family name. Examples are Swainson,
 EB Garamond, Libertinus Serif. No TeX fonts with three-letter codes.</p>
 <p><b>features</b> is an optional, comma-separated list of Open Type features,
 using <i>fontspec</i> syntax.</p>
-<p><b>main</b> role is equivlanet to <i>\setmainfont</i>. The font and features
-will be used for main body text.</p>
-<p><b>head</b> is applied to only the header and footer. In many cases,
-this is the same as the main font, except do not use ligatures. You might
-prefer to use Scale=N where N is a number slightly less than 1.</p>
-<p><b>note</b> is used for <a href="#footnotes">footnotes</a>. It is almost
-always the same as main font, except with Scale less than 1.</p>
-<p><b>name</b> is the font used by the <a href="#name">\name</a> command,
-in the <a href="#opening">opening</a> environment. It may be the
-same as the main font, but at larger Scale. Or you may use a stylish font.</p>
-<p><b>desc</b> is the font used by the <a href="#desc">\desc</a> command,
-in the <a href="#opening">opening</a> environment. It is usually the same
-as the main font, but at larger Scale.</p>
-<p><b>deco</b> is a font providing unusual characters such as dingbats,
-flourishes, or unusually-shaped characters.</p>
-<p><b>alt</b> is a font providing characters that cannot be found in the
-main text font.</p>
 </div>
+
+<a id="guides"></a>
+<div>
+<h3>\guides{integer,integer,integer,integer}</h3>
+<p>You may create four or fewer pairs of guides. These are marks in the
+side margins, when in shade or align mode. The guides align with main text
+baseline and descender, at the integer line number from top of main text.</p>
+<p>Guides are not enforced. They are merely for your own use. Typically,
+a guide is placed where you wish the topmost item in openings to sit, and
+another guide is placed at the first line of main text under the opening.</p>
+<p>If you use guides, they will be the same on every page.</p>
+</div>
+
+<a id="begindoc"></a>
+<div>
+<h3>\begin{document}</h3>
+<p>This command is the boundary between the Preamble above it, and the
+printable book below it.</p>
+<p>If you ever get an error message "Missing \begin{document}" and wonder why,
+it means that you made a syntax error somewhere in the Preamble.</p>
+</div>
+
+
+<!-- XXXXXXXXXXXXXXXXXXXX -->
+
+<a id="frontmatter"></a>
+<div>
+<h3>\frontmatter</h3>
+<p>This command tells the processor to begin page numbering with lowercase
+roman numeral i, and continue as ii, iii, iv, v, ... until the \mainmatter
+command is reached.</p>
+<p>The absolute minimum frontmatter contains the title page and copyright page.
+In practice, minimum frontmatter contains six pages: half-title page,
+blank page, title page, copyright page, visual break page, blank page.</p>
+<p>Even if the style calls for header and/or footer, it is generally the
+case that frontmatter pages do not display either header or footer. The
+exception is when something in frontmatter is extended, such as a multi-page
+Introduction.</p>
+</div>
+
+<a id="mainmatter"></a>
+<div>
+<h3>\mainmatter</h3>
+<p>The \mainmatter command tells the processor to change page numbering to
+Arabic numerals, starting with 1, and continue as 2, 3, 4, ... until the
+end of the book. There is no command to change to a different style or count
+at any later place in the book.</p>
+<p>There is a difference between "PDF page number" and "printed page number".
+The PDF page number uses only Arabic numerals, beginning at 1, and continuing
+without reset. The printed page number changes style and resets.</p>
+<p>Nearly all pages in mainmatter display their page numbers. The exceptions
+are chapter openings (and similar pages) that omit headers; if page numbers
+would be in the omitted headers, they are not shown there. Novelette does not
+provide for the "drop folio" method used by some academic works.</p>
+
+
+
 
 <a id="opening"></a>
 <div>
 <h3>\begin{opening} ... \end{opening}</h3>
 <p>The <i>opening</i> environment is used at the start of new chapters,
-and canalos be used at the start of chapter-like portions of your book.
+and can also be used at the start of chapter-like portions of your book.
 It does not matter whether the portion is just one page.</p>
 <p>Within an opening, you may use some commands that are not available
 in main text. These are <a href="#name">\name</a> and
-<a href="#desc">desc</a> (description). In essence, those are chapter
+<a href="#desc">\desc</a> (description). In essence, those are chapter
 title and subtitle (if any).</p>
-<p>The <a href="#openings">\openings</a> command determines the default
-alignment of items within an opening. It also places markers. To vertically
+<p>The <a href="#openings">\text{openings=<i>code</i>}</a> command
+determines the default alignment of items within an opening. To vertically
 position items, use the <i>\null</i> command, as often as necessary,
 to insert blank lines.</p>
 </div>
@@ -319,21 +380,145 @@ to insert blank lines.</p>
 <a id="name"></a>
 <div>
 <h3>\name{<i>Chapter Title or Number</i>}</h3>
-<p>The content of <i>\name</i> will use whatever font and features you set
-via <a href="#setfont">\setfont{name}{...}[...]</a>. It may only be used
-within the <a href="#opening>opening</a> environment. The <i>name</i>
-is usually chapter title or number.</p>
+<p>The \name command  may only be used
+within the <a href="#opening">opening</a> environment. The <i>name</i>
+is usually chapter title or number. This is not intended for more than
+one line of text.</p>
 </div>
 
 <a id="desc"></a>
 <div>
-<h3>\name{<i>Chapter Subtitle</i>}</h3>
-<p>The content of <i>\desc</i> will use whatever font and features you set
-via <a href="#setfont">\setfont{desc}{...}[...]</a>. It may only be used
-within the <a href="#opening>opening</a> environment. The <i>desc</i>
-(description), if used, is usually a one-line chapter subtitle. This is
-not intended for an extended amount of text.</p>
+<h3>\desc{<i>Chapter Subtitle</i>}</h3>
+<p>The \desc command may only be used in an <a href="#opening">opening</a>
+environment. If used, is usually a one-line chapter subtitle. This is
+not intended for an extended amount of text. If necessary, you may use
+\desc more than once, for multiple lines. However, multiple lines would
+probably look better in ordinary main text.</p>
 </div>
+
+
+<a id="cleartoend"></a>
+<div>
+<h3>\cleartoend</h3>
+<p>The final page of your book must be a blank verso. The \cleartoend command
+tells the processor to add one or two blank pages, as necessary.</p>
+</div>
+
+<a id="enddoc"></a>
+<div>
+<h3>\end{document}</h3>
+<p>This command ends your book. If you write anything underneath it, such as
+a note to yourself, it will be ignored.</p>
+</div>
+
+<!-- XXXXXXXXXXXXXXXX -->
+
+<a id="whichfonts"></a>
+<div>
+<h3>Which Fonts to Use?</h3>
+<P>You may use any free, shareware, or commercial OpenType font. There is
+no need to limit yourself to fonts from the LaTeX font catalog. In fact,
+many LaTeX fonts are not available as OpenType.</p>
+<p>Many, but not all, TrueType fonts are also OpenType, in this context.
+However, Novelette cannot handle TrueType "collections" bound into a single
+file.</p>
+<p>Desirable fonts for fiction will often say that they are similar to
+Garamond, Caslon, or Bembo. Some are more similar than others, but that
+is not relevant. Such fonts are designed for casual reading, where the eye
+will not dwell on a particular item of interest. The Swainson font,
+included with Novelette, is in this category; but it has a limited character
+set, and you are not required to use it.</p>
+<p>Fonts such as Times (New) Roman, and the TeX Latin Modern Roman,
+do not perform as well in fiction. Times was designed for relatively crowded
+newsprint. LMR was designed for academic papers.</p>
+<p>Print-on-demand technology uses high-speed photocopy or inkjet machines.
+The text will not be as dark as traditional offset presses (although at
+least one service offers "premium black ink", whatever that is). So, be sure
+that you are not using overly slender fonts. If your pages do not look
+good when you print the PDF in a photocopier, then they probably will not
+look better when bound into a book.</p>
+<p>Be sure that your fonts are properly licensed for commercial use, and be
+sure that use of the fonts does not obligate you to give away the source
+code or finished PDF, or the printed book. Fonts with the "GPL" (GNU Public
+License) cannot be used, unless they also bear a "font exception" releasing
+you from some of the GPL terms. Beware of free fonts that do not have
+enough information (such as Copyright) to ascertain the creator. Copyright
+is good, as long as you have the license you need. One well-known free
+license is the "SIL Open Font License" (OFL). There are others. Or, pay
+for the license of commercial or shareware fonts.</p>
+<p>Among LaTeX OpenType fonts, EB Garamond and Libertinus Serif are probably
+good enough. There are others. EBG is slightly light, and LS is slightly
+upright. Do have a look at Swainson.</p>
+</div>
+
+
+<a id="aboutcopyright"></a>
+<div>
+<p>The Copyright page is very important. It will be carefully examined by
+robots and humans.</p>
+<p>The page must contain: The book title; the book author (possibly pseudonym),
+the book copyright year (with true Copyright symbol ©) and name of copyright
+holder (your real name). Some books continue with an elaborate prohibition
+against this-and-that, but perhaps "All Rights Reserved: is sufficient;
+that is beyond the scope of this documentation.</p>
+<p>Under no conditions use "copyleft" or anything implying that you are
+being charitable.<p>
+<p>In some cases, you may need to provide further information regarding the
+use of copyrighted material, public domain material, or trademarks. That is
+beyond the scope of this documentation.</p>
+<p>If your book has a library catalog (call) number, put it on the copyright
+page. Nowadays, works of popular fiction (especially print-on-demand) do not
+need this. If a library wants your book, it will be filed by author surname
+in a section with similar books (such as Murder Mysteries) rather than by
+call number. If your book becomes a work for the ages, a call number can
+be added later.</p>
+<p>Provide sufficient information so that the publisher (you) can be
+identified and contacted. What you need to provide may vary from jurisdiction
+to jurisdiction. It may be as simple as your name, city, nation. The print
+service may encourage or discourage providing the URL of your web site.</p>
+<p>You cannot imply that the print and distribution service is the publisher,
+because it is not.</p>
+<p>You cannot be sure that copies of your book will be printed in any
+specific location, or using any specific paper or technology, or according
+to any particular environmental standard.</p>
+<p>Most nations require an "Impressum" or similar declaration that identifies
+the actual printer, and place where printed. This may vary from copy to copy.
+In books I have sent through print-on-demand in the USA, this information is
+printed on the final verso page, added by the machine at time of printing
+(which is why the final verso page must be submitted as blank).</p> 
+<p>The Copyright page must also show its ISBN (number, not bar code). The only
+exception are books that have a small number of private copies, not available
+for purchase by others, and not listed in the distribution system.</p>
+</div>
+
+
+<a id="visualbarrier"></a>
+<div>
+<p>Unless your book has very few pages (glorified pamphlet), something must
+come between the Copyright page and the first page of the story. It is
+visually distracting to have copyright legalese visible at left, when you
+are trying to start a romance or fantasy setting at right.</p>
+<p>To create a visual barrier, the simplest practice is to put something
+on the recto page facing copyright, with its verso blank. The qiestion is,
+what to put on that recto page?</p>
+<p>One possibility is a Dedication. Over-used, in my opinion. That's what
+web sites are for. If you dedicate the book to Suzy, who subsequently dumps
+you, then years later you marry Anna, you don't want Anna nagging you
+about Suzy. Thank Suzy on a web page, then when she dumps you, delete it.</p>
+<p>Another possibility, under-used but very effective, is an Epigraph.
+This is a short item of prose or poetry, intended to set the tone. It could
+be pretentious (quoting Shakespeare) or not. Major commercial authors will
+sometimes quote each other, because their common publisher fixes it.
+Bu don't you do that. Even if your quote the Bible, be sure that the
+translation is in the Public Domain (this is why KJV is widely used).</p>
+<p>You can quote imaginary works, or your own book. Perhaps the most famous
+Epigraph in modern fiction is the One Ring inscription (Lord of the Rings).</p>
+<p>You can use a Table of Contents, if it is short. This is unusual, unless
+the book is a collection of short stories.</p>
+<p>You can simply repeat the half-title. Even major publishers sometimes
+do this.</p>
+</div>
+
 
 
 

@@ -15,6 +15,33 @@
 %%
 
 
+%% MODE AND INTENT
+\newcommand\mode[1]{ % How to structure the PDF.
+  \StrDel{#1}{ }[\nvt@temp@s]
+  \IfSubStr{:draft:shade:align:final:}{\nvt@temp@s}{
+    \xdef\nvt@mode{\nvt@temp@s}
+  }{
+    \ClassError{novelette}{Bad value for \string\mode.^^J%
+      Choose: draft shade align final^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
+  }
+}
+\@onlypreamble\mode
+%%
+\newcommand\intent[1]{ % For PDF/X conformance.
+  \StrDel{#1}{ }[\nvt@temp@s]
+  \IfSubStr{:none:SWOP:FOGRA39:JC200103:}{\nvt@temp@s}{
+    \xdef\nvt@intent{\nvt@temp@s}
+  }{
+    \ClassError{novelette}{Bad value for \string\intent.^^J%
+      Choose: none SWOP FOGRA39 JC200103^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
+  }
+}
+\@onlypreamble\intent
+%%
+
+
 %% BOOK TRIM SIZE AND PAGE DESIGN SETTINGS
 % -----------------------------------------------------------------------------
 % These define the dimensions and styles of your book, and its page design.
@@ -328,10 +355,10 @@
 \setmicrotype{stretch=20,shrink=20,protrusion=true} % And others. Default.
 \@onlypreamble\setmicrotype
 \def\nvt@process@MT{ % AtEndPreamble.
-  \ifundef\nvt@MT{
+  \ifdefined\nvt@MT\else
     \setmicrotype{config=novelette-microtype,stretch=20,shrink=20,%
       protrusion=true,verbose=silent}
-  }{}
+  \fi
   \xdef\log@mto{\string\microtypesetup{\nvt@MT}}
 }
 %%

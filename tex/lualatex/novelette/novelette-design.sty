@@ -15,7 +15,7 @@
 %%
 
 
-%% PAGE DESIGN CALCULATIONS
+%% PROCESS SETTINGS AND CALCULATE LAYOUT
 %% ----------------------------------------------------------------------------
 
 
@@ -185,6 +185,10 @@
   \sbox0{\mainfont 3456789JÀÁÂÃÄÅÇçjfhlygpqþ} % Highest and lowest Latin-1.
   \global\deflength\nvt@ascn{\ht0}
   \global\deflength\nvt@dscn{\dp0}
+  \sbox0{\mainfont X}
+  \global\deflength\nvt@Xht{\ht0}
+  \sbox0{\mainfont x}
+  \global\deflength\nvt@xht{\ht0}
   \ifdefined\nvt@lpp\else\nvt@default@lpp\fi
   \ifnvt@header
     \ifnvt@footer

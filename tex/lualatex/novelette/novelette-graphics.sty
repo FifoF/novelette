@@ -168,14 +168,14 @@
   \nvt@oktrue%
     %%%%% Put validation routine here.
   \ifnvt@ok\else%
-    \ifnvt@draft%
+    \ifthenelse{\equal{\nvt@mode}{final}}{%
+       \ClassError{novelette}{Image #1 did not pass validation.^^J%
+         Must be processed to specific standards. See Novelette docs.^^J%
+         \nvt@XN}{\nvt@RXN}\nvt@bad%
+    }{%
       \ClassWarning{novelette}{Image #1 did not pass validation.^^J%
         This is a warning in draft mode, an error in final mode.}%
-    \else%
-       \ClassError{novelette}{Image #1 did not pass validation.^^J%
-         Must be processed to specific standards. See Novelette docs.^^J
-         \nvt@XN}{\nvt@RXN}\nvt@bad%
-    \fi%
+    }%
   \fi%
 }
 %%
@@ -215,10 +215,15 @@
   \typeout{Max height of two-line image, @600ppi: \nvt@temp@n\space pixels.}
   \FPmul{\nvt@temp@d}{\strip@pt\nvt@leading}{8.3022}
   \FPtrunc{\nvt@temp@d}{\nvt@temp@d}{0}
-  \typeout{\space\space Each additional line, add \nvt@temp@d\space pixels.}
+  \typeout{\space\space Each extra line, add max \nvt@temp@d\space pixels.}
   \FPmul{\nvt@temp@n}{\strip@pt\textheight}{8.3022}
   \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
   \typeout{Max height of full-page image, @600ppi: \nvt@temp@n\space pixels.}
+  \FPadd{\nvt@temp@n}{\strip@pt\nvt@leading}{\strip@pt\nvt@xht}
+  \FPmul{\nvt@temp@n}{\nvt@temp@n}{8.3022}
+  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
+  \typeout{Two-line image, visually centered vertically:^^J%
+  \space\space Height @600ppi: \nvt@temp@n\space pixels. Midheight: half that.}
 }
 %%
 

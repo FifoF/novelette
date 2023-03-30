@@ -56,16 +56,14 @@
 \pdfminorversion=3 % Required for optional PDF/X-1a:2001 conformance.
 \gdef\thepdfminorversion{\pdfminorversion}
 %% Novelette uses these in a slightly different way than in other classes:
-\protect\long\gdef\title#1{\gdef\nvt@title{#1}}
-\protect\long\gdef\author#1{\gdef\nvt@author{#1}}
+\protect\long\def\title#1{\gdef\nvt@title{#1}}
+\protect\long\def\author#1{\gdef\nvt@author{#1}}
 \newcommand\application[1]{\gdef\nvt@application{#1}}
 \newcommand\producer[1]{\gdef\nvt@producer{#1}}
-\newcommand\intent[1]{\gdef\nvt@intent{#1}}
 \@onlypreamble\title
 \@onlypreamble\author
 \@onlypreamble\application
 \@onlypreamble\producer
-\@onlypreamble\intent
 %% \subtitle is for convenience. Not in PDF metadata.
 \long\gdef\subtitle#1{\gdef\@subtitle{#1}\gdef\thesubtitle{#1}}
 \@onlypreamble\subtitle
@@ -87,14 +85,10 @@
 \newif\ifnvt@fnindent % True if design footnote indent.
 \newif\ifnvt@fnseq % True if using numerical footnote reference marks.
 \newif\ifnvt@fnleft % True if footnote rule is aligned left.
+\newif\ifnvt@imgwarn % True if image warning issued.
 \newif\ifnvt@frontmatter % True in frontmatter.
 \newif\ifnvt@mainmatter % True in mainmatter or backmatter.
 \newif\ifnvt@cleartoend % True if cleartoend issued. Prevents duplicate.
-\newif\ifnvt@shadelines % True in align mode.
-\newif\ifnvt@shademargins % True in shade mode.
-\newif\ifnvt@draft % True unless final mode.
-\newif\ifnvt@imgwarn % True if image warning issued.
-\newif\ifnvt@imgdrop % True if image aligned to descender, instead of baseline.
 \newif\ifnvt@err % True if Novelette (not LaTeX) issued an error.
 %%
 
@@ -106,6 +100,8 @@
 \newlength\nvt@leading % Standard baseline skip.
 \newlength\nvt@dscn % Main font descender (depth of JQgjpqy).
 \newlength\nvt@ascn % Main font ascender (height of accented Latin-1 capitals).
+\newlength\nvt@Xht % X height of main font.
+\newlength\nvt@xht % x height of main font.
 \newlength\nvt@spad % Padding at sides of textblock, to allow for protrusion.
 \newlength\nvt@trimw % Trim width.
 \newlength\nvt@trimh % Trim height.
@@ -133,17 +129,13 @@
 % Novelette calculates real normalsize AtEndPreamble.
 \renewcommand\normalsize{\@setfontsize\normalsize{11pt}{14pt}}\normalsize
 \RequirePackage[no-math,quiet]{fontspec}
-\defaultfontfeatures{} % Reset.
-\defaultfontfeatures[\rmfamily,\sffamily]{Kerning=On, Numbers=OldStyle,%
-  Ligatures=TeX,}
 %%
 
 
-%% CLASS OPTIONS (none!), MODE
+%% CLASS OPTIONS (None!)
 %% ----------------------------------------------------------------------------
 % Novelette does not use class options. Dimensions, font size, and everything
 % are are set by specific commands in Preamble.
-%   \mode{choose} selects draft, shade, align, final. Default draft.
 \ifdefined\@raw@classoptionslist
   \ifthenelse{\equal{\@raw@classoptionslist}{}}{}{
     \typeout{^^JALERT: Novelette has no class options. Ignored!^^J}
@@ -151,40 +143,21 @@
 \fi
 \def\@raw@classoptionslist{}
 \def\@classoptionslist{}
-\newcommand\mode[1]{
-  \nvt@okfalse
-  \StrDel{#1}{ }[\nvt@temp@s]
-  \ifdefined\nvt@mode % Prevent duplicates.
-    \def\nvt@temp@s{draft}
-    \ClassWarning{novelette}{Multiple usage of \string\mode^^J%
-      All ignored. Using draft mode instead.}
-  \fi
-  \ifthenelse{\equal{\nvt@temp@s}{draft}}{
-    \nvt@oktrue\nvt@drafttrue\gdef\nvt@mode{draft}
-    \nvt@shademarginsfalse\nvt@shadelinesfalse
-  }{}
-  \ifthenelse{\equal{\nvt@temp@s}{shade}}{
-    \nvt@oktrue\nvt@drafttrue\gdef\nvt@mode{shade}
-    \nvt@shademarginstrue\nvt@shadelinesfalse
-  }{}
-  \ifthenelse{\equal{\nvt@temp@s}{align}}{
-    \nvt@oktrue\nvt@drafttrue\gdef\nvt@mode{align}
-    \nvt@shademarginstrue\nvt@shadelinestrue
-  }{}
-  \ifthenelse{\equal{\nvt@temp@s}{final}}{
-    \nvt@oktrue\nvt@draftfalse\gdef\nvt@mode{final}
-    \nvt@shademarginsfalse\nvt@shadelinesfalse
-  }{}
-  \ifnvt@ok\else
-    \gdef\nvt@mode{draft}
-    \ClassWarning{novelette}{Unknown \string\mode{\nvt@temp@s}.^^J%
-      Ignored. Using draft mode instead.}
-  \fi
-}
-\@onlypreamble\mode
+%%
+
+
+%% GENERAL DEFAULTS
+%% ----------------------------------------------------------------------------
+\defaultfontfeatures{} % Reset.
+\defaultfontfeatures[\rmfamily,\sffamily]%
+  {Kerning=On, Numbers=OldStyle,Ligatures=TeX,}
+\def\nvt@mode{draft}
+\def\nvt@intent{none}
 \def\nvt@XN{Respond x to exit now. Fix the problem}
 \def\nvt@RXN{Really, respond with x and exit now. Else bad things may happen.}
-\def\nvt@bad{\global\nvt@errtrue\gdef\nvt@intent{none}}
+\def\nvt@bad{\global\nvt@errtrue\gdef\nvt@mode{draft}\gdef\nvt@intent{none}}
+\setlength\overfullrule{6pt} % Except in final mode.
+\def\fillertext{\typeout{^^JALERT: No fillertext in final mode.^^J}}
 %%
 
 
@@ -229,33 +202,9 @@
 %% ----------------------------------------------------------------------------
 %% Process user settings, set defaults, calculate page design.
 \AtEndPreamble{
-  \ifdefined\nvt@mode\else\gdef\nvt@mode{draft}\fi
-  \ifthenelse{\equal{\nvt@mode}{final}}{
-    \global\deflength\overfullrule{0pt}
-  }{
-    \global\deflength\overfullrule{6pt}
-  }
   \LetLtxMacro\RequirePackage\nvt@get@package\relax
   \LetLtxMacro\usepackage\nvt@get@package\relax
-  \ifundef{\nvt@title}{
-    \global\nvt@drafttrue
-    \gdef\@title{Untitled Document}
-    \gdef\thetitle{Untitled Document}
-  }{
-    \xdef\@title{\nvt@title}
-    \xdef\thetitle{\nvt@title}
-  }
-  \ifundef{\nvt@author}{
-    \global\nvt@drafttrue
-    \gdef\@author{Anonymous Author}
-    \gdef\theauthor{Anonymous Author}
-  }{
-    \xdef\@author{\nvt@author}
-    \xdef\theauthor{\nvt@author}
-  }
-  \ifundef{\nvt@application}{\gdef\nvt@application{Novelette}}{}
-  \ifundef{\nvt@producer}{\gdef\nvt@producer{Novelette}}{}
-  \ifundef{\nvt@intent}{\gdef\nvt@intent{none}}{}
+  \ifthenelse{\equal{\nvt@mode}{final}}{}{\gdef\nvt@intent{none}}
   \nvt@process@trimsize
   \nvt@process@margins
   \nvt@process@design
@@ -263,11 +212,6 @@
   \nvt@process@mainfont
   \nvt@calculate@leading
   \nvt@renew@normalsize % The real value.
-  \DeclareDocumentCommand\lipsum{sO{}o}{%
-    \ClassError{novelette}{Novelette cannot load package \string\lipsum.^^J%
-      This is intentional. Use built-in \string\fillertext\space instead.^^J%
-      \nvt@XN}{\nvt@RXN}\nvt@bad
-  }
   \nvt@process@language
   \nvt@process@MT
   \gundef\setmicrotype
@@ -282,14 +226,15 @@
   \RequirePackage{fancyhdr}
   \RequirePackage{novelette-headers}
   \nvt@processnvt@hfstyle
-  \RequirePackage{novelette-fillertext}
   \nvt@process@guides
+  \RequirePackage{novelette-metadata}
+  \nvt@process@metadata
+  \nvt@process@pdfboxes
   \RequirePackage{novelette-shading}
+  \ifthenelse{\equal{\nvt@mode}{final}}{}{\RequirePackage{novelette-filler}}
   \ifthenelse{\equal{\nvt@mode}{draft}}{\nvt@labeldraft}{}
   \ifthenelse{\equal{\nvt@mode}{shade}}{\nvt@labelshade}{}
   \ifthenelse{\equal{\nvt@mode}{align}}{\nvt@labelalign}{}
-  \RequirePackage{novelette-metadata}
-  \nvt@process@pdfboxes
 }
 %%
 
@@ -326,9 +271,9 @@
     /CreationDate(\pdffeedback creationdate) %
     /ModDate(\pdffeedback creationdate) %
   }
-  \nvt@process@metadata
-  \nvt@process@xmp
-  \ifthenelse{\equal{\nvt@intent}{none}}{}{\nvt@processnvt@intent}
+  \nvt@attach@metadata
+  \nvt@attach@xmp
+  \ifthenelse{\equal{\nvt@intent}{none}}{}{\nvt@attach@intent}
 }
 %%
 
@@ -338,7 +283,7 @@
 \AfterEndDocument{
   \typeout{^^J}
   \typeout{*******************************************************************}
-  \typeout{SUMMARY FOR JOBNAME \jobname\space\ifnvt@draft DRAFT MODE\fi}
+  \typeout{SUMMARY FOR JOBNAME \jobname}
   \typeout{*******************************************************************}
   \typeout{These are the actual values used. If different from your settings,}
   \typeout{it means Novelette used defaults, or needed to over-ride yours:}

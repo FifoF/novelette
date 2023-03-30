@@ -70,33 +70,35 @@
 %%
 
 
-%% PDF/X OUTPUT INTENT
-% Unless \intent{none}, or draft mode, novelette creates PDF/X-1a:2001 files.
-% This format is specifically intended for commercial printing.
-% It requires an Output Intent declaration, even though it is
-% irrelevant in non-color printing (and will be ignored by the printer).
-% Each named intent has identifier, condition, info, and registry.
-% Novelette does not attach an *.icc color profile.
-\StrDel{\nvt@intent}{ }[\nvt@temp@s]
-\nvt@okfalse
-\ifthenelse{\equal{\nvt@temp@s}{none}}{\nvt@oktrue}{} % Will not be PDF/X.
-\ifthenelse{\equal{\nvt@temp@s}{SWOP}}{\nvt@oktrue}{} % Typical for USA.
-\ifthenelse{\equal{\nvt@temp@s}{FOGRA39}}{\nvt@oktrue}{} % Typical for Europe.
-\ifthenelse{\equal{\nvt@temp@s}{JC200103}}{\nvt@oktrue}{} % Typical for Japan.
-\ifnvt@ok
-  \xdef\nvt@intent{\nvt@temp@s}
-\else
-  \ClassError{novelette}{Bad value for \string\intent.^^J%
-  \@XN}{\@RXN}\nvt@bad
-\fi
+%% PROCESS METADATA
+\def\nvt@process@metadata{
+  \ifdefined\nvt@title
+    \xdef\@title{\nvt@title}
+    \xdef\thetitle{\nvt@title}
+  \else
+    \gdef\nvt@intent{none}
+    \gdef\nvt@mode{draft}
+    \gdef\@title{Untitled Document}
+    \gdef\thetitle{Untitled Document}
+  \fi
+  \ifdefined\nvt@author
+    \xdef\@author{\nvt@author}
+    \xdef\theauthor{\nvt@author}
+  \else
+    \gdef\nvt@intent{none}
+    \gdef\nvt@mode{draft}
+    \gdef\@author{Anonymous Author}
+    \gdef\theauthor{Anonymous Author}
+  \fi
+  \ifdefined\nvt@application\else\gdef\nvt@application{Novelette}\fi
+  \ifdefined\nvt@producer\else\gdef\nvt@producer{Novelette}\fi
+}
 %%
 
 
-%% PROCESS METADATA
-\def\nvt@process@metadata{
-  \ifnvt@draft
-    \gdef\nvt@intent{none}
-  \fi
+%% ATTACH METADATA
+\def\nvt@attach@metadata{
+  \ifthenelse{\equal{\nvt@mode}{final}}{}{\gdef\nvt@intent{none}}
   \ifthenelse{\equal{\nvt@intent}{none}}{
     \gdef\pdflines{}
   }{
@@ -159,7 +161,7 @@
 
 
 %% DOCUMENT AND INSTANCE UUID
-% PDF/X is for printing, not digital archives. Required uuid can be simple:
+% Novelett PDF is for printing, not digital archives. The uuid can be simple:
 \edef\xmp@docid{\pdf@mdfivesum{jobname.pdf}}
 \edef\xmp@instid{\pdf@mdfivesum{\pdffeedback creationdate}}
 \def\nvt@documentID{uuid:\xmp@docid}
@@ -167,15 +169,19 @@
 %%
 
 
-%% PROCESS XMP
-\def\nvt@process@xmp{
+%% ATTACH XMP
+\def\nvt@attach@xmp{
   \begingroup
     \makeatletter
-    \input{novelette-xmppacket.sty}
-    \global\let\nvt@xmpdata\nvt@xmppacket
+    \ifthenelse{\equal{\nvt@mode}{final}}{
+      \input{novelette-xmppacket.sty}
+    }{
+      \input{novelette-draftxmp.sty}
+    }
+    \global\let\nvt@xmp\nvt@xmppacket
     \begingroup
       \pdfcompresslevel=0
-      \immediate\pdfobj stream attr {/Type /Metadata /Subtype /XML} {\nvt@xmpdata}
+      \immediate\pdfobj stream attr {/Type /Metadata /Subtype /XML} {\nvt@xmp}
       \pdfcatalog{/Metadata \the\pdflastobj\space 0 R}
     \endgroup
   \endgroup
@@ -183,8 +189,8 @@
 %%
 
 
-%% PROCESS INTENT
-\def\nvt@process@intent{ % Will not attach any *.icc file.
+%% ATTACH INTENT (but not its *icc file)
+\def\nvt@attach@intent{
     \begingroup
     \edef\@pctchar{\expandafter\@gobble\string\%} % Escaped in TeX, not PDF.
     \edef\@bchar{\expandafter\@gobble\string\\} % For use as escape, below.

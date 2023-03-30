@@ -9,7 +9,11 @@ language. Disregard anything you read elsewhere!
 
 When Novelette loads a language, it ONLY loads a hyphenation pattern.
 There is no spelling or grammar check. There is no automatic styling
-of time and date, or chapters, or anything else. Do it yourself!
+of time and date, or chapters, or quotes, or anything else. Do it yourself!
+
+The only exception: If you command \frenchspacing then the space between
+sentences will be increased (regardless of your language). It does not add
+or increase any other space. 
 
 Novelette uses this command in Preamble:
 	\setlang{code}
@@ -27,11 +31,12 @@ Here are your choices:
 	dutch (note 5)
 	catalan (note 6)
 	welsh (note 7)
+	maybe some others (note 8)
 Most languages use the same hyphenation, regardless of regional differences
 in vocabulary or pronunciation. That is why there are no separate codes for
 Australian English, Canadian French, etc.
 
-No matter which language you use, print services require that title
+No matter which language you use, most print services require that title
 and author be written using Latin characters (possibly with diacriticals).
 That excludes curly quotes and curly apostophe, but Novelette will
 automatically use the straight forms, in title and author.
@@ -54,6 +59,12 @@ You may type the two separate letters.
 Actually, you should not use them anywhere. Use periodcentered (middot).
 	7. The print service may forbid using circumflex over Y y in title
 or author. It may forbid any diacritical over W w.
+	8. Probably some Eastern European languages may be selected. Untested.
+The critical restrictions: (a) No stacked diacriticals. That excludes Vietnamese
+and some African languages, among others. (b) Left-to-right only. That excludes
+Arabic and Hebrew, among others. (c) No contextual ligatures. That excludes
+some South Asian languages, among others. (d) Characters must be in the
+Unicode utf-8 standard. (e) Print services may have further restrictions.
 
 You cannot load the `lipsum' package. If you need some text for
 testing layout, the built-in \fillertext command may be used

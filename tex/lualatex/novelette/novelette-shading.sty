@@ -90,7 +90,7 @@
 \newcommand{\nvt@addbg}{\g@addto@macro\nvt@bghook}
 \AddToHook{shipout/background}{\put(0,-\pageheight){\nvt@bghook}}
 \IfHookEmptyTF{shipout/background}{\AddToHook{shipout/background}{\relax}}{}
-\ifnvt@shademargins
+\ifthenelse{\equal{\nvt@mode}{shade} \OR \equal{\nvt@mode}{align}}{
   \pretocmd\@kernel@before@shipout@background{
     % Fill trim area with gray. If sheetfeed, do not extend gray outside trim:
     \nvt@trim@LL{{\nvt@gray{.6}\rule{\nvt@trimw}{\nvt@mbot}}}%
@@ -108,7 +108,7 @@
         \rule{\nvt@mins}{\nvt@trimh}%
       }}
     \fi
-    \ifnvt@shadelines
+    \ifthenelse{\equal{\nvt@mode}{align}}{
       \nvt@shade@main@lines
       \ifnvt@header
         \nvt@print@UL{{\nvt@gray{.8}%
@@ -120,7 +120,7 @@
           \rule{\textwidth+2\nvt@spad}{\nvt@dscn}%
         }}
       \fi
-    \fi
+    }{}
     \nvt@place@opening@guides
     \setlength\nvt@temp@l{\nvt@trimw-\nvt@spinew}%
     \ifodd\c@page\setlength\nvt@temp@l{0pt}\fi%
@@ -128,7 +128,7 @@
       \rule{\nvt@spinew}{\nvt@trimh}% Spine glue zone.
     }}%
   }{\typeout{Shading applied.}}{\typeout{Shading failed.}} % Part of \pretocmd.
-\fi
+}{}
 %%
 
 

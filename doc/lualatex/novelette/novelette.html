@@ -5,8 +5,12 @@
 <title>Document class "novel" - documentation</title>
 <style type="text/css">
 body{color:#000000; background-color:#aaaaaa}
-#main{max-width:80em; padding:1em; border:2px solid #000000; margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto; background-color:#dddddd}
-#doctemplate{width:80%; padding:1em; border:1px solid #000000; margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto; background-color:#ffffff}
+#main{max-width:80em; padding:1em; border:2px solid #000000;
+  margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto;
+  background-color:#dddddd}
+#doctemplate{width:80%; padding:1em; border:1px solid #000000;
+  margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto;
+  background-color:#ffffff}
 div{margin-top:2em; margin-bottom:2em}
 p.linesp{line-height: 150%}
 </style>
@@ -51,6 +55,8 @@ and how to choose their values:</p>
 <a href="#frontmatter">\frontmatter</a><br>
 % Various pages go here.
 <a href="#mainmatter">\mainmatter</a><br>
+<a href="versohead">\versohead</a>{<i>styled text</i>}<br>
+<a href="rectohead">\rectohead</a>{<i>styled text</i>}<br>
 % Various pages go here.
 <a href="#cleartoend">\cleartoend</a><br>
 <a href="#enddoc">\end{document}</a></p>
@@ -99,31 +105,20 @@ are the same as they will be, when you graduate to final mode.</p>
 <p><b>align</b> is shade/draft mode, with text baselines marked.</p>
 <p><b>final</b> should only be used when you are ready. In final mode,
 Novelette performs some checks that it would otherwise omit (to save time).
-If your document fails one of the checks, you will be warned. Then itt will
-automatically revert to draft mode, so that the PDF cannot be confused with
-the final file.</p>
+If your document fails one of the checks, you will be warned. Then it will
+automatically revert to draft mode, so that the failed PDF cannot be confused
+with a good final file.</p>
 </div>
 
 <a id="intent"></a>
 <div>
 <h3>\intent{<i>choice</i>}</h3>
-<p>There are four intents: none, SWOP, FOGRA39, JC200103. Default is none.</p>
-<p>No matter which intent you choose, fonts are subset embedded. That is enough
-for some print services. But many print services require PDF/X conformance,
-especially <span style="white-space:nowrap">PDF/X-1a:2001.</span></p>
-<p>When a file conforms to PDF/X, it must have a certain internal structure.
-Among the requirements is an "output intent", which states that the PDF was
-prepared according to the requirements of a particular print technology.
-It does not force the printer to use that technology.</p>
-<p>Your file will be printed by an industrial-strength photocopier or inkjet,
-rather than the offset presses declared by intent. In any case, the intent is
-irrelevant for books using only black ink. Nevertheless, an intent must be
-declared, even though it is useless; it is part of the PDF/X standards.</p>
-<p>You are urged to use an intent, other than <i>none</i>, for the final PDF.
-This enables additional checks, hopefully reducing the possibility that your
-file will be rejected by the print service.</p>
-<p><b>none</b> does not produce PDF/X. No matter how you set intent, it will
-automatically be changed to <i>none</i> unless you are in final mode.</p>
+<p>There are four intents: none, SWOP, FOGRA39, JC200103. Default is none.
+No matter which intent you choose, fonts are subset embedded. That is enough
+for some print services.</p>
+<p><b>none</b> does not produce PDF/X. No matter how you set intent, it is
+automatically changed to <i>none</i> unless you are in final mode. The other
+intents produce <span style="white-space:nowrap">PDF/X-1a:2001.</span></p>
 <p><b>SWOP</b> means "US Web Coated SWOP". This is most frequently used in
 the United States.</p>
 <p><b>FOGRA39</b> (actually FOGRA39L) is frequently used in Europe.</p>
@@ -147,20 +142,22 @@ diacritical marks (Vietnamese), or right-to-left text, is not supported.</p>
 <a id="title"></a>
 <div>
 <h3>\title{<i>Title of Your Book</i>}</h3>
-<p>When you use a print-on-demand service, you will provide the book title.
-This </i>\title</i> must be exactly the same. Also, it must be the same
-on the printed title page, on the copyright page, in page headers (if you use
-them), and generally anywhere the title is expected. Novelette does not do
-cover artwork, but the cover must have exactly the same title.</p>
-<p>The title must use the Latin character sets. Some print services limit
-to Latin-1; others allow more extended Latin characters. Curly apostrophe
-and curly quotes are not Latin characters, but Novelette will convert them
-to the acceptable straight variety.</p>
-<p>You may not use TeX code, such as requesting Italics. You may not use code
-such as \`A for Agrave, but you may directly place À from a Unicode character
-map.</p>
-<p>Exception: If any of characters @ # $ % & { } appear in the title, they must
-be preceded by a backslash, as in \title{The \$20 Balloon}.</p>
+<p>When you use a print-on-demand service, you provide them with metadata
+for your book: title, author, genre, keywords, description, ISBN, and maybe
+others. Of these, only title and author are part of the PDF. This is because
+the PDF itself is not being marketed. Information such as the copyright
+and ISBN appear in print.</p>
+<p>The <i>\title</i> of your document must be exactly the same as whatever
+you provided to the service. Do not use TeX macros, styles, or character codes
+(except as listed below). Use straight (ordinary keyboard) apostrophe,
+not curly. You may use Latin-1 letters with diacriticals, as long as they
+are pasted directly. That is, you may write Aumluat as Ä but not \"A code.</p>
+<p>Exceptions: Special characters \# \$ \% \& \{ \}
+are preceded by a backslash, as shown.</p>
+<p>Example: \title{The \$20 Balloon}</p>
+<p>Note: The print service may allow you to use non-alphanumeric characters
+in the title, or may forbid them. It is a matter of how things are indexed
+in their database. Novelette does not care.</p>
 </div>
 
 <a id="author"></a>
@@ -242,14 +239,16 @@ allows for binding glue.</p>
 \margins{<i>size</i>} sets top, ouside, and bottom margins to that size.
 Inside margin is set 0.125in (or 3mm) larger.</p>
 <p>If you do not set margins, Novelette will set them for you. At smaller
-trim sizes, the margins will be at the minimum required by print services.
+trim sizes, the margins will be at the minimum required by some print services.
 At larger trim size, the margins will be larger.</p>
 </div>
+
 
 <a id="layout"></a>
 <div>
 <h3>\layout{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}</h3>
-<p>The \layout command accepts one or more comma-separated key=value pairs.</p>
+<p>The \layout command accepts one or more comma-separated key=value pairs.
+It sets the page layout header/footer style.</p>
 <p><b>style=<i>integer</i></b><br>Integer from 1 to 7 selects page style,
 (header and/or footer) from a menu of available styles. The default style
 depends on other page design settings.</p>
@@ -263,7 +262,14 @@ between main text and footer. Ignored if style has no footer.</p>
 <p><b>scale=<i>number</i></b><br>
 Sets the scale of header/footer text, relative to size of main font.
 Acceptable range is 0.75 to 1, but must evaluate to at least 8.03pt.</p>
+<p>Note: If you use a header/footer, there will be pages where nothing
+is printed in the header/footer. Nevertheless, the space for header/footer
+is reserved; main text does not vertically expand to fill the empty
+header/footer.<p>
+<p>Note: Command <a href="#thispagestyle">\thispagestyle</a> locally changes
+the layout for a single page.</p>
 </div>
+
 
 <a id="text"></a>
 <div>
@@ -272,8 +278,6 @@ Acceptable range is 0.75 to 1, but must evaluate to at least 8.03pt.</p>
 <p><b>fontsize=<i>size</i></b><br>Sets the size of main text font. Integer
 or decimal. Typical value near 11.5pt. Must have units pt (TeX points) or
 bp (PostScript points). Instead of fontsize, you may set emperline.</p>
-<p><b>emperline=<i>number</i></b><br>Number of font em per line of main text.
-Alternative to fontsize. Typical value near 28.</p>
 <p><b>lines=<i>integer</i></b><br>Number of lines in main text block, not
 counting header or footer. The default number depends on page sizes.</p>
 <p><b>openings=<i>code</i></b><br>Sets the style of "opening" environments,
@@ -301,8 +305,13 @@ It assigns the font to its proper place and purpose.</p>
 <p><b>Font Name</b> is the Open Type font family name. Examples are Swainson,
 EB Garamond, Libertinus Serif. No TeX fonts with three-letter codes.</p>
 <p><b>features</b> is an optional, comma-separated list of Open Type features,
-using <i>fontspec</i> syntax.</p>
+using <i>fontspec</i> syntax. Default uses kerning and OldStyle numerals.
+Default also uses TeX ligatures (converts `` to “ and so forth).</p>
+<p>Common ligatures (ff, fi, fl, ffi, ffl) are not enabled by default, since
+they are not necessarily useful. To enable common ligatures, write
+<span style="white-space:nowrap">[Ligatures=Common]</span> option.</p>
 </div>
+
 
 <a id="guides"></a>
 <div>
@@ -384,6 +393,7 @@ to insert blank lines.</p>
 within the <a href="#opening">opening</a> environment. The <i>name</i>
 is usually chapter title or number. This is not intended for more than
 one line of text.</p>
+<p>The name text is pre-set at 1.8 times the size of main text.</p>
 </div>
 
 <a id="desc"></a>
@@ -394,6 +404,7 @@ environment. If used, is usually a one-line chapter subtitle. This is
 not intended for an extended amount of text. If necessary, you may use
 \desc more than once, for multiple lines. However, multiple lines would
 probably look better in ordinary main text.</p>
+<p>The desc text is pre-set at 1.33 times the size of main text.</p>
 </div>
 
 

@@ -192,9 +192,12 @@
 
 %% TEXT (fontsize, and lines in main textblock)
 % fontsize -> Main text. Size in pt or bp.
-% lines -> Lines per page in main textblock (not counting header/footer).
-% openings -> Horizontal alignment of items in openings.
-% footnotes -> Various settings for footnotes.
+% lines -> Integer lines per page in main textblock (not header/footer).
+% openings -> Horizontal alignment of items in openings: l c r o i.
+% footnotes -> Various settings for footnotes:
+%   c|l -> Align separator rule left or center (default center).
+%   s|n -> Reference marks numerical or symbolic (default symbolic = literary).
+%   f|i -> Indent fors line of footnote, or flush left (default flush).
 \newcommand\text[1]{
   \nvt@oktrue
   \StrDel{#1,}{ }[\nvt@temp@s]
@@ -204,6 +207,12 @@
     \nvt@checklength{\nvt@temp@s}
     \ifnvt@ok\global\deflength\nvt@fontsize{\nvt@temp@s}\fi
   }
+  \ifnvt@ok\else
+    \ClassError{novelette}{Bad value for \string\text{fontsize=value}.^^J%
+      Value must be integer|decimal with units pt or bp.^^J%
+      Default will be calculated, if fontsize is not specified.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
+  \fi
   \StrDel{#1,}{ }[\nvt@temp@s]
   \StrBehind{\nvt@temp@s}{lines=}[\nvt@temp@s]
   \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
@@ -220,24 +229,40 @@
      \fi
     }{\nvt@okfalse}
   }
+  \ifnvt@ok\else
+    \ClassError{novelette}{Bad value for \string\text{lines=integer}.^^J%
+      Integer is lines in main textblock, not counting header/footer.^^J%
+      Default will be calculated, if lines not specified.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
+  \fi
   \nvt@oktrue
   \StrDel{#1,}{ }[\nvt@temp@s]
   \StrSubstitute{\nvt@temp@s}{footnotes=}{footnote=}[\nvt@temp@s]
   \StrBehind{\nvt@temp@s}{footnote=}[\nvt@temp@s]
   \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
-  \IfSubStr{\nvt@temp@s}{n}{%
-    \global\nvt@fnseqtrue
-    \StrDel{\nvt@temp@s}{n}[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{}}{\def\nvt@temp@s{csf}}{}
+  \IfSubStr{\nvt@temp@s}{n}{
+    \global\nvt@fnseqtrue\StrDel{nvt@temp@s}{n}[\nvt@temp@s]
   }{}
-  \IfSubStr{\nvt@temp@s}{l}{%
-    \global\nvt@fnlefttrue
-    \StrDel{\nvt@temp@s}{l}[\nvt@temp@s]
+  \IfSubStr{\nvt@temp@s}{l}{
+    \global\nvt@fnlefttrue\StrDel{\nvt@temp@s}{l}[\nvt@temp@s]
   }{}
-  \IfSubStr{\nvt@temp@s}{i}{%
-    \global\nvt@fnindenttrue
-    \StrDel{\nvt@temp@s}{i}[\nvt@temp@s]
+  \IfSubStr{\nvt@temp@s}{i}{
+    \global\nvt@fnindenttrue\StrDel{\nvt@temp@s}{i}[\nvt@temp@s]
   }{}
+  \StrDel{\nvt@temp@s}{c}[\nvt@temp@s]
+  \StrDel{\nvt@temp@s}{s}[\nvt@temp@s]
+  \StrDel{\nvt@temp@s}{f}[\nvt@temp@s]
   \ifthenelse{\equal{\nvt@temp@s}{}}{}{\nvt@okfalse}
+  \ifnvt@ok\else
+    \ClassError{novelette}{Bad value for \string\text{footnote=code}.^^J%
+      Code is 3 or fewer letters: c|l s|n f|i^^J%
+      c,l -> center or left-align separator rule.^^J%
+      s,n -> symbolic (asterisk, etc.) or numerical reference markers.^^J%
+      f,i -> flush left or indented first line of footnote.^^J%
+      Default choices are csf, if not specified.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad
+  \fi
   \nvt@oktrue
   \StrDel{#1,}{ }[\nvt@temp@s]
   \StrSubstitute{\nvt@temp@s}{openings=}{opening=}[\nvt@temp@s]
@@ -253,7 +278,10 @@
     \gdef\nvt@openalign{c}
   }
   \ifnvt@ok\else
-    \ClassError{novelette}{Bad value for \string\text.^^J%
+    \ClassError{novelette}{Bad value for \string\text{openings=code}.^^J%
+      Code is one of: l r c o i^^J%
+      Corresponding to left, center, right, outside, inside.^^J%
+      Default c if not specified.
       \nvt@XN}{\nvt@RXN}\nvt@bad
   \fi
 }

@@ -153,6 +153,7 @@
   {Kerning=On, Numbers=OldStyle,Ligatures=TeX,}
 \def\nvt@mode{draft}
 \def\nvt@intent{none}
+\def\nvt@guides{}
 \def\nvt@XN{Respond x to exit now. Fix the problem}
 \def\nvt@RXN{Really, respond with x and exit now. Else bad things may happen.}
 \def\nvt@bad{\global\nvt@errtrue\gdef\nvt@mode{draft}\gdef\nvt@intent{none}}

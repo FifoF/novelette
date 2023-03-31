@@ -69,3 +69,4 @@ packagedata.sidebearings.right = function (char)
   return sidebearings (font.current (), char, false)
 end
 
+-- End novelette-sidebearings.lua.

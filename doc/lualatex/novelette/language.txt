@@ -11,9 +11,9 @@ When Novelette loads a language, it ONLY loads a hyphenation pattern.
 There is no spelling or grammar check. There is no automatic styling
 of time and date, or chapters, or quotes, or anything else. Do it yourself!
 
-The only exception: If you command \frenchspacing then the space between
-sentences will be increased (regardless of your language). It does not add
-or increase any other space. 
+The only exception: If your language is french, Novelette will
+automatically increase punctuation spacing and between-sentence spacing
+for the language.
 
 Novelette uses this command in Preamble:
 	\setlang{code}
@@ -25,7 +25,7 @@ Here are your choices:
 	english usenglishmax british (note 1)
 	german ngerman swissgerman german-x-latest ngerman-x-latest (note 2)
 	norwegian bokmal nynorsk (note 3)
-	french (note 4)
+	french swissfrench (note 4)
     occitan spanish portuguese italian
 	basque finnish danish icelandic swedish
 	dutch (note 5)
@@ -50,9 +50,8 @@ Better results will be obtained by "usenglishmax" or "british".
 "german-x-latest" and "ngerman-x-latest" are recent updates to the 1901
 and 1996 patterns.
 	3. "norwegian" uses bokmal. "bokmal" and "nynorsk" are specific. 
-	4. "french" does not load spacing patterns, just hyphenation. Add the
-command \frenchspacing after \begin{document}, to increase the space between
-sentences. But for increased punctuation space, you must type it yourself.
+	4. "french" and "swissfrench" increase punctiation and inter-sentence
+space, with slight differences.
 	5. The print service may forbid using digraphs IJ ij in title or author.
 You may type the two separate letters.
 	6. Single-character Ldot and ldot should not be used in title or author.

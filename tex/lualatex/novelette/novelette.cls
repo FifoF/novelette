@@ -129,6 +129,7 @@
 % Novelette calculates real normalsize AtEndPreamble.
 \renewcommand\normalsize{\@setfontsize\normalsize{11pt}{14pt}}\normalsize
 \RequirePackage[no-math,quiet]{fontspec}
+\RequirePackage{luatexbase}
 %%
 
 
@@ -214,6 +215,10 @@
   \nvt@calculate@leading
   \nvt@renew@normalsize % The real value.
   \nvt@process@language
+\ifthenelse{\equal{\nvt@lang}{french}}{
+\directlua{require "novelette-frpunct"}
+\directlua{nvtfrpunct.activate_french_punct(true, true)}
+}{}
   \nvt@process@MT
   \gundef\setmicrotype
   \RequirePackage[\nvt@MT]{microtype}

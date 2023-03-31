@@ -20,3 +20,11 @@ When your work is at or near final, be sure to save its summary. That will
 help you re-compile the document, in the event that you move to a different
 TeX system.
 
+The log Summary may have this line:
+    "You may get better results by processing via novelette script."
+At the initial release of Novelette, that is only wishful thinking. Ignore it.
+An updated version may include a new shell script (BASH) for optional use.
+The concept: The script will examine the plain text of your document,
+and look for some possible errors that TeX cannot easily detect. You will
+be advised of the results. When satisfied, process with lualatex as usual.
+    Whether or not that script is ever developed, it will not be required.

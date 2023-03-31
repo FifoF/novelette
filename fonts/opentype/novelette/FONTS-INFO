@@ -11,6 +11,12 @@ The Regular and Italic fonts exist. Probably there will be a Light (regular) as 
 Be there will not be Bold or Bold Italic added. There is no need for bold in popular literature,
 which is the purpose of these fonts.
 
+These fonts only include the Western European character set (Latin-1) plus
+a few other characters, and typographic characters such as curly quotes.
+They will never be extended to a much larger character set, because there are
+already many fonts for that purpose. The main reason for having these fonts is
+to provide a few reference glyphs that other fonts may not have.
+
 Originally (two years ago!) these fonts were intended as a private (me only) derivative of some Libertinus Serif fonts.
 But in the intervening time, they morphed into originals, with no code from Libertinus Serif.
 The finished Swainson fonts will be closer to Garamond styles.

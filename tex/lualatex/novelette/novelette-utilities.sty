@@ -15,6 +15,7 @@
 %%
 
 
+
 %% UTILITY MACROS
 %% ----------------------------------------------------------------------------
 % These are used by other packages and novelette-*.sty files, during setup.
@@ -42,38 +43,33 @@
 %% FRONTMATTER, MAINMATTER, BACKMATTER
 % These commands can only be used in document body:
 \def\frontmatter{%
-  \ifnvt@frontmatter%
-    \ClassError{novelette}{Duplicate \string\frontmatter.^^J%
-      \nvt@XN}{\nvt@RXN}\nvt@bad%
-  \fi% Bad matter command.
   \ifnvt@mainmatter%
     \ClassError{novelette}{No more frontmatter after mainmatter.^^J%
       \nvt@XN}{\nvt@RXN}\nvt@bad%
   \fi%
+  \ifnvt@frontmatter\else%
+    \pagenumbering{roman}%
+    \setcounter{page}{1}%
+    \versohead{}%
+    \rectohead{}%
+  \fi%
   \global\nvt@frontmattertrue%
   \global\nvt@mainmatterfalse%
-  \clearpage%
-  \versohead{}%
-  \rectohead{}%
-  \pagenumbering{roman}%
-  \setcounter{page}{1}%
 }
-%
+%%
 \def\mainmatter{ % Restarts page to 1, arabic numbers; freeze frontpagecount.
-  \ifnvt@mainmatter%
-    \ClassError{novelette}{Cannot use \string\mainmatter\space twice.^^J%
-      \nvt@XN}{\nvt@RXN}\nvt@bad%
+  \ifnvt@mainmatter\else%
+    \cleartorecto%
+    \pagenumbering{arabic}%
+    \setcounter{page}{1}%
+    \versohead{\allsmcp{\thetitle}}%
+    \rectohead{\textit{\theauthor}}%
   \fi%
-  \cleartorecto%
-  \versohead{\allsmcp{\thetitle}}
-  \rectohead{\textit{\theauthor}}
   \global\nvt@frontmatterfalse%
   \global\nvt@mainmattertrue%
-  \pagenumbering{arabic}%
-  \setcounter{page}{1}%
 }
-%
-\def\backmatter{%
+%%
+\def\backmatter{% Usually not used.
   \cleartorecto%
   \versohead{}%
   \rectohead{}%
@@ -81,7 +77,7 @@
 %%
 
 
-%% FAKE FRONT MATTER (six-page placeholder}
+%% FAKE FRONT MATTER (six-page placeholder)
 \def\fakefrontmatterpages{
   \gdef\nvt@usingfakefront{true}
   \thispagestyle{empty} % half-title, page i.
@@ -95,13 +91,15 @@
   \begin{center}
   {\addfontfeature{Letters=SmallCaps,Scale=3}My Book}\par
   \null\null
-  {\addfontfeature{Scale=1.4}read it and weep}\par
+  \upscale[1.6]{read it and weep\\then read it again}
   \null\null
-  \rule[.5\nvt@Xht-1pt]{.2\textwidth}{2pt}
-  A NOVEL
-  \rule[.5\nvt@Xht-1pt]{.2\textwidth}{2pt}\par
-  \null\null
-  {\addfontfeature{Scale=1.6}Wanna B. Famous}\par
+  \rule{.25\textwidth}{1pt}\par
+  \rule{.375\textwidth}{1.5pt}\par
+  \rule{.5\textwidth}{2pt}\par
+  \rule{.375\textwidth}{1.5pt}\par
+  \rule{.25\textwidth}{1pt}\par
+  \null\null\null
+  {\addfontfeature{Scale=2}Wanna B. Famous}\par
   \vfill
   {\addfontfeature{Scale=1.2}Independently Published}\par
   \end{center}
@@ -110,19 +108,16 @@
   \null
   \vfil
   \begin{center}
-  \begingroup
-  \addfontfeature{Numbers=ResetAll,Numbers=Lining}
   My Book : read it and weep\\
-  / Wanna B. Famous.\par
-  Copyright ©\the\year\space Myreal Name. All Rights Reserved.\par
-  Independently Published by the Copyright Holder\\
-  Mycity, Mynation\par
+  then read it again / Wanna B. Famous.\par
+  Copyright ©\lnum{\the\year} Myreal Name. All Rights Reserved.\par
+  Independently Published by the Copyright Holder,\\
+  Mycity, Mynation.\par
   http://www.example.com/wannabfamous/books\par
   This is a work of fiction.\\
   All characters and events are imaginary.\\
   Resemblance to any person, living or dead, is coincidental.\par
-  ISBN 123-45-6789012-3\par
-  \endgroup
+  ISBN \lnum{123-45-6789012-3}\par
   \end{center}
   \vfil
   \null
@@ -138,7 +133,93 @@
   \end{center}
   \vfil
   \null
-  \blankpage % blank, page vi.
+  \blankpage % blank, page vi. Following page is mainmatter, page 1.
+}
+%%
+
+
+%% TEXT STYLE (only in frontmatter)
+\DeclareDocumentCommand\style{O{}+m}{%
+  \ifnvt@frontmatter%
+  \begingroup%
+  \setlength\parindent{0pt}%
+  \hyphenpenalty=20000{}%
+  \StrDel{#1,}{ }[\nvt@temp@s]%
+  \StrBehind{\nvt@temp@s}{align=}[\nvt@temp@s]%
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
+  \StrLeft{\nvt@temp@s}{1}[\nvt@temp@s]%
+  \def\nvt@alignchoice{:l:c:r:o:i:}%
+  \IfSubStr{\nvt@alignchoice}{:\nvt@temp@s:}{}{%
+    \ClassWarning{novelette}{Bad value for align in \string\style.^^J%
+      Choose: l c r o i^^J%
+      Bad value ignored. Default c used.}%
+    \def\nvt@temp@s{c}%
+  }
+  \ifthenelse{\equal{\nvt@temp@s}{r}}{/strut/hfill{}}{}%
+  \ifodd\c@page\ifthenelse{\equal{\nvt@temp@s}{o}}{/strut/hfill{}}{}\fi%
+  \ifthenelse{\equal{\nvt@temp@s}{c}}{\begin{center}}{}%
+  \StrDel{#1,}{ }[\nvt@temp@s]%
+  \StrBehind{\nvt@temp@s}{font=}[\nvt@temp@s]%
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
+  \ifdefined\nvt@fontlist\else\gdef\nvt@fontlist{:mainfont:}\fi%
+  %%%%% check if font name was defined: \def\nvt@fontlist{:main:deco: ... user additions.}
+  \IfSubStr{\nvt@fontlist}{:\nvt@temp@s:}{%
+    \csname\nvt@temp@s\endcsname%
+  }{%
+    \StrSubstitute{\nvt@fontlist}{:}{ }[\nvt@temp@n]
+    \ClassError{novelette}{Bad value for font, in \string\style.^^J%
+      Choose: \nvt@temp@n^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad%
+  }%
+  \StrDel{#1,}{ }[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{Scale=}{scale=}[\nvt@temp@s]%
+  \StrBehind{\nvt@temp@s}{scale=}[\nvt@temp@s]%
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
+  \IfSubStr{\nvt@temp@s}{t}{\nvt@oktrue}{\nvt@okfalse}%
+  \StrDel{\nvt@temp@s}{t}[\nvt@temp@s]%
+  \IfDecimal{\nvt@temp@s}{%
+    \addfontfeature{ScaleAgain=\nvt@temp@s}%
+    \ifnvt@ok%
+      \sbox0{3456789JÀÁÂÃÄÅÇçjfhlygpqþ}%
+      \setlength\nvt@temp@l{\ht0+\dp0}%
+      \setlength\baselineskip{1.05\nvt@temp@l}%
+    \else%
+      \setlength\baselineskip{\nvt@temp@s\nvt@leading}%
+    \fi%
+  }{%
+   \ifthenelse{\equal{\nvt@temp@s}{}}{}{%
+      \ClassError{novelette}{Bad value for scale, in \string\style.^^J%
+        Must be integer|decimal number. May have suffix t.^^J%
+        \nvt@XN}{\nvt@RXN}\nvt@bad%
+      }%
+  }%
+  \StrDel{#1,}{ }[\nvt@temp@s]%
+  \StrBehind{\nvt@temp@s}{bold=}[\nvt@temp@s]%
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
+  \nvt@okfalse%
+  \StrLeft{\nvt@temp@s}{1}[\nvt@temp@s]%
+  \ifthenelse{\equal{\nvt@temp@s}{}}{\nvt@oktrue}{}%
+  \ifthenelse{\equal{\nvt@temp@s}{t}}{\nvt@oktrue\nvt@boldweight}{}%
+  \ifthenelse{\equal{\nvt@temp@s}{f}}{\nvt@oktrue}{}%
+  \ifnvt@ok\else%
+    \ClassWarning{novelette}{Bad value for bold in \string\style.^^J%
+      Choose: bold=true bold=false (default false)^^J%
+      The bad value was ignored.}%
+  \fi%
+  #2%
+  \StrDel{#1,}{ }[\nvt@temp@s]%
+  \StrBehind{\nvt@temp@s}{align=}[\nvt@temp@s]%
+  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
+  \ifthenelse{\equal{\nvt@temp@s}{l}}{/hfill/strut}{}%
+  \ifodd\c@page\ifthenelse{\equal{\nvt@temp@s}{i}}{/hfill/strut}{}\fi%
+  \ifthenelse{\equal{\nvt@temp@s}{c}}{\end{center}}{}%
+  \par%
+  \endgroup%
+  \else%
+    \ClassError{novelette}{\string\style\space only allowed in frontmatter^^J%
+      or on part separator pages.^^J%
+      \nvt@XN}{\nvt@RXN}\nvt@bad%
+  \fi%
 }
 %%
 
@@ -200,10 +281,12 @@
 \DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\normalfont\rmfamily}
 \DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\normalfont\sffamily}
 \DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\normalfont\ttfamily}
-\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\normalfont\bfseries}
+\DeclareOldFontCommand{\bf}{}{}
 \DeclareOldFontCommand{\it}{\normalfont\itshape}{\normalfont\itshape}
 \DeclareOldFontCommand{\sl}{\normalfont\slshape}{\normalfont\slshape}
 \DeclareOldFontCommand{\sc}{\normalfont\scshape}{\normalfont\scshape}
+\LetLtxMacro\nvt@boldweight\bfseries\relax
+\def\bfseries{}
 \pagestyle{empty}
 \pagenumbering{arabic}
 \flushbottom
@@ -383,6 +466,55 @@
 %%
 
 
+%% BLOCK INDENTS (integer number of \normalindent)
+\newenvironment{pushright}[1][1]{%
+  \begingroup%
+  \IfInteger{#1}{\def\nvt@temp@n{#1}}{%
+    \def\nvt@temp@n{1}%
+    \ClassWarning{novelette}{Bad option for \string\begin{pushright}.^^J%
+      Option must be integer. Default 1 used.}%
+  }%
+  \setlength\leftskip{\nvt@temp@n\normalindent}%
+}{\endgroup}
+%%
+\newenvironment{pushleft}[1][1]{%
+  \begingroup%
+  \IfInteger{#1}{\def\nvt@temp@n{#1}}{%
+    \def\nvt@temp@n{1}%
+    \ClassWarning{novelette}{Bad option for \string\begin{pushleft}.^^J%
+      Option must be integer. Default 1 used.}%
+  }%
+  \setlength\rightskip{\nvt@temp@n\normalindent}%
+}{\endgroup}
+%%
+\newenvironment{pushcenter}[1][1]{%
+  \begingroup%
+  \IfInteger{#1}{\def\nvt@temp@n{#1}}{%
+    \def\nvt@temp@n{1}%
+    \ClassWarning{novelette}{Bad option for \string\begin{pushcenter}.^^J%
+      Option must be integer. Default 1 used.}%
+  }%
+  \setlength\leftskip{\nvt@temp@n\normalindent}%
+  \setlength\rightskip{\nvt@temp@n\normalindent}%
+}{\endgroup}
+%%
+
+
+%% TODO: limit to display pages %%%%%
+\DeclareDocumentCommand\upscale{O{1}+m}{%
+  \IfDecimal{#1}{}{%
+    \ClassError{novelette}{Bad optional argument to \string\upscale.^^J%
+      Must be integer|decimal number.^^J%
+      \@XN}{\@RXN}\nvt@bad%
+  }%
+  \begingroup%
+  \addfontfeature{ScaleAgain=#1}%
+  \setlength\baselineskip{#1\nvt@leading}#2\par%
+  \endgroup%
+}
+%%
+
+
 \ExplSyntaxOn
 %% \smcp{} and \textsc{} lowercase to small caps (Open Type):
 \DeclareDocumentCommand\smcp{+m}{% lowercase to small caps
@@ -420,7 +552,7 @@
 
 
 %% \lnum for lining numbers.
-\gdef\lnum#1{{\addfontfeature{Numbers=Lining}#1}}
+\gdef\lnum#1{{\addfontfeature{Numbers=ResetAll,Numbers=Lining}#1}}
 %%
 
 

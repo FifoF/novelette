@@ -6,7 +6,7 @@ Subject to revision.
 TEXT
 
 \text{fontsize=size,lines=integer,openings=code,footnotes=code}
-- OR -
+- OR - EXPERIMENTAL (not implemented):
 \text{emperline=number,lines=integer,openings=code,footnotes=code}
 
 fontsize
@@ -34,3 +34,4 @@ emperline
 	Number integer|decimal of em per line of main text.
 	Alternative to fontsize. You may not set both emperline and fontsize.
 	Typical emperline 28.
+	NOTE: Experimental. May or may not be implemented.

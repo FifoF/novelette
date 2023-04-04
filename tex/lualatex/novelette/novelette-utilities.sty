@@ -552,7 +552,8 @@
 
 
 %% \lnum for lining numbers.
-\gdef\lnum#1{{\addfontfeature{Numbers=ResetAll,Numbers=Lining}#1}}
+\gdef\lnum#1{{\addfontfeature{Numbers=ResetAll,%
+  Numbers=Lining,RawFeature={+case}}#1}}
 %%
 
 

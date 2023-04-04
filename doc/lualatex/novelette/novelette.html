@@ -127,16 +127,10 @@ the United States.</p>
 
 <a id="setlang"></a>
 <div>
-<h3>\setlang{<i>code</i>}</h3>
-<p>This command sets the language hyphenation pattern. Only one language
-may be chosen, from a <a href="#langlist">list</a>. It does not set anything
-other than hyphenation.</p>
-<p>You may write some text in another language; but if you do, it will be
-hyphenated according to the rules chosen by <i>\setlang</i>.</p>
-<p>The available languages all use Latin-based characters. This includes all
-well-known Western European languages, and some from Eastern Europe.
-Any language with non-Latin characters (Greek, Cyrillic), or stacked
-diacritical marks (Vietnamese), or right-to-left text, is not supported.</p>
+<h3>\setlang{<i>american</i>} <i>or</i>\setlang{british}</h3>
+<p>Novelette is designed for English. Due to slight spelling differences
+in American and British usage, there are slight differences in hyphenation.
+If you do not choose, a generic "english" will be used.</p>
 </div>
 
 <a id="title"></a>
@@ -277,7 +271,7 @@ the layout for a single page.</p>
 <p>The \text command accepts one or more comma-separated key=value pairs.</p>
 <p><b>fontsize=<i>size</i></b><br>Sets the size of main text font. Integer
 or decimal. Typical value near 11.5pt. Must have units pt (TeX points) or
-bp (PostScript points). Instead of fontsize, you may set emperline.</p>
+bp (PostScript points).</p>
 <p><b>lines=<i>integer</i></b><br>Number of lines in main text block, not
 counting header or footer. The default number depends on page sizes.</p>
 <p><b>openings=<i>code</i></b><br>Sets the style of "opening" environments,

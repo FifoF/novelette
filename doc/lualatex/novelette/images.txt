@@ -4,26 +4,43 @@ Subject to revision
 
 IMAGES
 
+Novelette images must be monochrome black/white png format, at 1-bit per pixel.
+The image must be stripped of private metadata such as EXIF. 
+
+If not in final mode, Novelette allows "fake" images. These are drawn, gray
+rectangles. Width is half the textwidth. Height is an integer, indicating
+the number of text lines that the fake image displaces. Using fake images
+allows you to "write now, do graphics later." The log Summary will tell you
+what real image sizes (pixels at 600ppi) correspond to fake images.
+
 
 IMAGE COMMAND
 
 Novelette does not use \includegraphics or any other standard TeX command
-for image insertion. It uses a custom \image command:
+for image insertion. It uses a custom \image command, real and fake:
 	\image[placement]{filename.png}
-Bottom of image is at text baseline.
+	\image[placement]{integer}
+Bottom of image, real or fake, is at text baseline.
 
-The placement may contain at most one of l,c,r,o,i for horizontal alignment.
-Default is c, except in the opening environment, where the default may be
-set by the \openings command in Preamble.
+If not specified, horizontal placement within an opening defaults to
+the \layout{openings=value}. It defaults to c (center) otherwise.
+
+If not specified, vertical placement defaults to h (here), as explained below.
+
+If specified, placement may contain a horizontal value, a vertical value,
+or both. Does not matter if space or comma is present. Error if conflicting
+values of the same type.
+
+The placement may contain at most one of l,c,r,o,i for horizontal alignment:
 	l -> left-aligned
 	c -> horizontally centered
 	r -> right-aligned
 	o -> outside aligned (left of verso, right of recto)
 	i -> inside aligned (right of verso, left of recto)
 
-The placement may contain at most one of h,t,b,p for insertion relative to
-the flow of main text. These are "similar but different" to standard LaTeX
-float definitions.
+The placement may contain at most one of h,t,b,p for vertical insertion
+relative to the flow of main text. These are "similar to, but different from"
+standard LaTeX float definitions:
 	h -> Place image "here" where the \image command is written, anywhere on
 		 the page. But if it cannot fit, move it to the top of the following
 		 page. Main text will flow to fill the lines left behind.
@@ -43,9 +60,8 @@ the \null command above|below the image, to create blank lines. Or, recreate
 the image with its own whitespace included.
 	There is no capability for a border. If you need one, draw it within the
 image itself.
-	There is no caption command. If necessary, simply write a line of text.
-A better approach is to draw the text within the image itself. Beware of
-using fine-detail fonts within low-resolution images.
+	There is no caption command. If necessary, draw the text within the
+image itself. Beware of using fine-detail fonts within low-resolution images.
 
 
 FAKE IMAGE
@@ -57,3 +73,36 @@ The \image command accepts an integer instead of a filename.
 It will place a gray rectangle occupying that many lines height. Width is
 half the text width.
 	Look in the log Summary, to see what actual image sizes are needed.
+
+
+IMAGE VALIDATION
+
+Fake images cannot be used in final mode. An error results.
+
+In all modes, Novelette verifies that any real image is monochrome png.
+If not, there will be an error in final mode, or a warning in other modes.
+
+In final mode, novelette also verifies that each image has been stripped
+of private metadata. If not, an error results.
+
+It is easy to ensure that an image will pass validation. Use your favorite
+graphics program, plus either ImageMagick or GraphicsMagick command line tool:
+	1. Create the image in any graphics program.
+	2. Within the graphics program, convert the image to black/white only.
+	   This might be accomplished using a "threshold" or "1-bit" method.
+	3. Export the image as png format. You do not need to worry about
+	   the details, because the next step will fix them for you.
+	4. Fix the png, to ensure it is 1-bit monochrome without private metadata:
+			ImageMagick:  magick mogrify -monochrome -strip filename.png
+			GraphicsMagick: gm mogrify -monochrome -strip filename.png
+
+
+PURPOSE OF VALIDATION
+
+Not all print services require validated images. Your own home printer, and
+office printers, do not care. But commercial printers prefer that either
+images be dumbed-down for dumbed-down printing machines, or spiced-up for
+spiced-up printing machines. When in doubt, dumbed-down works. That is what
+happens when the image is converted for validation. It basically says,
+"Print it however you wish." There is not much that can go wrong with
+1-bit monochrome. If you were working with color, that would be different.

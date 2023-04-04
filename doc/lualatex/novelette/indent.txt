@@ -1,0 +1,42 @@
+
+
+PLACEHOLDER
+Subject to revision.
+
+
+INDENTS
+
+Novelette automatically indents the first line of each paragraph, with these
+exceptions: Within centered text, or within an opening environment (no matter
+how it is aligned), no indent. Immediately following an opening environment,
+the first line of main text is not indented.
+
+The normal indent is 1.5em. This "looks ok."
+
+Commands \noindent and \indent can (usually) change this behavior, if written
+at the beginning a a paragraph.
+
+Under some circumstances, LaTeX does not obey \indent or \noindent.
+You can over-rule LaTex with \forceindent and \backindent. All these do is
+insert (or backtrack) a horizontal space. You may use more than one of them.
+
+If you wish to block indent an entire paragraph, use an environment:
+pushleft, pushright, pushcenter. The default indent is the normal indent.
+You may multiply by an integer value, as optional argument. Example:
+	\begin{pushright} % Push right means indent at left.
+	This block of text is indented by one normal indent, at its left.\par
+	You may use more than one paragraph. In each paragraph, its first line
+	of text may or may not be further indented, relative to the block.
+	That can be fixed using the commands shown above.\par
+	\end{pushright}
+	\begin{pushcenter}[2]
+    This block of text is indented by two normal indents, at both sides.\par
+	You may use more than one paragraph. The first lines may be further
+	intented. Note that this is not the same as centered text.\par
+	The pushcenter environment is especially well-suited to poetry,
+	if you are so inclined.\par
+	\end{pushcenter}
+
+Technical note: LaTeX has other methods for block indent. They use more code,
+because they must allow for various package possibilities. Since Novelette
+does not permit loading extra packages, lengthy code is unnecessary.

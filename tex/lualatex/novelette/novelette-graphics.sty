@@ -88,14 +88,14 @@
   \begingroup%
   \StrDel{#1}{ }[\nvt@temp@s]%
   \nvt@TestImagePlacement{\nvt@temp@s}%
-  \StrDel{#2}{ }[\nvt@temp@s]%
-  \def\nvt@imgfilename{\nvt@temp@s}%
+  \StrDel{#2}{ }[\nvt@imgfn]%
   \setlength\parindent{0pt}%
-  \nvt@TestImageFormat{\nvt@temp@s}%
+  \nvt@TestImageFormat{\nvt@imgfn}%
   \ifthenelse{\equal{\nvt@imgformat}{real}}{%
-    \nvt@ValidateImageFile{\nvt@temp@s}%
-    \@addtofilelist{\nvt@temp@s}\ProvidesFile{\nvt@temp@s}[png image]%
-    \saveimageresource attr{/Interpolate true } cropbox {\nvt@temp@s}%
+    \nvt@validate@image%
+    \@addtofilelist{\nvt@imgfn}%
+    \ProvidesFile{\nvt@imgfn}[png image]%
+    \saveimageresource attr{/Interpolate true } cropbox {\nvt@imgfn}%
     \sbox\nvt@imgbox{\useimageresource\the\lastsavedimageresourceindex}%
   }{%
     \sbox\nvt@imgbox{\nvt@gray{.5}%
@@ -164,17 +164,25 @@
 
 
 %% VALIDATE IMAGE
-\def\nvt@ValidateImageFile#1{%
+\def\nvt@validate@image{%
   \nvt@oktrue%
-    %%%%% Put validation routine here.
+  \edef\nvt@temp@s{\nvt@check@monochrome{\nvt@imgfn}}%
+  \ifthenelse{\equal{\nvt@temp@s}{false}}{\nvt@okfalse}{}%
+  \edef\nvt@temp@s{\nvt@getbytes{\nvt@imgfn}{e}{512}}%
+  \ifthenelse{\equal{\nvt@temp@s}{fail}}{\nvt@okfalse}{}%
   \ifnvt@ok\else%
-    \ifthenelse{\equal{\nvt@mode}{final}}{%
-       \ClassError{novelette}{Image #1 did not pass validation.^^J%
+    \ifthenelse{\equal{\nvt@mode}{final} \AND\NOT \equal{\nvt@intent}{none}}{%
+       \ClassError{novelette}{Image `\nvt@imgfn' did not pass validation.^^J%
          Must be processed to specific standards. See Novelette docs.^^J%
+         Using ImageMagick: magick mogrify -monochrome -strip \nvt@imgfn^^J%
+         Using GraphicsMagick: gm mogrify -monochrome -strip \nvt@imgfn^^J%
          \nvt@XN}{\nvt@RXN}\nvt@bad%
     }{%
-      \ClassWarning{novelette}{Image #1 did not pass validation.^^J%
-        This is a warning in draft mode, an error in final mode.}%
+      \ClassWarning{novelette}{Image `\nvt@imgfn' did not pass validation.^^J%
+         Must be processed to specific standards. See Novelette docs.^^J%
+         Using ImageMagick: magick mogrify -monochrome -strip \nvt@imgfn^^J%
+         Using GraphicsMagick: gm mogrify -monochrome -strip \nvt@imgfn^^J%
+         This warning may become an error in final mode.}%
     }%
   \fi%
 }
@@ -226,6 +234,94 @@
   \space\space Height @600ppi: \nvt@temp@n\space pixels. Midheight: half that.}
 }
 %%
+
+
+%% Lua code thanks to David Carlisle, tex.stackexchange.com:
+\def\nvt@check@monochrome#1{%
+  \directlua{
+    img2=img.scan{filename="#1"}
+    tex.print(tostring(img2.colordepth==1))
+  }%
+}
+%%
+
+
+%% Lua code thanks to Marcel Krüger, tex.stackexchange.com:
+% Read file bytes as plain text, for later parsing.
+% Output is comma-separated list of byte codes, decimal 0-255.
+% Returns -1 if requested start is more than file size.
+% Returns all bytes if requested number exceeds file size. Arguments:
+% filename, start byte number (0=from beginning, e=from end), number of bytes.
+\DeclareDocumentCommand\nvt@getbytes{mmm}{%
+  \ifthenelse{\equal{#2}{e}}{%
+    \long\edef\nvt@bytesare{%
+      \directlua{
+        inp = assert(io.open("#1", "rb"))
+        local e=inp:seek("end")
+        if #3>e+1 then
+          inp:seek("set")
+          local r=inp:read(e)
+          sep=""
+          for i,_ in string.bytes(r)
+          do
+          tex.sprint(sep)
+          sep=","
+          tex.sprint(i)
+          end
+        else
+          local b=e-2-math.min(e,#3)
+          local w=1+math.min(e,#3)
+          inp:seek("set",b)
+          local r=inp:read(w)
+          sep=""
+          for i,_ in string.bytes(r)
+          do
+          tex.sprint(sep)
+          sep=","
+          tex.sprint(i)
+          end
+        end
+      }%
+    }%
+  }{%
+    \long\edef\nvt@bytesare{%
+      \directlua{
+        inp = assert(io.open("#1", "rb"))
+        local e=inp:seek("end")
+        if #2>e then tex.sprint(-1) else
+          local w=math.min(#3,e-#2)
+          inp:seek("set",#2)
+          local r=inp:read(w)
+          sep=""
+          for i,_ in string.bytes(r)
+          do
+          tex.sprint(sep)
+          sep=","
+          tex.sprint(i)
+          end
+        end
+      }%
+    }%
+  }%
+  \IfSubStr{\nvt@bytesare}{\nvt@profile@string}{fail}{}%
+  \IfSubStr{\nvt@bytesare}{\nvt@packet@string}{fail}{}%
+}
+%%
+
+
+%% INSPECT PNG (not performed unless final mode)
+% If a png has private metadata (EXIF, XMP, etc.) then it is attached toward
+% the end of the file. Keyword `profile' or `packet' will appear. This routine
+% inspects the final 512 bytes (or entire file, if smaller) for the keywords.
+\def\nvt@profile@string{81,83,80,71,74,77,70}
+\def\nvt@packet@string{81,66,68,76,70,85}
+\def\nvt@inspect@png{%
+  \nvt@getbytes{\nvt@imgfn}{e}{512}%
+  \IfSubStr{\nvt@bytesare}{\nvt@profile@string}{fail}{}%
+  \IfSubStr{\nvt@bytesare}{\nvt@packet@string}{fail}{}%
+}
+%%
+
 
 
 %%

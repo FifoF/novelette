@@ -12,7 +12,10 @@ been tested, but are still subject to change. Thus, no documentation yet.
 Power users can get a glimpse of what Novelette will do, by looking into
 the code.
 
-Expected release late March 2023.
+Expected release late March 2023 (moved to mid-April).
+
+UPDATE, April 3, 2023: Getting closer. Will work some more on the
+Swainson fonts, documentation, minor tweaks.
 
 UPDATE, March 30, 2023: Doing tweaks. Code works, needs finishing touches.
 Still waiting for my system to install TeXlive 2023.

@@ -45,35 +45,12 @@
 %%
 
 
-%% FIXMETA (utility macro)
-\def\nvt@fixmeta#1{% Converts things such as curly quotes to straight, etc.
-  \StrSubstitute{#1}{``}{"}[\nvt@temp@s]%
-  \StrSubstitute{\nvt@temp@s}{''}{"}[\nvt@temp@s]%
-  \StrSubstitute{\nvt@temp@s}{`}{'}[\nvt@temp@s]%
-  \StrSubstitute{\nvt@temp@s}{‘}{'}[\nvt@temp@s]%
-  \StrSubstitute{\nvt@temp@s}{’}{'}[\nvt@temp@s]%
-  \StrSubstitute{\nvt@temp@s}{“}{"}[\nvt@temp@s]%
-  \StrSubstitute{\nvt@temp@s}{”}{"}[\nvt@temp@s]%
-  \StrSubstitute{\nvt@temp@s}{^^^^00a0}{ }[\nvt@temp@s]% Nonbreaking space.
-  \StrSubstitute{\nvt@temp@s}{~}{ }[\nvt@temp@s]% TeX nonbreaking space.
-  \StrSubstitute{\nvt@temp@s}{^^^^00ad}{}[\nvt@temp@s]% Soft hyphen. Remove it.
-  \StrSubstitute{\nvt@temp@s}{---}{-}[\nvt@temp@s]%
-  \StrSubstitute{\nvt@temp@s}{--}{-}[\nvt@temp@s]%
-  \StrSubstitute{\nvt@temp@s}{‐}{-}[\nvt@temp@s]% These next few lines convert various
-  \StrSubstitute{\nvt@temp@s}{‑}{-}[\nvt@temp@s]% kinds of dashes to hyphen.
-  \StrSubstitute{\nvt@temp@s}{‒}{-}[\nvt@temp@s]% But on most terminals, the dashes
-  \StrSubstitute{\nvt@temp@s}{–}{-}[\nvt@temp@s]% all look like the same character,
-  \StrSubstitute{\nvt@temp@s}{—}{-}[\nvt@temp@s]% due to monospace terminal font.
-  \StrSubstitute{\nvt@temp@s}{…}{...}[\nvt@temp@s]%
-  \nvt@temp@s%
-}
-%%
-
-
 %% PROCESS METADATA
 \def\nvt@process@metadata{
   \ifdefined\nvt@title
-    \xdef\@title{\nvt@title}
+    \StrSubstitute{\nvt@title}{‘}{'}[\nvt@temp@s]%
+    \StrSubstitute{\nvt@temp@s}{’}{'}[\nvt@temp@s]%
+    \xdef\@title{\nvt@temp@s}
     \xdef\thetitle{\nvt@title}
   \else
     \gdef\nvt@intent{none}
@@ -82,7 +59,9 @@
     \gdef\thetitle{Untitled Document}
   \fi
   \ifdefined\nvt@author
-    \xdef\@author{\nvt@author}
+    \StrSubstitute{\nvt@author}{‘}{'}[\nvt@temp@s]%
+    \StrSubstitute{\nvt@temp@s}{’}{'}[\nvt@temp@s]%
+    \xdef\@author{\nvt@temp@s}
     \xdef\theauthor{\nvt@author}
   \else
     \gdef\nvt@intent{none}

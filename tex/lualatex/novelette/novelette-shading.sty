@@ -15,7 +15,7 @@
 %%
 
 
-%% LABEL MODE, SHADE MARGINS, SHADE LINES, CHECK SIDEBEARINGS
+%% LABEL MODE, SHADE MARGINS, SHADE LINES
 % Novelette provides several methods for ensuring that your printed content
 % is aligned with your page layout.
 %   In \mode{shade}, the four margins are shaded gray. In \mode{align}
@@ -23,11 +23,7 @@
 % top of the shade at baseline, and the bottom of shade at text descender.
 % Both of these modes also automatically invoke draft mode.
 %   Novelette allows a small amount of padding at the side margins, so that
-% protruding text does not infringe the margins. Using Lua, it is possible
-% to detect whether particular font characters have excessive protrusion.
-% That may occur for letters such as "J" at left, "f" at right, and is more
-% likely when using Italics. Although this file and the associated *.lua
-% files contain the necessary code, it is not yet enabled (needs more testing).
+% protruding text does not infringe the margins.
 %   In any mode except final, each page is labeled by mode, the title changes,
 % and the PDF metadata will be modified to exclude PDF/X conformance. The page
 % labels are provided here. Novelette automatically switches out of final mode
@@ -218,26 +214,6 @@
 }
 %%
 
-
-%% LUA SIDEBEARINGS (not yet enabled)
-\def\lsidebearing#1{.1em} % Testing.
-\def\rsidebearing#1{.1em} % Testing.
-%  \directlua{require "novelette-sidebearings"}
-%  \def\lsidebearing#1{\directlua{packagedata.sidebearings.left [[#1]]}}
-%  \def\rsidebearing#1{\directlua{packagedata.sidebearings.right [[#1]]}}
-\def\nvt@getlsb#1{
-  \setlength\nvt@temp@l{\lsidebearing{#1}}
-  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@temp@l}{\strip@pt\nvt@leading}
-  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{3}
-  #1=\nvt@temp@n, %%%%% Really comma?
-}
-\def\nvt@getrsb#1{
-  \setlength\nvt@temp@l{\rsidebearing{#1}}
-  \FPdiv{\nvt@temp@n}{\strip@pt\nvt@temp@l}{\strip@pt\nvt@leading}
-  \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{3}
-  #1=\nvt@temp@n, %%%%% Really comma?
-}
-%%
 
 
 %%

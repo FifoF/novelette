@@ -65,8 +65,8 @@
       \nvt@XN}{\nvt@RXN}\nvt@bad%
   \fi%
   \cleartorecto%
-  \versohead{}
-  \rectohead{}
+  \versohead{\allsmcp{\thetitle}}
+  \rectohead{\textit{\theauthor}}
   \global\nvt@frontmatterfalse%
   \global\nvt@mainmattertrue%
   \pagenumbering{arabic}%
@@ -77,6 +77,68 @@
   \cleartorecto%
   \versohead{}%
   \rectohead{}%
+}
+%%
+
+
+%% FAKE FRONT MATTER (six-page placeholder}
+\def\fakefrontmatterpages{
+  \gdef\nvt@usingfakefront{true}
+  \thispagestyle{empty} % half-title, page i.
+  \null\null\null\null\null\null
+  \begin{center}
+  {\addfontfeature{Letters=SmallCaps,Scale=1.6}My Book}\par
+  \end{center}
+  \blankpage % blank, page ii.
+  \thispagestyle{empty} % title, page iii.
+  \null\null\null\null\null
+  \begin{center}
+  {\addfontfeature{Letters=SmallCaps,Scale=3}My Book}\par
+  \null\null
+  {\addfontfeature{Scale=1.4}read it and weep}\par
+  \null\null
+  \rule[.5\nvt@Xht-1pt]{.2\textwidth}{2pt}
+  A NOVEL
+  \rule[.5\nvt@Xht-1pt]{.2\textwidth}{2pt}\par
+  \null\null
+  {\addfontfeature{Scale=1.6}Wanna B. Famous}\par
+  \vfill
+  {\addfontfeature{Scale=1.2}Independently Published}\par
+  \end{center}
+  \clearpage
+  \thispagestyle{empty} % copyright, page iv.
+  \null
+  \vfil
+  \begin{center}
+  \begingroup
+  \addfontfeature{Numbers=ResetAll,Numbers=Lining}
+  My Book : read it and weep\\
+  / Wanna B. Famous.\par
+  Copyright ©\the\year\space Myreal Name. All Rights Reserved.\par
+  Independently Published by the Copyright Holder\\
+  Mycity, Mynation\par
+  http://www.example.com/wannabfamous/books\par
+  This is a work of fiction.\\
+  All characters and events are imaginary.\\
+  Resemblance to any person, living or dead, is coincidental.\par
+  ISBN 123-45-6789012-3\par
+  \endgroup
+  \end{center}
+  \vfil
+  \null
+  \clearpage
+  \thispagestyle{empty} % visual separator, page v.
+  \null
+  \vfil
+  \begin{center}
+  \begingroup
+  \addfontfeature{Scale=1.2}
+  \textit{Give them Hell}\par
+  \endgroup
+  \end{center}
+  \vfil
+  \null
+  \blankpage % blank, page vi.
 }
 %%
 
@@ -223,13 +285,15 @@
     \gdef\nvt@signoffmsg{Processed with lualatex by novelette script.}%
   \else%
     \long\gdef\nvt@signoffmsg{Processed with lualatex.^^J%
-      You may get better results by processing via novelette script.^^J%
-      See Novelette documentation for explanation.}%
+%%%%%      You may get better results by processing via novelette script.^^J%
+%%%%%      See Novelette documentation for explanation.%
+    }%
   \fi%
 }{%
     \long\gdef\nvt@signoffmsg{Processed with lualatex.^^J%
-      You may get better results by processing via novelette script.^^J%
-      See Novelette documentation for explanation.}%
+%%%%%      You may get better results by processing via novelette script.^^J%
+%%%%%      See Novelette documentation for explanation.%
+    }%
 }
 %%
 
@@ -310,6 +374,12 @@
 
 %% \stake is like \strut, but does not occupy much vertical space.
 \gdef\stake{\rule{0pt}{1pt}}
+%%
+
+
+%% Unicode character. Four hex digits, uppercase A-F, no following space.
+%% Examples: c\uni{0061}t -> cat  d\uni{006F}g -> dog
+\def\uni#1{\char"#1}
 %%
 
 
@@ -398,6 +468,15 @@
 }
 %%
 
+
+%%
+\def\blankpage{%
+  \clearpage%
+  \thispagestyle{empty}%
+  \null%
+  \clearpage%
+}
+%%
 
 
 \def\sups#1{%

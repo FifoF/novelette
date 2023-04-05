@@ -466,36 +466,38 @@
 %%
 
 
-%% BLOCK INDENTS (integer number of \normalindent)
-\newenvironment{pushright}[1][1]{%
+%% BLOCK INDENT (option is integer number of \normalindent, [L,R])
+\newenvironment{blockindent}[1][1]{%
   \begingroup%
-  \IfInteger{#1}{\def\nvt@temp@n{#1}}{%
-    \def\nvt@temp@n{1}%
-    \ClassWarning{novelette}{Bad option for \string\begin{pushright}.^^J%
-      Option must be integer. Default 1 used.}%
+  \StrDel{#1}{ }[\nvt@temp@s]%
+  \nvt@oktrue%
+  \IfInteger{\nvt@temp@s}{
+    \FPdiv{\nvt@temp@d}{\strip@pt\textwidth}{\strip@pt\normalindent}%
+    \FPiflt{\nvt@temp@s}{\nvt@temp@d}%
+      \setlength\leftskip{\nvt@temp@s\normalindent}%
+    \else\nvt@okfalse\fi%
+  }{%
+    \StrBefore{\nvt@temp@s}{,}[\nvt@temp@n]%
+    \IfInteger{\nvt@temp@n}{%
+      \FPiflt{\nvt@temp@n}{\nvt@temp@d}%
+        \setlength\leftskip{\nvt@temp@n\normalindent}%
+      \else\nvt@okfalse\fi%
+    }{\nvt@okfalse}%
+    \StrBehind{\nvt@temp@s}{,}[\nvt@temp@n]%
+    \IfInteger{\nvt@temp@n}{%
+      \FPiflt{\nvt@temp@n}{\nvt@temp@d}%
+        \setlength\rightskip{\nvt@temp@n\normalindent}%
+      \else\nvt@okfalse\fi%
+    }{\nvt@okfalse}%
   }%
-  \setlength\leftskip{\nvt@temp@n\normalindent}%
-}{\endgroup}
-%%
-\newenvironment{pushleft}[1][1]{%
-  \begingroup%
-  \IfInteger{#1}{\def\nvt@temp@n{#1}}{%
-    \def\nvt@temp@n{1}%
-    \ClassWarning{novelette}{Bad option for \string\begin{pushleft}.^^J%
-      Option must be integer. Default 1 used.}%
-  }%
-  \setlength\rightskip{\nvt@temp@n\normalindent}%
-}{\endgroup}
-%%
-\newenvironment{pushcenter}[1][1]{%
-  \begingroup%
-  \IfInteger{#1}{\def\nvt@temp@n{#1}}{%
-    \def\nvt@temp@n{1}%
-    \ClassWarning{novelette}{Bad option for \string\begin{pushcenter}.^^J%
-      Option must be integer. Default 1 used.}%
-  }%
-  \setlength\leftskip{\nvt@temp@n\normalindent}%
-  \setlength\rightskip{\nvt@temp@n\normalindent}%
+  \ifnvt@ok\else%
+    \ClassError{novelette}{Bad option for \string\begin{blockindent}.^^J%
+      Format: \string\begin{blockindent}[L,R]^^J%
+      L is left indent, integer >=0 of normal paragraph indent.^^J%
+      R is right indent, integer >=0 of normal paragraph indent.^^J%
+      May use L alone, for only left indent.^^J%
+      \@XN}{\@RXN}\nvt@bad%
+  \fi%
 }{\endgroup}
 %%
 

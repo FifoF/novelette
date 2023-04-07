@@ -14,6 +14,14 @@ the code.
 
 Expected release late March 2023 (moved to mid-April).
 
+
+UPDATE, April 7, 2023: Getting closer. Re-activated language support for
+more Western European languages. No big issues remain, although there may
+be bugs lurking in some of the settings (not to my knowledge). Still need
+to work on Swainson fonts. Still need to work on documentation. Need to
+decide what to leave in, what to take out. Still wating for 2023 binaries
+on my platform (I cannot get them from TUG or build them myself).
+
 UPDATE, April 3, 2023: Getting closer. Will work some more on the
 Swainson fonts, documentation, minor tweaks.
 

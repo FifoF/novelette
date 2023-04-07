@@ -38,7 +38,6 @@
 %%
 
 
-
 %% Modified code from package `luahyphenrules'.
 %% Copyright (C) 2016-2020 Javier Bezos.
 %% Also see file `babel.dtx'.
@@ -186,27 +185,99 @@
 %% End code modified from `luahyphenrules.sty'.
 
 
-%% Maybe other languages in the future. Maybe not!
-\def\nvt@langlist{:nohyphenation: :english: :usenglishmax: :british: %
-  :american: %
+%%
+\DeclareDocumentCommand\setlang{smO{}}{
+  \StrDel{#2}{ }[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{default}}{\gdef\nvt@lang{english}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{xx}}{\gdef\nvt@lang{nohyphenation}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{da}}{\gdef\nvt@lang{danish}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{nl}}{\gdef\nvt@lang{dutch}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{es}}{\gdef\nvt@lang{spanish}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{it}}{\gdef\nvt@lang{italian}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{ca}}{\gdef\nvt@lang{catalan}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{oc}}{\gdef\nvt@lang{occitan}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{pt}}{\gdef\nvt@lang{portuguese}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{eu}}{\gdef\nvt@lang{basque}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{ga}}{\gdef\nvt@lang{irish}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{is}}{\gdef\nvt@lang{icelandic}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{cy}}{\gdef\nvt@lang{welsh}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{sv}}{\gdef\nvt@lang{swedish}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{fi}}{\gdef\nvt@lang{finnish}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{nb} \OR \equal{\nvt@temp@s}{no-NB} %
+    \OR \equal{\nvt@temp@s}{no-nb}}{\gdef\nvt@lang{bokmal}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{nn} \OR \equal{\nvt@temp@s}{no-NN} \OR %
+    \equal{\nvt@temp@s}{no-nn}}{\gdef\nvt@lang{nynorsk}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{en} \OR \equal{\nvt@temp@s}{en-GB} \OR %
+    \equal{\nvt@temp@s}{en-gb}}{\gdef\nvt@lang{british}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{en-US} \OR \equal{\nvt@temp@s}{en-us}}{
+    \gdef\nvt@lang{american}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{de} \OR \equal{\nvt@temp@s}{de-DE} \OR %
+    \equal{\nvt@temp@s}{de-de}}{\gdef\nvt@lang{german}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{de-CH} \OR \equal{\nvt@temp@s}{de-ch}}{
+    \gdef\nvt@lang{swissgerman}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{fr} \OR \equal{\nvt@temp@s}{fr-FR} \OR %
+    \equal{\nvt@temp@s}{fr-fr}}{\gdef\nvt@lang{french}}{}
+  \ifthenelse{\equal{\nvt@temp@s}{fr-CH} \OR \equal{\nvt@temp@s}{fr-ch}}{
+    \gdef\nvt@lang{swissfrench}}{}
+  \ifdefined\nvt@lang
+    \xdef\nvt@setlang{\nvt@temp@s}
+    \edef\nvt@temp@d{\nvt@lang}
+    \ifthenelse{\equal{\nvt@temp@d}{german}}{
+      \IfBooleanTF{#1}{
+       \gdef\nvt@lang{german-x-latest}
+      }{
+        \gdef\nvt@lang{ngerman-x-latest}
+      }
+    }{}
+    \ifthenelse{\equal{\nvt@temp@d}{french}}{
+      \directlua{require "novelette-frpunct"}
+      \IfBooleanTF{#1}{
+        \lccode"2019=\z@
+        \directlua{nvtfrpunct.deactivate_french_punct()}
+      }{
+        \lccode"2019="2019
+        \ifthenelse{\equal{#3}{-g}}{
+          \directlua{nvtfrpunct.activate_french_punct(false, false)}
+        }{
+          \directlua{nvtfrpunct.activate_french_punct(false, true)}
+        }
+      }
+    }{}
+    \ifthenelse{\equal{\nvt@temp@d}{swissfrench}}{
+      \directlua{require "novelette-frpunct"}
+      \IfBooleanTF{#1}{
+        \lccode"2019=\z@
+        \directlua{nvtfrpunct.deactivate_french_punct()}
+      }{
+        \lccode"2019="2019
+        \ifthenelse{\equal{#3}{-g}}{
+          \directlua{nvtfrpunct.activate_french_punct(true, false)}
+        }{
+          \directlua{nvtfrpunct.activate_french_punct(true, true)}
+        }
+      }
+    }{}
+  \else
+    \ClassWarning{novelette}{Unavailable language code \nvt@temp@s.^^J%
+      Using default hyphenation instead. You need to fix this.}
+    \gdef\nvt@lang{english}
+    \gdef\nvt@setlang{default}
+  \fi
 }
 %%
 
-
-%%
-\def\nvt@lang{english}
-\newcommand\setlang[1]{
-  \StrDel{#1}{ }[\nvt@temp@s]
-  \xdef\nvt@lang{\nvt@temp@s}
-  \IfSubStr{\nvt@langlist}{:\nvt@temp@s:}{}{
-    \ClassWarning{novelette}{Language #1 not on approved list.}
-  }
-}
-%%
 
 
 %% AtEndPreamble:
-\def\nvt@process@language{\HyphenRules{\nvt@lang}}
+\def\nvt@process@language{
+  \ifdefined\nvt@lang\else\gdef\nvt@setlang{default}\gdef\nvt@lang{english}\fi
+  \HyphenRules{\nvt@lang}
+  \ifthenelse{\equal{\nvt@lang}{british} \OR \equal{\nvt@lang}{american}}{
+    \nonfrenchspacing
+  }{
+    \frenchspacing
+  }
+}
 %%
 
 

@@ -296,7 +296,7 @@
   \typeout{\string\producer{\nvt@producer}}
   \typeout{\string\intent{\nvt@intent}}
   \typeout{\string\mode{\nvt@mode}}
-  \typeout{\string\setlang{\nvt@lang}}
+  \typeout{\string\setlang{\nvt@setlang}}
   \typeout{\log@trimsize}
   \typeout{\log@sheetfeed}
   \typeout{\log@margins}

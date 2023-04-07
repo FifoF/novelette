@@ -4,30 +4,62 @@ Subject to change
 
 LANGUAGE
 
-After much thought, Novelette has been limited to the English language. (NOTE)
-In Preamble, write one of these:
-	\setlang{american}
-	\setlang{british}
-	\setlang{english}
-The only difference involves adjustments to hyphenation patterns, due to
-slight spelling differences in American and British English.
+Novelette uses its own method for setting language and options:
+	\setlang{code}[option] -OR- \setlang*{code}[option]
+Notice that the command is NOT \setlanguage or \language or anything else.
 
-Note that the language only selects hypenation patterns. It is not a spelling
-or grammar check. It does not automatically formate dates and times, or
-anything else.
+The language code must be selected from a limited number of choices:
+	da -> Danish.
+	is -> Icelandic.
+	nl -> Dutch.
+	es -> Spanish.
+	pt -> Portuguese.
+	it -> Italian.
+	ca -> Catalan.
+	oc -> Occitan.
+	fi -> Finnish.
+	sv -> Swedish.
+	ga -> Gaelic (Irish).
+	cy -> Welsh.
+	eu -> Basque.
+	fr (or) fr-FR -> French, except Swiss.
+	fr-CH -> Swiss French.
+	de (or) de-DE -> German, except Swiss.
+	de-CH -> Swiss German.
+	en (or) en-GB -> British English.
+	en-US -> American English
+	no (or) nb -> Norwegian Bokmal.
+    nn -> Norwegian Nynorsk.
+	xx -> No hyphenation.
 
-If you do not set either "american" or "british", then generic "english"
-will be used. It is better to specifically request american or british.
-Note that these are all lowercase,
+If \setlang is not specified, the default is an old version of English.
+There will be a warning message. If you actually intend to use English, then
+be sure to request either en-GB or en-US. 
 
-Why not more languages? To keep it as simple as possible, Novelette does not
-include the code needed for internationalization. The problem is that TeX
-likes to use some keyboard characters in a manner that has differenct meanings
-in different languages. 
+The language selection does NOT perform spelling or grammar check. It does NOT
+transform words, dates, times, or currency. All it does is apply hyphenation
+rules, and (fr and fr-CH) some spacing.
 
-Your writing may include words or short phrases in another language. They will
-be treated as if they were (mis-spelled) English words.
+Since hyphenation for Canadian French is the same as for France, there is
+no separate setting for Canadian. Similarly for Mexico vs. Spain, and most
+oher languages.
 
+The command may be written with or without an asterisk (star). For most
+languages, there is no difference between \setlang and \setlang*.
 
-NOTE: Maybe not limited. I will think about it some more. Definitely limited to
-Western European languages, for technical reasons.
+In the case of German, \setlang applies post-1996 hyphenation.
+\setlang* uses the older (1901) rules.
+
+In the case of French (fr), \setlang adds space before : ; ! ? punctuation.
+It also adds space after opening guillemet, and before closing guillemet.
+\setlang* does not add spaces. It might be useful if you already
+typed the spaces.
+
+Swiss French (fr-CH) is like French (fr), except that space is not added
+before the : colon character.
+
+The optional argument is only used for French and Swiss French.
+If [-g] is provided as option, then no space is added before or after
+guillemets.
+
+If you wish to change the style of footnotes, see the \text command.

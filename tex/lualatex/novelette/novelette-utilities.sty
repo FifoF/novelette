@@ -221,46 +221,6 @@
 %%
 
 
-%% For convenience, code from `article' class.
-%% ----------------------------------------------------------------------------
-% Environments verse, quotation, and quote are contained in `article' class.
-% They are not very useful in `novelette', but are made available because they
-% are often mentioned by others.
-\newenvironment{verse}{%
-  \let\\\@centercr
-  \list{}{%
-    \itemsep{0pt} %%%%%
-    \itemindent -\parindent%
-    \listparindent\itemindent
-    \rightmargin \leftmargin
-    \advance\leftmargin \parindent%
-  }%
-  \item\relax%
-}{%
-  \endlist%
-}
-\newenvironment{quotation}{%
-  \list{}{%
-    \listparindent \parindent%
-    \itemindent \listparindent
-    \rightmargin \leftmargin
-    \parsep{0pt}%
-  }%
-  \item\relax%
-}{%
-  \endlist%
-}
-\newenvironment{quote}{%
-  \list{}{%
-    \rightmargin\leftmargin%
-  }%
-  \item\relax%
-}{%
-  \endlist%
-}
-%%
-
-
 %% Write straight quotes that TeX will not auto-convert to curly quotes:
 \gdef\straightquote{{\addfontfeature{Ligatures=ResetAll}'}}
 \gdef\straightdblquote{{\addfontfeature{Ligatures=ResetAll}"}}
@@ -334,39 +294,16 @@
 %%
 
 
-\ExplSyntaxOn
-%% \smcp{} and \textsc{} lowercase to small caps (Open Type):
+%% small caps
 \DeclareDocumentCommand\smcp{+m}{% lowercase to small caps
   {\addfontfeature{Letters=SmallCaps}#1}%
 }
-%% \capsmcp{} uppercase to small caps (OpenType c2sc):
-\DeclareDocumentCommand\capsmcp{+m}{% uppercase to small caps
-  \fontspec_if_feature:nTF{c2sc}{%
-    {\addfontfeature{Letters=UppercaseSmallCaps}#1}%
-  }{%
-    \fontspec_if_feature:nTF{smcp}{%
-      {\addfontfeature{Letters=SmallCaps}\MakeLowercase{#1}}%
-    }{%
-      #1%
-    }%
-  }%
-}
-%%
 \DeclareDocumentCommand\allsmcp{+m}{% uppercase+lowercase to small caps
-  \fontspec_if_feature:nTF{c2sc}{%
-    {\addfontfeature{Letters=UppercaseSmallCaps,Letters=SmallCaps}#1}%
-  }{%
-    \fontspec_if_feature:nTF{smcp}{%
-      {\addfontfeature{Letters=SmallCaps}\MakeLowercase{#1}}%
-    }{%
-      #1%
-    }%
-  }%
+  {\addfontfeature{Letters=UppercaseSmallCaps,Letters=SmallCaps}#1}%
 }
 \let\textsc\smcp\relax % unified
 \let\oldscshape\scshape\relax % unified
 \let\scshape\smcp\relax % unified
-\ExplSyntaxOff
 %%
 
 
@@ -389,9 +326,11 @@
 
 
 %% Fake medium caps, if smcp available:
-\DeclareDocumentCommand\medcap{m}{%
-  {\addfontfeature{ScaleAgain=1.18,FakeStretch=0.9}\allsmcp{#1}}%
+\DeclareDocumentCommand\medcap{+m}{%
+  {\addfontfeature{Letters=UppercaseSmallCaps,ScaleAgain=1.18,%
+    FakeStretch=0.9}#1}%
 }
+\LetLtxMacro\medcaps\medcap\relax
 %%
 
 

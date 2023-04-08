@@ -45,9 +45,8 @@
 \def\DefineNamedColor#1#2#3#4{\nvt@colormsg}
 \def\normalcolor{}
 \DeclareDocumentCommand\includegraphics{sO{}m}{%
-  \ClassError{novelette}{You cannot use \string\includegraphics.^^J%
-    Novelette has its own \string\image\space command.^^J%
-    \@XN}{\@RXN}\nvt@bad%
+  \nvt@error{You cannot use \string\includegraphics.^^J%
+    Novelette has its own \string\image\space command.}%
 }
 %%
 
@@ -156,8 +155,7 @@
   \fi%
   \ifnvt@ok\else%
     \setlength\nvt@intht{2\nvt@leading}%
-    \ClassError{novelette}{Bad value in \string\image, page \thepage.^^J%
-      \nvt@XN}{\nvt@RXN}\nvt@bad%
+    \nvt@error{Bad value in \string\image, page \thepage.}%
   \fi%
 }
 %%
@@ -172,11 +170,10 @@
   \ifthenelse{\equal{\nvt@temp@s}{fail}}{\nvt@okfalse}{}%
   \ifnvt@ok\else%
     \ifthenelse{\equal{\nvt@mode}{final} \AND\NOT \equal{\nvt@intent}{none}}{%
-       \ClassError{novelette}{Image `\nvt@imgfn' did not pass validation.^^J%
+       \nvt@error{Image `\nvt@imgfn' did not pass validation.^^J%
          Must be processed to specific standards. See Novelette docs.^^J%
          Using ImageMagick: magick mogrify -monochrome -strip \nvt@imgfn^^J%
-         Using GraphicsMagick: gm mogrify -monochrome -strip \nvt@imgfn^^J%
-         \nvt@XN}{\nvt@RXN}\nvt@bad%
+         Using GraphicsMagick: gm mogrify -monochrome -strip \nvt@imgfn}%
     }{%
       \ClassWarning{novelette}{Image `\nvt@imgfn' did not pass validation.^^J%
          Must be processed to specific standards. See Novelette docs.^^J%

@@ -5,9 +5,7 @@ Subject to revision.
 
 TEXT
 
-\text{fontsize=size,lines=integer,openings=code,footnotes=code}
-- OR - EXPERIMENTAL (not implemented):
-\text{emperline=number,lines=integer,openings=code,footnotes=code}
+\text{fontsize=size,lines=integer,openings=code}
 
 fontsize
 	Size of main text, with units pt or bp. May be integer or decimal.
@@ -23,15 +21,3 @@ lines
 openings
 	Code is one of l,c,r,o,i. Default c.
 	Aligns items in opening environment: left, center, right, outside, inside.
-
-footnotes
-	Code is up to three letters.
-	l -> Aligns separator to left (default is centered).
-	i -> Indent first line of each footnote (default is no indent).
-	n -> Numerical footnote markers (default is literary).
-
-emperline
-	Number integer|decimal of em per line of main text.
-	Alternative to fontsize. You may not set both emperline and fontsize.
-	Typical emperline 28.
-	NOTE: Experimental. May or may not be implemented.

@@ -38,6 +38,10 @@
 %%
 
 
+      \directlua{require "novelette-frpunct"}
+
+
+
 %% Modified code from package `luahyphenrules'.
 %% Copyright (C) 2016-2020 Javier Bezos.
 %% Also see file `babel.dtx'.
@@ -230,7 +234,7 @@
       }
     }{}
     \ifthenelse{\equal{\nvt@temp@d}{french}}{
-      \directlua{require "novelette-frpunct"}
+%      \directlua{require "novelette-frpunct"}
       \IfBooleanTF{#1}{
         \lccode"2019=\z@
         \directlua{nvtfrpunct.deactivate_french_punct()}
@@ -244,7 +248,7 @@
       }
     }{}
     \ifthenelse{\equal{\nvt@temp@d}{swissfrench}}{
-      \directlua{require "novelette-frpunct"}
+%      \directlua{require "novelette-frpunct"}
       \IfBooleanTF{#1}{
         \lccode"2019=\z@
         \directlua{nvtfrpunct.deactivate_french_punct()}

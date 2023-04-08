@@ -127,10 +127,29 @@ the United States.</p>
 
 <a id="setlang"></a>
 <div>
-<h3>\setlang{<i>american</i>} <i>or</i>\setlang{british}</h3>
-<p>Novelette is designed for English. Due to slight spelling differences
-in American and British usage, there are slight differences in hyphenation.
-If you do not choose, a generic "english" will be used.</p>
+<h3>\setlang{<i>code</i>}[<i>option<i>] <i>-or-</i>\setlang*{<i>code</i>}[<i>option</i>]</h3>
+<p>The <i>code</i> is a language code, limited to Western European languages.
+The reason for the limitation is that many other world languages require support that
+would conflict with Novelette layout methods.</p>
+<p>Available codes: <i>da</i> (Danish), <i>nl</i> (Dutch), <i>is</i> (Icelandic),
+<i>ga</i> (An Caighdeán Gaelic), <i>nb</i> (Norwegian Bokmål), <i>nn</i> (Norwegian Nynorsk),
+<i>sv</i> (Swedish), <i>fi</i> (Finnish), <i>pt</i> (Portuguese), <i>es</i> (Spanish), <i>eu</i> (Basque),
+<i>ca</i> (Catalan), <i>oc</i> (Occitan), <i>fr</i> (French, France), <i>fr-CH</i> (French, Swiss),
+<i>de</i> (German, Germany/Austria), <i>de-CH</i> (German, Swiss), <i>it</i> (Italian),
+<i>en</i> (English, British), <i>en-US</i> (English, USA), <i>xx</i> (No hyphenation).</p>
+<p>For most languages, there is no difference between the unstarred <i>\setlang</i>
+and the starred <i>\setlang*</i> commands. Exceptions:</p>
+<p>In German (de), the unstarred command uses contemporary (post-1996) rules.
+The starred command uses older (1901) rules.</p>
+<p>In French (fr and fr-CH) the unstarred command adds extra space before the semicolon,
+exclamation, and question marks. French (fr, but not fr-CH) also adds space before
+the colon. Both (fr and fr-CH) add space after opening guillemet, and before
+closing guillemet. The starred command does not add any of these spaces; this is useful
+if you are importing text that already has space characters there.</p>
+<p>There is only one option <i>[-g]</i> and it is only effective for French (fr and fr-CH).
+It does not add guillemet space, regardless of starred or unstarred command.</p>
+<p>The setting does not perform spelling or grammar check, does not style time or date,
+and does not suggest words. You must do that yourself.</p>
 </div>
 
 <a id="title"></a>
@@ -255,7 +274,7 @@ The headgap is ignored if style has no header.</p>
 between main text and footer. Ignored if style has no footer.</p>
 <p><b>scale=<i>number</i></b><br>
 Sets the scale of header/footer text, relative to size of main font.
-Acceptable range is 0.75 to 1, but must evaluate to at least 8.03pt.</p>
+Acceptable range is 0.75 to 1, but must evaluate to at least 7bp.</p>
 <p>Note: If you use a header/footer, there will be pages where nothing
 is printed in the header/footer. Nevertheless, the space for header/footer
 is reserved; main text does not vertically expand to fill the empty
@@ -278,11 +297,6 @@ counting header or footer. The default number depends on page sizes.</p>
 which are used at places such as the start of chapters. The code may be
 one of l c r o i for left, center, right, outside, inside alignment of items
 in the opening.</p>
-<p><b>footnotes=<i>code</i></b><br>Sets the style of footnotes. Default style
-uses literary markers (asterisk, dagger, etc.), first line of each footnote
-is not indented, line separating footnotes from main text is centered.
-Code n sets markers to numerals. Code i indents first line of each footnote.
-Code l aligns the separator to left. Total code 1-3 letters.</p>
 </div>
 
 

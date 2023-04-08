@@ -39,9 +39,8 @@
 %% DO NOT USE DIRECTLY
 \pretocmd\setmainfont{%
   \ifdefined\nvt@main@font\else%
-    \ClassError{novelette}{Do not use command \string\setmainfont.^^J%
-      Novelette uses \string\setfont{main}{Font Name}[features] instead.^^J%
-      \nvt@XN}{\nvt@RXN}\nvt@bad%
+    \nvt@error{Do not use command \string\setmainfont.^^J%
+      Novelette uses \string\setfont{main}{Font Name}[features] instead.}%
   \fi%
 }{}{}
 %%
@@ -58,9 +57,8 @@
     \nvt@oktrue\gdef\nvt@deco@font{#2}\gdef\nvt@deco@feat{#3}
   }{}
   \ifnvt@ok\else
-    \ClassError{novelette}{Bad first argument in \string\setfont.^^J%
-      Choices: main deco^^J%
-      \nvt@XN}{\nvt@RXN}\nvt@bad
+    \nvt@error{Bad first argument in \string\setfont.^^J%
+      Choices: main deco}
   \fi
 }
 \@onlypreamble\setfont
@@ -85,10 +83,9 @@
             \ClassWarning{novelette}{Did not find suitable default font.^^J%
               Using Latin Modern Roman. For best appearance, select another.}
           }{
-            \ClassError{novelette}{Looked for Latin Modern Roman^^J%
-              as last-choice default main font, but did not find it.^^J
-              Your TeX system may be missing some standard files.^^J%
-              \nvt@XN}{\nvt@RXN}\nvt@bad%
+            \nvt@error{Looked for Latin Modern Roman^^J%
+              as last-choice default main font, but did not find it.^^J%
+              Your TeX system may be missing some standard files.}
           }
         }
       }

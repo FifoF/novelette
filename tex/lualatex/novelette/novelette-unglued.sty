@@ -1,0 +1,131 @@
+%% This is file `novelette-unglued.sty',
+%% part of `novelette' document class.
+%% Copyright 2023 Robert Allgeyer.
+%%
+%% This file may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+\ProvidesFile{novelette-unglued.sty}%
+[2023/01/20 v0.2 LaTeX file (neutralize some standard LaTeX)]
+%%
+
+
+%% NEUTRALIZE SOME STANDARD LATEX SETTINGS AND MACROS
+% LaTeX uses flexible "glues" and "skips" to arrange things. The standard
+% value for many of these settings interferes with the grid layout used by
+% Novelette. So they are set to 0pt, or some other appropriate value.
+%   Also, many standard macros and environments are not suitable for Novelette.
+% Where possible, they are neutralized (simply do nothing). If that cannot
+% easily be done, then they are defined to throw an error.
+%   Most prominent: No math! The active characters for math mode, and related
+% non-text modes, have their catcodes changed AtBeginDocument.
+%%
+
+
+\setlength\hoffset{0pt}
+\setlength\voffset{0pt}
+\global\deflength\headheight{0pt}
+\global\deflength\headsep{0pt}
+\global\deflength\footskip{0pt}
+\global\deflength\footnotesep{0pt}
+\global\deflength\fboxrule{0pt}
+\global\deflength\fboxsep{0pt}
+\@twocolumnfalse
+\@twosidetrue
+\setlength\columnsep{12pt} % Not needed, picked something at random.
+\setlength\columnseprule{0pt}
+\@mparswitchtrue
+\setlength\marginparwidth{0pt}
+\setlength\marginparsep{0pt}
+\setlength\marginparpush{0pt}
+\global\@topnum=0
+\setlength\abovedisplayskip{0pt}
+\setlength\abovedisplayshortskip{0pt}
+\setlength\belowdisplayshortskip{0pt}
+\setlength\belowdisplayskip{0pt}
+\setlength\smallskipamount{0pt}
+\setlength\medskipamount{0pt}
+\setlength\bigskipamount{0pt}
+\setlength\topsep{0pt}
+\setlength\partopsep{0pt}
+\setlength\parsep{0pt}
+\setlength\parskip{0pt}
+\setlength\floatsep{0pt}
+\setlength\textfloatsep{0pt}
+\setlength\dbltextfloatsep{0pt}
+\setlength\intextsep{0pt}
+\setlength\lineskip{0pt}
+\setlength\normallineskip{0pt}
+\setlength\lineskiplimit{0pt}
+\renewcommand\baselinestretch{1}
+\widowpenalty 150
+\clubpenalty 150
+\@lowpenalty   51
+\@medpenalty  151
+\@highpenalty 301
+\vbadness=99999 % Suppress nuisance warnings.
+\setcounter{topnumber}{2}
+\renewcommand\topfraction{1} % Was .7
+\setcounter{bottomnumber}{1}
+\renewcommand\bottomfraction{1} % Was .3
+\setcounter{totalnumber}{3}
+\renewcommand\textfraction{0} % Was .2
+\renewcommand\floatpagefraction{1} % Was .5
+\setcounter{dbltopnumber}{2}
+\renewcommand\dbltopfraction{1} % Was .7
+\renewcommand\dblfloatpagefraction{1} % Was .5
+\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\normalfont\rmfamily}
+\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\normalfont\sffamily}
+\DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\normalfont\ttfamily}
+\DeclareOldFontCommand{\bf}{}{}
+\DeclareOldFontCommand{\it}{\normalfont\itshape}{\normalfont\itshape}
+\DeclareOldFontCommand{\sl}{\normalfont\slshape}{\normalfont\slshape}
+\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\normalfont\scshape}
+\LetLtxMacro\nvt@boldweight\bfseries\relax
+\def\bfseries{}
+\pagestyle{empty}
+\pagenumbering{arabic}
+\flushbottom
+%%
+
+
+\long\gdef\part#1{#1}
+\long\gdef\chapter#1{#1}
+\long\gdef\section#1{#1}
+\long\gdef\subsection#1{#1}
+\long\gdef\subsubsection#1{#1}
+\long\gdef\paragraph#1{#1}
+\long\gdef\subparagraph#1{#1}
+\long\gdef\appendix#1{#1}
+\DeclareDocumentCommand\nvt@nodocommand{O{}+m}{%
+  \nvt@error{Command `#2' cannot be used in Novelette.}%
+}
+% The no-do commands:
+\long\gdef\maketitle{\nvt@nodocommand{maketitle}}
+\long\gdef\makeindex{\nvt@nodocommand{makeindex}}
+\long\gdef\tableofcontents{\nvt@nodocommand{tableofcontents}}
+\long\gdef\listoftables{\nvt@nodocommand{listoftables}}
+\long\gdef\listoffigures{\nvt@nodocommand{listoffigures}}
+\long\gdef\thebibliography{\nvt@nodocommand{thebibliography}}
+\long\gdef\theindex{\nvt@nodocommand{theindex}}
+\long\gdef\abstract{\nvt@nodocommand{abstract}}
+\long\gdef\caption{\nvt@nodocommand{caption}}
+\DeclareDocumentEnvironment{tabular}{sO{}+m}{\nvt@nodocommand{tabular}}{}
+\DeclareDocumentEnvironment{table}{sO{}}{\nvt@nodocommand{table}}{}
+\DeclareDocumentEnvironment{figure}{sO{}}{\nvt@nodocommand{figure}}{}
+\DeclareDocumentEnvironment{itemize}{s}{\nvt@nodocommand{itemize}}{}
+\DeclareDocumentEnvironment{enumerate}{s}{\nvt@nodocommand{enumerate}}{}
+\DeclareDocumentEnvironment{description}{s}{\nvt@nodocommand{description}}{}
+\DeclareDocumentEnvironment{labeling}{s}{\nvt@nodocommand{labeling}}{}
+%%
+
+
+%%
+\endinput
+%%
+%% End of file `novelette-unglued.sty'.

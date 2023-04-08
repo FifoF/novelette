@@ -22,23 +22,23 @@ The language code must be selected from a limited number of choices:
 	ga -> Gaelic (Irish).
 	cy -> Welsh.
 	eu -> Basque.
-	fr (or) fr-FR -> French, except Swiss.
+	fr -> French, except Swiss.
 	fr-CH -> Swiss French.
-	de (or) de-DE -> German, except Swiss.
+	de -> German, except Swiss.
 	de-CH -> Swiss German.
-	en (or) en-GB -> British English.
+	en -> British English.
 	en-US -> American English
-	no (or) nb -> Norwegian Bokmal.
+	nb -> Norwegian Bokmal.
     nn -> Norwegian Nynorsk.
 	xx -> No hyphenation.
 
 If \setlang is not specified, the default is an old version of English.
 There will be a warning message. If you actually intend to use English, then
-be sure to request either en-GB or en-US. 
+be sure to request either en or en-US. 
 
 The language selection does NOT perform spelling or grammar check. It does NOT
 transform words, dates, times, or currency. All it does is apply hyphenation
-rules, and (fr and fr-CH) some spacing.
+rules, and (fr or fr-CH) some spacing.
 
 Since hyphenation for Canadian French is the same as for France, there is
 no separate setting for Canadian. Similarly for Mexico vs. Spain, and most
@@ -53,7 +53,7 @@ In the case of German, \setlang applies post-1996 hyphenation.
 In the case of French (fr), \setlang adds space before : ; ! ? punctuation.
 It also adds space after opening guillemet, and before closing guillemet.
 \setlang* does not add spaces. It might be useful if you already
-typed the spaces.
+typed the spaces.x
 
 Swiss French (fr-CH) is like French (fr), except that space is not added
 before the : colon character.
@@ -62,4 +62,3 @@ The optional argument is only used for French and Swiss French.
 If [-g] is provided as option, then no space is added before or after
 guillemets.
 
-If you wish to change the style of footnotes, see the \text command.

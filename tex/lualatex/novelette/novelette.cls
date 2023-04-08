@@ -67,7 +67,6 @@
 %% \subtitle is for convenience. Not in PDF metadata.
 \long\gdef\subtitle#1{\gdef\@subtitle{#1}\gdef\thesubtitle{#1}}
 \@onlypreamble\subtitle
-\subtitle{} % Default empty.
 %%
 
 
@@ -81,10 +80,7 @@
 \newif\ifnvt@header % True if design style has header.
 \newif\ifnvt@footer % True if design style has footer.
 \newif\ifnvt@pnital % True if page numbers are italicized.
-\newif\ifnvt@fnzmark % True if footnote is in opening. Omits the marker. 
-\newif\ifnvt@fnindent % True if design footnote indent.
-\newif\ifnvt@fnseq % True if using numerical footnote reference marks.
-\newif\ifnvt@fnleft % True if footnote rule is aligned left.
+\newif\ifnvt@fnzmark % True if footnote is in opening. Omits the marker.
 \newif\ifnvt@imgwarn % True if image warning issued.
 \newif\ifnvt@frontmatter % True in frontmatter.
 \newif\ifnvt@mainmatter % True in mainmatter or backmatter.
@@ -158,6 +154,7 @@
 \def\nvt@XN{Respond x to exit now. Fix the problem}
 \def\nvt@RXN{Really, respond with x and exit now. Else bad things may happen.}
 \def\nvt@bad{\global\nvt@errtrue\gdef\nvt@mode{draft}\gdef\nvt@intent{none}}
+\def\nvt@error#1{\ClassError{novelette}{^^J#1^^J\nvt@XN}{\nvt@RXN}\nvt@bad}
 \setlength\overfullrule{6pt} % Except in final mode.
 \def\fillertext{\typeout{^^JALERT: No fillertext in final mode.^^J}}
 %%
@@ -177,6 +174,7 @@
 \RequirePackage{atbegshi} % For header changes.
 \RequirePackage{changepage} % Block indents, etc. Do not use strict!
 \RequirePackage{noindentafter} % For unindented chapter and scene starts.
+\RequirePackage{novelette-unglued}
 \RequirePackage{novelette-utilities}
 \RequirePackage{novelette-settings}
 \RequirePackage{novelette-fonts}
@@ -190,10 +188,8 @@
 % or writes information disallowed by PDF/X. Solution: No user-added packages.
 \LetLtxMacro\nvt@get@package\RequirePackage\relax
 \NewDocumentCommand\out@of@luck{O{}m}{%
-  \ClassError{novelette}{You cannot load packages via \string\usepackage^^J%
-    or \string\RequirePackage. Novelette pre-loads only what is necessary.^^J%
-    Novelette does one thing well, not many things.^^J%
-    \nvt@XN}{\nvt@RXN}\nvt@bad
+  \nvt@error{You cannot use \string\usepackage, or \string\RequirePackage.^^J%
+    Novelette pre-loads only what is necessary. No frills allowed.}
 }
 \LetLtxMacro\RequirePackage\out@of@luck\relax
 \LetLtxMacro\usepackage\out@of@luck\relax
@@ -290,7 +286,7 @@
   \typeout{These are the actual values used. If different from your settings,}
   \typeout{it means Novelette used defaults, or needed to over-ride yours:}
   \typeout{\string\title{\@title}}
-  \typeout{\string\subtitle{\@subtitle}}
+  \ifdefined\@subtitle\typeout{\string\subtitle{\@subtitle}}\fi
   \typeout{\string\author{\@author}}
   \typeout{\string\application{\nvt@application}}
   \typeout{\string\producer{\nvt@producer}}

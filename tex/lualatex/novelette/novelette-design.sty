@@ -27,8 +27,7 @@
   \ifdimcomp{\nvt@trimw}{>}{\pagewidth}{\nvt@okfalse}{}
   \ifdimcomp{\nvt@trimh}{>}{\pageheight}{\nvt@okfalse}{}
   \ifnvt@ok\else
-    \ClassError{novelette}{\string\sheetfeed\space too small for trimsize.^^J%
-      \nvt@XN}{\nvt@RXN}\nvt@bad
+    \nvt@error{\string\sheetfeed\space too small for trimsize.}%
     \global\setlength\pagewidth{\nvt@trimw}
     \global\setlength\pageheight{\nvt@trimh}
   \fi
@@ -53,8 +52,7 @@
     \ifdimcomp{\nvt@mins}{>}{.25\nvt@trimw}{\nvt@okfalse}{}
   }{}
   \ifnvt@ok\else
-    \ClassError{novelette}{Margins not within reasonable range.^^J%
-      \nvt@XN}{\nvt@RXN}\nvt@bad
+    \nvt@error{Margins not within reasonable range.}%
     \global\deflength\nvt@mtop{0pt} % Reset.
   \fi
   \ifdimcomp{\nvt@mtop}{=}{0pt}{ % Unset or reset.
@@ -116,9 +114,8 @@
     \global\deflength\textwidth{\nvt@temp@l}
   }{
     \ifdimcomp{\nvt@fontsize}{<}{8.03pt}{
-      \ClassError{novelette}{Main font size is too small. Must be at least^^J%
-        8.03pt, equivalent to 8bp (PostScript points).^^J%
-        \nvt@XN}{nvt@RXN}\nvt@bad
+      \nvt@error{Main font size is too small. Must be at least 8.03pt,^^J%
+        equivalent to 8bp (PostScript points).}%
     }{}
     \setlength\nvt@temp@l{\nvt@trimw-\nvt@mout-\nvt@mins}
     \global\deflength\nvt@spad{\nvt@spadval\nvt@fontsize}
@@ -228,8 +225,7 @@
   \global\deflength\textheight{\nvt@lpp\nvt@leading}
   \xdef\log@text{%
     \string\text{fontsize=\the\nvt@fontsize,lines=\nvt@lpp,%
-      openings=\nvt@openalign,footnotes=\ifnvt@fnseq n\fi%
-      \ifnvt@fnleft l\fi\ifnvt@fnindent i\fi}%
+      openings=\nvt@openalign}%
   }
   \xdef\log@charsperline{Estimated characters per line = \nvt@charsperline}
   \xdef\log@layout{%
@@ -327,10 +323,9 @@
   \setlength\nvt@temp@l{\nvt@ascn+\nvt@dscn}
   \FPdiv{\nvt@temp@n}{\strip@pt\nvt@temp@l}{\strip@pt\nvt@leading}
   \FPifgt{\nvt@temp@n}{1}%
-    \ClassError{novelette}{Too many lines per page. The requested number^^J%
+    \nvt@error{Too many lines per page. Requested number cannot fit.^^J%
       cannot fit. If you need that exact number, change something else.^^J%
-      See Novelette documentation for possibilities.^^J%
-      \nvt@XN}{\nvt@RXN}\nvt@bad
+      See Novelette documentation for possibilities.}%
   \fi
   \ifnvt@header
     \global\deflength\headheight{\nvt@leading}

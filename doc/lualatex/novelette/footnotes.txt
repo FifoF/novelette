@@ -1,0 +1,34 @@
+
+PLACEHOLDER
+Subject to revision.
+
+
+FOOTNOTES
+
+Novelette is not intended for academic works. It does not support numbered
+footnotes with first-line indent.
+
+Popular fiction sometimes does have the occasional footnote. It will be
+a comment from the author, or perhaps from a fictional editor. This style
+is supported. Reference marks will be literary style (begiining with asterisk),
+rather than numbers. The first line of a footnote is not indented.
+
+Syntax for a footnote:
+
+It was a dark and stormy night.\footnote{This chapter is set in Trondheim,
+where even the days are dark, in winter.}
+
+If the footnote is written within an opening or display environment,
+no reference mark is placed. This is the preferred style.
+
+A footnote may have more than one paragraph of text (unlikely, but possible).
+If it does, subsequent paragraphs are indented.
+
+Each opening automatically re-sets the reference mark. In order:
+	* † ‡ § ** †† ‡‡ §§
+Then the order re-cycles to asterisk.
+
+If the Swainson font is installed (should be, since it comes with Novelette)
+then its characters will be used for the reference marks, because they were
+specifically designed for this purpose. Does not matter what the main font is.
+But if Swainson is not available, the main font will be used.

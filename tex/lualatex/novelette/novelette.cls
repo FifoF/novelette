@@ -248,14 +248,29 @@
   \let\lsstyle\relax
   \hyphenpenalty=1000
   \exhyphenpenalty=1000
+  \versohead{Verso}\rectohead{Recto} % Dummy fill. Developer use.
 }
 %%
 
 
 %% AFTER END PREAMBLE (Tacked onto the end of AtBeginDocument.)
 %% ----------------------------------------------------------------------------
-\AfterEndPreamble{
-  \versohead{Verso}\rectohead{Recto} % Dummy fill. Developer use.
+\AfterEndPreamble{ % Deactivate many special characters and macros.
+  \catcode`\$=12
+  \catcode`\_=12
+  \catcode`\#=12
+  \catcode`\&=12
+  \catcode`\^=12
+  \gdef\nvt@sdqused{ALERT: Used straightdblquote, page \thepage.}
+  \begingroup
+    \lccode`\~="0022
+    \lowercase{\endgroup\gdef~{\straightdblquote\typeout{\nvt@sdqused}}%
+    }%
+  \catcode`\"=13
+  \def\({(}
+  \def\){)}
+  \def\[{[}
+  \def\]{]}
 }
 %%
 
@@ -263,6 +278,12 @@
 %% AT END DOCUMENT (Document is still writeable here.)
 %% ----------------------------------------------------------------------------
 \AtEndDocument{
+  \catcode`\"=12
+  \catcode`\$=3
+  \catcode`\_=8
+  \catcode`\#=6
+  \catcode`\&=4
+  \catcode`\^=7
   \cleartoend
   \iferrorsissued{\global\nvt@errtrue}{}
   \pdfinfo{%
@@ -328,13 +349,7 @@
 %%
 
 
-%  \catcode`\$=12
-%  \catcode`\&=12
-%  \def\({(} % No math mode.
-%  \def\){)}
-
-
-
 
 %%
 %% End of file `novelette.cls'.
+%%

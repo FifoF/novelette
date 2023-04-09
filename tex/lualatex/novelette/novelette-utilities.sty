@@ -222,15 +222,15 @@
 
 
 %% Write straight quotes that TeX will not auto-convert to curly quotes:
-\gdef\straightquote{{\addfontfeature{Ligatures=ResetAll}'}}
-\gdef\straightdblquote{{\addfontfeature{Ligatures=ResetAll}"}}
+\def\straightquote{{\addfontfeature{Ligatures=ResetAll}'}}
+\def\straightdblquote{{\addfontfeature{Ligatures=ResetAll}"}}
 %%
 
 
 %% \memo{} does not print or save its argument. May be more than one paragraph.
 % Useful when you wish to put a note to yourself in the *.tex document.
 % Not the same as % comment, because anything after the braces will print.
-\long\gdef\memo#1{\ignorespaces}
+\long\def\memo#1{\ignorespaces}
 %%
 
 
@@ -373,10 +373,12 @@
 \def\sups#1{%
   {\addfontfeature{Numbers=ResetAll,VerticalPosition=Superior}#1}%
 }
+\let\sup\sups\relax
 
 \def\subs#1{%
   {\addfontfeature{Numbers=ResetAll,VerticalPosition=Inferior}#1}%
 }
+\let\sub\subs\relax
 
 \AtBeginDocument{%
   \providecommand\fraction[2]{% Use only with Swainson fonts (metrics).

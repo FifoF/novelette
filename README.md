@@ -14,6 +14,10 @@ the code.
 
 Expected release late March 2023 (moved to mid-April).
 
+UPDATE, April 9, 2023: Fixed some typos in the html (Thanks!). Implemented
+some experimental code changes. The experiments work for me, but because
+they are quite radical, more testing is needed. If they withstand the tests,
+potential users will be so happy!
 
 UPDATE, April 7, 2023: Getting closer. Re-activated language support for
 more Western European languages. No big issues remain, although there may

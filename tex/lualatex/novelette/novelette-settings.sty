@@ -185,10 +185,9 @@
 %%
 
 
-%% TEXT (fontsize, lines in main textblock, opening alignment)
+%% TEXT (fontsize, lines in main textblock)
 % fontsize -> Main text. Size in pt or bp.
 % lines -> Integer lines per page in main textblock (not header/footer).
-% openings -> Horizontal alignment of items in openings: l c r o i. Default c.
 \newcommand\text[1]{
   \nvt@oktrue
   \StrDel{#1,}{ }[\nvt@temp@s]
@@ -223,25 +222,6 @@
     \nvt@error{Bad value for \string\text{lines=integer}.^^J%
       Integer is lines in main textblock, not counting header/footer.^^J%
       Default will be calculated, if lines not specified.}
-  \fi
-  \nvt@oktrue
-  \StrDel{#1,}{ }[\nvt@temp@s]
-  \StrSubstitute{\nvt@temp@s}{openings=}{opening=}[\nvt@temp@s]
-  \StrBehind{\nvt@temp@s}{opening=}[\nvt@temp@s]
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
-  \ifthenelse{\equal{\nvt@temp@s}{}}{\def\nvt@temp@s{c}}{}
-  \ifthenelse{\equal{\nvt@temp@s}{c} \OR %
-    \equal{\nvt@temp@s}{l} \OR \equal{\nvt@temp@s}{r} \OR %
-    \equal{\nvt@temp@s}{o} \OR \equal{\nvt@temp@s}{i}}{
-      \xdef\nvt@openalign{\nvt@temp@s}
-  }{
-    \nvt@okfalse
-    \gdef\nvt@openalign{c}
-  }
-  \ifnvt@ok\else
-    \nvt@error{Bad value for \string\text{openings=code}.^^J%
-      Default c. Code is one of: l r c o i^^J%
-      Corresponding to left, center, right, outside, inside.}
   \fi
 }
 \@onlypreamble\text

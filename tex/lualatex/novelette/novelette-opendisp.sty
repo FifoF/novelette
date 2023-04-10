@@ -41,7 +41,7 @@
   \clearpage%
   \ifnvt@header%
     \ifnvt@footer%
-      \thispagestyle{footer}% %%%%%
+      \thispagestyle{footer}% %%%%% TODO
     \else%
       \thispagestyle{empty}%
     \fi%
@@ -52,13 +52,7 @@
   \nvt@fnzmarktrue%
   \nvt@inopeningtrue%
   \setlength\parindent{0pt}% Just within this environment.
-  \ifthenelse{\equal{\nvt@openalign}{l}}{}{}%
-  \ifthenelse{\equal{\nvt@openalign}{r}}{\raggedleft}{}%
-  \ifthenelse{\equal{\nvt@openalign}{c}}{\begin{center}}{}%
-  \ifthenelse{\equal{\nvt@openalign}{o}}{\ifodd\c@page\raggedleft\fi}{}%
-  \ifthenelse{\equal{\nvt@openalign}{i}}{\ifodd\c@page\else\raggedleft\fi}{}%
 }{% Close the environment:
-  \ifthenelse{\equal{\nvt@openalign}{c}}{\end{center}}{}%
   \setcounter{nvt@fnmnum}{1}% Footnote markers.
   \endgroup%
   \nvt@fnzmarkfalse%
@@ -70,21 +64,82 @@
 %%
 
 
-\newcommand\name[1]{%
-  \ifnvt@inopening%
+%%
+\DeclareDocumentCommand\name{O{c}m}{%
+  \begingroup%
+  \def\nvt@temp@n{:l:c:r:o:i:}%
+  \StrDel{#1}{ }[\nvt@temp@s]%
+  \nvt@oktrue%
+  \IfSubStr{\nvt@temp@n}{\nvt@temp@s}{}{\nvt@okfalse}%
+  \ifnvt@inopening\else\nvt@okfalse\fi%
+  \ifnvt@ok%
     \null\par%
-    \strut\smash{\nvt@namefont #1}\par%
+    \ifthenelse{\equal{\nvt@temp@s}{l}}{%
+      \strut\smash{\nvt@namefont #2}\hfill\par}{}%
+    \ifthenelse{\equal{\nvt@temp@s}{c}}{%
+      {\centering\strut\smash{\nvt@namefont #2}\par}}{}%
+    \ifthenelse{\equal{\nvt@temp@s}{r}}{%
+      \strut\hfill\smash{\nvt@namefont #2}\par}{}%
+    \ifthenelse{\equal{\nvt@temp@s}{o}}{%
+      \ifodd\c@page%
+        \strut\hfill\smash{\nvt@namefont #2}\par%
+      \else%
+        \strut\smash{\nvt@namefont #2}\hfill\par%
+      \fi%
+    }{}
+    \ifthenelse{\equal{\nvt@temp@s}{i}}{%
+      \ifodd\c@page%
+        \strut\smash{\nvt@namefont #2}\hfill\par%
+      \else%
+        \strut\hfill\smash{\nvt@namefont #2}\par%
+      \fi%
+    }{}%
   \else%
-    {#1}%
+    \ClassWarning{novelette}{\string\name\space bad option, or not opening^^J%
+       or display environment. Wrote unformatted text, on page \thepage.}%
+    {#2}%
   \fi%
+  \endgroup%
 }
-\newcommand\desc[1]{%
-  \ifnvt@inopening%
+%%
+
+
+%%
+\DeclareDocumentCommand\desc{O{c}m}{%
+  \begingroup%
+  \def\nvt@temp@n{:l:c:r:o:i:}%
+  \StrDel{#1}{ }[\nvt@temp@s]%
+  \nvt@oktrue%
+  \IfSubStr{\nvt@temp@n}{\nvt@temp@s}{}{\nvt@okfalse}%
+  \ifnvt@inopening\else\nvt@okfalse\fi%
+  \ifnvt@ok%
     \null\par%
-    \strut\smash{\nvt@descfont #1}\par%
+    \ifthenelse{\equal{\nvt@temp@s}{l}}{%
+      \strut\smash{\nvt@descfont #2}\hfill\par}{}%
+    \ifthenelse{\equal{\nvt@temp@s}{c}}{%
+      {\centering\strut\smash{\nvt@descfont #2}\par}}{}%
+    \ifthenelse{\equal{\nvt@temp@s}{r}}{%
+      \strut\hfill\smash{\nvt@descfont #2}\par}{}%
+    \ifthenelse{\equal{\nvt@temp@s}{o}}{%
+      \ifodd\c@page%
+        \strut\hfill\smash{\nvt@descfont #2}\par%
+      \else%
+        \strut\smash{\nvt@descfont #2}\hfill\par%
+      \fi%
+    }{}%
+    \ifthenelse{\equal{\nvt@temp@s}{i}}{%
+      \ifodd\c@page%
+        \strut\smash{\nvt@descfont #2}\hfill\par%
+      \else%
+        \strut\hfill\smash{\nvt@descfont #2}\par%
+      \fi%
+    }{}%
   \else%
-    {#1}%
+    \ClassWarning{novelette}{\string\desc\space bad option, or not opening^^J%
+       or display environment. Wrote unformatted text, on page \thepage.}%
+    {#2}%
   \fi%
+  \endgroup%
 }
 %%
 

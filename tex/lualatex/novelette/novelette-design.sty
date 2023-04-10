@@ -123,9 +123,9 @@
     \global\deflength\textwidth{\nvt@temp@l}
   }
   \FPdiv{\nvt@temp@n}{\strip@pt\textwidth}{\strip@pt\nvt@fontsize}
+  \FPmul{\nvt@temp@n}{\nvt@temp@n}{2.23}
   \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
   \xdef\nvt@charsperline{\nvt@temp@n}
-  \ifdefined\nvt@openalign\else\gdef\nvt@openalign{c}\fi
   \ifdefined\nvt@hfscale\else\gdef\nvt@hfscale{.92}\fi
   \setlength\nvt@temp@l{\nvt@hfscale\nvt@fontsize}
   \ifdimcomp{\nvt@temp@l}{<}{7.0263pt}{
@@ -224,8 +224,7 @@
   \fi
   \global\deflength\textheight{\nvt@lpp\nvt@leading}
   \xdef\log@text{%
-    \string\text{fontsize=\the\nvt@fontsize,lines=\nvt@lpp,%
-      openings=\nvt@openalign}%
+    \string\text{fontsize=\the\nvt@fontsize,lines=\nvt@lpp}%
   }
   \xdef\log@charsperline{Estimated characters per line = \nvt@charsperline}
   \xdef\log@layout{%

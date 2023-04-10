@@ -119,7 +119,7 @@
 
 %% TEST IMAGE PLACEMENT
 \newcommand\nvt@TestImagePlacement[1]{% No error or warning, if bad value.
-  \ifnvt@inopening\def\nvt@imgpos{\nvt@openalign}\else\def\nvt@imgpos{c}\fi%
+  \def\nvt@imgpos{c}%
   \IfSubStr{#1}{l}{\def\nvt@imgpos{l}}{}%
   \IfSubStr{#1}{r}{\def\nvt@imgpos{r}}{}%
   \IfSubStr{#1}{o}{\def\nvt@imgpos{o}}{}%

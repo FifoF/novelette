@@ -293,10 +293,6 @@ or decimal. Typical value near 11.5pt. Must have units pt (TeX points) or
 bp (PostScript points).</p>
 <p><b>lines=<i>integer</i></b><br>Number of lines in main text block, not
 counting header or footer. The default number depends on page sizes.</p>
-<p><b>openings=<i>code</i></b><br>Sets the style of "opening" environments,
-which are used at places such as the start of chapters. The code may be
-one of l c r o i for left, center, right, outside, inside alignment of items
-in the opening.</p>
 </div>
 
 
@@ -388,31 +384,33 @@ It does not matter whether the portion is just one page.</p>
 in main text. These are <a href="#name">\name</a> and
 <a href="#desc">\desc</a> (description). In essence, those are chapter
 title and subtitle (if any).</p>
-<p>The <a href="#openings">\text{openings=<i>code</i>}</a> command
-determines the default alignment of items within an opening. To vertically
-position items, use the <i>\null</i> command, as often as necessary,
-to insert blank lines.</p>
+<p>To vertically position items, use the <i>\null</i> command,
+as often as necessary, to insert blank lines.</p>
 </div>
 
 <a id="name"></a>
 <div>
-<h3>\name{<i>Chapter Title or Number</i>}</h3>
+<h3>\name[option]{<i>Chapter Title or Number</i>}</h3>
 <p>The \name command  may only be used
 within the <a href="#opening">opening</a> environment. The <i>name</i>
 is usually chapter title or number. This is not intended for more than
 one line of text.</p>
 <p>The name text is pre-set at 1.8 times the size of main text.</p>
+<p>The option is a letter: l c r o i, for alignment left, center, right,
+outside, or inside.</p>
 </div>
 
 <a id="desc"></a>
 <div>
-<h3>\desc{<i>Chapter Subtitle</i>}</h3>
+<h3>\desc[option]{<i>Chapter Subtitle</i>}</h3>
 <p>The \desc command may only be used in an <a href="#opening">opening</a>
 environment. If used, is usually a one-line chapter subtitle. This is
 not intended for an extended amount of text. If necessary, you may use
 \desc more than once, for multiple lines. However, multiple lines would
 probably look better in ordinary main text.</p>
 <p>The desc text is pre-set at 1.33 times the size of main text.</p>
+<p>The option is a letter: l c r o i, for alignment left, center, right,
+outside, or inside.</p>
 </div>
 
 

@@ -178,25 +178,25 @@
  }
 \ExplSyntaxOff
 % End code by egreg.
-\getenv[\nvt@invocation]{processedbynovelette}
+% \getenv[\nvt@invocation]{processedbynovelette} %%%%% Not implemented.
 \edef\nvt@rightnow{\nvt@getepoch}
-\IfInteger{\nvt@invocation}{%
-  \FPsub{\nvt@temp@n}{\nvt@rightnow}{\nvt@invocation}%
-  \FPabs{\nvt@temp@n}{\nvt@temp@n}%
-  \FPiflt{\nvt@temp@n}{20}%
-    \gdef\nvt@signoffmsg{Processed with lualatex by novelette script.}%
-  \else%
+%\IfInteger{\nvt@invocation}{%
+%  \FPsub{\nvt@temp@n}{\nvt@rightnow}{\nvt@invocation}%
+%  \FPabs{\nvt@temp@n}{\nvt@temp@n}%
+%  \FPiflt{\nvt@temp@n}{20}%
+%    \gdef\nvt@signoffmsg{Processed with lualatex by novelette script.}%
+%  \else%
+%    \long\gdef\nvt@signoffmsg{Processed with lualatex.^^J%
+%      You may get better results by processing via novelette script.^^J%
+%      See Novelette documentation for explanation.%
+%    }%
+%  \fi%
+%}{%
     \long\gdef\nvt@signoffmsg{Processed with lualatex.^^J%
-%%%%%      You may get better results by processing via novelette script.^^J%
-%%%%%      See Novelette documentation for explanation.%
+%      You may get better results by processing via novelette script.^^J%
+%      See Novelette documentation for explanation.%
     }%
-  \fi%
-}{%
-    \long\gdef\nvt@signoffmsg{Processed with lualatex.^^J%
-%%%%%      You may get better results by processing via novelette script.^^J%
-%%%%%      See Novelette documentation for explanation.%
-    }%
-}
+%}
 %%
 
 

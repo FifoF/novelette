@@ -9,8 +9,8 @@ Certain chapter-like portions, such as Introduction or Prologue, may use
 the opening style.
 
 \begin{opening}
-\name{such as chapter number}
-\desc{if used, a very short description}
+\name[option]{such as chapter number}
+\desc[option]{if used, a very short description}
 \end{opening}
 Main text starts here.
 
@@ -20,12 +20,12 @@ there will be no header on that page.
 Commands \name and \desc may only be used within the opening. They will
 style the text according to \setfont{name} and \setfont{desc}.
 
-Default alignment l|c|r|0|i within an opening, is set by the \design command.
-	l -> Items in opening are left-aligned.
-	c -> Items in opening are centered (default).
-	r -> Items in opening are right-aligned.
-	o -> Items in opening are aligned to outside margin.
-	i -> Items in opening are aligned to inside margin.
+Alignment l|c|r|o|i , is set by the [option].
+	l -> name or desc is left-aligned.
+	c -> name or desc is centered (default).
+	r -> name or desc is right-aligned.
+	o -> name or desc is aligned to outside margin.
+	i -> name or desc is  aligned to inside margin.
 
 The first line of main text may have special styling. A common practice is
 to enlarge the first letter, and put a few words in small caps.

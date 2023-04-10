@@ -5,7 +5,7 @@ Subject to revision.
 
 TEXT
 
-\text{fontsize=size,lines=integer,openings=code}
+\text{fontsize=size,lines=integer}
 
 fontsize
 	Size of main text, with units pt or bp. May be integer or decimal.
@@ -18,6 +18,3 @@ lines
 	Not counting header/footer.
 	Default is calculated from other settings and defaults.
 
-openings
-	Code is one of l,c,r,o,i. Default c.
-	Aligns items in opening environment: left, center, right, outside, inside.

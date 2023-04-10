@@ -20,12 +20,6 @@ Novelette does not use \includegraphics or any other standard TeX command
 for image insertion. It uses a custom \image command, real and fake:
 	\image[placement]{filename.png}
 	\image[placement]{integer}
-Bottom of image, real or fake, is at text baseline.
-
-If not specified, horizontal placement within an opening defaults to
-the \layout{openings=value}. It defaults to c (center) otherwise.
-
-If not specified, vertical placement defaults to h (here), as explained below.
 
 If specified, placement may contain a horizontal value, a vertical value,
 or both. Does not matter if space or comma is present. Error if conflicting
@@ -33,7 +27,7 @@ values of the same type.
 
 The placement may contain at most one of l,c,r,o,i for horizontal alignment:
 	l -> left-aligned
-	c -> horizontally centered
+	c -> horizontally centered (default)
 	r -> right-aligned
 	o -> outside aligned (left of verso, right of recto)
 	i -> inside aligned (right of verso, left of recto)
@@ -43,7 +37,7 @@ relative to the flow of main text. These are "similar to, but different from"
 standard LaTeX float definitions:
 	h -> Place image "here" where the \image command is written, anywhere on
 		 the page. But if it cannot fit, move it to the top of the following
-		 page. Main text will flow to fill the lines left behind.
+		 page. Main text will flow to fill the lines left behind. Default.
 		 If you do not wish text to flow, use \clearpage to break pages.
 	t -> Place image at "top" of the page where command is written, which
 		 is usually above the command. In some cases, if the command is too
@@ -52,6 +46,7 @@ standard LaTeX float definitions:
 	b -> Place image at "bottom" of the page where command is written.
 		 If it cannot fit there, place it at bottom of following page.
 	p -> Place image on a page by itself.
+
 The \image command must occupy its own paragraph. The bottom of the image
 will be at text baseline.
 	Novelette only adds enough whitespace, above or below an image,

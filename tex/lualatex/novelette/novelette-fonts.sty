@@ -19,9 +19,9 @@
 % Novelette uses fontspec technology, with Open Type (or some TrueType) fonts.
 %   The main font is used for body text. With modifications (such as Scale)
 % it is also used for header/footer, footnotes, and opening name/desc.
-%   The deco font may only be used on the book Title page, half-title, and
-% Part separator pages. It is intended for dramatic effect. If you do not
-% set the deco font, then the main font will be used, with modifications.
+%   The deco font may only be used on display pages. It is intended for
+% dramatic effect. If you do not set the deco font, then the main font will
+% be used, with modifications.
 %   If the main font is neither EB Garamond nor Libertinus Serif, then the
 % alt font is set to one of these, if available. These fonts provide many
 % characters (such as Greek and Cyrillic) that may not be available in the
@@ -114,14 +114,18 @@
 
 %%
 \def\nvt@process@otherfonts{
-  % \altfont (always Libertinus Serif, if available)
-  \IfFontExistsTF{Libertinus Serif}{
+  % \altfont (EB Garamond or Libertinus Serif, if available)
+  \IfFontExistsTF{EB Garamond}{
     \newfontfamily\altfont{Libertinus Serif}[Scale=MatchLowercase,%
       RawFeature={colr=0}]
   }{
+    \IfFontExistsTF{Libertinus Serif}{
+      \newfontfamily\altfont{Libertinus Serif}[Scale=MatchLowercase,%
+        RawFeature={colr=0}]
+    }{}
     \let\altfont\relax
   }
-  % \nvt@headfont
+  % \nvt@headfont (variation of main font)
   \ifthenelse{\equal{\nvt@hfscale}{1}}{
     \gdef\nvt@hfstretch{}
   }{
@@ -133,11 +137,11 @@
   \newfontfamily\nvt@headfont{\nvt@main@font}[\nvt@main@feat,%
     Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0},%
     Scale=\nvt@hfscale,\nvt@hfstretch]
-  % \nvt@name@font
+  % \nvt@name@font (variation of main font)
   \newfontfamily\nvt@namefont{\nvt@main@font}[\nvt@main@feat,Scale=1.8,%
     Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0},%
     FakeStretch=.9,LetterSpace=2]
-  % \nvt@desc@font
+  % \nvt@desc@font (variation of main font)
   \newfontfamily\nvt@descfont{\nvt@main@font}[\nvt@main@feat,Scale=1.33,%
     Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0},%
     FakeStretch=.94,LetterSpace=2]

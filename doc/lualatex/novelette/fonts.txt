@@ -12,6 +12,7 @@ or any other technology.
 Novelette uses its own \setfont command:
 	\setfont{main}{Font Name}[features]
 	\setfont{deco}{Font Name}[features]
+
 The main font is set only once, in Preamble. Do not use \setmainfont.
 	If you do not set the main font, a default will be chosen. If you attempt
 to set a font that is not installed where TeX can find it, a default will
@@ -19,22 +20,21 @@ be chosen, and a warning is issued. If no suitable default is found, error.
 	The main font is used for main body text. With certain automatic
 modifications (such as Scale) it is used in header/footer, footnotes,
 and opening name/desc.
-	The deco font may be used on the book title and half-title pages,
-for dramatic effect. If may also be used on a "Part" separator page.
-If you do not set the deco font, it will be the main font, with modifications.
-The deco font is used like this:
-	{\decofont Decorative Text}
+
+The deco font may be used only in display pages. These are stand-alone
+pages that do not need to conform to the text line grid. They are identified
+by use of the display environment.
+	If you do not set the deco font, it is the main font, with modifications.
 
 If you are familiar with fontspec syntax, you may define and use your own
 fonts. This is discouraged. There are potential layout issues that may
 arise when using font commands. They are not bugs; they are font mis-use.
 
-Novelette uses Libertinus Serif as an alternative font.
-It may be installed as package 'libertinus-fonts'. If you need characters
-that are not in the chosen main font, you may request them from the altfont.
-For example, suppose the main font has no Greek letters, but you need pi,
-which is Unicode hex 0030. Sample code:
-	I want my {\altfont ^^^^0030}, and I want it now.
-Libertinus Serif is a moderately-designed font, which is likely to be
-unobtrusive when an occasional character is interted within main text.
-It is automatically scaled to fit its surroundings.
+If the main font is neither EB Garamond nor Libertinus Serif, then one of
+these fonts (if installed) will be designated as an alternative font.
+It may be used when the main font lacks some character(s) that you need.
+For example, suppose that your main font has no Greek letters. You need
+Greek lowercase pi.This is the code:
+	{\altfont\uni{0030}}
+where 0030 is the Unicode location of pi.
+	

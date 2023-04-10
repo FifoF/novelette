@@ -1,0 +1,34 @@
+
+PLACEHOLDER
+Subject to revision.
+
+
+LOG ALERTS
+
+Novelette regards a few things as being suspicious. They are not errors,
+not even warnings. But there is the possibility that what you wrote was not
+what you meant. These get an ALERT message in the log file.
+
+If there are one or more ALERT messages, you may throw a warning, or not.
+This is chosen by \warnalert or \nowarnalert in Preamble. Default \warnalert.
+Note that only one such warning is thrown, no matter how many ALERTs.
+	Programs such as TeXworks can observer whether or not a warning is thrown,
+but have no knowledge of ALERT. It is best to allow \warnalert until you are
+sure that any remaining ALERTs are harmless.
+	If you allow remaining ALERTs, then use \nowarnalert in final mode.
+Otherwise, \warnalert may interfere with final mode.
+
+These cause an ALERT each time they are written in the document body:
+	1. Novelette has no document class options. If you write something there,
+it will be ignored, and cause an ALERT.
+	2. You may straight double quotes for diaeresis (umlaut) , such as \"o
+for ö. Any other usage will print the straight double quotes, not curly,
+and will throw an ALERT. There are no babel shortcuts. Writing "HHHH (where
+each H is a hex digit) will not produce a Unicode character. But you may use
+\uni{HHHH} instead.
+	3. Writing \% simply prints the percent symbol (as usual). If you write
+% without a backslash in front, it will (as usual) start a comment, and also
+throw an ALERT. Instead of using % for comments, use \memo{text}. However,
+\memo can only be used between paragraphs.
+	4. Settings that are unusually large or small may throw an ALERT.
+

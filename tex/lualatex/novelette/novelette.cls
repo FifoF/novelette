@@ -86,6 +86,7 @@
 \newif\ifnvt@mainmatter % True in mainmatter or backmatter.
 \newif\ifnvt@cleartoend % True if cleartoend issued. Prevents duplicate.
 \newif\ifnvt@err % True if Novelette (not LaTeX) issued an error.
+\newif\ifnvt@warnalert % True will issue warning when alerts > 0.
 %%
 
 
@@ -133,9 +134,11 @@
 %% ----------------------------------------------------------------------------
 % Novelette does not use class options. Dimensions, font size, and everything
 % are are set by specific commands in Preamble.
+\newcounter{nvt@alert} \setcounter{nvt@alert}{0}
 \ifdefined\@raw@classoptionslist
   \ifthenelse{\equal{\@raw@classoptionslist}{}}{}{
     \typeout{^^JALERT: Novelette has no class options. Ignored!^^J}
+    \stepcounter{nvt@alert}
   }
 \fi
 \def\@raw@classoptionslist{}
@@ -165,11 +168,13 @@
 \RequirePackage{novelette-language}
 \RequirePackage[nomessages]{fp} % Calculations.
 \FPmessagesfalse
-\RequirePackage{silence}
-\WarningFilter{microtype}{I cannot find a protrusion list}
-\WarningFilter{microtype}{protrusion}
-\WarningFilter{microtype}{Redefining}
-\WarningsOff[Fancyhdr,fancyhdr]
+\IfFileExists{silence.sty}{ % If not, no big deal.
+  \RequirePackage{silence}
+  \WarningFilter{microtype}{I cannot find a protrusion list}
+  \WarningFilter{microtype}{protrusion}
+  \WarningFilter{microtype}{Redefining}
+  \WarningsOff[Fancyhdr,fancyhdr]
+}{}
 \RequirePackage{calc} % Length expression calculations.
 \RequirePackage{atbegshi} % For header changes.
 \RequirePackage{changepage} % Block indents, etc. Do not use strict!
@@ -249,6 +254,7 @@
   \hyphenpenalty=1000
   \exhyphenpenalty=1000
   \versohead{Verso}\rectohead{Recto} % Dummy fill. Developer use.
+  \frenchspacing % Even if English.
 }
 %%
 
@@ -264,13 +270,20 @@
   \gdef\nvt@sdqused{ALERT: Used straightdblquote, page \thepage.}
   \begingroup
     \lccode`\~="0022
-    \lowercase{\endgroup\gdef~{\straightdblquote\typeout{\nvt@sdqused}}%
+    \lowercase{\endgroup%
+      \gdef~{\straightdblquote\typeout{\nvt@sdqused}\stepcounter{nvt@alert}}%
     }%
   \catcode`\"=13
   \def\({(}
   \def\){)}
   \def\[{[}
   \def\]{]}
+  \gdef\nvt@pctused{ALERT: Used percent symbol for comment, page \thepage.}
+  \begingroup
+    \lccode`\~="0025
+    \lowercase{\endgroup\gdef~{\typeout{\nvt@pctused}\stepcounter{nvt@alert}}%
+    }%
+  \catcode`\%=13
 }
 %%
 
@@ -278,6 +291,7 @@
 %% AT END DOCUMENT (Document is still writeable here.)
 %% ----------------------------------------------------------------------------
 \AtEndDocument{
+  \catcode`\%=14
   \catcode`\"=12
   \catcode`\$=3
   \catcode`\_=8
@@ -293,6 +307,11 @@
   \nvt@attach@metadata
   \nvt@attach@xmp
   \ifthenelse{\equal{\nvt@intent}{none}}{}{\nvt@attach@intent}
+  \ifnum\value{nvt@alert}=0\else
+    \ifnvt@warnalert
+      \ClassWarningNoLine{novelette}{One or more ALERT in log file}
+    \fi
+  \fi
 }
 %%
 
@@ -340,9 +359,8 @@
   \typeout{\log@decofont}
   \log@imagespecs
   \typeout{\nvt@signoffmsg}
-  \ifnvt@err
-    \typeout{*** NOVELETTE ERROR. OUTPUT IS INVALID. ***}
-  \fi
+  \ifnum\value{nvt@alert}=0\else\typeout{ALERT(s) issued. See log file.}\fi
+  \ifnvt@err\typeout{*** NOVELETTE ERROR. OUTPUT IS INVALID. ***}\fi
   \typeout{*******************************************************************}
   \typeout{^^J}
 }

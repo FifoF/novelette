@@ -21,15 +21,11 @@
 % it is also used for header/footer, footnotes, and opening name/desc.
 %   The deco font may only be used on the book Title page, half-title, and
 % Part separator pages. It is intended for dramatic effect. If you do not
-% set the deco font, then the main font willbe used, with modifications.
-%   The alt font is automatically set to Libertinus Serif, if installed.
-% It can provide many characters (such as Greek and Cyrillic) that may not
-% be available in the main font. The fonts are in package 'libertinus-fonts'.
-% If you do not have Libertinus Serif, then alt default to main.
-%   Some special characters, such as footnote reference marks in literary
-% format (asterisk, dagger, etc.) do not look nice in most fonts. Swainson
-% has special designs for this purpose. It is automatically invoked as the
-% mark font, if installed. Otherwise defaults to main font.
+% set the deco font, then the main font will be used, with modifications.
+%   If the main font is neither EB Garamond nor Libertinus Serif, then the
+% alt font is set to one of these, if available. These fonts provide many
+% characters (such as Greek and Cyrillic) that may not be available in the
+% main font.
 %   Note that unless you do code hacks, you have very little choice for how
 % fonts are used. In the past, authors never chose (metal) fonts; they were
 % chosen by the printer. Good enough for Victor Hugo, good enough for you!
@@ -69,24 +65,20 @@
 \def\nvt@process@mainfont{
   \ifdefined\nvt@main@feat\else\gdef\nvt@main@feat{}\fi
   \ifdefined\nvt@main@font\else
-    \IfFontExistsTF{Swainson}{
-      \gdef\nvt@main@font{Swainson}
+    \IfFontExistsTF{EB Garamond}{
+      \gdef\nvt@main@font{EB Garamond}
     }{
-      \IfFontExistsTF{EB Garamond}{
-        \gdef\nvt@main@font{EB Garamond}
+      \IfFontExistsTF{Libertinus Serif}{
+        \gdef\nvt@main@font{Libertinus Serif}
       }{
-        \IfFontExistsTF{Libertinus Serif}{
-          \gdef\nvt@main@font{Libertinus Serif}
+        \IfFontExistsTF{Latin Modern Roman}{
+          \gdef\nvt@main@font{Latin Modern Roman}
+          \ClassWarningNoLine{novelette}{Did not find suitable default font.^^J%
+            Using Latin Modern Roman. For best appearance, select another.}
         }{
-          \IfFontExistsTF{Latin Modern Roman}{
-            \gdef\nvt@main@font{Latin Modern Roman}
-            \ClassWarning{novelette}{Did not find suitable default font.^^J%
-              Using Latin Modern Roman. For best appearance, select another.}
-          }{
-            \nvt@error{Looked for Latin Modern Roman^^J%
-              as last-choice default main font, but did not find it.^^J%
-              Your TeX system may be missing some standard files.}
-          }
+          \nvt@error{Looked for Latin Modern Roman^^J%
+            as last-choice default main font, but did not find it.^^J%
+            Your TeX system may be missing some standard files.}
         }
       }
     }
@@ -108,7 +100,7 @@
     \newfontfamily\decofont{\nvt@deco@font}[\nvt@deco@feat,%
       Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0}]
   }{
-    \ClassWarning{novelette}{Did not find deco font \nvt@deco@font.^^J%
+    \ClassWarningNoLine{novelette}{Did not find deco font \nvt@deco@font.^^J%
       Will use main font instead. Results will not be as intended.}
     \newfontfamily\decofont{\nvt@main@font}[\nvt@main@feat,%
       Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0}]
@@ -141,13 +133,6 @@
   \newfontfamily\nvt@headfont{\nvt@main@font}[\nvt@main@feat,%
     Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0},%
     Scale=\nvt@hfscale,\nvt@hfstretch]
-  % \nvt@mark@font (always Swainson, if available)
-  \IfFontExistsTF{Swainson}{
-    \newfontfamily\nvt@mark@font{Swainson}[Scale=MatchLowercase,%
-      RawFeature={colr=0}]
-  }{
-    \let\nvt@mark@font\relax
-  }
   % \nvt@name@font
   \newfontfamily\nvt@namefont{\nvt@main@font}[\nvt@main@feat,Scale=1.8,%
     Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0},%

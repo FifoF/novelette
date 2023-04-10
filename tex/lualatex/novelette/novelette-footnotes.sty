@@ -41,6 +41,20 @@
 % \@makefnmark is an existing LaTeX macro, redefined here. Marker in main text.
 \newcounter{nvt@fnmnum} % Which marker in the list.
 \setcounter{nvt@fnmnum}{1}
+\def\nvt@supmark#1{%
+  \ignorespaces%
+  \ifthenelse{\equal{#1}{*} \OR \equal{#1}{**}}{%
+    \def\nvt@temp@d{.8}%
+  }{%
+    \def\nvt@temp@d{.6}%
+  }%
+  \sbox0{{\addfontfeature{ScaleAgain=\nvt@temp@d}#1}}%
+  \setlength\nvt@temp@l{\ht0}%
+  \setlength\nvt@temp@l{\nvt@ascn-\nvt@temp@l}%
+  \rule{.12\nvt@fontsize}{0pt}\makebox[0pt][l]{%
+    \smash{\raisebox{\nvt@temp@l}{\addfontfeature{ScaleAgain=\nvt@temp@d}#1}}%
+  }%
+}
 \def\@makefnmark{\ifnvt@fnzmark\else\nvt@getfnmark\fi}
 \def\nvt@getfnmark{% Places marker in the main text.
   \ifthenelse{\equal{\value{nvt@fnmnum}}{1}}{\gdef\nvt@fnm{*}}{}%
@@ -51,7 +65,7 @@
   \ifthenelse{\equal{\value{nvt@fnmnum}}{6}}{\gdef\nvt@fnm{††}}{}%
   \ifthenelse{\equal{\value{nvt@fnmnum}}{7}}{\gdef\nvt@fnm{‡‡}}{}%
   \ifthenelse{\equal{\value{nvt@fnmnum}}{8}}{\gdef\nvt@fnm{§§}}{}%
-  {\nvt@mark@font\addfontfeature{VerticalPosition=Superior}\nvt@fnm}%
+  \nvt@supmark{\nvt@fnm}%
 }
 \def\nvt@bfnm{% Bottom footnote marker.
   \nvt@fnm%
@@ -66,9 +80,9 @@
 % The actual footnote, at bottom of textblock, text in \@footnotesize.
 \long\def\nvt@makefntext#1{%
   \ifnvt@fnzmark%
-    \noindent{\addfontfeature{FakeStretch=1.1}#1}%
+    \noindent{#1}%
   \else%
-    \noindent{\addfontfeature{FakeStretch=1.1}\nvt@bfnm\,#1}%
+    \noindent\nvt@bfnm\,#1%
   \fi%
 }
 \long\def\@footnotetext#1{
@@ -79,7 +93,7 @@
     \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
     \hsize\columnwidth \@parboxrestore
     \def\@currentcounter{footnote}%
-    \setlength\parindent{\normalindent}%}
+    \setlength\parindent{\normalindent}%
     \protected@edef\@currentlabel{\csname p@footnote\endcsname\@thefnmark}%
     \nvt@makefntext{\ignorespaces#1\@finalstrut\strutbox}\par%
   }

@@ -229,13 +229,17 @@
 
 %% \memo{} does not print or save its argument. May be more than one paragraph.
 % Useful when you wish to put a note to yourself in the *.tex document.
-% Not the same as % comment, because anything after the braces will print.
-\long\def\memo#1{\ignorespaces}
+% Not the same as % comment. It cannot be used at the end of a text line.
+\long\def\memo#1{%
+  \ifvmode\else%
+    \nvt@error{Command \string\memo\space cannot be used within a paragraph.}%
+  \fi%
+}
 %%
 
 
-%% \stake is like \strut, but does not occupy much vertical space.
-\gdef\stake{\rule{0pt}{1pt}}
+%% \stake does not occupy much vertical space.
+\gdef\stake{\rule{0pt}{.02pt}}
 %%
 
 
@@ -325,7 +329,7 @@
 %%
 
 
-%% Fake medium caps, if smcp available:
+%% Fake medium caps, if c2sc available:
 \DeclareDocumentCommand\medcap{+m}{%
   {\addfontfeature{Letters=UppercaseSmallCaps,ScaleAgain=1.18,%
     FakeStretch=0.9}#1}%
@@ -380,11 +384,6 @@
 }
 \let\sub\subs\relax
 
-\AtBeginDocument{%
-  \providecommand\fraction[2]{% Use only with Swainson fonts (metrics).
-    \raisebox{-.103em}{\sups{#1}}^^^^2044\raisebox{.168em}{\subs{#2}}%
-  }%
-}
 
 
 %%

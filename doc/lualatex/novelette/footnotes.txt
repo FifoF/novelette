@@ -27,8 +27,3 @@ If it does, subsequent paragraphs are indented.
 Each opening automatically re-sets the reference mark. In order:
 	* † ‡ § ** †† ‡‡ §§
 Then the order re-cycles to asterisk.
-
-If the Swainson font is installed (should be, since it comes with Novelette)
-then its characters will be used for the reference marks, because they were
-specifically designed for this purpose. Does not matter what the main font is.
-But if Swainson is not available, the main font will be used.

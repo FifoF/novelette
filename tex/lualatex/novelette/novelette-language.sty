@@ -118,7 +118,7 @@
   \bbl@languages
   \openin1=language.dat
   \ifeof1
-    \ClassWarning{novelette}{Did not find file language.dat.^^J%
+    \ClassWarningNoLine{novelette}{Did not find file language.dat.^^J%
       Until this issue is fixed, NO HYPHENATION.}%
     \gdef\nvt@lang{nohyphenation}%
   \else
@@ -181,7 +181,7 @@
     }%
   }{}%
   \@ifundefined{bbl@hyphendata@\the\language}{
-    \ClassWarning{novelette}{Did not find hyphenation for \string\setlang.^^J%
+    \ClassWarningNoLine{novelette}{Did not find hyphenation for \string\setlang.^^J%
       It is not installed in your TeX system. Proceeding without hyphenation.}
     \gdef\nvt@lang{nohyphenation}
   }{}%
@@ -262,7 +262,7 @@
       }
     }{}
   \else
-    \ClassWarning{novelette}{Unavailable language code \nvt@temp@s.^^J%
+    \ClassWarningNoLine{novelette}{Unavailable language code \nvt@temp@s.^^J%
       Using default hyphenation instead. You need to fix this.}
     \gdef\nvt@lang{english}
     \gdef\nvt@setlang{default}

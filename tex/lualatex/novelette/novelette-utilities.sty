@@ -166,6 +166,12 @@
 %%
 
 
+%% ITALICS (better than \textit or \itshape)
+\long\def\ital#1{{\itshape #1\/}}
+\long\def\textit#1{{\itshape #1\/}}
+%%
+
+
 %% BLOCK INDENT (option is integer number of \normalindent, [L,R])
 \newenvironment{blockindent}[1][1]{%
   \begingroup%

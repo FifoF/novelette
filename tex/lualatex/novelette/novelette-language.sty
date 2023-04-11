@@ -276,11 +276,6 @@
 \def\nvt@process@language{
   \ifdefined\nvt@lang\else\gdef\nvt@setlang{default}\gdef\nvt@lang{english}\fi
   \HyphenRules{\nvt@lang}
-  \ifthenelse{\equal{\nvt@lang}{british} \OR \equal{\nvt@lang}{american}}{
-    \nonfrenchspacing
-  }{
-    \frenchspacing
-  }
 }
 %%
 

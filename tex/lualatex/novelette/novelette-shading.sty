@@ -137,7 +137,7 @@
     \setlength\nvt@temp@l{-\value{nvt@mline}\nvt@leading}%
     \addtolength\nvt@temp@l{\nvt@dscn-\nvt@leading}%
     \ifnvt@header%
-      \addtolength\nvt@temp@l{-\nvt@leading-\nvt@headgap\nvt@leading}%
+      \addtolength\nvt@temp@l{-\nvt@leading-\nvt@gap\nvt@leading}%
       \addtolength\nvt@temp@l{-\nvt@dscn}%
     \fi%
     \rule[\nvt@temp@l]{\textwidth}{\nvt@dscn}%
@@ -154,7 +154,7 @@
   \ifdefined\nvt@guidea%
     \setlength\nvt@temp@l{\nvt@dscn-\nvt@guidea\nvt@leading}%
     \ifnvt@header%
-      \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
+      \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@gap\nvt@leading}%
     \else%
       \addtolength\nvt@temp@l{\nvt@leading}%
     \fi%
@@ -169,7 +169,7 @@
   \ifdefined\nvt@guideb%
     \setlength\nvt@temp@l{\nvt@dscn-\nvt@guideb\nvt@leading}%
     \ifnvt@header%
-      \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
+      \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@gap\nvt@leading}%
     \else%
       \addtolength\nvt@temp@l{\nvt@leading}%
     \fi%
@@ -184,7 +184,7 @@
   \ifdefined\nvt@guidec%
     \setlength\nvt@temp@l{\nvt@dscn-\nvt@guidec\nvt@leading}%
     \ifnvt@header%
-      \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
+      \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@gap\nvt@leading}%
     \else%
       \addtolength\nvt@temp@l{\nvt@leading}%
     \fi%
@@ -199,7 +199,7 @@
   \ifdefined\nvt@guided%
     \setlength\nvt@temp@l{\nvt@dscn-\nvt@guided\nvt@leading}%
     \ifnvt@header%
-      \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@headgap\nvt@leading}%
+      \addtolength\nvt@temp@l{-\nvt@dscn-\nvt@gap\nvt@leading}%
     \else%
       \addtolength\nvt@temp@l{\nvt@leading}%
     \fi%

@@ -265,13 +265,10 @@ It sets the page layout header/footer style.</p>
 <p><b>style=<i>integer</i></b><br>Integer from 1 to 7 selects page style,
 (header and/or footer) from a menu of available styles. The default style
 depends on other page design settings.</p>
-<p><b>headgap=<i>number</i></b><br>Number is integer|decimal from 0 to 1.
-Value 0 (rarely used) places header at the line immediately above main text.
-Value 1 skips a whole line between header and main text, and is best for
-large books. Value 0.5 is a nice compromise for smaller books.
-The headgap is ignored if style has no header.</p>
-<p><b>footgap=<i>number</i></b><br>As with headgap, but pertains to gap
-between main text and footer. Ignored if style has no footer.</p>
+<p><b>gap=<i>number</i></b><br>Number is integer|decimal from 0 to 1.
+Value 0 (rarely used) places header|footer at the line immediately above|below
+ main text. Value 1 skips a whole line between them, and is best for
+large books. Value 0.5 is a nice compromise for smaller books.</p>
 <p><b>scale=<i>number</i></b><br>
 Sets the scale of header/footer text, relative to size of main font.
 Acceptable range is 0.75 to 1, but must evaluate to at least 7bp.</p>
@@ -336,6 +333,11 @@ another guide is placed at the first line of main text under the opening.</p>
 printable book below it.</p>
 <p>If you ever get an error message "Missing \begin{document}" and wonder why,
 it means that you made a syntax error somewhere in the Preamble.</p>
+<p><b>IMPORTANT:</b> TeX has many characters, or character combinations,
+that have special meaning. What you type is not what you get in print.</p>
+<p>After \begin{document}, Novelette reduces the number of special characters,
+to reduce the chance that you will become tanlged with special meanings.
+This is <a href="#specialcharbody">explained in detail</a>.</p>
 </div>
 
 
@@ -535,6 +537,22 @@ do this.</p>
 </div>
 
 
+<a id="specialcharbody></a>
+<div>
+<p>Between <i>\begin{document}</i> and <i>\end{document}</i> ONLY these
+characters have their usual special meanings: \ { } ~ % symbols.</p>
+<p>If you type the # character, it prints #. Or you may type \# instead.
+Similarly for $ ^ & _ characters. You cannot do math or tables. If you
+need superscripts or subscripts, Novelette has other commands.</p>
+<p>When you type % it performs its usual action as comment. However, to ensure
+that you did not make a mistake, Novelette writes an ALERT message in the
+log file, each time you use %. If you really intended to print the percent
+character, use \% instead. A better way to make comments is the
+<i>\memo{text}</i> command.</p>
+<p>Braces [ ] only have their usual special meaning, when they surround
+an optional argument for a command. Otherwise they print.</p>
+<!-- MORE HERE -->
+</div>
 
 
 </div>

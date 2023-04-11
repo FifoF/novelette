@@ -59,7 +59,7 @@
 %   Margins exclude all printed material. Header/footer do not sit within
 %   the margins, but sit within the same rectangle as main text. 
 % \nvt@lpp -> Integer lines per page, main textblock (not header/footer).
-% \nvt@headgap, \nvt@footgap -> Increase line space from main to header|footer.
+% \nvt@gap -> Increase line space from main to header|footer.
 %   Range 0-1, may be decimal. Value 1 means one full blank line gap.
 % \nvt@hfstyle -> Chooses the style of header/footer.
 %   Settings for fonts, and header style formats, are in other files.
@@ -228,14 +228,14 @@
 %%
 
 
-%% LAYOUT (headers and footers)
+%% LAYOUT (headers, footers, openings)
 % scale -> Relative to main text. Min 0.75, max 1.
-% headgap -> Extra space between header and main text (if style has header).
-% footgap -> Extra space between main text and footer (if style has footer).
+% gap -> Extra space between header|footer and main text.
 % style -> Integer 1-7, chooses header/footer style from a list.
 \newcommand\layout[1]{
   \nvt@oktrue
   \StrDel{#1,}{ }[\nvt@temp@s]
+  \StrSubstitute{\nvt@temp@s}{Scale=}{scale=}[\nvt@temp@s]
   \StrBehind{\nvt@temp@s}{scale=}[\nvt@temp@s]
   \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
   \ifthenelse{\equal{\nvt@temp@s}{}}{}{
@@ -244,8 +244,13 @@
       \FPmin{\nvt@hfscale}{\nvt@hfscale}{1}
     }{\nvt@okfalse}
   }
+  \ifnvt@ok\else
+    \nvt@error{Bad value for \string\layout{scale=value}.^^J%
+      Value is a number. Will be limited between 0.75 and 1.}
+  \fi
   \StrDel{#1,}{ }[\nvt@temp@s]
-  \StrBehind{\nvt@temp@s}{headgap=}[\nvt@temp@s]
+  \StrSubstitute{\nvt@temp@s}{gaps=}{gap=}[\nvt@temp@s]
+  \StrBehind{\nvt@temp@s}{gap=}[\nvt@temp@s]
   \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
   \ifthenelse{\equal{\nvt@temp@s}{}}{}{
     \IfDecimal{\nvt@temp@s}{
@@ -255,27 +260,15 @@
         \FPifgt{\nvt@temp@s}{1}
           \nvt@okfalse
         \else
-          \xdef\nvt@headgap{\nvt@temp@s}
+          \xdef\nvt@gap{\nvt@temp@s}
         \fi
      \fi
     }{\nvt@okfalse}
   }
-  \StrDel{#1,}{ }[\nvt@temp@s]
-  \StrBehind{\nvt@temp@s}{footgap=}[\nvt@temp@s]
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
-  \ifthenelse{\equal{\nvt@temp@s}{}}{}{
-    \IfDecimal{\nvt@temp@s}{
-      \FPiflt{\nvt@temp@s}{0}
-        \nvt@okfalse
-      \else
-        \FPifgt{\nvt@temp@s}{1}
-          \nvt@okfalse
-        \else
-          \xdef\nvt@footgap{\nvt@temp@s}
-        \fi
-     \fi
-    }{\nvt@okfalse}
-  }
+  \ifnvt@ok\else
+    \nvt@error{Bad value fot \string\layout{gap=value}.^^J%
+      Value is a number from 0 to 1. May be decimal.}
+  \fi
   \StrDel{#1,}{ }[\nvt@temp@s]
   \StrBehind{\nvt@temp@s}{style=}[\nvt@temp@s]
   \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]
@@ -295,6 +288,10 @@
      \fi
     }{\nvt@okfalse}
   }
+  \ifnvt@ok\else
+    \nvt@error{bad value for \string\layout{style=value}.^^J%
+      Value is integer from 1 to 7. Selects head/foot style.}
+  \fi
 }
 \@onlypreamble\layout
 %%

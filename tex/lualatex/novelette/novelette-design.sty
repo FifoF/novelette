@@ -132,17 +132,8 @@
     \FPdiv{\nvt@temp@n}{7.0263}{\strip@pt\nvt@fontsize}
     \xdef\nvt@hfscale{\nvt@temp@n}
   }{}
-  \ifdefined\nvt@headgap
-    \ifdefined\nvt@footgap\else\gdef\nvt@footgap{\nvt@headgap}\fi
-  \fi
-  \ifdefined\nvt@footgap
-    \ifdefined\nvt@headgap\else\gdef\nvt@headgap{\nvt@footgap}\fi
-  \fi
-  \ifdefined\nvt@headgap\else
-    \ifdefined\nvt@footgap\else
-      \gdef\nvt@headgap{0.5}
-      \gdef\nvt@footgap{0.5}
-    \fi
+  \ifdefined\nvt@gap\else
+    \gdef\nvt@gap{0.5}
   \fi
   \ifdefined\nvt@hfstyle\else
     \ifdimcomp{\nvt@totalh}{<}{6.8in}{
@@ -191,16 +182,16 @@
     \ifnvt@footer
       \setlength\nvt@temp@l{\nvt@totalh}
       \FPadd{\nvt@temp@d}{\nvt@lpp}{2}
-      \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@headgap}
-      \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@footgap}
+      \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@gap}
+      \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@gap}
     \else
       \FPadd{\nvt@temp@d}{\nvt@lpp}{1}
-      \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@headgap}
+      \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@gap}
     \fi
   \else
     \ifnvt@footer
       \FPadd{\nvt@temp@d}{\nvt@lpp}{1}
-      \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@footgap}
+      \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@gap}
     \else
       \setlength\nvt@temp@l{\nvt@totalh+\nvt@ascn-2\nvt@dscn}
       \def\nvt@temp@d{\nvt@lpp}
@@ -229,7 +220,7 @@
   \xdef\log@charsperline{Estimated characters per line = \nvt@charsperline}
   \xdef\log@layout{%
     \string\layout{style=\nvt@hfstyle\ifnvt@pnital i\fi,scale=\nvt@hfscale,%
-      headgap=\nvt@headgap,footgap=\nvt@footgap}%
+      gap=\nvt@gap}%
   }
 }
 %%
@@ -241,11 +232,11 @@
   \FPdiv{\nvt@temp@n}{\strip@pt\nvt@totalh}{\nvt@temp@n}
   \ifnvt@header
     \FPsub{\nvt@temp@n}{\nvt@temp@n}{1}
-    \FPsub{\nvt@temp@n}{\nvt@temp@n}{\nvt@headgap}
+    \FPsub{\nvt@temp@n}{\nvt@temp@n}{\nvt@gap}
   \fi
   \ifnvt@footer
     \FPsub{\nvt@temp@n}{\nvt@temp@n}{1}
-    \FPsub{\nvt@temp@n}{\nvt@temp@n}{\nvt@footgap}
+    \FPsub{\nvt@temp@n}{\nvt@temp@n}{\nvt@gap}
   \fi
   \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
   \xdef\nvt@lpp{\nvt@temp@n}
@@ -328,10 +319,10 @@
   \fi
   \ifnvt@header
     \global\deflength\headheight{\nvt@leading}
-    \global\deflength\headsep{\nvt@headgap\nvt@leading-\nvt@dscn}
+    \global\deflength\headsep{\nvt@gap\nvt@leading-\nvt@dscn}
   \fi
   \ifnvt@footer
-    \global\deflength\footskip{\nvt@footgap\nvt@leading+\nvt@leading}
+    \global\deflength\footskip{\nvt@gap\nvt@leading+\nvt@leading}
   \fi
 }
 %%

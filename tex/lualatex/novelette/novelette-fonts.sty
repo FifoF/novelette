@@ -22,10 +22,9 @@
 %   The deco font may only be used on display pages. It is intended for
 % dramatic effect. If you do not set the deco font, then the main font will
 % be used, with modifications.
-%   If the main font is neither EB Garamond nor Libertinus Serif, then the
-% alt font is set to one of these, if available. These fonts provide many
-% characters (such as Greek and Cyrillic) that may not be available in the
-% main font.
+%   If the main font is not Libertinus Serif, then this is used as the
+% alt font, if it is available. This font provides many characters (such as
+% Greek and Cyrillic) that may not be available in themain font.
 %   Note that unless you do code hacks, you have very little choice for how
 % fonts are used. In the past, authors never chose (metal) fonts; they were
 % chosen by the printer. Good enough for Victor Hugo, good enough for you!
@@ -65,21 +64,17 @@
 \def\nvt@process@mainfont{
   \ifdefined\nvt@main@feat\else\gdef\nvt@main@feat{}\fi
   \ifdefined\nvt@main@font\else
-    \IfFontExistsTF{EB Garamond}{
-      \gdef\nvt@main@font{EB Garamond}
+    \IfFontExistsTF{Libertinus Serif}{
+      \gdef\nvt@main@font{Libertinus Serif}
     }{
-      \IfFontExistsTF{Libertinus Serif}{
-        \gdef\nvt@main@font{Libertinus Serif}
+      \IfFontExistsTF{Latin Modern Roman}{
+        \gdef\nvt@main@font{Latin Modern Roman}
+        \ClassWarningNoLine{novelette}{Did not find suitable default font.^^J%
+          Using Latin Modern Roman. For best appearance, select another.}
       }{
-        \IfFontExistsTF{Latin Modern Roman}{
-          \gdef\nvt@main@font{Latin Modern Roman}
-          \ClassWarningNoLine{novelette}{Did not find suitable default font.^^J%
-            Using Latin Modern Roman. For best appearance, select another.}
-        }{
-          \nvt@error{Looked for Latin Modern Roman^^J%
-            as last-choice default main font, but did not find it.^^J%
-            Your TeX system may be missing some standard files.}
-        }
+        \nvt@error{Looked for Latin Modern Roman^^J%
+          as last-choice default main font, but did not find it.^^J%
+          Your TeX system may be missing some standard files.}
       }
     }
   \fi
@@ -94,36 +89,45 @@
 
 %%
 \def\nvt@process@decofont{
-  \ifdefined\nvt@deco@font\else\xdef\nvt@deco@font{\nvt@main@font}\fi
-  \ifdefined\nvt@deco@feat\else\xdef\nvt@deco@feat{\nvt@main@feat}\fi
-  \IfFontExistsTF{\nvt@deco@font}{
-    \newfontfamily\decofont{\nvt@deco@font}[\nvt@deco@feat,%
-      Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0}]
-  }{
-    \ClassWarningNoLine{novelette}{Did not find deco font \nvt@deco@font.^^J%
-      Will use main font instead. Results will not be as intended.}
-    \newfontfamily\decofont{\nvt@main@font}[\nvt@main@feat,%
-      Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0}]
-  }
-  \def\nvt@temp@n{}
-  \ifthenelse{\equal{\nvt@deco@feat}{}}{}{\def\nvt@temp@s{[\nvt@deco@feat]}}
-  \xdef\log@decofont{\string\setfont{deco}{\nvt@deco@font}\nvt@temp@n}
+  \ifdefined\nvt@deco@feat\else\gdef\nvt@deco@feat{\nvt@main@feat}\fi
+  \ifdefined\nvt@deco@font
+    \IfFontExistsTF{\nvt@deco@font}{
+      \newfontfamily\nvt@deco@font{\nvt@deco@font}[\nvt@deco@feat,%
+        Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0}]
+      \gdef\decofont##1{{\nvt@deco@font ##1}}
+      \def\nvt@temp@n{}
+      \ifthenelse{\equal{\nvt@deco@feat}{}}{}{%
+        \def\nvt@temp@n{[\nvt@deco@feat]}}
+      \xdef\log@decofont{\string\setfont{deco}{\nvt@deco@font}\nvt@temp@n}
+    }{
+      \ClassWarningNoLine{novelette}{Did not find deco font \nvt@deco@font.^^J%
+        Will use main font instead. Results will not be as intended.}
+      \gdef\decofont##1{##1}
+    }
+  \else
+    \gdef\log@decofont{\string\setfont{deco}{} unused. Same as main font.}
+    \gdef\decofont##1{##1}
+  \fi
 }
 %%
 
 
 %%
 \def\nvt@process@otherfonts{
-  % \altfont (EB Garamond or Libertinus Serif, if available)
-  \IfFontExistsTF{EB Garamond}{
-    \newfontfamily\altfont{Libertinus Serif}[Scale=MatchLowercase,%
+  % \altfont (Libertinus Serif, if available)
+  \IfFontExistsTF{Libertinus Serif}{
+    \newfontfamily\nvt@alt@font{Libertinus Serif}[Scale=MatchLowercase,%
       RawFeature={colr=0}]
+    \gdef\altfont##1{{\nvt@alt@font ##1}}
   }{
-    \IfFontExistsTF{Libertinus Serif}{
-      \newfontfamily\altfont{Libertinus Serif}[Scale=MatchLowercase,%
-        RawFeature={colr=0}]
-    }{}
-    \let\altfont\relax
+    \ifnvt@warnalt\else
+      \ClassWarningNoLine{novelette}{Libertinus Serif fonts not installed.^^J%
+        The \string\altfont\space command has no effect. Text will be bad.^^J%
+        Libertinus Serif fonts are in TeX `libertinus-fonts' package.}
+      \nvt@bad
+      \let\altfont\relax
+      \nvt@warnalttrue
+    \fi
   }
   % \nvt@headfont (variation of main font)
   \ifthenelse{\equal{\nvt@hfscale}{1}}{
@@ -146,6 +150,51 @@
     Ligatures=ResetAll,Ligatures=TeX,RawFeature={colr=0},%
     FakeStretch=.94,LetterSpace=2]
 }
+%%
+
+
+%% EXPERIMENTAL \fshort requests substitute glyph. 
+\def\fshort{
+  \directlua{
+    fonts.handlers.otf.addfeature {
+      name = "fsht", type = "substitution", data = { ["f"] = "f.short", }
+    }
+  }
+}
+\@onlypreamble\fshort
+%%
+
+
+%% FEATURE COMMANDS
+\def\sups#1{%
+  {\addfontfeature{Numbers=ResetAll,VerticalPosition=Superior}#1}%
+}
+\let\sup\sups\relax
+%%
+\def\subs#1{%
+  {\addfontfeature{Numbers=ResetAll,VerticalPosition=Inferior}#1}%
+}
+\let\sub\subs\relax
+%%
+\DeclareDocumentCommand\smcp{+m}{% lowercase to small caps
+  {\addfontfeature{Letters=SmallCaps}#1}%
+}
+\DeclareDocumentCommand\allsmcp{+m}{% uppercase+lowercase to small caps
+  {\addfontfeature{Letters=UppercaseSmallCaps,Letters=SmallCaps}#1}%
+}
+\let\textsc\smcp\relax % unified
+\let\oldscshape\scshape\relax % unified
+\let\scshape\smcp\relax % unified
+%%
+\gdef\lnum#1{%
+  {\addfontfeature{Numbers=ResetAll,Numbers=Lining,RawFeature={+case}}#1}%
+}
+%% Fake medium caps, if c2sc available:
+\DeclareDocumentCommand\medcap{+m}{%
+  {\addfontfeature{Letters=UppercaseSmallCaps,ScaleAgain=1.18,%
+    FakeStretch=0.9}#1}%
+}
+\LetLtxMacro\medcaps\medcap\relax
 %%
 
 

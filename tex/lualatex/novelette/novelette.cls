@@ -31,8 +31,7 @@
 % Some systems use this:  luahbtex --fmt=lualatex your-document.tex
 %   Fonts are loaded by luaotfload and fontspec, and massaged by microtype.
 % For best results, use modern Open Type fonts, or TrueType fonts.
-%   The EB Garamond font family, if installed, is default.
-% The Libertinus Serif font family, if installed, is second default.
+%   The Libertinus Serif font family, if installed, is default.
 % Last-choice default is Latin Modern Roman; using it generates a warning.
 %   Images must be png monochrome, 1-bit per pixel, usually 600 pixels/inch.
 %%
@@ -87,6 +86,7 @@
 \newif\ifnvt@cleartoend % True if cleartoend issued. Prevents duplicate.
 \newif\ifnvt@err % True if Novelette (not LaTeX) issued an error.
 \newif\ifnvt@warnalert % True will issue warning when alerts > 0.
+\newif\ifnvt@warnalt % True if \altfont used without Libertinus Serif.
 %%
 
 

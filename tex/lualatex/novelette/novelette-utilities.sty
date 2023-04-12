@@ -117,7 +117,7 @@
 %%
 
 
-%% CHANGE MODE ON ERROR (not yet fully enabled)
+%% CHANGE MODE ON ERROR
 % Detect whether an error was thrown, regardless of its source.
 % If thrown, AtEndDocument changes to draft mode.
 \directlua{
@@ -221,25 +221,6 @@
 %%
 
 
-%% small caps
-\DeclareDocumentCommand\smcp{+m}{% lowercase to small caps
-  {\addfontfeature{Letters=SmallCaps}#1}%
-}
-\DeclareDocumentCommand\allsmcp{+m}{% uppercase+lowercase to small caps
-  {\addfontfeature{Letters=UppercaseSmallCaps,Letters=SmallCaps}#1}%
-}
-\let\textsc\smcp\relax % unified
-\let\oldscshape\scshape\relax % unified
-\let\scshape\smcp\relax % unified
-%%
-
-
-%% \lnum for lining numbers.
-\gdef\lnum#1{{\addfontfeature{Numbers=ResetAll,%
-  Numbers=Lining,RawFeature={+case}}#1}}
-%%
-
-
 %% \init[kern]{Letter}{phrase} for optional styling first line of a chapter.
 \DeclareDocumentCommand\init{O{0}mm}{%
   \noindent\smash{\addfontfeature{ScaleAgain=1.33}#2}%
@@ -252,16 +233,7 @@
 %%
 
 
-%% Fake medium caps, if c2sc available:
-\DeclareDocumentCommand\medcap{+m}{%
-  {\addfontfeature{Letters=UppercaseSmallCaps,ScaleAgain=1.18,%
-    FakeStretch=0.9}#1}%
-}
-\LetLtxMacro\medcaps\medcap\relax
-%%
-
-
-% \cleartorecto works same as \clearpage when next page is recto.
+%% \cleartorecto works same as \clearpage when next page is recto.
 %   If next page would be verso, a blank verso is inserted,
 %   so that the following material is recto.
 % \cleartoend is used at very end of book.
@@ -295,17 +267,6 @@
   \clearpage%
 }
 %%
-
-
-\def\sups#1{%
-  {\addfontfeature{Numbers=ResetAll,VerticalPosition=Superior}#1}%
-}
-\let\sup\sups\relax
-
-\def\subs#1{%
-  {\addfontfeature{Numbers=ResetAll,VerticalPosition=Inferior}#1}%
-}
-\let\sub\subs\relax
 
 
 

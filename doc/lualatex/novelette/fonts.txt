@@ -30,8 +30,7 @@ If you are familiar with fontspec syntax, you may define and use your own
 fonts. This is discouraged. There are potential layout issues that may
 arise when using font commands. They are not bugs; they are font mis-use.
 
-If the main font is neither EB Garamond nor Libertinus Serif, then one of
-these fonts (if installed) will be designated as an alternative font.
+Libertinus Serif (if installed) will be designated as an alternative font.
 It may be used when the main font lacks some character(s) that you need.
 For example, suppose that your main font has no Greek letters. You need
 Greek lowercase pi.This is the code:

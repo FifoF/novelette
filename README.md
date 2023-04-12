@@ -15,6 +15,8 @@ the code.
 Expected release mid-April 2023. Before I release it, I must wait for
 2023 binaries on my platform. They are custom-built, beyond my control.
 
+UPDATE, April 12, 2023: Getting closer.
+
 UPDATE, April 11, 2023: Settings \layout{headgap= ,footgap= } have been
 combined into a single \layout{gap= }.
 

@@ -38,4 +38,14 @@ Only uppercase letters are converted. Lowercase remains ordinary lowercase,
 not small caps.
 
 
+\cleartorecto
+\cleartoend
+
+\sups
+\subs
+\lnum
+
+\liga
+\dlig
+
 

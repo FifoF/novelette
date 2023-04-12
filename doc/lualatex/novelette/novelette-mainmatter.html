@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Novelette - Design and Content of Main Matter</title>
+<style type="text/css">
+body{color:#000000; background-color:#aaaaaa}
+#main{max-width:80em; padding:1em; border:2px solid #000000;
+  margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto;
+  background-color:#dddddd}
+#doctemplate{width:80%; padding:1em; border:1px solid #000000;
+  margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto;
+  background-color:#ffffff}
+div{margin-top:2em; margin-bottom:2em}
+p.linesp{line-height: 150%}
+</style>
+</head>
+<body>
+<div id="main">
+
+<div><a href="novelette.html">UP TO INDEX</a></div>
+
+<h2>Novelette - Design and Content of Main Matter</h2>
+
+<h4>THIS HTML FILE IS A WORK IN PROGRESS. ANYTHING MAY CHANGE.</h4>
+
+
+<div>
+<a id="mainwhat"></a>
+<h3>What is mainmatter ?</h3>
+<p>Main matter, or mainmatter, is your story. It includes chapters, and
+may contain other things. If something is "about the book" rather than
+part of the story, then it does not belong in mainmatter.</p>
+<p>The beginning of mainmatter is signaled by the <i>\mainmatter</i> command.
+This ensures that the next page will be recto, and changes the style and numbering
+of printable page numbers.</p>
+<p>In many cases, page 1 will be the very first page of your story. Whether it
+is named Chapter 1, or Introduction, or Prologue, does not matter.</p>
+<p>In other cases, page 1 will be earlier, so that the text of your story
+begins on page 3 or later. These cases are:</p>
+<p><ul>
+<li>Lengthy frontmatter (exceeding 8 pages). The visual separator will be
+page 1.</li>
+<li>Story is divided into Parts. In this case, the Part I page is page 1.</li>
+<li>Maps or diagrams, relevant to the story, are placed prior to the text.
+In this case, the visual separator is page 1, followed by the maps, then
+the text.</li> 
+</ul></p>
+<p>No matter what is there, page 1 is always recto, and the first page of
+the text (whether or not it is page 1) is always recto.</p>
+</div>
+
+<a id="opening"></a>
+<div>
+<h3>\begin{opening} ... \end{opening}</h3>
+<p>The <i>opening</i> environment is used at the start of new chapters,
+and can also be used at the start of chapter-like portions of your book.
+It does not matter whether the portion is just one page.</p>
+<p>Within an opening, you may use some commands that are not available
+in main text. These are <a href="#name">\name</a> and
+<a href="#desc">\desc</a> (description). In essence, those are chapter
+title and subtitle (if any).</p>
+<p>To vertically position items, use the <i>\null</i> command,
+as often as necessary, to insert blank lines.</p>
+</div>
+
+<a id="name"></a>
+<div>
+<h3>\name[option]{<i>Chapter Title or Number</i>}</h3>
+<p>The \name command  may only be used
+within the <a href="#opening">opening</a> environment. The <i>name</i>
+is usually chapter title or number. This is not intended for more than
+one line of text.</p>
+<p>The name text is pre-set at 1.8 times the size of main text.</p>
+<p>The option is a letter: l c r o i, for alignment left, center, right,
+outside, or inside.</p>
+</div>
+
+<a id="desc"></a>
+<div>
+<h3>\desc[option]{<i>Chapter Subtitle</i>}</h3>
+<p>The \desc command may only be used in an <a href="#opening">opening</a>
+environment. If used, is usually a one-line chapter subtitle. This is
+not intended for an extended amount of text. If necessary, you may use
+\desc more than once, for multiple lines. However, multiple lines would
+probably look better in ordinary main text.</p>
+<p>The desc text is pre-set at 1.33 times the size of main text.</p>
+<p>The option is a letter: l c r o i, for alignment left, center, right,
+outside, or inside.</p>
+</div>
+
+<!-- XXXXXXXXXXXXXXXX -->
+
+
+</div>
+</body>
+</html>
+

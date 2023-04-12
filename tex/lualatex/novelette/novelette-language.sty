@@ -38,8 +38,9 @@
 %%
 
 
-      \directlua{require "novelette-frpunct"}
-
+%% MODIFIED FROM POLYGLOSSIA
+\directlua{require "novelette-frpunct"}
+%%
 
 
 %% Modified code from package `luahyphenrules'.
@@ -189,7 +190,7 @@
 %% End code modified from `luahyphenrules.sty'.
 
 
-%%
+%% SETLANG
 \DeclareDocumentCommand\setlang{smO{}}{
   \StrDel{#2}{ }[\nvt@temp@s]
   \ifthenelse{\equal{\nvt@temp@s}{default}}{\gdef\nvt@lang{english}}{}
@@ -234,7 +235,6 @@
       }
     }{}
     \ifthenelse{\equal{\nvt@temp@d}{french}}{
-%      \directlua{require "novelette-frpunct"}
       \IfBooleanTF{#1}{
         \lccode"2019=\z@
         \directlua{nvtfrpunct.deactivate_french_punct()}
@@ -248,7 +248,6 @@
       }
     }{}
     \ifthenelse{\equal{\nvt@temp@d}{swissfrench}}{
-%      \directlua{require "novelette-frpunct"}
       \IfBooleanTF{#1}{
         \lccode"2019=\z@
         \directlua{nvtfrpunct.deactivate_french_punct()}

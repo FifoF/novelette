@@ -254,7 +254,7 @@
   \ifvmode\else\par\fi%
   \nvt@okfalse%
   \StrDel{#1}{ }[\nvt@temp@s]%
-  \ifthenelse{\equal{\nvt@temp@s}{}}{\nvt@true\null}{}%
+  \ifthenelse{\equal{\nvt@temp@s}{}}{\nvt@oktrue\null}{}%
   \ifthenelse{\equal{\nvt@temp@s}{-}}{%
     \nvt@oktrue{\centering\strut\rule[.5\nvt@xht]{.25\textwidth}{.5pt}\par}%
   }{}%

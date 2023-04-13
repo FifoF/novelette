@@ -10,6 +10,7 @@ SCENE BREAKS
 The argument is mandatory. If necessary, use empty braces {}.
 
 If the argument is space or empty, \scene{} simply inserts a blank line.
+But \scene without the braces will throw an error. Better to use \null instead.
 
 If the argument is a hyphen (without additional text), \scene{-}
 skips a line, and  places a short centered line in the gap.
@@ -29,8 +30,8 @@ If the argument text begins with a single plus sign, then a dash precedes the
 remaining text. The dash is at half uppercase X-height.
 	\scene{+IX. The Dinner}
 
-The text may be styled with Italics. Note the use of \itshape here:
-	\scene{+IX. \itshape{The Dinner}}
+The text may be styled with Italics:
+	\scene{+IX. \ital{The Dinner}}
 
 In all cases, the following paragraph is not indented.
 

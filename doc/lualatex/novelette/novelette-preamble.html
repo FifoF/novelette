@@ -3,101 +3,111 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 <title>Novelette - Preamble Settings</title>
-<style type="text/css">
-body{color:#000000; background-color:#aaaaaa}
-#main{max-width:80em; padding:1em; border:2px solid #000000;
-  margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto;
-  background-color:#dddddd}
-#doctemplate{width:80%; padding:1em; border:1px solid #000000;
-  margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto;
-  background-color:#ffffff}
-div{margin-top:2em; margin-bottom:2em}
-p.linesp{line-height: 150%}
-</style>
+<link rel="stylesheet" type="text/css" href="novelette.css">
 </head>
 <body>
 <div id="main">
-<h2>Novelette - Preamble Settings</h2>
 
-<div><a href="novelette.html">UP TO INDEX</a></div>
+<h2>Novelette - Documentation</h2>
+<p class="noindent">Quick Links:
+<a href="novelette.html">Overview</a>
+<a href="novelette-frontmatter.html">Frontmatter</a>
+<a href="novelette-mainmatter.html">Mainmatter</a>
+</p>
 
-<h4>THIS HTML FILE IS A WORK IN PROGRESS. ANYTHING MAY CHANGE.</h4>
+<h3>Preamble</h3>
 
+<p>The Preamble is where you write settings. Novelette comes with pre-set
+values for everything. Only change what you need.</p>
 
-<p>Document class <i>novelette</i> is unlike any other LaTeX document class:
-(a) It requires LuaLaTeX; (b) It does not honor widely-used LaTeX commands;
-(c) It has its own methods for setting layout and other properties,
-specifically written for those who have very little knowledge of LaTeX;
-(d) The resulting PDF is created for printed (to paper) popular fiction,
-such as detective novels, printed in black ink only; (e) There is no capability
-for Ebooks or any kind of academic works.</p> 
+<div>
+<h4>Install Libertinus Serif fonts: Package libertinus-serif</h4>
+<p>Before you do anything else, install the
+<span class="nowrap"><i>Libertinus Serif</i></span> fonts.
+These are the default fonts, and are also used as "Plan B" for any
+other font you require. If you are using MiKTeX, install them via
+the MiKTeX console. If you are using command line (Linux, etc.) then use
+<i>tlmgr</i> to install them:</p>
+<p class="code"><code>tlmgr install libertinus-fonts</code></p>
+<p>Although there are other packages with "libertinus" in the name, the only
+one you need is <span class="nowrap"><i>libertinus-fonts</i>.</span></p>
+<p>Unlike other component packages, Novelette will not throw an error if
+you do not have those fonts. You must install them yourself.</p>
+</div>
 
-<p>QUICK START: Here is a model Preamble. Each of its commands is a
+<div>
+<h3>Quick Start</h3>
+<p>Here is a model Preamble. Each of its commands is a
 hyperlink within this documentation. Click to learn what the commands do,
-and how to choose their values:</p>
+and how to choose their values.</p>
+</div>
 
-<div id="doctemplate"><p class="linesp">
+<div id="doctemplate">
+<p class="linesp noindent">
 <a href="#lualatex">% !TeX TS-program = lualatex</a><br>
 <a href="#utf8">% !TeX encoding = UTF-8</a><br>
 <a href="#documentclass">\documentclass{novelette}</a><br>
 <a href="#mode">\mode</a>{<i>choice</i>}<br>
 <a href="#intent">\intent</a>{<i>choice</i>}<br>
-<a href="#setlang">\setlang</a>{<i>code</i>}[<i>option</i>]<br>
-<a href="#title">\title</a>{<i>title</i>}<br>
-<a href="#author">\author</a>{</i>author</i>}<br>
-<a href="#trimsize">\trimsize</a>{width=<i>size</i>,height=<i>size</i>}<br>
-<a href="#sheetfeed">\sheetfeed</a>{<i>choice</i>} % Normally not used.<br>
-<a href="#margins">\margins</a>{top=<i>size</i>,outside=<i>size</i>,bottom=<i>size</i>,inside=<i>size</i>}<br>
-<a href="#layout">\layout</a>{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}<br>
-<a href="#text">\text</a>{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}<br>
-<a href="#setfont">\setfont</a>{main}{<i>Font Name</i>}[<i>features</i>]<br>
-<a href="#setfont">\setfont</a>{<i>deco</i>}{<i>Font Name</i>}[<i>features</i>]<br>
-<a href="#guides">\guides</a>{<i>integer,integer,integer,integer</i>}<br>
-<a href="#begindoc">\begin{document}</a><br>
+<a href="#setlang">\setlang</a>{<i>choice</i>}[<i>option</i>]<br>
+<a href="#title">\title</a>{<i>choice</i>}<br>
+<a href="#subtitle">\subtitle</a>{<i>choice</i>}<br>
+<a href="#author">\author</a>{</i>choice</i>}<br>
+<a href="#trimsize">\trimsize</a>{choice}<br>
+<a href="#sheetfeed">\sheetfeed</a>{<i>choice</i>} % Normally unused.<br>
+<a href="#margins">\margins</a>{<i>choice</i>}<br>
+<a href="#layout">\layout</a>{<i>choice</i>}<br>
+<a href="#text">\text</a>{choose}<br>
+<a href="#setfont">\setfont</a>{main}{<i>choice</i>}[<i>option</i>]<br>
+<a href="#setfont">\setfont</a>{deco}{<i>choice</i>}[<i>option</i>]<br>
+<a href="#guides">\guides</a>{<i>choice</i>}<br>
+<a href="#begindoc">\begin{document}</a>
+</p>
 </div>
 
 
 <a id="lualatex"></a>
 <div>
-<h3>% !TeX TS-program = lualatex</h3>
-<p>This is a "magic comment". Some GUI programs (TeXworks, TeXstudio, etc.)
-can read this line. It tells them to use <i>lualatex</i> compiler, regardless
-of what the program uses for its standard compiler.</p>
-<p>If you are compiling from command line, be sure to use </i>lualatex</i>.
-Anything else will be rejected.</p>
+<h4><code>% !TeX TS-program = lualatex</code></h4>
+<p>This is a <i>magic comment</i>. Some (not all) GUI programs
+can read this line. It tells them to use <code>lualatex</code> compiler,
+regardless of what the program uses for its standard compiler.</p>
+<p>If you are building from command line, be sure to use
+<code>lualatex</code> as the compiler. Anything else will be rejected.</p>
 </div>
 
 <a id="utf8"></a>
 <div>
-<h3>% !TeX encoding = UTF-8</h3>
-<p>This is a "magic comment". It tells some GUI programs that the characters
-have utf-8 encoding. You must type your document using utf-8, without its
-"byte order mark" (BOM). This is essential. It is the default encoding for
-Linux and Mac. On Windows, be sure to configure your text editor for
-utf-8 without BOM.</p>
+<h4><code>% !TeX encoding = UTF-8</code></h4>
+<p>This is a <i>magic comment</i>, understood by some (not all) GUI programs.
+It tells them that your document has utf-8 encoding.</p>
+<p>You <b>must</b> type your document using utf-8, without its
+<i>byte order mark</i> (BOM). This is essential. It is the default encoding
+for Linux and Mac. On Windows, be sure to configure your text editor for
+utf-8 without BOM. Never use Windows Notepad.</p>
 </div>
 
 <a id="documentclass"></a>
 <div>
-<h3>\documentclass{novelette}</h3>
+<h4><code>\documentclass{novelette}</code></h4>
+<p>This command begins the Preamble, where you place settings.</p>
 <p>Unlike other LaTeX document classes, Novelette has no class options.
 Anything you need is set by one of the other commands in Preamble,
 or is automatically calculated from other settings.</p>
-<p>The \documentclass begins the Preamble, where you place settings.</p>
 </div>
 
 <a id="mode"></a>
 <div>
-<h3>\mode{<i>choice</i>}</h3>
-<p>Novelette has four modes: draft, shade, align, final. If you do not set
-the mode, its default is draft.</p>
-<p><b>draft</b> disables PDF/X conformance (see <a href="#intent">intent</a>).
-It places DRAFT at the top left of each page. The PDF title is changed,
-to include the word DRAFT. Otherwise, the layout, line breaks, and page breaks
-are the same as they will be, when you graduate to final mode.</p>
-<p><b>shade</b> is draft mode, with margins tinted gray.</p>
-<p><b>align</b> is shade/draft mode, with text baselines marked.</p>
-<p><b>final</b> should only be used when you are ready. In final mode,
+<h4><code>\mode{<i>choice</i>}</code></h4>
+<p>Novelette has four modes: <code>draft shade align final</code>.
+If you do not set the mode, its default is <code>draft</code>.</p>
+<p><code>draft</code> disables <a href="#intent">PDF/X conformance</a>.
+The PDF title is changed, to include the word DRAFT. Otherwise, the layout,
+line breaks, and page breaks are the same as they will be, when you graduate
+to final mode.</p>
+<p><code>shade</code> is draft mode, with margins tinted gray.</p>
+<p><code>align</code> is shade+draft mode, with text baselines marked.</p>
+<p><code>final</code> should only be used when you are ready. In final mode,
 Novelette performs some checks that it would otherwise omit (to save time).
 If your document fails one of the checks, you will be warned. Then it will
 automatically revert to draft mode, so that the failed PDF cannot be confused
@@ -106,80 +116,89 @@ with a good final file.</p>
 
 <a id="intent"></a>
 <div>
-<h3>\intent{<i>choice</i>}</h3>
-<p>There are four intents: none, SWOP, FOGRA39, JC200103. Default is none.
+<h4><code>\intent{<i>choice</i>}</code></h4>
+<p>There are four intents: <code>none SWOP FOGRA39 JC200103</code>.
+Default is <code>none</code>.
 No matter which intent you choose, fonts are subset embedded. That is enough
 for some print services.</p>
-<p><b>none</b> does not produce PDF/X. No matter how you set intent, it is
-automatically changed to <i>none</i> unless you are in final mode. The other
-intents produce <span style="white-space:nowrap">PDF/X-1a:2001.</span></p>
-<p><b>SWOP</b> means "US Web Coated SWOP". This is most frequently used in
-the United States.</p>
-<p><b>FOGRA39</b> (actually FOGRA39L) is frequently used in Europe.</p>
-<p><b>JC200103</b> is frequently used in Japan.</p>
+<p><code>none</code> does not produce PDF/X. No matter how you set intent, it
+is automatically changed to <code>none</code> unless you are in final mode.
+The other intents produce <span class="nowrap">PDF/X-1a:2001.</span></p>
+<p><code>SWOP</code> means "US Web Coated SWOP". This is most frequently used
+in the United States.</p>
+<p><code>FOGRA39</code> (actually FOGRA39L) is frequently used in Europe.</p>
+<p><code>JC200103</code> is frequently used in Japan.</p>
+<p>Dirty little secret: Even if your print service requires an intent,
+it will be ignored. The only reason it may be required, is that it is part
+of the standard, so it cannot be omitted.</p>
 </div>
 
 <a id="setlang"></a>
 <div>
-<h3>\setlang{<i>code</i>}[<i>option</i>] <i>-or-</i>\setlang*{<i>code</i>}[<i>option</i>]</h3>
-<p>The <i>code</i> is a language code, limited to Western European languages.
-The reason for the limitation is that many other world languages require support that
-would conflict with Novelette layout methods.</p>
-<p>Available codes:<ul>
-<li><i>da</i> (Danish)</li>
-<li><i>nl</i> (Dutch)</li>
-<li><i>is</i> (Icelandic)</li>
-<li><i>ga</i> (An Caighdeán Gaelic)</li>
-<li><i>nb</i> (Norwegian Bokmål)</li>
-<li><i>nn</i> (Norwegian Nynorsk)</li>
-<li><i>sv</i> (Swedish)</li>
-<li><i>fi</i> (Finnish)</li>
-<li><i>pt</i> (Portuguese)</li>
-<li><i>es</i> (Spanish)</li>
-<li><i>eu</i> (Basque)</li>
-<li><i>ca</i> (Catalan)</li>
-<li><i>oc</i> (Occitan)</li>
-<li><i>fr</i> (French, France)</li>
-<li><i>fr-CH</i> (French, Swiss)</li>
-<li><i>de</i> (German, Germany/Austria)</li>
-<li><i>de-CH</i> (German, Swiss)</li>
-<li><i>it</i> (Italian)</li>
-<li><i>en</i> (English, British)</li>
-<li><i>en-US</i> (English, USA)</li>
-<li><i>xx</i> (No hyphenation).</li>
+<h4><code>\setlang{<i>code</i>}[<i>option</i>]<br>
+\setlang*{<i>code</i>}[<i>option</i>]</code></h4>
+<p>The <code>code</code> is a Western European language code. Novelette is not
+configured for other world languages, due to layout calculation methods.</p>
+<p>Novelette only uses this setting for hyphenation patterns, and (for French)
+punctuation spacing. It is not a spelling or grammar check. It does not format
+time or date. Soyou may write snippets of text in most other languages,
+if you do not mind it being hyphenated like your setting.</p>
+<p class="noindent">Available codes:<ul>
+<li><code>da</code> (Danish)</li>
+<li><code>nl</code> (Dutch)</li>
+<li><code>is</code> (Icelandic)</li>
+<li><code>ga</code> (An Caighdeán Gaelic)</li>
+<li><code>nb</code> (Norwegian Bokmål)</li>
+<li><code>nn</code> (Norwegian Nynorsk)</li>
+<li><code>sv</code> (Swedish)</li>
+<li><code>fi</code> (Finnish)</li>
+<li><code>pt</code> (Portuguese)</li>
+<li><code>es</code> (Spanish)</li>
+<li><code>eu</code> (Basque)</li>
+<li><code>ca</code> (Catalan)</li>
+<li><code>oc</code> (Occitan)</li>
+<li><code>fr</code> (French, France)</li>
+<li><code>fr-CH</code> (French, Swiss)</li>
+<li><code>de</code> (German, Germany/Austria)</li>
+<li><code>de-CH</code> (German, Swiss)</li>
+<li><code>it</code> (Italian)</li>
+<li><code>en</code> (English, British)</li>
+<li><code>en-US</code> (English, USA)</li>
+<li><code>xx</code> (No hyphenation).</li>
 </ul></p>
-<p>For most languages, there is no difference between the unstarred <i>\setlang</i>
-and the starred <i>\setlang*</i> commands. Exceptions:</p>
-<p>In German (de), the unstarred command uses contemporary <span style="whitespace:no-wrap">(post-1996)</span> rules.
-The starred command uses older (1901) rules.</p>
-<p>In French <span style="whitespace:no-wrap">(fr and fr-CH)</span> the
-unstarred command adds extra space before the semicolon,
-exclamation, and question marks. French
-<span style="whitespace:no-wrap">(fr, but not fr-CH)</span> also adds space before
-the colon. Both <span style="whitespace:nowrap">(fr and fr-CH)</span> add space
-after opening guillemet, and before
-closing guillemet. The starred command does not add any of these spaces; this is useful
-if you are importing text that already has space characters there.</p>
-<p>There is only one option <i>[-g]</i> and it is only effective for French
-<span style="whitespace:no-wrap">(fr and fr-CH).</span>
-It does not add guillemet space, regardless of starred or unstarred command.</p>
-<p>The setting does not perform spelling or grammar check, does not style time or date,
-and does not suggest words. You must do that yourself.</p>
+<p>For most languages, there is no difference between the starred and
+unstarred <code>\setlang</code> commands. Exceptions:</p>
+<p>In <b>German (<code>de</code>)</b>, the unstarred <code>\setlang</code>
+uses contemporary <span class="nowrap">(post-1996)</span> rules.
+The starred <code>\setlang*</code> uses older (1901) rules.</p>
+<p>In <b>French (<code>fr</code>)</b> the unstarred <code>\setlang</code> adds
+extra space before the colon, semicolon, exclamation, and question marks.</p>
+<p>In <b>Swiss French (<code>fr-CH</code>)</b>, the unstarred
+<code>\setlang</code> adds extra space before the semicolon, exclamation, and
+question marks. But it does <i>not</i> add extra space before the colon.</p>
+<p>Both <b>French (<code>fr</code>)</b> and <b>Swiss French
+(<code>fr-CH</code>)</b> also add extra space after opening guillement, and
+before closing guillemet. If you do not wish to add these spaces, use the
+<code>[-g]</code> option. Other spaces are not affected.</p>
+<p>In <b>French (<code>fr</code>)</b> and <b>Swiss French
+(<code>fr-CH</code>)</b>, the starred <code>\setlang*</code> does not apply
+extra space to any punctuation. This might be useful if you already typed
+those spaces manually.</p>
 </div>
 
 <a id="title"></a>
 <div>
-<h3>\title{<i>Title of Your Book</i>}</h3>
+<h4><code>\title{<i>Title of Your Book</i>}</code></h4>
 <p>When you use a print-on-demand service, you provide them with metadata
 for your book: title, author, genre, keywords, description, ISBN, and maybe
 others. Of these, only title and author are part of the PDF. This is because
 the PDF itself is not being marketed. Information such as the copyright
 and ISBN appear in print.</p>
-<p>The <i>\title</i> of your document must be exactly the same as whatever
-you provided to the service. Do not use TeX macros, styles, or character codes
-(except as listed below). Use straight (ordinary keyboard) apostrophe,
-not curly. You may use Latin-1 letters with diacriticals.</p>
-<p>Exceptions: Special characters \# \$ \% \& \{ \}
+<p>The <code>\title</code> must be exactly the same as whatever
+you provided to the distribution service. Do not use TeX macros, styles, or
+character codes (except as listed below). Use straight (ordinary keyboard)
+apostrophe, not curly. You may use Latin-1 letters with diacriticals.</p>
+<p>Exceptions: Special characters \# \$ \% \&
 are preceded by a backslash, as shown.</p>
 <p>Example: \title{The \$20 Balloon}</p>
 <p>Note: The print service may allow you to use non-alphanumeric characters
@@ -187,12 +206,24 @@ in the title, or may forbid them. It is a matter of how things are indexed
 in their database. Novelette does not care.</p>
 </div>
 
+
+<a id="subtitle"></a>
+<div>
+<h4><code>\subtitle{<i>Subtitle of Your Book</i>}</code></h4>
+<p>Not all books have a subtitle, so the default is no subtitle. If you do
+have a subtitle, write it here.</p>
+<p>Unlike the title and author, the subtitle is not part of PDF metadata.
+But if you print a subtitle, it must agree with whatever you listed with
+the book distribution network.</p>
+</div>
+
+
 <a id="author"></a>
 <div>
-<h3>\author{<i>Author of Your Book</i>}</h3>
-<p>The considerations for <i>\title</i> apply, with these additional:</p>
+<h4><code>\author{<i>Author of Your Book</i>}</code></h4>
+<p>The considerations for <code>\title</code> apply, with these additional:</p>
 <p>Novelette is not intended for academic works. There should be a single
-author (in some cases, two equal authors, using a single <i>\author</i>).</p>
+author (or two equal authors, using a single <code>\author</code>).</p>
 <p>Whether the author is your real name, or a pseudonym, is up to you.
 If in doubt, ask the print service.</p>
 <p>If you use a pseudonym, then you should probably use your real name as
@@ -206,14 +237,14 @@ have it indexed under the desired name (pseudonym or real name).</p>
 
 <a id="trimsize"></a>
 <div>
-<h3>\trimsize{width=<i>size</i>,height=<i>size</i>}</h3>
+<h4><code>\trimsize{width=<i>size</i>,height=<i>size</i>}</code></h4>
 <p>Trim Size is the size of your book pages. Be sure to choose cream paper
 (creme, off-white), not white paper. The print service will offer a choice
 of several standard sizes.</p>
 <p>Dimensions are measured in units of inches or millimeters (in,mm).
 Examples:<p>
-<p>\trimsize{width=5.5in,height=8.5in} % American Digest.</p>
-<p>\trimsize{width=129mm,height=198mm} % British B-Format.</p>
+<p><code>\trimsize{width=5.5in,height=8.5in} % American Digest.</code></p>
+<p><code>\trimsize{width=129mm,height=198mm} % British B-Format.</code></p>
 <p>The name "trim size" comes from the manufacturing process. The pages are
 printed on larger paper, then roughly cut and assembled with glue.
 The cover is attached with glue, then the entire book is "trimmed" with
@@ -224,26 +255,27 @@ pages. The cover size is slightly larger.</p>
 
 <a id="sheetfeed"></a>
 <div>
-<h3>\sheetfeed{<i>choice</i>}</h3>
-<p>Do not use the \sheetfeed setting, unless you are certain that you need it.
+<h4><code>\sheetfeed{<i>choice</i>}</code></h4>
+<p>Do not use the <code>\sheetfeed</code> setting, unless you are certain.
 If you use this setting incorrectly, big problems will result. Do not guess.
-Available choices are <i>letter</i> and <i>A4</i>.</p>
-<p>If you do not use \sheetfeed, the PDF page size will be the same as the
+Available choices are <code>letter</code> and <code>A4</code>.</p>
+<p>If you do not use <code>\sheetfeed</code>, the PDF page size will be the
 book trim size. This is how nearly all print-on-demand services want it.</p>
-<p><b>letter</b> centers the trim size, vertically and horizontally, in the
-larger USletter size (8.5in width, 11in height),</p>
-<p><b>A4</b> (or a4) centers the trim size, vertically and horizontally,
-in the larger European A4 size (210mm width, 297mm height).</p>
+<p><b><code>letter</code></b> centers the trim size, vertically
+and horizontally, in the larger USletter size (8.5in width, 11in height),</p>
+<p><b><code>A4</code></b> (or a4) centers the trim size, vertically and
+horizontally, in the larger European A4 size (210mm width, 297mm height).</p>
 <p>If you are printing pages at home, for manual editing, then you might
-use letter or A4, to produce consistent results from your home printer.
-That might also be the case, if your book will be reviewed by an editor.</p>
+use <code>letter</code> or <code>A4</code>, to produce consistent results from
+your home printer. That might also be the case, if your book will be reviewed
+by an editor.</p>
 <p>Novelette does not produce crop marks or trim marks. It does write the
 internal "TrimBox" metadata to the PDF.</p>
 </div>
 
 <a id="margins"></a>
 <div>
-<h3>\margins{top=<i>size</i>,outside=<i>size</i>,bottom=<i>size</i>,inside=<i>size</i>}</h3>
+<h4><code>\margins{top=<i>size</i>,outside=<i>size</i>,bottom=<i>size</i>,inside=<i>size</i>}</code></h4>
 <p>In Novelette, margins surround the printable area. Nothing may be printed
 within the margins. The header, main text, and footer all must fit within the
 rectangle surrounded by the margins. This is how the term "margins" is used
@@ -252,88 +284,96 @@ by most print services.</p>
 within the bottom margin.</p>
 <p>Margins are measured in units of inches or millimeters (in,mm). It is best
 to use the same units for margins, as you use for trim size.</p>
-<p><b>top</b> margin is the area above the topmost printable item, which
-is the header (if your page style uses header), or main text (if otherwise).</p>
-<p><b>outside</b> margin is the area at the outer page edge, being the left
-side of even-numbered (verso) pages, or the right side of odd-numbered (recto)
-pages.</p>
-<p><b>bottom</b> margin is the area below the lowest printable item, which
-is the footer (if your page layout uses footer), or main text (if otherwise).</p>
-<p><b>inside</b> margin as at the spine (binding). In general, this margin
-should be set 0.125in (or 3mm) wider than the ouside margin. The extra width
-allows for binding glue.</p>
+<p><b><code>top</code></b> margin is the area above the topmost printable item,
+which is the header or main text.</p>
+<p><b><code>outside</code></b> margin is the area at the outer page edge,
+being the left side of even-numbered (verso) pages, or the right side of
+odd-numbered (recto) pages.</p>
+<p><b><code>bottom</code></b> margin is the area below the lowest printable
+item, which is the footer or main text.</p>
+<p><b><code>inside</code></b> margin is at the spine (binding). In general,
+this margin should be set 0.125in (or 3mm) wider than the ouside margin.
+The extra width allows for binding glue.</p>
 <p>You may abbreviate the margins setting, with a single value:<br>
-\margins{<i>size</i>} sets top, ouside, and bottom margins to that size.
-Inside margin is set 0.125in (or 3mm) larger.</p>
-<p>If you do not set margins, Novelette will set them for you. At smaller
-trim sizes, the margins will be at the minimum required by some print services.
-At larger trim size, the margins will be larger.</p>
+<code>\margins{<i>size</i>}</code> sets top, ouside, and bottom margins
+to that size. Inside margin is set 0.125in (or 3mm) larger.</p>
+<p>If you do not set margins, Novelette will set them for you.
+Many print services require minimum margins of 0.5in|13mm, plus 0.125in|3mm
+at the spine. These are the Novelette minimum defaults, for small books.
+You can manually use narrower margins, if allowed by your print service.</p>
 </div>
 
 
 <a id="layout"></a>
 <div>
-<h3>\layout{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}</h3>
-<p>The \layout command accepts one or more comma-separated key=value pairs.
-It sets the page layout header/footer style.</p>
-<p><b>style=<i>integer</i></b><br>Integer from 1 to 7 selects page style,
+<h4><code>\layout{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}</code></h4>
+<p>The <code>\layout</code> command accepts one or more comma-separated
+key=value pairs. It sets the page layout header/footer style.</p>
+<p><b><code>style=<i>integer</i></code></b><br>
+Integer from 1 to 7 selects page style,
 (header and/or footer) from a menu of available styles. The default style
 depends on other page design settings.</p>
-<p><b>gap=<i>number</i></b><br>Number is integer|decimal from 0 to 1.
+<p><b><code>gap=<i>number</i></code></b><br>
+Number is integer|decimal from 0 to 1.
 Value 0 (rarely used) places header|footer at the line immediately above|below
- main text. Value 1 skips a whole line between them, and is best for
+main text. Value 1 skips a whole line between them, and is best for
 large books. Value 0.5 is a nice compromise for smaller books.</p>
-<p><b>scale=<i>number</i></b><br>
+<p><b><code>scale=<i>number</i></code></b><br>
 Sets the scale of header/footer text, relative to size of main font.
 Acceptable range is 0.75 to 1, but must evaluate to at least 7bp.</p>
 <p>Note: If you use a header/footer, there will be pages where nothing
 is printed in the header/footer. Nevertheless, the space for header/footer
 is reserved; main text does not vertically expand to fill the empty
 header/footer.<p>
-<p>Note: Command <a href="#thispagestyle">\thispagestyle</a> locally changes
-the layout for a single page.</p>
+<p>Note: Command <a href="#thispagestyle"><code>\thispagestyle</code></a>
+locally changes the layout for a single page.</p>
 </div>
 
 
 <a id="text"></a>
 <div>
-<h3>\text{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}</h3>
-<p>The \text command accepts one or more comma-separated key=value pairs.</p>
-<p><b>fontsize=<i>size</i></b><br>Sets the size of main text font. Integer
-or decimal. Typical value near 11.5pt. Must have units pt (TeX points) or
-bp (PostScript points).</p>
-<p><b>lines=<i>integer</i></b><br>Number of lines in main text block, not
-counting header or footer. The default number depends on page sizes.</p>
+<h4><code>\text{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}</code></h4>
+<p>The <code>\text</code> command accepts one or more comma-separated
+key=value pairs.</p>
+<p><b><code>fontsize=<i>size</i></code></b><br>
+Sets the size of main text font. Integer or decimal. Typical value near 11.5pt.
+Must have units pt (TeX points) or bp (PostScript points).</p>
+<p><b><code>lines=<i>integer</i></code></b><br>
+Number of lines in main text block, not counting header or footer.
+The default number depends on page sizes.</p>
 </div>
 
 
 <a id="setfont"></a>
 <div>
-<h3>\setfont{<i>role</i>}{<i>Font Name</i>}[<i>features</i>]</h3>
+<h4><code>\setfont{<i>role</i>}{<i>Font Name</i>}[<i>features</i>]</code></h4>
 <p>Novelette uses <i>fontspec</i> technology for Open Type fonts. If you are
 a knowledgeable LaTeX user, you may use some aspects of <i>fontspec</i>
 directly, but that is strongly discouraged, due to potential layout conflict.
-Do not use <i>\setmainfont</i>.</p>
-<p><i>\setfont</i> has two mandatory arguments, and an optional argument.</p>
-<p><b>role</b> is a keyword, one of: <i>main deco</i>.
+Do not use <code>\setmainfont</code>.</p>
+<p><code>\setfont</code> has two mandatory arguments, and an optional
+argument.</p>
+<p><b><code>role</code></b> is a keyword, one of: <code>main deco</code>.
 It assigns the font to its proper place and purpose.</p>
-<p><b>Font Name</b> is the Open Type font family name. Examples are
-EB Garamond, Libertinus Serif. No TeX fonts with three-letter codes.</p>
-<p><b>features</b> is an optional, comma-separated list of Open Type features,
-using <i>fontspec</i> syntax. Default uses kerning and OldStyle numerals.
-Default also uses TeX ligatures (converts `` to “ and so forth).</p>
+<p><b><code>Font Name</code></b> is the Open Type font family name, such as
+<i>Libertinus Serif</i>. No TeX fonts with three-letter codes.</p>
+<p><b><code>features</code></b> is an optional, comma-separated list of
+Open Type features, using <i>fontspec</i> syntax. Default uses kerning and
+OldStyle numerals. Default also uses TeX ligatures
+(converts `` to “ and so forth).</p>
 <p>Common ligatures (ff, fi, fl, ffi, ffl) are not enabled by default, since
 they are not necessarily useful. To enable common ligatures, write
-<span style="white-space:nowrap">[Ligatures=Common]</span> option.</p>
+<span class="nowrap"><code>[Ligatures=Common]</code></span> option.</p>
 </div>
 
 
 <a id="guides"></a>
 <div>
-<h3>\guides{integer,integer,integer,integer}</h3>
+<h4><code>\guides{integer,integer,integer,integer}</code></h4>
 <p>You may create four or fewer pairs of guides. These are marks in the
 side margins, when in shade or align mode. The guides align with main text
-baseline and descender, at the integer line number from top of main text.</p>
+baseline and descender, at the <code>integer</code> line number from top of
+main text.</p>
 <p>Guides are not enforced. They are merely for your own use. Typically,
 a guide is placed where you wish the topmost item in openings to sit, and
 another guide is placed at the first line of main text under the opening.</p>
@@ -342,7 +382,7 @@ another guide is placed at the first line of main text under the opening.</p>
 
 <a id="begindoc"></a>
 <div>
-<h3>\begin{document}</h3>
+<h4><code>\begin{document}</code></h4>
 <p>This command is the boundary between the Preamble above it, and the
 printable book below it.</p>
 <p>If you ever get an error message "Missing \begin{document}" and wonder why,
@@ -352,43 +392,6 @@ that have special meaning. What you type is not what you get in print.</p>
 <p>After \begin{document}, Novelette reduces the number of special characters,
 to reduce the chance that you will become tanlged with special meanings.
 This is <a href="#specialcharbody">explained in detail</a>.</p>
-</div>
-
-
-<a id="whichfonts"></a>
-<div>
-<h3>Which Fonts to Use?</h3>
-<P>You may use any free, shareware, or commercial OpenType font. There is
-no need to limit yourself to fonts from the LaTeX font catalog. In fact,
-many LaTeX fonts are not available as OpenType.</p>
-<p>Many, but not all, TrueType fonts are also OpenType, in this context.
-However, Novelette cannot handle TrueType "collections" bound into a single
-file.</p>
-<p>Desirable fonts for fiction will often say that they are similar to
-Garamond, Caslon, or Bembo. Some are more similar than others, but that
-is not relevant. Such fonts are designed for casual reading, where the eye
-will not dwell on a particular item of interest.</p>
-<p>Fonts such as Times (New) Roman, and the TeX Latin Modern Roman,
-do not perform as well in fiction. Times was designed for relatively crowded
-newsprint. LMR was designed for academic papers.</p>
-<p>Print-on-demand technology uses high-speed photocopy or inkjet machines.
-The text will not be as dark as traditional offset presses (although at
-least one service offers "premium black ink", whatever that is). So, be sure
-that you are not using overly slender fonts. If your pages do not look
-good when you print the PDF in a photocopier, then they probably will not
-look better when bound into a book.</p>
-<p>Be sure that your fonts are properly licensed for commercial use, and be
-sure that use of the fonts does not obligate you to give away the source
-code or finished PDF, or the printed book. Fonts with the "GPL" (GNU Public
-License) cannot be used, unless they also bear a "font exception" releasing
-you from some of the GPL terms. Beware of free fonts that do not have
-enough information (such as Copyright) to ascertain the creator. Copyright
-is good, as long as you have the license you need. One well-known free
-license is the "SIL Open Font License" (OFL). There are others. Or, pay
-for the license of commercial or shareware fonts.</p>
-<p>Among LaTeX OpenType fonts, EB Garamond and Libertinus Serif are probably
-good enough. There are others. EBG is slightly light, and LS is slightly
-upright. The default is Livertinus Serif.</p>
 </div>
 
 

@@ -134,6 +134,9 @@
 %% ----------------------------------------------------------------------------
 % Novelette does not use class options. Dimensions, font size, and everything
 % are are set by specific commands in Preamble.
+%   In the future, there may be a class option for revision number (integer).
+% Then there may be adjustments based on which revision, so that current code
+% is compatible with older code, by using the revision. Maybe!
 \newcounter{nvt@alert} \setcounter{nvt@alert}{0}
 \ifdefined\@raw@classoptionslist
   \ifthenelse{\equal{\@raw@classoptionslist}{}}{}{
@@ -143,6 +146,7 @@
 \fi
 \def\@raw@classoptionslist{}
 \def\@classoptionslist{}
+\ifdefined\revision\else\def\revision{0}\fi
 %%
 
 

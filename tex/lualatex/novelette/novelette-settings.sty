@@ -316,7 +316,7 @@
   \IfSubStr{\nvt@temp@s}{verbose}{}{\g@addto@macro\nvt@temp@s{,verbose=silent}}
   \xdef\nvt@MT{\nvt@temp@s}
 }
-\setmicrotype{stretch=20,shrink=20,protrusion=true} % And others. Default.
+\setmicrotype{stretch=20,shrink=20,protrusion=false} % And others. Default.
 \@onlypreamble\setmicrotype
 \def\nvt@process@MT{ % AtEndPreamble.
   \ifdefined\nvt@MT\else

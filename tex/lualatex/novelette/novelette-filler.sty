@@ -33,7 +33,10 @@
 
 
 %%
-\long\def\fillertext{
+\long\def\fillertext{%
+  \ifthenelse{\equal{\nvt@mode}{final}}{%
+    \ClassWarning{novelette}{Using \string\fillertext\space in final mode.}%
+  }{}%
 
 I do not mean to suggest that the \ital{custom} of lying has
 suffered any decay or interruption. The Lie, as a Virtue, a

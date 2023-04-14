@@ -91,9 +91,13 @@ utf-8 without BOM. Never use Windows Notepad.</p>
 <div>
 <h4><code>\documentclass{novelette}</code></h4>
 <p>This command begins the Preamble, where you place settings.</p>
-<p>Unlike other LaTeX document classes, Novelette has no class options.
-Anything you need is set by one of the other commands in Preamble,
-or is automatically calculated from other settings.</p>
+<p>Unlike other LaTeX document classes, Novelette does not use document class
+options to set font size, book dimension, or anything else.
+Everything you need is set by one of the other commands in Preamble,
+or is automatically calculated from other settings. Novelette will provide
+defaults for anything you do not set.</p>
+<p>You may write an integer, as class option. Nothing else. Currently, this
+has no function, so it is ignored. It may mean something in the future.</p>
 </div>
 
 <a id="mode"></a>

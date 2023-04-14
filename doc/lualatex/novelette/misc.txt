@@ -34,8 +34,8 @@ MEDIUM CAPS
 	\medcap{TEXT} -or- \medcaps{TEXT}
 Fakes "medium caps" at height between small caps and ordinary uppercase.
 Useful for acronyms, where small caps is too small, uppercase is too big.
-Only uppercase letters are converted. Lowercase remains ordinary lowercase,
-not small caps.
+Be sure that the TEXT is uppercase (lowercase will look bad).
+	If the font does not have the `c2sc' OpenType feature, TEXT is unchanged.
 
 
 \cleartorecto

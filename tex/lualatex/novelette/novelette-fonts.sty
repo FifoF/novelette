@@ -189,13 +189,24 @@
 \gdef\lnum#1{%
   {\addfontfeature{Numbers=ResetAll,Numbers=Lining,RawFeature={+case}}#1}%
 }
-%% Fake medium caps, if c2sc available:
+%% Fake medium caps:
 \DeclareDocumentCommand\medcap{+m}{%
-  {\addfontfeature{Letters=UppercaseSmallCaps,ScaleAgain=1.18,%
-    FakeStretch=0.9}#1}%
+  \sbox0{{\mainfont\addfontfeature{Letters=UppercaseSmallCaps}X}}%
+  \ifdimcomp{\ht0}{>}{0pt}{%
+    \setlength\nvt@temp@l{.5\ht0}%
+    \FPmul{\nvt@temp@n}{\strip@pt\nvt@Xht}{.5}%
+    \FPadd{\nvt@temp@n}{\nvt@temp@n}{\strip@pt\nvt@temp@l}%
+    \FPdiv{\nvt@temp@n}{\nvt@temp@n}{\strip@pt\ht0}%
+    \FPdiv{\nvt@temp@d}{1}{\nvt@temp@n}%
+    \smash{{\addfontfeature{Letters=UppercaseSmallCaps,%
+      ScaleAgain=\nvt@temp@n,FakeStretch=\nvt@temp@d}#1}}%
+  }{#1}%
 }
 \LetLtxMacro\medcaps\medcap\relax
 %%
+
+
+
 
 
 

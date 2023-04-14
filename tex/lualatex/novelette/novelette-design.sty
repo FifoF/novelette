@@ -174,9 +174,13 @@
   \global\deflength\nvt@ascn{\ht0}
   \global\deflength\nvt@dscn{\dp0}
   \sbox0{\mainfont X}
-  \global\deflength\nvt@Xht{\ht0}
+  \ifdimcomp{\ht0}{>}{0pt}{
+    \global\deflength\nvt@Xht{\ht0}
+  }{\global\deflength\nvt@Xht{.65\nvt@fontsize}}
   \sbox0{\mainfont x}
-  \global\deflength\nvt@xht{\ht0}
+  \ifdimcomp{\ht0}{>}{0pt}{
+    \global\deflength\nvt@xht{\ht0}
+  }{\global\deflength\nvt@xht{.4\nvt@fontsize}}
   \ifdefined\nvt@lpp\else\nvt@default@lpp\fi
   \ifnvt@header
     \ifnvt@footer

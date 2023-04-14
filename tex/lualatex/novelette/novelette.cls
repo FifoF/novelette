@@ -54,6 +54,7 @@
 \pdfobjcompresslevel=0
 \pdfminorversion=3 % Required for optional PDF/X-1a:2001 conformance.
 \gdef\thepdfminorversion{\pdfminorversion}
+\def\nvt@revision{0}
 %% Novelette uses these in a slightly different way than in other classes:
 \protect\long\def\title#1{\gdef\nvt@title{#1}}
 \protect\long\def\author#1{\gdef\nvt@author{#1}}
@@ -115,6 +116,13 @@
 %%
 
 
+%% COUNTERS (used in various Novelette files)
+\newcounter{nvt@alert} \setcounter{nvt@alert}{0} % Number of alerts issued.
+\newcounter{nvt@fnmnum} \setcounter{nvt@fnmnum}{1} % Footnote marker number.
+\newcounter{nvt@mline} \setcounter{nvt@mline}{0} % Main text line number.
+%%
+
+
 %% REQUIRE SOME PACKAGES
 %% ----------------------------------------------------------------------------
 \RequirePackage{xparse} % For writing cool-looking commands.
@@ -132,21 +140,21 @@
 
 %% CLASS OPTIONS (None!)
 %% ----------------------------------------------------------------------------
-% Novelette does not use class options. Dimensions, font size, and everything
-% are are set by specific commands in Preamble.
-%   In the future, there may be a class option for revision number (integer).
-% Then there may be adjustments based on which revision, so that current code
-% is compatible with older code, by using the revision. Maybe!
-\newcounter{nvt@alert} \setcounter{nvt@alert}{0}
+% Novelette does not use class options to set dimensions, font size, or
+% anything else. There may be a revision number (integer).
+\edef\nvt@revreq{\nvt@revision}
 \ifdefined\@raw@classoptionslist
-  \ifthenelse{\equal{\@raw@classoptionslist}{}}{}{
-    \typeout{^^JALERT: Novelette has no class options. Ignored!^^J}
-    \stepcounter{nvt@alert}
+  \IfInteger{\@raw@classoptionslist}{
+    \xdef\nvt@revreq{\@raw@classoptionslist}
+  }{
+    \ifthenelse{\equal{\@raw@classoptionslist}{}}{}{
+      \typeout{^^JALERT: Novelette has no class options. Ignored!^^J}
+      \stepcounter{nvt@alert}
+    }
   }
 \fi
 \def\@raw@classoptionslist{}
 \def\@classoptionslist{}
-\ifdefined\revision\else\def\revision{0}\fi
 %%
 
 
@@ -163,7 +171,6 @@
 \def\nvt@bad{\global\nvt@errtrue\gdef\nvt@mode{draft}\gdef\nvt@intent{none}}
 \def\nvt@error#1{\ClassError{novelette}{^^J#1^^J\nvt@XN}{\nvt@RXN}\nvt@bad}
 \setlength\overfullrule{6pt} % Except in final mode.
-\def\fillertext{\typeout{^^JALERT: No fillertext in final mode.^^J}}
 %%
 
 
@@ -238,10 +245,10 @@
   \nvt@process@metadata
   \nvt@process@pdfboxes
   \RequirePackage{novelette-shading}
-  \ifthenelse{\equal{\nvt@mode}{final}}{}{\RequirePackage{novelette-filler}}
   \ifthenelse{\equal{\nvt@mode}{draft}}{\nvt@labeldraft}{}
   \ifthenelse{\equal{\nvt@mode}{shade}}{\nvt@labelshade}{}
   \ifthenelse{\equal{\nvt@mode}{align}}{\nvt@labelalign}{}
+  \RequirePackage{novelette-filler}
 }
 %%
 

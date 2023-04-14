@@ -20,7 +20,7 @@ Otherwise, \warnalert may interfere with final mode.
 
 These cause an ALERT each time they are written in the document body:
 	1. Novelette has no document class options. If you write something there,
-it will be ignored, and cause an ALERT.
+other than an integer, it will be ignored, and cause an ALERT.
 	2. You may straight double quotes for diaeresis (umlaut) , such as \"o
 for ö. Any other usage will print the straight double quotes, not curly,
 and will throw an ALERT. There are no babel shortcuts. Writing "HHHH (where

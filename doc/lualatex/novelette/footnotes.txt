@@ -8,9 +8,9 @@ FOOTNOTES
 Novelette is not intended for academic works. It does not support numbered
 footnotes with first-line indent.
 
-Popular fiction sometimes does have the occasional footnote. It will be
+Popular fiction sometimes has an occasional footnote. It will be
 a comment from the author, or perhaps from a fictional editor. This style
-is supported. Reference marks will be literary style (begiining with asterisk),
+is supported. Reference marks will be literary style (beginning with asterisk),
 rather than numbers. The first line of a footnote is not indented.
 
 Syntax for a footnote:

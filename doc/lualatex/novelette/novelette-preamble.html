@@ -48,11 +48,11 @@ and how to choose their values.</p>
 <a href="#utf8">% !TeX encoding = UTF-8</a><br>
 <a href="#documentclass">\documentclass{novelette}</a><br>
 <a href="#mode">\mode</a>{<i>choice</i>}<br>
-<a href="#intent">\intent</a>{<i>choice</i>}<br>
-<a href="#setlang">\setlang</a>{<i>choice</i>}[<i>option</i>]<br>
+<a href="#warnalert">\warnalert<br>
 <a href="#title">\title</a>{<i>choice</i>}<br>
 <a href="#subtitle">\subtitle</a>{<i>choice</i>}<br>
 <a href="#author">\author</a>{</i>choice</i>}<br>
+<a href="#setlang">\setlang</a>{<i>choice</i>}[<i>option</i>]<br>
 <a href="#trimsize">\trimsize</a>{choice}<br>
 <a href="#sheetfeed">\sheetfeed</a>{<i>choice</i>} % Normally unused.<br>
 <a href="#margins">\margins</a>{<i>choice</i>}<br>
@@ -60,6 +60,8 @@ and how to choose their values.</p>
 <a href="#text">\text</a>{choose}<br>
 <a href="#setfont">\setfont</a>{main}{<i>choice</i>}[<i>option</i>]<br>
 <a href="#setfont">\setfont</a>{deco}{<i>choice</i>}[<i>option</i>]<br>
+<a href="#intent">\intent</a>{<i>choice</i>}<br>
+<a href="#setmicrotype">\setmicrotype</a>{<i>choice</i>}<br>
 <a href="#guides">\guides</a>{<i>choice</i>}<br>
 <a href="#begindoc">\begin{document}</a>
 </p>
@@ -76,6 +78,7 @@ regardless of what the program uses for its standard compiler.</p>
 <code>lualatex</code> as the compiler. Anything else will be rejected.</p>
 </div>
 
+
 <a id="utf8"></a>
 <div>
 <h4><code>% !TeX encoding = UTF-8</code></h4>
@@ -86,6 +89,7 @@ It tells them that your document has utf-8 encoding.</p>
 for Linux and Mac. On Windows, be sure to configure your text editor for
 utf-8 without BOM. Never use Windows Notepad.</p>
 </div>
+
 
 <a id="documentclass"></a>
 <div>
@@ -99,6 +103,7 @@ defaults for anything you do not set.</p>
 <p>You may write an integer, as class option. Nothing else. Currently, this
 has no function, so it is ignored. It may mean something in the future.</p>
 </div>
+
 
 <a id="mode"></a>
 <div>
@@ -118,24 +123,72 @@ automatically revert to draft mode, so that the failed PDF cannot be confused
 with a good final file.</p>
 </div>
 
-<a id="intent"></a>
+
+<a id="warnalert"></a>
 <div>
-<h4><code>\intent{<i>choice</i>}</code></h4>
-<p>There are four intents: <code>none SWOP FOGRA39 JC200103</code>.
-Default is <code>none</code>.
-No matter which intent you choose, fonts are subset embedded. That is enough
-for some print services.</p>
-<p><code>none</code> does not produce PDF/X. No matter how you set intent, it
-is automatically changed to <code>none</code> unless you are in final mode.
-The other intents produce <span class="nowrap">PDF/X-1a:2001.</span></p>
-<p><code>SWOP</code> means "US Web Coated SWOP". This is most frequently used
-in the United States.</p>
-<p><code>FOGRA39</code> (actually FOGRA39L) is frequently used in Europe.</p>
-<p><code>JC200103</code> is frequently used in Japan.</p>
-<p>Dirty little secret: Even if your print service requires an intent,
-it will be ignored. The only reason it may be required, is that it is part
-of the standard, so it cannot be omitted.</p>
+<h4><code>\warnalert</code></h4>
+<p>In the developer's experience, there are several situations where the
+TeX markup is good (no error or warning), but may not be what was intended.
+Novelette can detect some of these situations, and issue ALERT messages
+in the log file.</p>
+<p>If you get an ALERT, review your document. Maybe you should fix it,
+maybe not. Novelette cannot read your mind.</p>
+<p>GUI TeX editors ignore ALERTs. The <code>\warnalert</code> command
+issues a warning, when there are ALERTs. This will be noticed by the GUI.</p>
+<p>You should use <code>\warnalert</code> until you are satisfied that any
+remaining ALERTs can be ignored. In final mode, there will be no warning.</p>
 </div>
+
+
+<a id="title"></a>
+<div>
+<h4><code>\title{<i>Title of Your Book</i>}</code></h4>
+<p>When you use a print-on-demand service, you provide them with metadata
+for your book: title, author, genre, keywords, description, ISBN, and maybe
+others. Of these, only title and author are part of the PDF. This is because
+the PDF itself is not being marketed. Information such as the copyright
+and ISBN appear in print.</p>
+<p>The <code>\title</code> must be exactly the same as whatever
+you provided to the distribution service. Do not use TeX macros, styles, or
+character codes (except as listed below). Use straight (ordinary keyboard)
+apostrophe, not curly. You may use Latin-1 letters with diacriticals.</p>
+<p>Exceptions: Special characters \# \$ \% \&
+are preceded by a backslash, as shown.</p>
+<p>Example: \title{The \$20 Balloon}</p>
+<p>Note: The print service may allow you to use non-alphanumeric characters
+in the title, or may forbid them. It is a matter of how things are indexed
+in their database. Novelette does not care.</p>
+</div>
+
+
+<a id="subtitle"></a>
+<div>
+<h4><code>\subtitle{<i>Subtitle of Your Book</i>}</code></h4>
+<p>Not all books have a subtitle, so the default is no subtitle. If you do
+have a subtitle, write it here.</p>
+<p>Unlike the title and author, the subtitle is not part of PDF metadata.
+But if you print a subtitle, it must agree with whatever you listed with
+the book distribution network.</p>
+</div>
+
+
+<a id="author"></a>
+<div>
+<h4><code>\author{<i>Author of Your Book</i>}</code></h4>
+<p>The considerations for <code>\title</code> apply, with these additional:</p>
+<p>Novelette is not intended for academic works. There should be a single
+author (or two equal authors, using a single <code>\author</code>).</p>
+<p>Whether the author is your real name, or a pseudonym, is up to you.
+If in doubt, ask the print service.</p>
+<p>If you use a pseudonym, then you should probably use your real name as
+copyright holder, on the copyright page. Then, if someone unlawfully copies
+your book, it will be easier to enforce the copyright. Otherwise, you will
+have to prove that "Fakename Author" is actually "Realname You" before
+distributors will honor your requests.</p>
+<p>And, if you do use a pseudonym, request that distributors (and libraries)
+have it indexed under the desired name (pseudonym or real name).</p>
+</div>
+
 
 <a id="setlang"></a>
 <div>
@@ -190,54 +243,6 @@ extra space to any punctuation. This might be useful if you already typed
 those spaces manually.</p>
 </div>
 
-<a id="title"></a>
-<div>
-<h4><code>\title{<i>Title of Your Book</i>}</code></h4>
-<p>When you use a print-on-demand service, you provide them with metadata
-for your book: title, author, genre, keywords, description, ISBN, and maybe
-others. Of these, only title and author are part of the PDF. This is because
-the PDF itself is not being marketed. Information such as the copyright
-and ISBN appear in print.</p>
-<p>The <code>\title</code> must be exactly the same as whatever
-you provided to the distribution service. Do not use TeX macros, styles, or
-character codes (except as listed below). Use straight (ordinary keyboard)
-apostrophe, not curly. You may use Latin-1 letters with diacriticals.</p>
-<p>Exceptions: Special characters \# \$ \% \&
-are preceded by a backslash, as shown.</p>
-<p>Example: \title{The \$20 Balloon}</p>
-<p>Note: The print service may allow you to use non-alphanumeric characters
-in the title, or may forbid them. It is a matter of how things are indexed
-in their database. Novelette does not care.</p>
-</div>
-
-
-<a id="subtitle"></a>
-<div>
-<h4><code>\subtitle{<i>Subtitle of Your Book</i>}</code></h4>
-<p>Not all books have a subtitle, so the default is no subtitle. If you do
-have a subtitle, write it here.</p>
-<p>Unlike the title and author, the subtitle is not part of PDF metadata.
-But if you print a subtitle, it must agree with whatever you listed with
-the book distribution network.</p>
-</div>
-
-
-<a id="author"></a>
-<div>
-<h4><code>\author{<i>Author of Your Book</i>}</code></h4>
-<p>The considerations for <code>\title</code> apply, with these additional:</p>
-<p>Novelette is not intended for academic works. There should be a single
-author (or two equal authors, using a single <code>\author</code>).</p>
-<p>Whether the author is your real name, or a pseudonym, is up to you.
-If in doubt, ask the print service.</p>
-<p>If you use a pseudonym, then you should probably use your real name as
-copyright holder, on the copyright page. Then, if someone unlawfully copies
-your book, it will be easier to enforce the copyright. Otherwise, you will
-have to prove that "Fakename Author" is actually "Realname You" before
-distributors will honor your requests.</p>
-<p>And, if you do use a pseudonym, request that distributors (and libraries)
-have it indexed under the desired name (pseudonym or real name).</p>
-</div>
 
 <a id="trimsize"></a>
 <div>
@@ -256,6 +261,7 @@ a cutting device. This is why such books have all page edges aligned.</p>
 <p>In the case of library hardcover books, trim size refers to the interior
 pages. The cover size is slightly larger.</p>
 </div>
+
 
 <a id="sheetfeed"></a>
 <div>
@@ -276,6 +282,7 @@ by an editor.</p>
 <p>Novelette does not produce crop marks or trim marks. It does write the
 internal "TrimBox" metadata to the PDF.</p>
 </div>
+
 
 <a id="margins"></a>
 <div>
@@ -317,6 +324,17 @@ key=value pairs. It sets the page layout header/footer style.</p>
 Integer from 1 to 7 selects page style,
 (header and/or footer) from a menu of available styles. The default style
 depends on other page design settings.</p>
+<p>Available styles:<ul>
+<li>1 = Only footer. Page number centered.</li>
+<li>2 = Header and footer. Centered.</li>
+<li>3 = Header and footer. Both aligned to outside margin.</li>
+<li>4 = Header. Page number aligned to outside margin. Text centered.</li>
+<li>5 = Header. Page number aligned to outside margin. Vertical bar near
+page number, at fixed distance from margin. Centered text.</li>
+<li>6 = Header. Page number aligned to outside margin. Adjacent slash.
+Centered text.</li>
+<li>7 = Header. Centered number/text or text/number.</li>
+</ul></p>
 <p><b><code>gap=<i>number</i></code></b><br>
 Number is integer|decimal from 0 to 1.
 Value 0 (rarely used) places header|footer at the line immediately above|below
@@ -371,9 +389,42 @@ they are not necessarily useful. To enable common ligatures, write
 </div>
 
 
+<a id="intent"></a>
+<div>
+<h4><code>\intent{<i>choice</i>}</code></h4>
+<p>There are four intents: <code>none SWOP FOGRA39 JC200103</code>.
+Default is <code>none</code>.
+No matter which intent you choose, fonts are subset embedded. That is enough
+for some print services.</p>
+<p><code>none</code> does not produce PDF/X. No matter how you set intent, it
+is automatically changed to <code>none</code> unless you are in final mode.
+The other intents produce <span class="nowrap">PDF/X-1a:2001.</span></p>
+<p><code>SWOP</code> means "US Web Coated SWOP". This is most frequently used
+in the United States.</p>
+<p><code>FOGRA39</code> (actually FOGRA39L) is frequently used in Europe.</p>
+<p><code>JC200103</code> is frequently used in Japan.</p>
+<p>Dirty little secret: Even if your print service requires an intent,
+it will be ignored. The only reason it may be required, is that it is part
+of the standard, so it cannot be omitted.</p>
+</div>
+
+
+<a id="setmicrotype"></a>
+<div>
+<h4><code>\setmicrotype{<i>microtype options</i>}</code></h4>
+<p>Default is <code>\setmicrotype{default}</code>. This applies Novelette's
+own options for the <i>microtype</i> package. Do not change it, unless
+you are familiar with <i>microtype</i> documentation.</p>
+<p>The <i>microtype</i> package is loaded automatically, so you cannot load
+it yourself. Only use <code>\setmicrotype</code> if you need to pass your
+own options to <i>microtype</i> at the time it loads.</p>
+<p>Novelette ignores <i>mt-*.cfg</i> files.</p>
+</div>
+
+
 <a id="guides"></a>
 <div>
-<h4><code>\guides{integer,integer,integer,integer}</code></h4>
+<h4><code>\guides{<i>integer,integer,integer,integer</i>}</code></h4>
 <p>You may create four or fewer pairs of guides. These are marks in the
 side margins, when in shade or align mode. The guides align with main text
 baseline and descender, at the <code>integer</code> line number from top of
@@ -383,6 +434,7 @@ a guide is placed where you wish the topmost item in openings to sit, and
 another guide is placed at the first line of main text under the opening.</p>
 <p>If you use guides, they will be the same on every page.</p>
 </div>
+
 
 <a id="begindoc"></a>
 <div>

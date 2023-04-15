@@ -305,34 +305,38 @@
 
 %% MICROTYPE OPTIONS
 % Novelette loads microtype automatically, AtEndPreamble. This is equivalent
-% to \PassOptionsToPackage{microtype}, but passes \nvt@MT instead:
+% to \PassOptionsToPackage{microtype}, but passes \nvt@microset instead:
 \DeclareDocumentCommand\setmicrotype{m}{% Undefined before loading microtype.
-  \StrDel{#1}{ifdraft}[\nvt@temp@s]
-  \StrDel{\nvt@temp@s}{draft}[\nvt@temp@s]
-  \StrDel{\nvt@temp@s}{final}[\nvt@temp@s]
-  \IfSubStr{\nvt@temp@s}{config}{}{
-    \g@addto@macro\nvt@temp@s{,config=novelette-microtype}
+  \StrDel{#1}{ }[\nvt@temp@s]
+  \ifthenelse{\equal{\nvt@temp@s}{default}}{}{
+    \StrDel{\nvt@temp@s}{ifdraft}[\nvt@temp@s]
+    \StrDel{\nvt@temp@s}{draft}[\nvt@temp@s]
+    \StrDel{\nvt@temp@s}{final}[\nvt@temp@s]
+    \IfSubStr{\nvt@temp@s}{config}{}{
+      \g@addto@macro\nvt@temp@s{,config=novelette-microtype}
+    }
+    \IfSubStr{\nvt@temp@s}{verbose}{}{
+      \g@addto@macro\nvt@temp@s{,verbose=silent}
+    }
+    \xdef\nvt@microset{\nvt@temp@s}
   }
-  \IfSubStr{\nvt@temp@s}{verbose}{}{\g@addto@macro\nvt@temp@s{,verbose=silent}}
-  \xdef\nvt@MT{\nvt@temp@s}
 }
-\setmicrotype{stretch=20,shrink=20,protrusion=false} % And others. Default.
 \@onlypreamble\setmicrotype
-\def\nvt@process@MT{ % AtEndPreamble.
-  \ifdefined\nvt@MT\else
-    \setmicrotype{config=novelette-microtype,stretch=20,shrink=20,%
-      protrusion=true,verbose=silent}
+\def\nvt@process@microset{ % AtEndPreamble.
+  \ifdefined\nvt@microset
+    \xdef\log@mto{\string\setmicrotype{\nvt@microset}}
+  \else
+    \gdef\nvt@microset{config=novelette-microtype,stretch=20,shrink=20,%
+      protrusion=false,verbose=silent}
+    \gdef\log@mto{\string\setmicrotype{default}}
   \fi
-  \xdef\log@mto{\string\microtypesetup{\nvt@MT}}
 }
 %%
 
 
 %% WARN IF ALERTS
-\def\warnalert{\global\nvt@warnalerttrue}
-\def\nowarnalert{\global\nvt@warnalertfalse}
+\newcommand\warnalert{\global\nvt@warnalerttrue}
 \@onlypreamble\warnalert
-\@onlypreamble\nowarnalert
 %%
 
 

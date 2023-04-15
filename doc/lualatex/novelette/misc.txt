@@ -12,16 +12,6 @@ ITALICS
 Includes trailing italic correction. May include more than one paragraph.
 
 
-ALERT WARNING
-	\warnalert
-	\nowarnalert
-In Preamble. Default is \warnalert. Novelette issues ALERT messages in the
-log file, when something is technically acceptable but possibly not what
-you meant. With \warnalert, one or more ALERT will create a Warning.
-If the ALERT messages are harmless, you can turn off the Warning
-with \nowarnalert.
-
-
 SMALL CAPS
 	\smcp{Lowercase text in small caps}
 Only uses real small caps, not faked. If your font does not have them,
@@ -33,9 +23,11 @@ Uses the smcp and c2sc features, if available in the font.
 MEDIUM CAPS
 	\medcap{TEXT} -or- \medcaps{TEXT}
 Fakes "medium caps" at height between small caps and ordinary uppercase.
-Useful for acronyms, where small caps is too small, uppercase is too big.
+Useful for acronyms, where small caps are too small, uppercase too big.
 Be sure that the TEXT is uppercase (lowercase will look bad).
 	If the font does not have the `c2sc' OpenType feature, TEXT is unchanged.
+If you need italics, use this order. Note the use of braces:
+	\ital{\medcap{TEXT}}
 
 
 \cleartorecto

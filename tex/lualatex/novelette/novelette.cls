@@ -86,7 +86,7 @@
 \newif\ifnvt@mainmatter % True in mainmatter or backmatter.
 \newif\ifnvt@cleartoend % True if cleartoend issued. Prevents duplicate.
 \newif\ifnvt@err % True if Novelette (not LaTeX) issued an error.
-\newif\ifnvt@warnalert % True will issue warning when alerts > 0.
+\newif\ifnvt@warnalert % True issues warning when alerts > 0.
 \newif\ifnvt@warnalt % True if \altfont used without Libertinus Serif.
 %%
 
@@ -227,10 +227,13 @@
   \nvt@calculate@leading
   \nvt@renew@normalsize % The real value.
   \nvt@process@language
-  \nvt@process@MT
-  \gundef\setmicrotype
-  \RequirePackage[\nvt@MT]{microtype}
-  \def\MT@find@file#1{} % Prevents loading mt-*.cfg files AtBeginDocument.
+  \nvt@process@microset
+  \RequirePackage[\nvt@microset]{microtype}
+  \ifdefined\DeclareMicrotypeFilePrefix % From microtype version 3.1.
+    \DeclareMicrotypeFilePrefix{nvt} % Load nvt-*.cfg for microtype.
+  \else
+    \def\MT@find@file#1{} % Prevents loading mt-*.cfg files AtBeginDocument.
+  \fi
   \nvt@process@decofont
   \nvt@process@otherfonts
   \RequirePackage{novelette-footnotes}
@@ -245,6 +248,7 @@
   \nvt@process@metadata
   \nvt@process@pdfboxes
   \RequirePackage{novelette-shading}
+  \ifthenelse{\equal{\nvt@mode}{final}}{\global\nvt@warnalertfalse}{}
   \ifthenelse{\equal{\nvt@mode}{draft}}{\nvt@labeldraft}{}
   \ifthenelse{\equal{\nvt@mode}{shade}}{\nvt@labelshade}{}
   \ifthenelse{\equal{\nvt@mode}{align}}{\nvt@labelalign}{}
@@ -368,6 +372,7 @@
   \typeout{Calculated ratio leading/fontsize: \nvt@temp@n}
   \typeout{\log@mainfont}
   \typeout{\log@decofont}
+  \typeout{\log@mto}
   \log@imagespecs
   \typeout{\nvt@signoffmsg}
   \ifnum\value{nvt@alert}=0\else\typeout{ALERT(s) issued. See log file.}\fi

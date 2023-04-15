@@ -1,0 +1,30 @@
+
+PLACEHOLDER
+Subject to revision.
+
+
+HOW TO INSTALL NOVELETTE
+
+Your TeX installation must have lualatex.
+
+Beyond the base LaTeX files that everyone should have, Novelette requires
+these additional packages:
+iftex luatex85 pdftexcmds infwarerr ltxcmds xparse expl3 xpatch
+letltxmacro etoolbox xifthen ifmtarg xstring fontspec microtype
+luahyphenrules fp silence atbegshi changepage noindentafter
+
+Install the Libertinus Serif fonts. This is TeX package `libertinus-serif'.
+You may use them for your document, if you wish. But even if you prefer
+different fonts, Libertinus Serif can be used as "Plan B" for placing
+characters that are not in your preferred fonts. 
+
+Perhaps someday Novelette will be package `novelette' in CTAN. Then you will
+be able to install it like any other package. Until then:
+
+Place Novelette files in your `texmf-local' or user-specific TEXMFHOME
+directory. Use the same directory structure that you see in the Novelette
+project page at https://github.com/rallg/novelette. Only place the `doc'
+and `tex' directories and their contents.
+
+Then update the TeX file system (command-line mktexlsr).
+

@@ -39,9 +39,10 @@
 %% OPENING ENVIRONMENT
 \newenvironment{opening}{%
   \clearpage%
+  \null\vspace{-\nvt@leading}%}
   \ifnvt@header%
     \ifnvt@footer%
-      \thispagestyle{footer}% %%%%% TODO
+      \thispagestyle{footer}%
     \else%
       \thispagestyle{empty}%
     \fi%
@@ -161,6 +162,7 @@
 \newenvironment{display}{%
   \clearpage%
   \thispagestyle{empty}%
+  \null\vspace{-\nvt@leading}%
   \begingroup%
   \nvt@indisplaytrue%
   \setlength\parindent{0pt}%
@@ -178,70 +180,70 @@
 %% TEXT STYLE (only in display pages)
 \DeclareDocumentCommand\style{O{}+m}{%
   \ifnvt@indisplay%
-  \begingroup%
-  \setlength\parindent{0pt}%
-  \hyphenpenalty=20000%
-  \StrDel{#1,}{ }[\nvt@temp@s]%
-  \StrBehind{\nvt@temp@s}{align=}[\nvt@temp@s]%
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
-  \StrLeft{\nvt@temp@s}{1}[\nvt@temp@s]%
-  \def\nvt@alignchoice{:l:c:r:o:i:}%
-  \IfSubStr{\nvt@alignchoice}{:\nvt@temp@s:}{}{%
-    \ClassWarning{novelette}{Bad value for align in \string\style.^^J%
-      Choose: l c r o i^^J%
-      Bad value ignored. Default c used.}%
-    \def\nvt@temp@s{c}%
-  }
-  \ifthenelse{\equal{\nvt@temp@s}{r}}{/strut/hfill{}}{}%
-  \ifodd\c@page\ifthenelse{\equal{\nvt@temp@s}{o}}{/strut/hfill{}}{}\fi%
-  \ifthenelse{\equal{\nvt@temp@s}{c}}{\begin{center}}{}%
-  \StrDel{#1,}{ }[\nvt@temp@s]%
-  \StrBehind{\nvt@temp@s}{font=}[\nvt@temp@s]%
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
-  \ifthenelse{\equal{\nvt@temp@s}{deco}}{\nvt@deco@font}{}%
-  \StrDel{#1,}{ }[\nvt@temp@s]%
-  \StrSubstitute{\nvt@temp@s}{Scale=}{scale=}[\nvt@temp@s]%
-  \StrBehind{\nvt@temp@s}{scale=}[\nvt@temp@s]%
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
-  \IfSubStr{\nvt@temp@s}{t}{\nvt@oktrue}{\nvt@okfalse}%
-  \StrDel{\nvt@temp@s}{t}[\nvt@temp@s]%
-  \IfDecimal{\nvt@temp@s}{%
-    \addfontfeature{ScaleAgain=\nvt@temp@s}%
-    \ifnvt@ok%
-      \sbox0{3456789JÀÁÂÃÄÅÇçjfhlygpqþ}%
-      \setlength\nvt@temp@l{\ht0+\dp0}%
-      \setlength\baselineskip{1.05\nvt@temp@l}%
-    \else%
-      \setlength\baselineskip{\nvt@temp@s\nvt@leading}%
+    \begingroup%
+    \setlength\parindent{0pt}%
+    \hyphenpenalty=20000%
+    \StrDel{#1,}{ }[\nvt@temp@s]%
+    \StrBehind{\nvt@temp@s}{align=}[\nvt@temp@s]%
+    \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
+    \StrLeft{\nvt@temp@s}{1}[\nvt@temp@s]%
+    \def\nvt@alignchoice{:l:c:r:o:i:}%
+    \IfSubStr{\nvt@alignchoice}{:\nvt@temp@s:}{}{%
+      \ClassWarning{novelette}{Bad value for align in \string\style.^^J%
+        Choose: l c r o i^^J%
+        Bad value ignored. Default c used.}%
+      \def\nvt@temp@s{c}%
+    }
+    \ifthenelse{\equal{\nvt@temp@s}{r}}{/strut/hfill{}}{}%
+    \ifodd\c@page\ifthenelse{\equal{\nvt@temp@s}{o}}{/strut/hfill{}}{}\fi%
+    \ifthenelse{\equal{\nvt@temp@s}{c}}{\begin{center}}{}%
+    \StrDel{#1,}{ }[\nvt@temp@s]%
+    \StrBehind{\nvt@temp@s}{font=}[\nvt@temp@s]%
+    \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
+    \ifthenelse{\equal{\nvt@temp@s}{deco}}{\nvt@deco@font}{}%
+    \StrDel{#1,}{ }[\nvt@temp@s]%
+    \StrSubstitute{\nvt@temp@s}{Scale=}{scale=}[\nvt@temp@s]%
+    \StrBehind{\nvt@temp@s}{scale=}[\nvt@temp@s]%
+    \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
+    \IfSubStr{\nvt@temp@s}{t}{\nvt@oktrue}{\nvt@okfalse}%
+    \StrDel{\nvt@temp@s}{t}[\nvt@temp@s]%
+    \IfDecimal{\nvt@temp@s}{%
+      \addfontfeature{ScaleAgain=\nvt@temp@s}%
+      \ifnvt@ok%
+        \sbox0{3456789JÀÁÂÃÄÅÇçjfhlygpqþ}%
+        \setlength\nvt@temp@l{\ht0+\dp0}%
+        \setlength\baselineskip{1.05\nvt@temp@l}%
+      \else%
+        \setlength\baselineskip{\nvt@temp@s\nvt@leading}%
+      \fi%
+    }{%
+     \ifthenelse{\equal{\nvt@temp@s}{}}{}{%
+       \nvt@error{Bad value for scale, in \string\style.^^J%
+         Must be integer|decimal number. May have suffix t (tight).}%
+       }%
+    }%
+    \StrDel{#1,}{ }[\nvt@temp@s]%
+    \StrBehind{\nvt@temp@s}{bold=}[\nvt@temp@s]%
+    \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
+    \nvt@okfalse%
+    \StrLeft{\nvt@temp@s}{1}[\nvt@temp@s]%
+    \ifthenelse{\equal{\nvt@temp@s}{}}{\nvt@oktrue}{}%
+    \ifthenelse{\equal{\nvt@temp@s}{t}}{\nvt@oktrue\nvt@boldweight}{}%
+    \ifthenelse{\equal{\nvt@temp@s}{f}}{\nvt@oktrue}{}%
+    \ifnvt@ok\else%
+      \ClassWarning{novelette}{Bad value for bold in \string\style.^^J%
+        Choose: bold=true bold=false (default false)^^J%
+        The bad value was ignored.}%
     \fi%
-  }{%
-   \ifthenelse{\equal{\nvt@temp@s}{}}{}{%
-      \nvt@error{Bad value for scale, in \string\style.^^J%
-        Must be integer|decimal number. May have suffix t (tight).}%
-      }%
-  }%
-  \StrDel{#1,}{ }[\nvt@temp@s]%
-  \StrBehind{\nvt@temp@s}{bold=}[\nvt@temp@s]%
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
-  \nvt@okfalse%
-  \StrLeft{\nvt@temp@s}{1}[\nvt@temp@s]%
-  \ifthenelse{\equal{\nvt@temp@s}{}}{\nvt@oktrue}{}%
-  \ifthenelse{\equal{\nvt@temp@s}{t}}{\nvt@oktrue\nvt@boldweight}{}%
-  \ifthenelse{\equal{\nvt@temp@s}{f}}{\nvt@oktrue}{}%
-  \ifnvt@ok\else%
-    \ClassWarning{novelette}{Bad value for bold in \string\style.^^J%
-      Choose: bold=true bold=false (default false)^^J%
-      The bad value was ignored.}%
-  \fi%
-  {#2}%
-  \StrDel{#1,}{ }[\nvt@temp@s]%
-  \StrBehind{\nvt@temp@s}{align=}[\nvt@temp@s]%
-  \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
-  \ifthenelse{\equal{\nvt@temp@s}{l}}{/hfill/strut}{}%
-  \ifodd\c@page\ifthenelse{\equal{\nvt@temp@s}{i}}{/hfill/strut}{}\fi%
-  \ifthenelse{\equal{\nvt@temp@s}{c}}{\end{center}}{}%
-  \par%
-  \endgroup%
+    {#2}%
+    \StrDel{#1,}{ }[\nvt@temp@s]%
+    \StrBehind{\nvt@temp@s}{align=}[\nvt@temp@s]%
+    \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
+    \ifthenelse{\equal{\nvt@temp@s}{l}}{/hfill/strut}{}%
+    \ifodd\c@page\ifthenelse{\equal{\nvt@temp@s}{i}}{/hfill/strut}{}\fi%
+    \ifthenelse{\equal{\nvt@temp@s}{c}}{\end{center}}{}%
+    \par%
+    \endgroup%
   \else%
     \nvt@error{\string\style\space only allowed in display pages.}
   \fi%

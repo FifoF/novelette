@@ -8,37 +8,78 @@
 <body>
 <div id="main">
 
-<div><a href="novelette.html">UP TO INDEX</a></div>
-
 <h2>Novelette - Design and Content of Main Matter</h2>
+<p class="noindent">On Other Pages:
+<a href="novelette.html">Overview</a>
+<a href="novelette-preamble.html">Preamble</a>
+<a href="novelette-frontmatter.html">Frontmatter</a>
 
-<h4>THIS HTML FILE IS A WORK IN PROGRESS. ANYTHING MAY CHANGE.</h4>
 
-
-<div>
 <a id="mainwhat"></a>
+<div>
 <h3>What is mainmatter ?</h3>
-<p>Main matter, or mainmatter, is your story. It includes chapters, and
-may contain other things. If something is "about the book" rather than
-part of the story, then it does not belong in mainmatter.</p>
-<p>The beginning of mainmatter is signaled by the <i>\mainmatter</i> command.
-This ensures that the next page will be recto, and changes the style and numbering
-of printable page numbers.</p>
-<p>In many cases, page 1 will be the very first page of your story. Whether it
-is named Chapter 1, or Introduction, or Prologue, does not matter.</p>
-<p>In other cases, page 1 will be earlier, so that the text of your story
-begins on page 3 or later. These cases are:</p>
-<p><ul>
-<li>Lengthy frontmatter (exceeding 8 pages). The visual separator will be
-page 1.</li>
-<li>Story is divided into Parts. In this case, the Part I page is page 1.</li>
-<li>Maps or diagrams, relevant to the story, are placed prior to the text.
-In this case, the visual separator is page 1, followed by the maps, then
-the text.</li> 
-</ul></p>
-<p>No matter what is there, page 1 is always recto, and the first page of
-the text (whether or not it is page 1) is always recto.</p>
+<p>Main matter, or mainmatter, is your story. If something is "about the book"
+rather than part of the story, then it does not belong in mainmatter.</p>
+<p>Chapters are part of the story. So is a Prologue. If you have a map of a
+fictional world, or a diagram of the murder scene, it is part of the story,
+so it belongs in mainmatter.</p>
+<p>What about an Introduction? Novelette is intended for popular fiction,
+where frontmatter is short. If you have something to say (as author), put it
+in frontmatter, as a one or two page Author's Note.</p>
+<p>If an Introduction is part of the story, then it belongs in mainmatter.
+This might be the case in the "lost manuscript" genre, in which a fictional
+Introduction is by a fictional archaeologist, who explains how the manuscript
+was discovered. The rest of the story, beginning with Chapter 1, is the
+fictional manuscript.</p>
 </div>
+
+
+<a id="mainwhere"></a>
+<div>
+<h3>Where is Page 1 ?</h3>
+<p>Page 1, arabic numerals, is the first page of mainmatter. It is always
+recto. In most cases, it is the start of your story text: Chapter 1,
+or Prologue, or fictional Introduction.</p>
+<p>But if you place a map prior to the start of story text, then the start
+of story text must be Page 3 or more (always odd). This is because the map is
+part of mainmatter. Page 1 may be the map, or it may be a repeat of the
+half-title. It may say Part I, for a multi-part book. It may be an Epigraph,
+but only if the Epigraph is part of the story (not from an external source
+such as Shakespeare).</p>
+<p>When frontmatter is lengthy (don't do it), it is customary to repeat
+the half-title as Page 1, so the story begins on Page 3.</p>
+</div>
+
+
+<a id="mainmatter"></a>
+<div>
+<h3>\mainmatter</h3>
+<p>The <code>\mainmatter</code> command defines the start of mainmatter.
+It clears to a recto page. It re-starts page numbers at arabic 1. Whether
+or not the page number is printed, depends on layout style.</p>
+</div>
+
+
+<a id="headtext"></a>
+<div>
+<h3>\versohead{<i>content</i>} -and- \rectohead{<i>content</i>}</h3>
+<p>Commands <code>\versohead{}</code> and <code>\rectohead{}</code> apply
+when the layout style has a header. Otherwise, they are ignored.</p>
+<p>These commands have no effect in frontmatter. In mainmatter, they define
+the content of verso and recto header text. Page numbering is automatic,
+so it is not affected by these commands.</p>
+<p>You may repeat the commands throughout the book. For example, perhaps
+you wish to put the chapter number in the header. But be aware that most
+print-on-demand services require that headers contain only the book title
+and author name, exactly as they are registered with the distribution network.
+So, it is better to keep the same headers throughout the book.</p>
+<p>The headers may be styled, using commands for small caps or italics.
+If you do not use these commands to define your own headers, then Novelette
+will automatically put the title in all-small caps above verso pages, and
+the author in Italics above recto pages.</p>
+<p>Opening pages never display a header.</p>
+</div>
+
 
 <a id="opening"></a>
 <div>
@@ -54,6 +95,7 @@ title and subtitle (if any).</p>
 as often as necessary, to insert blank lines.</p>
 </div>
 
+
 <a id="name"></a>
 <div>
 <h3>\name[option]{<i>Chapter Title or Number</i>}</h3>
@@ -65,6 +107,7 @@ one line of text.</p>
 <p>The option is a letter: l c r o i, for alignment left, center, right,
 outside, or inside.</p>
 </div>
+
 
 <a id="desc"></a>
 <div>

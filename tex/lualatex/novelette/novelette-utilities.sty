@@ -22,18 +22,6 @@
 
 
 
-%% CLEARPAGE %%%%% maybe \addtocmd\clearpage{...}{}{}
-\let\old@clearpage\clearpage\relax
-\def\clearpage{%
-  \old@clearpage%
-  \ifnvt@frontmatter%
-    \versohead{}%
-    \rectohead{}%
-  \fi%
-}
-%%
-
-
 %% FRONTMATTER, MAINMATTER, BACKMATTER
 % These commands can only be used in document body:
 \def\frontmatter{%
@@ -43,8 +31,7 @@
   \ifnvt@frontmatter\else%
     \pagenumbering{roman}%
     \setcounter{page}{1}%
-    \versohead{}%
-    \rectohead{}%
+    \pagestyle{empty}%
   \fi%
   \global\nvt@frontmattertrue%
   \global\nvt@mainmatterfalse%
@@ -55,6 +42,7 @@
     \cleartorecto%
     \pagenumbering{arabic}%
     \setcounter{page}{1}%
+    \pagestyle{fancy}%
     \versohead{\allsmcp{\thetitle}}%
     \rectohead{\textit{\theauthor}}%
   \fi%
@@ -70,33 +58,36 @@
 %%
 
 
-%%
-\def\nvt@getepoch{% My first lua code!
-  \directlua{
-    local jack = os.time()
-    tex.sprint(jack)
-  }%
-}
+\def\nvt@signoffmsg{Processed with lualatex.}
+
+
+%% This code block is not implemented. Possible future use.
+%\def\nvt@getepoch{%
+%  \directlua{
+%    local jack = os.time()
+%    tex.sprint(jack)
+%  }%
+%}
 % Code by user `egreg' at tex.stackexchange.com, q. 62010 :
 % Puts environment variable #2 into macro #1.
 % Example: \getenv[\userhome]{HOME}
-\ExplSyntaxOn
-\NewDocumentCommand{\getenv}{om}
- {
-  \sys_get_shell:nnN { kpsewhich ~ --var-value ~ #2 } { } \l_tmpa_tl
-  \tl_trim_spaces:N \l_tmpa_tl
-  \IfNoValueTF { #1 }
-   {
-    \tl_use:N \l_tmpa_tl
-   }
-   {
-    \tl_set_eq:NN #1 \l_tmpa_tl
-   }
- }
-\ExplSyntaxOff
+%\ExplSyntaxOn
+%\NewDocumentCommand{\getenv}{om}
+% {
+%  \sys_get_shell:nnN { kpsewhich ~ --var-value ~ #2 } { } \l_tmpa_tl
+%  \tl_trim_spaces:N \l_tmpa_tl
+%  \IfNoValueTF { #1 }
+%   {
+%    \tl_use:N \l_tmpa_tl
+%   }
+%   {
+%    \tl_set_eq:NN #1 \l_tmpa_tl
+%   }
+% }
+%\ExplSyntaxOff
 % End code by egreg.
-% \getenv[\nvt@invocation]{processedbynovelette} %%%%% Not implemented.
-\edef\nvt@rightnow{\nvt@getepoch}
+%\getenv[\nvt@invocation]{processedbynovelette}
+%\edef\nvt@rightnow{\nvt@getepoch}
 %\IfInteger{\nvt@invocation}{%
 %  \FPsub{\nvt@temp@n}{\nvt@rightnow}{\nvt@invocation}%
 %  \FPabs{\nvt@temp@n}{\nvt@temp@n}%
@@ -109,10 +100,10 @@
 %    }%
 %  \fi%
 %}{%
-    \long\gdef\nvt@signoffmsg{Processed with lualatex.^^J%
-%      You may get better results by processing via novelette script.^^J%
-%      See Novelette documentation for explanation.%
-    }%
+%  \long\gdef\nvt@signoffmsg{Processed with lualatex.^^J%
+%    You may get better results by processing via novelette script.^^J%
+%    See Novelette documentation for explanation.%
+%  }%
 %}
 %%
 
@@ -204,20 +195,6 @@
       May use L alone, for only left indent.}%
   \fi%
 }{\endgroup}
-%%
-
-
-%% TODO: limit to display pages %%%%%
-\DeclareDocumentCommand\upscale{O{1}+m}{%
-  \IfDecimal{#1}{}{%
-    \nvt@error{Bad optional argument to \string\upscale.^^J%
-      Must be integer|decimal number.}%
-  }%
-  \begingroup%
-  \addfontfeature{ScaleAgain=#1}%
-  \setlength\baselineskip{#1\nvt@leading}#2\par%
-  \endgroup%
-}
 %%
 
 

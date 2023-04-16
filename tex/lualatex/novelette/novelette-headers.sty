@@ -54,19 +54,19 @@
 %% PROCESS HFSTYLE
 \def\nvt@processnvt@hfstyle{ % Called AtEndPreamble.
   \ifthenelse{\equal{\nvt@hfstyle}{1}}{
-    \fancyfoot[CO,CE]{\rule{0pt}{\nvt@ascn}% %%%%%
+    \fancyfoot[CO,CE]{\rule{0pt}{\nvt@ascn}%
       {\nvt@headfont\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{2}}{
     \fancyhead[CE]{\nvt@headily{\versoheadtext}}
     \fancyhead[CO]{\nvt@headily{\rectoheadtext}}
-    \fancyfoot[CO,CE]{\rule{0pt}{\nvt@ascn}% %%%%%
+    \fancyfoot[CO,CE]{\rule{0pt}{\nvt@ascn}%
       {\nvt@headfont\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{3}}{
     \fancyhead[LE]{\nvt@headily{\versoheadtext}}
     \fancyhead[RO]{\nvt@headily{\rectoheadtext}}
-    \fancyfoot[LE,RO]{\vfil\leavevmode\rule{0pt}{\nvt@leading}% %%%%%
+    \fancyfoot[LE,RO]{\vfil\leavevmode\rule{0pt}{\nvt@leading}%
      {\nvt@headfont\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{4}}{

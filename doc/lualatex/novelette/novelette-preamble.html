@@ -9,7 +9,7 @@
 <div id="main">
 
 <h2>Novelette - Documentation</h2>
-<p class="noindent">Quick Links:
+<p class="noindent">On Other Pages:
 <a href="novelette.html">Overview</a>
 <a href="novelette-frontmatter.html">Frontmatter</a>
 <a href="novelette-mainmatter.html">Mainmatter</a>
@@ -21,7 +21,7 @@
 values for everything. Only change what you need.</p>
 
 <div>
-<h4>Install Libertinus Serif fonts: Package libertinus-serif</h4>
+<h4>Install Libertinus Serif fonts: Package libertinus-fonts</h4>
 <p>Before you do anything else, install the
 <span class="nowrap"><i>Libertinus Serif</i></span> fonts.
 These are the default fonts, and are also used as "Plan B" for any
@@ -32,7 +32,8 @@ the MiKTeX console. If you are using command line (Linux, etc.) then use
 <p>Although there are other packages with "libertinus" in the name, the only
 one you need is <span class="nowrap"><i>libertinus-fonts</i>.</span></p>
 <p>Unlike other component packages, Novelette will not throw an error if
-you do not have those fonts. You must install them yourself.</p>
+you do not have those fonts. You must install them yourself. You may never
+need them; but if you do, it is best to have them ready.</p>
 </div>
 
 <div>
@@ -177,7 +178,7 @@ the book distribution network.</p>
 <h4><code>\author{<i>Author of Your Book</i>}</code></h4>
 <p>The considerations for <code>\title</code> apply, with these additional:</p>
 <p>Novelette is not intended for academic works. There should be a single
-author (or two equal authors, using a single <code>\author</code>).</p>
+author, or two equal authors, using a single <code>\author</code>.</p>
 <p>Whether the author is your real name, or a pseudonym, is up to you.
 If in doubt, ask the print service.</p>
 <p>If you use a pseudonym, then you should probably use your real name as
@@ -198,9 +199,9 @@ have it indexed under the desired name (pseudonym or real name).</p>
 configured for other world languages, due to layout calculation methods.</p>
 <p>Novelette only uses this setting for hyphenation patterns, and (for French)
 punctuation spacing. It is not a spelling or grammar check. It does not format
-time or date. Soyou may write snippets of text in most other languages,
-if you do not mind it being hyphenated like your setting.</p>
-<p class="noindent">Available codes:<ul>
+time or date. So you may write snippets of text in most other languages,
+if you do not mind them being hyphenated like your setting.</p>
+<p>Available codes:<ul>
 <li><code>da</code> (Danish)</li>
 <li><code>nl</code> (Dutch)</li>
 <li><code>is</code> (Icelandic)</li>
@@ -359,7 +360,8 @@ locally changes the layout for a single page.</p>
 key=value pairs.</p>
 <p><b><code>fontsize=<i>size</i></code></b><br>
 Sets the size of main text font. Integer or decimal. Typical value near 11.5pt.
-Must have units pt (TeX points) or bp (PostScript points).</p>
+Must have units pt (TeX points) or bp (PostScript points). The default is
+calculated from page sizes.</p>
 <p><b><code>lines=<i>integer</i></code></b><br>
 Number of lines in main text block, not counting header or footer.
 The default number depends on page sizes.</p>

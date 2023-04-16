@@ -162,7 +162,7 @@
 %% ----------------------------------------------------------------------------
 \defaultfontfeatures{} % Reset.
 \defaultfontfeatures[\rmfamily,\sffamily]%
-  {Kerning=On, Numbers=OldStyle,Ligatures=TeX,}
+  {Kerning=On,Numbers=OldStyle,Ligatures=TeX,}
 \def\nvt@mode{draft}
 \def\nvt@intent{none}
 \def\nvt@guides{}

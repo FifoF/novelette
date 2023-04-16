@@ -2,112 +2,370 @@
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-<title>Novelette - Design and Content of Front Matter</title>
+<title>Novelette - Front Matter</title>
 <link rel="stylesheet" type="text/css" href="novelette.css">
 </head>
 <body>
 <div id="main">
 
-<div><a href="novelette.html">UP TO INDEX</a></div>
+<h2>Novelette - Documentation</h2>
+<p class="noindent">On Other Pages:
+<a href="novelette.html">Overview</a>
+<a href="novelette-preamble.html">Preamble</a>
+<a href="novelette-mainmatter.html">Mainmatter</a>
+</p>
 
-<h2>Novelette - Design and Content of Front Matter</h2>
+<h3>Front Matter</h3>
 
-<h4>THIS HTML FILE IS A WORK IN PROGRESS. ANYTHING MAY CHANGE.</h4>
+<p>Front Matter, or <i>frontmatter</i>, contains information "about the book"
+rather than "the story itself". The absolute minimum is a Title Page and
+Copyright Page. The practical minimum is six pages. It is rare for an
+original work of popular fiction to have more than six pages of frontmatter.
+Books with longer frontmatter are either non-fiction, or reprints of older
+works in critical editions.</p>
+
+<h3>Quick Start</h3>
+<p>Here is a model for six pages of frontmatter. Each of its commands is a
+hyperlink within this documentation. Click to learn what the commands do,
+and how to choose their values.</p>
+<p>The <code>\null</code> command inserts a blank line. May be repeated.
+Actual frontmatter pages will often have many <code>\null</code> to provide
+space at the top of the page, or between items on the page.</p>
+
+<div id="doctemplate">
+<p class="linesp noindent">
+<a href="#frontmatter">\frontmatter</a><br>
+<a href="#memo">\memo</a>{Page i, <a href="#halftitle">Half-Title</a>.}<br>
+<a href="#display">\begin{display}</a><br>
+<a href="#style">\style</a>{<i>choice</i>}{Title of Your Book}<br>
+<a href="#display">\end{display}</a><br>
+<a href="#memo">\memo</a>{Page ii, normally blank.}<br>
+<a href="#blankpage">\blankpage</a><br>
+<a href="#memo">\memo</a>{Page iii, Title Page.}<br>
+<a href="#display">\begin{display}</a><br>
+<a href="#titlepage"><i>Content of the Title Page</i></a><br>
+<a href="#display">\end{display}</a><br>
+<a href="#memo">\memo</a>{Page iv, Copyright Page.}<br>
+<a href="#display">\begin{display}</a><br>
+<a href="#copyright"><i>Content of the Copyright Page</i></a><br>
+<a href="#display">\end{display}</a><br>
+<a href="#memo">\memo</a>{Page v, Visual Barrier.}<br>
+<a href="#display">\begin{display}</a><br>
+<a href="#visualbarrier"><i>Content of the Visual Barrier.</i></a><br>
+<a href="#display">\end{display}</a><br>
+<a href="#memo">\memo</a>{Page vi, normally blank.}<br>
+<a href="#blankpage">\blankpage</a><br>
+<a href="#memo">\memo</a>{End of frontmatter. Next page is mainmatter.}<br>
+</div>
 
 
 <a id="frontmatter"></a>
 <div>
-<h3>\frontmatter</h3>
-<p>This command tells the processor to begin page numbering with lowercase
-roman numeral i, and continue as ii, iii, iv, v, ... until the \mainmatter
-command is reached.</p>
-<p>The absolute minimum frontmatter contains the title page and copyright page.
-In practice, minimum frontmatter contains six pages: half-title page,
-blank page, title page, copyright page, visual break page, blank page.</p>
-<p>Even if the style calls for header and/or footer, it is generally the
-case that frontmatter pages do not display either header or footer. The
-exception is when something in frontmatter is extended, such as a multi-page
-Introduction.</p>
+<h4><code>\frontmatter</code></h4>
+<p>This command immediately follows <code>\begin{document}</code>. It tells
+TeX to use lowercase roman page numbers (i, ii, ...) and to omit the header
+and footer. Thus, no page numbers are printed. Although there is no visible
+header or footer, they still occupy space.</p>
 </div>
 
-<a id="frontpages"></a>
+
+<a id="memo"></a>
 <div>
-<h3>Content of front matter</h3>
-<p>The front matter (or frontmatter) is the portion of your book that precedes
-the story. It is "about your book" rather than any part of the story itself.</p>
-<p>Front matter must contain a title page and a copyright page. But for a
-well-designed book, that is not enough. The contemporary minimum is 6 pages.
-Remember that each leaf has 2 pages, odd-numbered recto and even-numbered verso.
-So the minimum 6 pages is 3 leaves.</p>
-<p>The necessary and optional content of front matter is discussed in detail
-on a <a href="novelette-frontmatter.html">separate page</a> of this documentation.</p>
+<h4><code>\memo{<i>Non-printing text.</i>}</code></h4>
+<p>Novelette strongly discourages the use of percent <code>%</code> for comments.
+This is because % is a useful text character. If you forget to write
+<code>\%</code> with the backslash, then the remainder of the text line does
+not print. That may not be what you intended to do.</p>
+<p>Instead, use the <code>\memo{}</code> command. Its content does not print.
+The content may be multi-line. It may be quite lengthy.</p>
+<p>The memo may not be in the middle of a paragraph. It must stand by itself.</p>
 </div>
 
-<a id="aboutcopyright"></a>
+
+<a id="display"></a>
 <div>
-<p>The Copyright page is very important. It will be carefully examined by
-robots and humans.</p>
-<p>The page must contain: The book title; the book author (possibly pseudonym),
-the book copyright year (with true Copyright symbol ©) and name of copyright
-holder (your real name). Some books continue with an elaborate prohibition
-against this-and-that, but perhaps "All Rights Reserved" is sufficient;
-that is beyond the scope of this documentation.</p>
-<p>Under no conditions use "copyleft" or anything implying that you are
-being charitable.<p>
-<p>In some cases, you may need to provide further information regarding the
-use of copyrighted material, public domain material, or trademarks. That is
-beyond the scope of this documentation.</p>
-<p>If your book has a library catalog (call) number, put it on the copyright
-page. Nowadays, works of popular fiction (especially print-on-demand) do not
-need this. If a library wants your book, it will be filed by author surname
-in a section with similar books (such as Murder Mysteries) rather than by
-call number. If your book becomes a work for the ages, a call number can
-be added later.</p>
-<p>Provide sufficient information so that the publisher (you) can be
-identified and contacted. What you need to provide may vary from jurisdiction
-to jurisdiction. It may be as simple as your name, city, nation. The print
-service may encourage or discourage providing the URL of your web site.</p>
-<p>You cannot imply that the print and distribution service is the publisher,
-because it is not.</p>
-<p>You cannot be sure that copies of your book will be printed in any
-specific location, or using any specific paper or technology, or according
-to any particular environmental standard.</p>
-<p>Most nations require an "Impressum" or similar declaration that identifies
-the actual printer, and place where printed. This may vary from copy to copy.
-In books I have sent through print-on-demand in the USA, this information is
-printed on the final verso page, added by the machine at time of printing
-(which is why the final verso page must be submitted as blank).</p> 
-<p>The Copyright page must also show its ISBN (number, not bar code). The only
-exception are books that have a small number of private copies, not available
-for purchase by others, and not listed in the distribution system.</p>
+<h4><code>\begin{display} ... \end{display}</code></h4>
+<p>A <i>display page</i> stands by itself. Its appearance, and alignment of
+content, is unrelated to ordinary text pages.</p>
+<p>No matter how much or how little content, <code>\begin{display}</code>
+ensures that it starts on its own page, and <code>\end{display}</code>
+finishes that page, so that following material will be on a new page.</p>
+<p>Do not put so much content that the display flows to a second page.
+If necessary, use two display pages.</p>
+</div>
+
+
+<a id="style"></a>
+<div>
+<h4><code>\style[<i>options</i>]{<i>Styled Text</i>}</code></h4>
+<p>The <code>\style</code> command may only be used on a display page.
+This command allows you to place text that otherwise would not obey the
+main alignment rules. It has several comma-separated options:</p>
+<p><ul>
+<li>font=<i>choice</i> (choose <i>main</i> or <i>deco</i>) Default main.</li>
+<li>bold=<i>choice</i> (choose <i>true</i> or <i>false</i>) Default false.</li>
+<li>scale=<i>number</i> (integer or decimal, relative to main text) Default 1.</li>
+<li>align=<i>choice</i> (choose l c r o i) Default c.<br>
+l=left, c=center, r=right. o=outside, i=inside.</li>
+</ul></p>
+<p class="noindent">Example usage:</p>
+<p class="code"><code>\style[scale=2.5,font=deco]{Hello World}</code><br>
+Hello World is printed with the deco font, at 2.5x scale, aligned center, not bold.</p>
+<p>If you wish to use Italics, small caps, or other text features, put those
+commands within the styled text.</p>
+<p>Note that Novelette does not honor the standard TeX commands for bold text.
+Only the <code>\style</code> command may request bold.</p>
+</div>
+
+
+<a id="blankpage"></a>
+<div>
+<h4><code>\blankpage</code></h4>
+<p>This command closes the preceding page, inserts a blank page, and ensures
+that following material begins on a new page.</p>
+<p>Do not write consecutive blank pages. They may automatically appear at
+the very end of your book.</p>
+</div>
+
+
+<!-- XXXXXXXXXXXXXXX -->
+
+
+<a id="halftitle"></a>
+<div>
+<h3>Half-Title</h3>
+<p>The Half-Title, or <i>halftitle</i>, is a page containing only the title
+of your book. No subtitle, no author, nothing else. The title may be styled,
+but it should not be as prominent (that is, smaller scale) as it will appear
+on the Title Page.</p>
+<p>The halftitle is a custom dating back to the era when the printed pages
+were not immediately bound, but were stored for later binding (if ever).
+The halftitle was essentially a dust cover for the real Title Page.
+This custom has endured. Nowadays, it provides you with a place to write
+something, without marking the Title Page.</p>
+<p>The halftitle page is simple:</p>
+<p class="code"><code>\begin{display}<br>
+\null\null\null\null<br>
+\style[options]{Title of Your Book}<br>
+\end{display}
+</code></p>
+<p>The four <code>\null</code> commands insert four lines, before the
+printed halftitle. Use as many or as few as you wish.</p>
+</div>
+
+
+<a id="titlepage"></a>
+<div>
+<h3>Title Page</h3>
+<p>The title page must contain the title, subtitle (if any), and author name.
+Professional publishers identify themselves at the base of this page.</p>
+<p>Although the title page will use <code>\null</code> commands for vertical
+spacing, they are omitted here. Example title page:</p>
+<p class="code"><code>\begin{display}<br>
+\style[options]{Title of Your Book}\par<br>
+\style[options]{Subtitle}\par<br>
+\style[options]{Author Name}\par<br>
+\vfill<br>
+\style[options]{publisher identification}\par
+</code></p>
+<p> The <code>\vfill</code> command places as much vertical space as needed,
+so that material above/below is pushed to the page top/bottom.</p>
+<p>Unless your jurisdiction requires it, you do not need a publisher
+identification here. Simply omit it. Professional publishers put their
+business name, business logo, city and state/nation, and possibly year.
+<p>Remember that the print and distribution service is NOT the publisher.
+You are! Novelette does not allow inline images, so if you have a logo image,
+you cannot place it between text here.</p>
+</div>
+
+
+<a id="copyright"></a>
+<div>
+<h3>Copyright Page</h3>
+<p>Nowadays, popular fiction (especially print-on-demand) rarely has a block
+of library catalog information. This is because such books are rarely stocked
+by libraries; if stocked, they are placed by genre and author surname, instead
+of by catalog call number. Even professional publishers will sometimes say
+that library catalog information is shown on the publisher's web site,
+rather than printed here in the book. If you do have library catalog information,
+and wish to print it here, it must be in a specific format. That is beyond
+the scope of Novelette.</p>
+<p>The simplest Copyright Page format uses centered text, with extra space
+at the top rather than at the bottom. However you do it, the Copyright Page
+must be have a different format than main text. Although you may use the
+<code>\style</code> command, it is inappropriate, because the page should
+be readable without drawing attention to itself.</p>
+<p>Sample Copyright Page:</p>
+<p class="code"><code>\begin{display}<br>
+\vfill<br>
+\begin{center}<br>
+Title of Your Book : Book Subtitle / Author Name\par<br>
+Copyright ©\lnum{YYYY} Your Real Name. All Rights Reserved.\par<br>
+This is a work of fiction, etc.\par<br>
+Publisher contact information.\par<br>
+ISBN \lnum{...}\par<br>
+\end{center}<br>
+\end{display}
+</code></p>
+<p>Notes:<ul>
+<li>Each line should be narrower than full text width. Do not allow
+hyphenation at line breaks. Manually break lines using <code>\\</code> where
+needed.</li>
+<li>The <i>Title : Subtitle / Author</i> format is standard. You may break
+it into two or more lines. Do not break words.</li> 
+<li>If you use a pseudonym as author, it is best to use your real name as
+copyright holder.</li>
+<li>Use the copyright symbol © NOT (c). Do not use "copyleft" or anything
+that implies the book is free.</li>
+<li>The minimal "All Rights Reserved" may be expanded with various warnings
+and imprecations.</li>
+<li>It is customary, perhaps necessary, to include a disclaimer regarding fiction.
+See other books for examples.</li>
+<li>You are the publisher. How much contact information do you wish to write?
+Unless your jurisdiction requires it, better not put your name, address, and
+phone number. Most print distribution services allow you to put a web page
+URL, either for yourself, or specific to the book. Where I live, I can simply
+write "Independently Published by the Copyright Holder\\MyCity, MyState USA."</li>
+<li>Unless legally required, avoid saying "Printed in (Nation)" or
+"Printed on Thus-and-Such Paper". You have no control of where it will be
+printed, or how. The Impressum (which has that information) will be added
+by the printer, at time of printing, on the final verso page. If in doubt,
+check with the print distribution service.</li>
+<li>Sometimes, short acknowledgements appear on the copyright page.</li> 
+</ul></p>
 </div>
 
 
 <a id="visualbarrier"></a>
 <div>
-<p>Unless your book has very few pages (glorified pamphlet), something must
-come between the Copyright page and the first page of the story. It is
-visually distracting to have copyright legalese visible at left, when you
-are trying to start a romance or fantasy setting at right.</p>
-<p>To create a visual barrier, the simplest practice is to put something
-on the recto page facing copyright, with its verso blank. The qiestion is,
-what to put on that recto page?</p>
-<p>One possibility is a Dedication. Over-used, in my opinion. That's what
-web sites are for. If you dedicate the book to Suzy, who subsequently dumps
-you, then years later you marry Anna, you don't want Anna nagging you
-about Suzy. Thank Suzy on a web page, then when she dumps you, delete it.</p>
-<p>Another possibility, under-used but very effective, is an Epigraph.
-This is a short item of prose or poetry, intended to set the tone. It could
-be pretentious (quoting Shakespeare) or not. Major commercial authors will
-sometimes quote each other, because their common publisher fixes it.
-But don't you do that. Even if you quote the Bible, be sure that the
-translation is in the Public Domain (this is why KJV is widely used).</p>
-<p>You can quote imaginary works, or your own book. Perhaps the most famous
-Epigraph in modern fiction is the One Ring inscription (Lord of the Rings).</p>
-<p>You can use a Table of Contents, if it is short. This is unusual, unless
-the book is a collection of short stories.</p>
-<p>You can simply repeat the half-title. Even major publishers sometimes
-do this.</p>
+<h3>Visual Barrier</h3>
+<p>The <i>visual barrier</i> is not a standard publishing term. It is my own
+term for "whatever you put on page v".</p>
+<p>After the copyright on page iv, many books do not have anything else
+to say, before the story begins. But it is visually distracting to place the
+legalese copyright facing the first page of your story. It ruins the mood.</p>
+<p>So, page v is a visual barrier. Then page vi is blank, so that your
+story begins with recto page 1.</p>
+<p>Page v is not blank. It might contain any one of these, but may not
+contain anything that is part of the story itself:<ul>
+<li><a href="#dedication">Dedication</a></li>
+<li><a href="#epigraph">Epigraph</a></li>
+<li><a href="#authorsnote">Author's Note</a></li>
+<li><a href="#halfrepeat">Repeat of Half Title</a></li>
+</ul></p>
+
+
+<a id="dedication"></a>
+<div>
+<h3>Dedication</h3>
+<p>Your book does not need a Dedication. That is a leftover from the era when
+poor writers dedicated their books to rich folks, in hopes of benefits.
+But if you insist on a Dedication, it might look like this:</p>
+<p class="code"><code>
+\begin{display}<br>
+\begin{center}<br>
+\vfil<br>
+\desc\ital{For Joanna}\par<br>
+\null\null<br>
+\vfil<br>
+\end{center}<br>
+\end{display}
+</code></p>
+<p>Two or more <code>\vfil</code> commands (just one <code>l</code>), when
+used on the same page, evenly split the remaining vertical space.</p>
+<p>The <code>\desc</code> command prints its text slightly larger than
+main text, and <code>\ital</code> makes it Italic (this is standard).
+The <code>\null\null</code> (blank lines) have the effect of moving the text
+slightly above mid-page, which is visually pleasing.</p>
+<p>A Dedication is always very short, and does not say "Dedicated to".
+If you have more to say, put it in the form of an Author's Note.</p>
+</div>
+
+
+<a id="epigraph"></a>
+<div>
+<h3>Epigraph</h3>
+<p>An Epigraph is a short piece of prose or poetry. It is meant to set
+the tone of the book, or get the reader in the mood, or create the impression
+that the genre or writing style is like that of the Epigraph.</p>
+<p>You cannot quote someone else without written permission, which you will
+not get. Commercial authors quote each other, because their common publisher
+fixes it. So an Epigraph should either be something from Public Domain,
+or your own writing (possibly created just for this purpose).</p>
+<p>Pretentious writers like to quote Shakespeare or the King James Bible.
+The works of authors such as Charles Dickens and Victor Hugo are in Public
+Domain, so you could pick a line or two from one of them.</p>
+<p>But an Epigraph does not have to be pretentious. Suppose your book is
+about mutant spiders brought to Earth by a hail of meteorites. Here is an
+Epigraph that is suited to the theme:</p>
+<p class="code"><code>
+\begin{display}<br>
+\begin{blockindent}[3]<br>
+\noindent The itsy-bitsy spider\\<br>
+Went up the water spout.\\<br>
+Down came the rain, and\\<br>
+Washed the spider out.\par<br>
+\end{blockindent}<br>
+\end{display}
+</code></p>
+</div>
+
+
+<a id="authorsnote"></a>
+<div>
+<h3>Author's Note</h3>
+<p>An Author's Note is a short (one page, at most two) explanation by the
+author, directly addressing the reader. There is no particular content.
+But it must lead into the story, not lead away from it. This is not the place
+to discuss how your primal scream therapist recommended you write a book.</p>
+<p>Informal acknowledgements might go here. If there is something the reader
+ought to know (but might not know), it may be mentioned, for better
+understanding of the story. One American humorist likes to mention that some
+aspect of the story (surely that could never happen) actually happened.</p>
+<p>In most cases, an Author's Note is formatted like a short chapter,
+with an opening instead of a display page. Here is an example of a fictional
+Author's Note, in which the author pretends that the story is something
+his father found:</p>
+<p><ul>
+\begin{opening}<br>
+\null\null\null\null\null<br>
+\name{Author's Note}<br>
+\null\null\null\null\null<br>
+\end{opening}<br>
+Shortly after the Great War, my father was on an expedition investigating
+some ancient tombs that had been unearthed by cannon fire. Among the usual
+detritus were several manuscripts, one of which was very unlike the others.
+Professor Zorkle Dondles, of West Erewhon University, translated... etc.\par
+</ul></p>
+<p>The above example is on the edge between "about the book" and
+"part of the story". But as long as it pretends to be about the book, and
+the reader will know that it is fictional, it can go in frontmatter.</p>
+</div>
+
+
+<a id="halfrepeat"></a>
+<div>
+<h3>Repeat of Half-Title</h3>
+<p>Sometimes, even professionl authors have nothing to say. Let's get to the
+story! No more diversions! In this case, page v may simply be a repeat of
+the <a href="#halftitle">halftitle</a> page.</p>
+</div>
+
+
+<a id="notfrontmatter"></a>
+<div>
+<h3>Not Frontmatter</h3>
+<p>If a map or diagram precedes the story text, the map or diagram is part of
+the story itself. It is not frontmatter. You could place it recto as Page 1,
+so the story text begins on Page 3. Or you could place it verso as Page 2,
+facing the story text on page 3. If the map is page 2, then something else
+needs to be Page 1. That could be a repeat of the halftitle, or Part I, or an
+Epigraph that is extracted from the story (not from an external source).</p>
+<p>If your book is divided into parts, the page announcing Part I is not
+considered to be front matter. It would be the first page of mainmatter.</p>
+<p>If your fontmatter is lengthy (don't do it!) then it is customary to
+repeat the halftitle page, but in this case it would not be frontmatter.
+It would be the first page of mainmatter.</p>
 </div>
 
 

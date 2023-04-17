@@ -268,7 +268,8 @@
   \let\lsstyle\relax
   \hyphenpenalty=1000
   \exhyphenpenalty=1000
-  \versohead{Verso}\rectohead{Recto} % Dummy fill. Developer use.
+  \gdef\nvt@versohead{}
+  \gdef\nvt@\rectohead{}
   \frenchspacing % Even if English.
 }
 %%

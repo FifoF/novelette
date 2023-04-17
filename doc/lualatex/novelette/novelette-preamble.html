@@ -318,13 +318,16 @@ You can manually use narrower margins, if allowed by your print service.</p>
 
 <a id="layout"></a>
 <div>
-<h4><code>\layout{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}</code></h4>
+<h4><code>\layout{<i>style</i>=<i>choice</i>,<i>gap</i>=<i>number</i>}</code></h4>
 <p>The <code>\layout</code> command accepts one or more comma-separated
 key=value pairs. It sets the page layout header/footer style.</p>
-<p><b><code>style=<i>integer</i></code></b><br>
+<p><b><code>style=<i>choice</i></code></b><br>
 Integer from 1 to 7 selects page style,
 (header and/or footer) from a menu of available styles. The default style
 depends on other page design settings.</p>
+<p>If the integer is followed by lowercase <code>i</code>, then the page number
+will be written in Italics. Example: <code>style=4i</code> is style 4 with
+Italic page numbers.</p>
 <p>Available styles:<ul>
 <li>1 = Only footer. Page number centered.</li>
 <li>2 = Header and footer. Centered.</li>
@@ -341,9 +344,6 @@ Number is integer|decimal from 0 to 1.
 Value 0 (rarely used) places header|footer at the line immediately above|below
 main text. Value 1 skips a whole line between them, and is best for
 large books. Value 0.5 is a nice compromise for smaller books.</p>
-<p><b><code>scale=<i>number</i></code></b><br>
-Sets the scale of header/footer text, relative to size of main font.
-Acceptable range is 0.75 to 1, but must evaluate to at least 7bp.</p>
 <p>Note: If you use a header/footer, there will be pages where nothing
 is printed in the header/footer. Nevertheless, the space for header/footer
 is reserved; main text does not vertically expand to fill the empty

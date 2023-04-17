@@ -18,36 +18,39 @@
 <a id="mainwhat"></a>
 <div>
 <h3>What is mainmatter ?</h3>
-<p>Main matter, or mainmatter, is your story. If something is "about the book"
-rather than part of the story, then it does not belong in mainmatter.</p>
-<p>Chapters are part of the story. So is a Prologue. If you have a map of a
-fictional world, or a diagram of the murder scene, it is part of the story,
-so it belongs in mainmatter.</p>
-<p>What about an Introduction? Novelette is intended for popular fiction,
-where frontmatter is short. If you have something to say (as author), put it
-in frontmatter, as a one or two page Author's Note.</p>
-<p>If an Introduction is part of the story, then it belongs in mainmatter.
-This might be the case in the "lost manuscript" genre, in which a fictional
-Introduction is by a fictional archaeologist, who explains how the manuscript
-was discovered. The rest of the story, beginning with Chapter 1, is the
-fictional manuscript.</p>
-</div>
+<p>Main Matter, or <i>mainmatter</i>, is your story. It includes chapters,
+prologue, epilogue, maps, and so forth. It may include an Introduction,
+if that is part of your story.</p>
+<p>Mainmatter begins on recto Page 1. In most cases, that is where the
+story's written text begins, regardless of whether it is a chapter or
+something else. But there are exceptions:</p>
+<p><ul>
+<li>If you have one or more maps on pages preceding the text, they are
+mainmatter. By the time the reader arrives at the opening text, the page
+is an odd number higher than 1.</li>
+<li>If frontmatter is lengthy (don't do it), then it is customary to place
+a second halftitle page as the beginning of mainmatter, page 1. The opening
+text will have an odd page number, higher than 1.</li>
+<li>If the story is divided into parts, Page 1 is the the display page
+announcing Part I. The story text will begin on an odd page higher than 1.</li>
+</ul></p>
 
+<h3>Quick Start</h3>
+<p>Here is a model for the first chapter, assumed to begin at Page 1.
+ Each of its commands is a hyperlink within this documentation. Click to learn
+what the commands do, and how to choose their values.</p>
+<p>The <code>\null</code> command inserts a blank line. May be repeated.
+Actual mainmatter opening pages will often have many <code>\null</code> to
+provide space at the top of the page, or between items on the page.</p>
 
-<a id="mainwhere"></a>
-<div>
-<h3>Where is Page 1 ?</h3>
-<p>Page 1, arabic numerals, is the first page of mainmatter. It is always
-recto. In most cases, it is the start of your story text: Chapter 1,
-or Prologue, or fictional Introduction.</p>
-<p>But if you place a map prior to the start of story text, then the start
-of story text must be Page 3 or more (always odd). This is because the map is
-part of mainmatter. Page 1 may be the map, or it may be a repeat of the
-half-title. It may say Part I, for a multi-part book. It may be an Epigraph,
-but only if the Epigraph is part of the story (not from an external source
-such as Shakespeare).</p>
-<p>When frontmatter is lengthy (don't do it), it is customary to repeat
-the half-title as Page 1, so the story begins on Page 3.</p>
+<div id="doctemplate">
+<p class="linesp noindent">
+<a href="#mainmatter">\mainmatter</a><br>
+<a href="#opening">\begin{opening}</a><br>
+<a href="#name">\name[<i>option</i>]{<i>content</i>}</a><br>
+<a href="#desc">\desc[<i>option</i>]{<i>content</i>}</a><br>
+<a href="#init">\init[<i>kern</i>]{<i>letter</i>}{<i>words</i>}</a> and text.<br>
+<a href="#memo">\scene{<i>text</i>}</a><br>
 </div>
 
 
@@ -57,27 +60,6 @@ the half-title as Page 1, so the story begins on Page 3.</p>
 <p>The <code>\mainmatter</code> command defines the start of mainmatter.
 It clears to a recto page. It re-starts page numbers at arabic 1. Whether
 or not the page number is printed, depends on layout style.</p>
-</div>
-
-
-<a id="headtext"></a>
-<div>
-<h3>\versohead{<i>content</i>} -and- \rectohead{<i>content</i>}</h3>
-<p>Commands <code>\versohead{}</code> and <code>\rectohead{}</code> apply
-when the layout style has a header. Otherwise, they are ignored.</p>
-<p>These commands have no effect in frontmatter. In mainmatter, they define
-the content of verso and recto header text. Page numbering is automatic,
-so it is not affected by these commands.</p>
-<p>You may repeat the commands throughout the book. For example, perhaps
-you wish to put the chapter number in the header. But be aware that most
-print-on-demand services require that headers contain only the book title
-and author name, exactly as they are registered with the distribution network.
-So, it is better to keep the same headers throughout the book.</p>
-<p>The headers may be styled, using commands for small caps or italics.
-If you do not use these commands to define your own headers, then Novelette
-will automatically put the title in all-small caps above verso pages, and
-the author in Italics above recto pages.</p>
-<p>Opening pages never display a header.</p>
 </div>
 
 
@@ -120,6 +102,59 @@ probably look better in ordinary main text.</p>
 <p>The desc text is pre-set at 1.33 times the size of main text.</p>
 <p>The option is a letter: l c r o i, for alignment left, center, right,
 outside, or inside.</p>
+</div>
+
+
+<a id="init"></a>
+<div>
+<h3>\init[kern]{letter}{letters}</h3>
+<p>The <code>\init</code> command is optional. But if you use it for one
+chapter, you must uniformly use it for all of them.</p>
+<p>It is customary to use something distinctive for the very first line
+of chapter text. Drop caps are out of fashion, and never were widely used for
+popular fiction, so Novelette does not do them.</p>
+<p>The single <i>letter</i> argument is the first letter of the chapter text.
+If text begins with quotation marks, you may include them. This letter will
+be set larger than normal, so it is distinctive. It does not affect the
+line grid.</p>
+<p>The plural <i>letters</i> are letters, perhaps a few words, that will be
+set with lowercase converted to small caps. Note that the <i>letter</i>
+argument already placed a letter, so do not repeat it in the <i>letters</i>.</p>
+<p>After this, text is normal. Example:</p>
+<p class="code">\init{I}{t was dark and stormy,} but that was not unusual.</code></p>
+<p>The optional <i>kern</i> will adjust the spacing between the enlarged
+letter, and the following small caps letter. It is a number, without units.
+Negative number moves them closer, positive farther. Rarely beyond -.2 to .2
+range. Useful when the first letter is T, so you can move the following letter
+partly under the overhang.</p>
+<p>If you want the first letter to be something decorative, then you will
+need to use <i>fontspec</i> syntax to define your own font command, and
+use it there. Novelette will not do that for you; do it yourself.</p>
+</div>
+
+
+<a id="scene"></a>
+<h3>\scene{<i>text</i>}</h3>
+<p>The <code>\scene</code> command creates a scene break. If all you want is
+a simple blank line, use <code>\null</code> instead.</p>
+<p>The <i>text</i> has several variations:</p>
+<p><ul>
+<li>\scene{-} skips one line, and puts a long dash (about one-fourth width)
+in the gap</li>
+<li>\scene{*} skips one line, and puts three widely-spaced asterisks in the gap.</li>
+<li>\scene{text} (where text is neither - nor *) skips TWO lines, and puts the
+text left-aligned in the gap. The text is slightly larger than main text.
+It is off-grid, but this is visually best.</li>
+<li>\scene{-text} (first character is hyphen) is like the above, except that
+the text begins with a long dash, with the first letter at indent. If your
+chapters are routinely divided into scenes, this method is especially attractive.</li>
+</ul></p>
+<p>If you use a blank line instead of <code>\scene</code>, there may be pages
+where the blank line is at top or bottom. Standard practice is to use
+<code>\scene{-}</code> or <code>\scene{*}</code> to show that the missing line
+was intentional.</p>
+<p>In all cases, it is bad layout to have just one line above or below a
+scene break. The only solution is to re-write.</p>  
 </div>
 
 <!-- XXXXXXXXXXXXXXXX -->

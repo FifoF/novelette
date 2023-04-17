@@ -15,10 +15,6 @@
 %%
 
 
-\def\versohead#1{\gdef\versoheadtext{#1}}
-\def\rectohead#1{\gdef\rectoheadtext{#1}}
-
-
 %% INITIALIZE FANCYHDR
 \providecommand\headrulewidth{0pt}\renewcommand\headrulewidth{0pt}
 \providecommand\footrulewidth{0pt}\renewcommand\footrulewidth{0pt}
@@ -58,38 +54,38 @@
       {\nvt@headfont\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{2}}{
-    \fancyhead[CE]{\nvt@headily{\versoheadtext}}
-    \fancyhead[CO]{\nvt@headily{\rectoheadtext}}
+    \fancyhead[CE]{\nvt@headily{\nvt@versohead}}
+    \fancyhead[CO]{\nvt@headily{\nvt@rectohead}}
     \fancyfoot[CO,CE]{\rule{0pt}{\nvt@ascn}%
       {\nvt@headfont\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{3}}{
-    \fancyhead[LE]{\nvt@headily{\versoheadtext}}
-    \fancyhead[RO]{\nvt@headily{\rectoheadtext}}
+    \fancyhead[LE]{\nvt@headily{\nvt@versohead}}
+    \fancyhead[RO]{\nvt@headily{\nvt@rectohead}}
     \fancyfoot[LE,RO]{\vfil\leavevmode\rule{0pt}{\nvt@leading}%
      {\nvt@headfont\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{4}}{
     \fancyhead[LE]{\nvt@headily{\pagenumber}}
     \fancyhead[RO]{\nvt@headily{\pagenumber}}
-    \fancyhead[CE]{\nvt@headily{\versoheadtext}}
-    \fancyhead[CO]{\nvt@headily{\rectoheadtext}}
+    \fancyhead[CE]{\nvt@headily{\nvt@versohead}}
+    \fancyhead[CO]{\nvt@headily{\nvt@rectohead}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{5}}{
     \fancyhead[LE]{\nvt@headily{\makebox[2\normalindent][l]{\pagenumber}\nvt@widebar}}
-    \fancyhead[CE]{\nvt@headily{\versoheadtext}}
-    \fancyhead[CO]{\nvt@headily{\rectoheadtext}}
+    \fancyhead[CE]{\nvt@headily{\nvt@versohead}}
+    \fancyhead[CO]{\nvt@headily{\nvt@rectohead}}
     \fancyhead[RO]{\nvt@headily{\nvt@widebar\makebox[2\normalindent][r]{\pagenumber}}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{6}}{
     \fancyhead[LE]{\nvt@headily{\pagenumber~/}}
-    \fancyhead[CE]{\nvt@headily{\versoheadtext}}
-    \fancyhead[CO]{\nvt@headily{\rectoheadtext}}
+    \fancyhead[CE]{\nvt@headily{\nvt@versohead}}
+    \fancyhead[CO]{\nvt@headily{\nvt@rectohead}}
     \fancyhead[RO]{\nvt@headily{/~\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{7}}{
-    \fancyhead[CE]{\nvt@headily{\pagenumber~/~\versoheadtext}}
-    \fancyhead[CO]{\nvt@headily{\rectoheadtext~/~\pagenumber}}
+    \fancyhead[CE]{\nvt@headily{\pagenumber~/~\nvt@versohead}}
+    \fancyhead[CO]{\nvt@headily{\nvt@rectohead~/~\pagenumber}}
   }{}
   \pagestyle{fancy} % Unless over-ridden by \thispagestyle.
 }

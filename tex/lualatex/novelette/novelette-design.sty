@@ -126,12 +126,13 @@
   \FPmul{\nvt@temp@n}{\nvt@temp@n}{2.4}
   \FPtrunc{\nvt@temp@n}{\nvt@temp@n}{0}
   \xdef\nvt@charsperline{\nvt@temp@n}
-  \ifdefined\nvt@hfscale\else\gdef\nvt@hfscale{.92}\fi
-  \setlength\nvt@temp@l{\nvt@hfscale\nvt@fontsize}
+  \setlength\nvt@temp@l{.92\nvt@fontsize}
   \ifdimcomp{\nvt@temp@l}{<}{7.0263pt}{
     \FPdiv{\nvt@temp@n}{7.0263}{\strip@pt\nvt@fontsize}
     \xdef\nvt@hfscale{\nvt@temp@n}
-  }{}
+  }{
+    \gdef\nvt@hfscale{.92}
+  }
   \ifdefined\nvt@gap\else
     \gdef\nvt@gap{0.5}
   \fi
@@ -223,8 +224,7 @@
   }
   \xdef\log@charsperline{Estimated characters per line = \nvt@charsperline}
   \xdef\log@layout{%
-    \string\layout{style=\nvt@hfstyle\ifnvt@pnital i\fi,scale=\nvt@hfscale,%
-      gap=\nvt@gap}%
+    \string\layout{style=\nvt@hfstyle\ifnvt@pnital i\fi,gap=\nvt@gap}%
   }
 }
 %%

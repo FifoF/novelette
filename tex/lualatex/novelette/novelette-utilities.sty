@@ -43,8 +43,8 @@
     \pagenumbering{arabic}%
     \setcounter{page}{1}%
     \pagestyle{fancy}%
-    \versohead{\allsmcp{\thetitle}}%
-    \rectohead{\textit{\theauthor}}%
+    \gdef\nvt@versohead{\allsmcp{\thetitle}}%
+    \gdef\nvt@rectohead{\textit{\theauthor}}%
   \fi%
   \global\nvt@frontmatterfalse%
   \global\nvt@mainmattertrue%
@@ -52,8 +52,8 @@
 %%
 \def\backmatter{% Usually not used.
   \cleartorecto%
-  \versohead{}%
-  \rectohead{}%
+  \gdef\nvt@versohead{}%
+  \gdef\nvt@rectohead{}%
 }
 %%
 

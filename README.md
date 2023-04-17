@@ -15,16 +15,5 @@ the code.
 Expected release mid-April 2023. Before I release it, I must wait for
 2023 binaries on my platform. They are custom-built, beyond my control.
 
-UPDATE, April 15, 2023: Working on the HTML documentation. Hunting for bugs,
-if any, in the code. Getting close to finish.
-
-UPDATE, April 11, 2023: Settings \layout{headgap= ,footgap= } have been
-combined into a single \layout{gap= }.
-
-UPDATE, April 10, 2023: Fixed some typos in the html (Thanks!). Implemented
-some experimental code changes. The experiments work for me, but because
-they are quite radical, more testing is needed. If they withstand the tests,
-potential users will be so happy! Swainson fonts will not be part of the
-release (not really necessary). If you have their preliminary files,
-please delete them (unfinished).
-
+Update: April 16, 2023: At this point, there are no "known bugs" but I need
+to perform more tests. Curently working on the documentation.

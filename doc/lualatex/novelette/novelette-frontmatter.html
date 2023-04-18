@@ -2,17 +2,23 @@
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-<title>Novelette - Front Matter</title>
+<title>Novelette - Documentation - Front Matter</title>
 <link rel="stylesheet" type="text/css" href="novelette.css">
 </head>
 <body>
 <div id="main">
 
 <h2>Novelette - Documentation</h2>
-<p class="noindent">On Other Pages:
+<p class="links">On Other Pages:
 <a href="novelette.html">Overview</a>
+<a href="novelette-setup.html">Setup</a>
 <a href="novelette-preamble.html">Preamble</a>
 <a href="novelette-mainmatter.html">Mainmatter</a>
+<a href="novelette-language.html">Language</a>
+</p>
+<p class="links">On This Page:
+<a href="#fronttemplate">Frontmatter-Template</a>
+(other links within the template)
 </p>
 
 <h3>Front Matter</h3>
@@ -32,6 +38,7 @@ and how to choose their values.</p>
 Actual frontmatter pages will often have many <code>\null</code> to provide
 space at the top of the page, or between items on the page.</p>
 
+<a id="fronttemplate"></a>
 <div id="doctemplate">
 <p class="linesp noindent">
 <a href="#frontmatter">\frontmatter</a><br>
@@ -101,13 +108,13 @@ If necessary, use two display pages.</p>
 <p>The <code>\style</code> command may only be used on a display page.
 This command allows you to place text that otherwise would not obey the
 main alignment rules. It has several comma-separated options:</p>
-<p><ul>
+<ul>
 <li>font=<i>choice</i> (choose <i>main</i> or <i>deco</i>) Default main.</li>
 <li>bold=<i>choice</i> (choose <i>true</i> or <i>false</i>) Default false.</li>
 <li>scale=<i>number</i> (integer or decimal, relative to main text) Default 1.</li>
 <li>align=<i>choice</i> (choose l c r o i) Default c.<br>
 l=left, c=center, r=right. o=outside, i=inside.</li>
-</ul></p>
+</ul>
 <p class="noindent">Example usage:</p>
 <p class="code"><code>\style[scale=2.5,font=deco]{Hello World}</code><br>
 Hello World is printed with the deco font, at 2.5x scale, aligned center, not bold.</p>
@@ -207,7 +214,8 @@ ISBN \lnum{...}\par<br>
 \end{center}<br>
 \end{display}
 </code></p>
-<p>Notes:<ul>
+<p>Notes:</p>
+<ul>
 <li>Each line should be narrower than full text width. Do not allow
 hyphenation at line breaks. Manually break lines using <code>\\</code> where
 needed.</li>
@@ -232,7 +240,7 @@ printed, or how. The Impressum (which has that information) will be added
 by the printer, at time of printing, on the final verso page. If in doubt,
 check with the print distribution service.</li>
 <li>Sometimes, short acknowledgements appear on the copyright page.</li> 
-</ul></p>
+</ul>
 </div>
 
 
@@ -247,12 +255,13 @@ legalese copyright facing the first page of your story. It ruins the mood.</p>
 <p>So, page v is a visual barrier. Then page vi is blank, so that your
 story begins with recto page 1.</p>
 <p>Page v is not blank. It might contain any one of these, but may not
-contain anything that is part of the story itself:<ul>
+contain anything that is part of the story itself:</p>
+<ul>
 <li><a href="#dedication">Dedication</a></li>
 <li><a href="#epigraph">Epigraph</a></li>
 <li><a href="#authorsnote">Author's Note</a></li>
 <li><a href="#halfrepeat">Repeat of Half Title</a></li>
-</ul></p>
+</ul>
 
 
 <a id="dedication"></a>
@@ -326,7 +335,7 @@ aspect of the story (surely that could never happen) actually happened.</p>
 with an opening instead of a display page. Here is an example of a fictional
 Author's Note, in which the author pretends that the story is something
 his father found:</p>
-<p><ul>
+<p class="code"><code>
 \begin{opening}<br>
 \null\null\null\null\null<br>
 \name{Author's Note}<br>
@@ -336,7 +345,7 @@ Shortly after the Great War, my father was on an expedition investigating
 some ancient tombs that had been unearthed by cannon fire. Among the usual
 detritus were several manuscripts, one of which was very unlike the others.
 Professor Zorkle Dondles, of West Erewhon University, translated... etc.\par
-</ul></p>
+</code></p>
 <p>The above example is on the edge between "about the book" and
 "part of the story". But as long as it pretends to be about the book, and
 the reader will know that it is fictional, it can go in frontmatter.</p>
@@ -369,7 +378,7 @@ It would be the first page of mainmatter.</p>
 </div>
 
 
-</div>
+</div><div>&nbsp;</div>
 </body>
 </html>
 

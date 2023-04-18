@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Novelette - Documentation - Setup</title>
+<link rel="stylesheet" type="text/css" href="novelette.css">
+</head>
+<body>
+<div id="main">
+
+<h2>Novelette - Documentation</h2>
+<p class="links">On Other Pages:
+<a href="novelette.html">Overview</a>
+<a href="novelette-preamble.html">Preamble</a>
+<a href="novelette-frontmatter.html">Frontmatter</a>
+<a href="novelette-mainmatter.html">Mainmatter</a>
+<a href="novelette-language.html">Language</a>
+</p>
+<p class="links">On This Page:
+<a href="#basics">Basics</a>
+<a href="#packages">Required-Packages</a>
+<a href="#reqfont">Required-Font</a>
+<a href="#yourfont">Your-Font</a>
+</p>
+<a id="setup"></a>
+<div>
+<h2>Setup</h2>
+
+
+<a id="basics"></id>
+<div>
+<h3>Basics</h3>
+<p>Novelette requires a working TeX installation, with Luatex support.
+To ensure that you have it, copy this code to file <code>test.tex</code>
+in your home directory. Use a plain text editor with utf-8 encoding,
+without BOM (byte order mark). That is standard for Linux and Mac, but if
+you are on Windows, use a program such as <i>Notepad++</i>, NOT Windows
+Notepad. Code:</p>
+<p class="code"><code>
+\documentclass{article}<br>
+\usepackage{fontspec}<br>
+\begin{document}<br>
+Hello World<br>
+\end{document}
+</code></p>
+<p>Then try to build it to PDF. If you are using a GUI program
+(TeXworks, etc.) be sure that you specify <i>lualatex</i> as the engine.
+If you are using command line:</p>
+<p class="code"><code>lualatex test</code></p>
+<p>If that fails:</p>
+<ul>
+<li>If the system cannot find a program named <i>lualatex</i>, try to build
+with this instead:<br>
+<code>luahbtex --fmt=latex test</code><br>
+If that works, it means your system (probably a Linux variant) needs a tweak:
+As root user, navigate to the directory where TeX keeps its binaries. That can
+be discovered via <code>which luahbtex</code>. In that directory, create a symlink:<br>
+<code>ln -s luahbtex lualatex</code><br>
+Then try to build with <i>lualatex</i>. This time, it should work.</li>
+<li>If you get this error: "LuaTeX is required to compile this document. Sorry."
+It means that you did not compile with <i>lualatex</i>. Be sure to do that,
+and try again.</i>
+<li>If you get an error saying that <i>fontspec</i> is not installed, or that
+<i>fontspec.sty</i> was not found, then use your TeX package installer, and
+get <i>fontspec</i> plus its dependent packages. If using command line:<br>
+<code>tlmgr install --reinstall l3kernel xparse<br>
+tlmgr install --reinstall --with-doc fontspec</code></li>
+</ul>
+</div>
+
+
+<a id="packages"></a>
+<div>
+<h3>Supporting Packages</h3>
+<p>After the test document builds successfully, install the other packages
+required by Novelette. Some or all of them may already be installed.</p>
+<p>If you are using MiKTeX, and have it set to automatically install missing
+packages on-the-fly, do this: Edit the above <i>test.tex</i> file.
+Change the document class to <code>novelette</code> and build it with
+<i>lualatex</i>. MiKTeX will obtain the packages you need.</p>
+<p>If you are using command line instead, use the TeX package installer:</p>
+<p class="code"><code>
+tlmgr install --reinstall iftex luatex85 pdftexcmds infwarerr<br>
+tlmgr install --reinstall ltxcmds xparse expl3 xpatch xifthen<br>
+tlmgr install --reinstall letltxmacro etoolbox noindentafter<br>
+tlmgr install --reinstall ifmtarg xstring luahyphenrules<br>
+tlmgr install --reinstall fp silence atbegshi changepage<br>
+tlmgr install --reinstall --with-doc fontspec microtype
+</code></p>
+<p>Then, try a new test document:</p>
+<p class="code"><code>
+\documentclass{novelette}<br>
+\begin{document}<br>
+Welcome to Novelette.<br>
+\end{document}
+</code></p>
+</div>
+
+
+<a id="reqfont"></a>
+<div><h3>Required Font</h3>
+<p>Although TeX uses <i>Latin Modern Roman</i> as default font, it is utterly
+unsuitable for popular fiction, particularly when using print-on-demand.
+You will need to use a different font.</p>
+<p>Novelette expects that you have <i>Libertinus Serif</i> installed where TeX
+can find it. In MiKTeX, install <code>libertinus-fonts</code>.
+In TeXlive command line:</p>
+<p class="code"><code>tlmgr install libertinus-fonts</code></p>
+<p>Note that other packages with <i>libertinus</i> in the name, are something
+else. You want <i>libertinus-fonts</i>.</p>
+<p>If you do not use
+<a href="novelette-preamble.html#setfont"><code>\setfont</code></a>
+to choose something else, Novelette will use <i>Libertinus Serif</i> as
+main font. It is suited to popular fiction, although there are other fonts
+that look as good (or better) for this purpose.</p>
+<p>Since <i>Libertinus Serif</i> has a reasonably large character set,
+Novelette uses it as "Plan B" when your chosen main font does not have a
+practicular character. For example, if your chosen main font does not have
+the Greek lowercase letter "pi", you can get it this way:</p>
+<p class="code"><code>Pecan \altfont{\uni{03C0}} with ice cream.</code></p>
+<p>Note that <code>\uni{03C0}</code> requests Unicode 03C0, which is pi.</p>
+<p>If you do not choose your own main font, and do not have
+<i>Libertinus Serif</i> as default, then Novelette will use <i>Latin Modern
+Roman</i>. but it will issue a warning, and prevent using final mode.</p>
+</div>
+
+
+<a id="yourfont"></id>
+<div>
+<h3>Your Font</h3>
+<p>Novelette can use any OpenType font (extension <code>otf</code>)
+and some TrueType fonts (extension <code>ttf</code>). It cannot use Type 1
+fonts (extension <code>pfb, afm, pfm, vf</code>).</p>
+<p>The TeX Font Catalog (online web page) shows samples of all fonts that
+can be installed within TeX. However, you are not limited to those fonts.
+On most platforms, Novelette can find fonts installed in the operating system,
+not just the ones installed within TeX. But be sure that the fonts are
+licensed for your purpose.</p>
+<p>Each font must have a license that permits embedding, for printed
+books, for profit. Many "free" or system fonts do not have a suitable license.
+In particular, DO NOT use any font that comes with the "GNU Public License"
+(GPL) unless it also has a "font exception" clause that allows embedding
+for any purpose.</p>
+<p>Some fonts have a free version, and a paid version. You might need the
+paid version. Some fonts come with a program, and can only be used for
+files created by that program. Novelette cannot verify the license; this is
+your responsibilty.</p>
+<p>Your print-on-demand book will be printed using a high-speed photocopier,
+not offset press (unless you strike it rich). Before committing to a font,
+create test files, for each <i>Font Name</i>. Select either <i>letter</i>
+or <i>A4</i> depending on what size paper is used. Note that this is not
+the same as your book page size:</p>
+<p class="code"><code>
+\documentclass{novelette}<br>
+\setfont{main}{<i>Font Name</i>}<br>
+\sheetfeed{<i>letter or A4</i>}<br>
+\begin{document}<br>
+\fillertext<br>
+\end{document}
+</code></p>
+<p>Print the PDF on a photocopier that can print directly from digital files.
+Where I live, this kind of machine is often at print/ship services. Be sure
+to specify non-color print.</p>
+<p>The name of the main font will be printed above the filler text. That way,
+you can print several test files, and know which font is which.</p>
+<p>Pay particular attention to how dark the characters print. Fonts intended
+for offset presses may print too light. Pay attention to the reading
+experience: Does the text flow the way you expect in fiction, or does it look
+more like a textbook?</p>
+<p>Only <i>you</i> can decide.</p>
+</div>
+
+
+</div><div>&nbsp;</div>
+</body>
+</html>
+

@@ -2,17 +2,19 @@
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-<title>Novelette - Preamble Settings</title>
+<title>Novelette - Documentation - Preamble</title>
 <link rel="stylesheet" type="text/css" href="novelette.css">
 </head>
 <body>
 <div id="main">
 
 <h2>Novelette - Documentation</h2>
-<p class="noindent">On Other Pages:
+<p class="links">On Other Pages:
 <a href="novelette.html">Overview</a>
+<a href="novelette-setup.html">Setup</a>
 <a href="novelette-frontmatter.html">Frontmatter</a>
 <a href="novelette-mainmatter.html">Mainmatter</a>
+<a href="novelette-language.html">Language</a>
 </p>
 
 <h3>Preamble</h3>
@@ -197,51 +199,12 @@ have it indexed under the desired name (pseudonym or real name).</p>
 \setlang*{<i>code</i>}[<i>option</i>]</code></h4>
 <p>The <code>code</code> is a Western European language code. Novelette is not
 configured for other world languages, due to layout calculation methods.</p>
-<p>Novelette only uses this setting for hyphenation patterns, and (for French)
-punctuation spacing. It is not a spelling or grammar check. It does not format
-time or date. So you may write snippets of text in most other languages,
-if you do not mind them being hyphenated like your setting.</p>
-<p>Available codes:<ul>
-<li><code>da</code> (Danish)</li>
-<li><code>nl</code> (Dutch)</li>
-<li><code>is</code> (Icelandic)</li>
-<li><code>ga</code> (An Caighdeán Gaelic)</li>
-<li><code>nb</code> (Norwegian Bokmål)</li>
-<li><code>nn</code> (Norwegian Nynorsk)</li>
-<li><code>sv</code> (Swedish)</li>
-<li><code>fi</code> (Finnish)</li>
-<li><code>pt</code> (Portuguese)</li>
-<li><code>es</code> (Spanish)</li>
-<li><code>eu</code> (Basque)</li>
-<li><code>ca</code> (Catalan)</li>
-<li><code>oc</code> (Occitan)</li>
-<li><code>fr</code> (French, France)</li>
-<li><code>fr-CH</code> (French, Swiss)</li>
-<li><code>de</code> (German, Germany/Austria)</li>
-<li><code>de-CH</code> (German, Swiss)</li>
-<li><code>it</code> (Italian)</li>
-<li><code>en</code> (English, British)</li>
-<li><code>en-US</code> (English, USA)</li>
-<li><code>xx</code> (No hyphenation).</li>
-</ul></p>
-<p>For most languages, there is no difference between the starred and
-unstarred <code>\setlang</code> commands. Exceptions:</p>
-<p>In <b>German (<code>de</code>)</b>, the unstarred <code>\setlang</code>
-uses contemporary <span class="nowrap">(post-1996)</span> rules.
-The starred <code>\setlang*</code> uses older (1901) rules.</p>
-<p>In <b>French (<code>fr</code>)</b> the unstarred <code>\setlang</code> adds
-extra space before the colon, semicolon, exclamation, and question marks.</p>
-<p>In <b>Swiss French (<code>fr-CH</code>)</b>, the unstarred
-<code>\setlang</code> adds extra space before the semicolon, exclamation, and
-question marks. But it does <i>not</i> add extra space before the colon.</p>
-<p>Both <b>French (<code>fr</code>)</b> and <b>Swiss French
-(<code>fr-CH</code>)</b> also add extra space after opening guillement, and
-before closing guillemet. If you do not wish to add these spaces, use the
-<code>[-g]</code> option. Other spaces are not affected.</p>
-<p>In <b>French (<code>fr</code>)</b> and <b>Swiss French
-(<code>fr-CH</code>)</b>, the starred <code>\setlang*</code> does not apply
-extra space to any punctuation. This might be useful if you already typed
-those spaces manually.</p>
+<p>Details of this command are explained on <a href="novelette-language.html">
+another page</a>. If you do not use the command, a generic English pattern
+is the default.</p>
+<p>Novelette only uses this setting for hyphenation patterns, and (in the
+case of French) punctuation spacing. It is not a spell-check or grammar-check.
+It does not format dates and times. Do those things yourself.</p>
 </div>
 
 
@@ -328,7 +291,8 @@ depends on other page design settings.</p>
 <p>If the integer is followed by lowercase <code>i</code>, then the page number
 will be written in Italics. Example: <code>style=4i</code> is style 4 with
 Italic page numbers.</p>
-<p>Available styles:<ul>
+<p>Available styles:</p>
+<ul>
 <li>1 = Only footer. Page number centered.</li>
 <li>2 = Header and footer. Centered.</li>
 <li>3 = Header and footer. Both aligned to outside margin.</li>
@@ -338,7 +302,7 @@ page number, at fixed distance from margin. Centered text.</li>
 <li>6 = Header. Page number aligned to outside margin. Adjacent slash.
 Centered text.</li>
 <li>7 = Header. Centered number/text or text/number.</li>
-</ul></p>
+</ul>
 <p><b><code>gap=<i>number</i></code></b><br>
 Number is integer|decimal from 0 to 1.
 Value 0 (rarely used) places header|footer at the line immediately above|below
@@ -453,7 +417,7 @@ This is <a href="#specialcharbody">explained in detail</a>.</p>
 </div>
 
 
-</div>
+</div><div>&nbsp;</div>
 </body>
 </html>
 

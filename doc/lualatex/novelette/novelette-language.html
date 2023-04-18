@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Novelette - Documentation - Language Choice</title>
+<link rel="stylesheet" type="text/css" href="novelette.css">
+</head>
+<body>
+<div id="main">
+
+<h2>Novelette - Documentation</h2>
+<p class="links">On Other Pages:
+<a href="novelette.html">Overview</a>
+<a href="novelette-setup.html">Setup</a>
+<a href="novelette-preamble.html">Preamble</a>
+<a href="novelette-frontmatter.html">Frontmatter</a>
+<a href="novelette-mainmatter.html">Mainmatter</a>
+</p>
+
+<h3>Language Choice</h3>
+
+<a id="setlang"></a>
+<div>
+<h4><code>\setlang{<i>code</i>}[<i>option</i>]<br>
+\setlang*{<i>code</i>}[<i>option</i>]</code></h4>
+<p>The <code>code</code> is a Western European language code. Novelette is not
+configured for other world languages, due to layout calculation methods.</p>
+<p>Novelette only uses this setting for hyphenation patterns, and (for French)
+punctuation spacing. It is not a spelling or grammar check. It does not format
+time or date. So you may write snippets of text in most other languages,
+if you do not mind them being hyphenated like your setting.</p>
+<p>Hyphenation patterns are provided by a TeX package that supports the chosen
+language. If you do not already have what you need, use the TeX package
+manager to install <code>hyphen-<i>language</i></code> where <i>language</i>
+is the English name for that language, in lowercase (<i>hyphen-french</i>
+rather than hyphen-francais). Alternatively, it may be the two-letter language code,
+as shown below, with <i>hyph</i> suffix (French is <code>frhyph</code>).</p>
+<p>Available codes:</p>
+<ul>
+<li><code>da</code> (Danish)</li>
+<li><code>nl</code> (Dutch)</li>
+<li><code>is</code> (Icelandic)</li>
+<li><code>ga</code> (An Caighdeán Gaelic)</li>
+<li><code>nb</code> (Norwegian Bokmål)</li>
+<li><code>nn</code> (Norwegian Nynorsk)</li>
+<li><code>sv</code> (Swedish)</li>
+<li><code>fi</code> (Finnish)</li>
+<li><code>pt</code> (Portuguese)</li>
+<li><code>es</code> (Spanish)</li>
+<li><code>eu</code> (Basque)</li>
+<li><code>ca</code> (Catalan)</li>
+<li><code>oc</code> (Occitan)</li>
+<li><code>fr</code> (French, France)</li>
+<li><code>fr-CH</code> (French, Swiss)</li>
+<li><code>de</code> (German, Germany/Austria)</li>
+<li><code>de-CH</code> (German, Swiss)</li>
+<li><code>it</code> (Italian)</li>
+<li><code>en</code> (English, British)</li>
+<li><code>en-US</code> (English, USA)</li>
+<li><code>xx</code> (No hyphenation).</li>
+</ul>
+<p>For most languages, there is no difference between the starred and
+unstarred <code>\setlang</code> commands, and no options. Exceptions:</p>
+<p>In <b>German (<code>de</code>)</b>, the unstarred <code>\setlang</code>
+uses contemporary <span class="nowrap">(post-1996)</span> rules.
+The starred <code>\setlang*</code> uses older (1901) rules.</p>
+<p>In <b>French (<code>fr</code>)</b> the unstarred <code>\setlang</code> adds
+extra space before the colon, semicolon, exclamation, and question marks.
+It also adds extra space after opening guillemets, and before closing
+guillemets. Option <code>[-g]</code> omits the guillemet spacing.
+<b>Swiss French (<code>fr-CH</code>)</b> is the same as French, except there
+is no extra space before the colon.</p>
+<p>For both <b>French</b> and <b>Swiss French</b>, the starred
+<code>\setlang*</code> does not add any extra space (whether or not option
+<code>[-g]</code>). This might be useful if you already wrote spaces
+manually.</p>
+</div>
+
+
+</div><div>&nbsp;</div>
+</body>
+</html>
+

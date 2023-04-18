@@ -2,29 +2,35 @@
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-<title>Novelette - Design and Content of Main Matter</title>
+<title>Novelette - Documentation - Main Matter</title>
 <link rel="stylesheet" type="text/css" href="novelette.css">
 </head>
 <body>
 <div id="main">
 
-<h2>Novelette - Design and Content of Main Matter</h2>
-<p class="noindent">On Other Pages:
+<h2>Novelette - Documentation</h2>
+<p class="links">On Other Pages:
 <a href="novelette.html">Overview</a>
+<a href="novelette-setup.html">Setup</a>
 <a href="novelette-preamble.html">Preamble</a>
 <a href="novelette-frontmatter.html">Frontmatter</a>
-
+<a href="novelette-language.html">Language</a>
+</p>
+<p class="links">On This Page:
+<a href="#mainmattertemplate">Mainmatter-Template</a>
+(other links within the template)
+</p>
 
 <a id="mainwhat"></a>
 <div>
-<h3>What is mainmatter ?</h3>
+<h2>Main Matter</h2>
 <p>Main Matter, or <i>mainmatter</i>, is your story. It includes chapters,
 prologue, epilogue, maps, and so forth. It may include an Introduction,
 if that is part of your story.</p>
 <p>Mainmatter begins on recto Page 1. In most cases, that is where the
 story's written text begins, regardless of whether it is a chapter or
 something else. But there are exceptions:</p>
-<p><ul>
+<ul>
 <li>If you have one or more maps on pages preceding the text, they are
 mainmatter. By the time the reader arrives at the opening text, the page
 is an odd number higher than 1.</li>
@@ -33,7 +39,7 @@ a second halftitle page as the beginning of mainmatter, page 1. The opening
 text will have an odd page number, higher than 1.</li>
 <li>If the story is divided into parts, Page 1 is the the display page
 announcing Part I. The story text will begin on an odd page higher than 1.</li>
-</ul></p>
+</ul>
 
 <h3>Quick Start</h3>
 <p>Here is a model for the first chapter, assumed to begin at Page 1.
@@ -43,14 +49,19 @@ what the commands do, and how to choose their values.</p>
 Actual mainmatter opening pages will often have many <code>\null</code> to
 provide space at the top of the page, or between items on the page.</p>
 
+<a id="mainmattertemplate"></a>
 <div id="doctemplate">
 <p class="linesp noindent">
 <a href="#mainmatter">\mainmatter</a><br>
+&nbsp;<br>
 <a href="#opening">\begin{opening}</a><br>
 <a href="#name">\name[<i>option</i>]{<i>content</i>}</a><br>
 <a href="#desc">\desc[<i>option</i>]{<i>content</i>}</a><br>
 <a href="#init">\init[<i>kern</i>]{<i>letter</i>}{<i>words</i>}</a> and text.<br>
-<a href="#memo">\scene{<i>text</i>}</a><br>
+<a href="#scene">\scene{<i>text</i>}</a><br>
+&nbsp;<br>
+<a href="#cleartoend">\cleartoend</a><br>
+<a href="#cleartoend">\end{document}</a>
 </div>
 
 
@@ -138,7 +149,7 @@ use it there. Novelette will not do that for you; do it yourself.</p>
 <p>The <code>\scene</code> command creates a scene break. If all you want is
 a simple blank line, use <code>\null</code> instead.</p>
 <p>The <i>text</i> has several variations:</p>
-<p><ul>
+<ul>
 <li>\scene{-} skips one line, and puts a long dash (about one-fourth width)
 in the gap</li>
 <li>\scene{*} skips one line, and puts three widely-spaced asterisks in the gap.</li>
@@ -148,7 +159,7 @@ It is off-grid, but this is visually best.</li>
 <li>\scene{-text} (first character is hyphen) is like the above, except that
 the text begins with a long dash, with the first letter at indent. If your
 chapters are routinely divided into scenes, this method is especially attractive.</li>
-</ul></p>
+</ul>
 <p>If you use a blank line instead of <code>\scene</code>, there may be pages
 where the blank line is at top or bottom. Standard practice is to use
 <code>\scene{-}</code> or <code>\scene{*}</code> to show that the missing line
@@ -157,10 +168,20 @@ was intentional.</p>
 scene break. The only solution is to re-write.</p>  
 </div>
 
-<!-- XXXXXXXXXXXXXXXX -->
 
-
+<a id="cleartoend"></a>
+<div>
+<h3>\cleartoend<br>
+\end{document}</h3>
+<p>When your story is finished, wrtie <code>\cleartoend</code> just prior to
+<code>\end{document}</code>. This ensures that the PDF will have a final
+blank verso page (as required by printers). If yor story ends recto, then
+only one blamk page is added. If your story ends verso, then two blank pages
+are added. This is calculated automatically.</p>
 </div>
+
+
+</div><div>&nbsp;</div>
 </body>
 </html>
 

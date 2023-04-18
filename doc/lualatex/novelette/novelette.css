@@ -9,9 +9,11 @@ body{color:#000000; background-color:#aaaaaa}
   background-color:#ffffff}
 div{margin-top:1em; margin-bottom:1em}
 h2{margin:0em}
+h3{margin-bottom:0em}
 h4{margin-bottom:0em}
 p{margin:0em; text-indent:1.5em}
 p.linesp{line-height: 150%}
 p.noindent{text-indent:0em}
+p.links{text-indent:0em; margin-top:.5em; margin-bottom:.5em}
 *.nowrap {white-space:nowrap}
-*.code {margin-left:2em; text-indent:0em}
+*.code {margin-left:3em; text-indent:0em; color:#660000}

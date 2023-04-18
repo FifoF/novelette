@@ -57,9 +57,13 @@
 \def\nvt@revision{0}
 %% Novelette uses these in a slightly different way than in other classes:
 \protect\long\def\title#1{\gdef\nvt@title{#1}}
+\title{Untitled Document}
 \protect\long\def\author#1{\gdef\nvt@author{#1}}
+\author{Anonymous Author}
 \newcommand\application[1]{\gdef\nvt@application{#1}}
+\application{Novelette}
 \newcommand\producer[1]{\gdef\nvt@producer{#1}}
+\producer{Novelette}
 \@onlypreamble\title
 \@onlypreamble\author
 \@onlypreamble\application
@@ -88,6 +92,7 @@
 \newif\ifnvt@err % True if Novelette (not LaTeX) issued an error.
 \newif\ifnvt@warnalert % True issues warning when alerts > 0.
 \newif\ifnvt@warnalt % True if \altfont used without Libertinus Serif.
+\newif\ifnvt@sheetfeed % True if \sheetfeed is other than trimsize.
 %%
 
 
@@ -350,7 +355,11 @@
   \typeout{\string\mode{\nvt@mode}}
   \typeout{\string\setlang{\nvt@setlang}}
   \typeout{\log@trimsize}
-  \typeout{\log@sheetfeed}
+  \ifdefined\log@sheetfeed
+    \typeout{\log@sheetfeed}
+  \else
+    \typeout{\string\sheetfeed{trimsize}}
+  \fi
   \typeout{\log@margins}
   \typeout{\log@layout}
   \typeout{\log@text}

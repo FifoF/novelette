@@ -60,21 +60,24 @@
   \AddToHook{shipout/foreground}{%
     \nvt@print@UL{%
       \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{%
-        {\normalfont\addfontfeature{ScaleAgain=.75} MODE: DRAFT}%
+        {\normalfont\addfontfeature{ScaleAgain=.75}%
+           MODE: DRAFT. Main Font: \nvt@main@font}%
   }}}%
 }
 \def\nvt@labelshade{%
   \AddToHook{shipout/foreground}{%
     \nvt@print@UL{%
       \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{%
-        {\normalfont\addfontfeature{Scale=.75} MODE: SHADE}%
+        {\normalfont\addfontfeature{Scale=.75}%
+          MODE: SHADE. Main Font: \nvt@main@font}%
   }}}%
 }
 \def\nvt@labelalign{%
   \AddToHook{shipout/foreground}{%
     \nvt@print@UL{%
       \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{%
-        {\normalfont\addfontfeature{Scale=.75} MODE: ALIGN}%
+        {\normalfont\addfontfeature{Scale=.75}%
+           MODE: ALIGN. Main Font: \nvt@main@font}%
   }}}%
 }
 %%

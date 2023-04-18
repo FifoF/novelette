@@ -18,7 +18,7 @@
 %% MODE AND INTENT
 \newcommand\mode[1]{ % How to structure the PDF.
   \StrDel{#1}{ }[\nvt@temp@s]
-  \IfSubStr{:draft:shade:align:final:}{\nvt@temp@s}{
+  \IfSubStr{:draft:shade:align:final:}{:\nvt@temp@s:}{
     \xdef\nvt@mode{\nvt@temp@s}
   }{
     \nvt@error{Bad value for \string\mode.^^J%
@@ -98,8 +98,6 @@
   \ifnvt@ok
     \global\deflength\nvt@trimw{\nvt@temp@n}
     \global\deflength\nvt@trimh{\nvt@temp@d}
-    \global\deflength\pagewidth{\nvt@trimw}
-    \global\deflength\pageheight{\nvt@trimh}
   \else
     \nvt@error{Bad value for \string\trimsize.}
   \fi
@@ -119,6 +117,16 @@
   \ifthenelse{\equal{\nvt@temp@s}{A4}}{\nvt@oktrue}{}
   \ifthenelse{\equal{\nvt@temp@s}{a4}}{\nvt@oktrue\gdef\nvt@temp@s{A4}}{}
   \ifnvt@ok
+    \ifthenelse{\equal{\nvt@temp@s}{letter}}{
+      \global\nvt@sheetfeedtrue
+      \global\deflength\pagewidth{8.5in}
+      \global\deflength\pageheight{11in}
+    }{}
+    \ifthenelse{\equal{\nvt@temp@s}{A4}}{
+      \global\nvt@sheetfeedtrue
+      \global\deflength\pagewidth{140mm} %%%%%
+      \global\deflength\pageheight{190mm} %%%%%
+    }{}
     \xdef\nvt@sheetfeed{\nvt@temp@s}
   \else
     \nvt@error{Bad value for \string\sheetfeed.}

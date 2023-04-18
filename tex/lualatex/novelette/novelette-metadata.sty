@@ -47,30 +47,24 @@
 
 %% PROCESS METADATA
 \def\nvt@process@metadata{
-  \ifdefined\nvt@title
-    \StrSubstitute{\nvt@title}{‘}{'}[\nvt@temp@s]%
-    \StrSubstitute{\nvt@temp@s}{’}{'}[\nvt@temp@s]%
-    \xdef\@title{\nvt@temp@s}
-    \xdef\thetitle{\nvt@title}
-  \else
-    \gdef\nvt@intent{none}
-    \gdef\nvt@mode{draft}
-    \gdef\@title{Untitled Document}
-    \gdef\thetitle{Untitled Document}
-  \fi
-  \ifdefined\nvt@author
-    \StrSubstitute{\nvt@author}{‘}{'}[\nvt@temp@s]%
-    \StrSubstitute{\nvt@temp@s}{’}{'}[\nvt@temp@s]%
-    \xdef\@author{\nvt@temp@s}
-    \xdef\theauthor{\nvt@author}
-  \else
-    \gdef\nvt@intent{none}
-    \gdef\nvt@mode{draft}
-    \gdef\@author{Anonymous Author}
-    \gdef\theauthor{Anonymous Author}
-  \fi
-  \ifdefined\nvt@application\else\gdef\nvt@application{Novelette}\fi
-  \ifdefined\nvt@producer\else\gdef\nvt@producer{Novelette}\fi
+  \ifthenelse{\equal{\nvt@mode}{final}}{
+    \ifthenelse{\equal{\nvt@title}{Untitled Document} \OR %
+      \equal{\nvt@author}{Anonymous Author}}{
+      \ClassWarningNoLine{novelette}{%
+        You must provide title and author in final mode.^^J%
+        One or both are missing. Mode changed to draft.}
+      \gdef\nvt@mode{draft}
+      \gdef\nvt@intent{none}
+    }{}
+  }{}
+  \StrSubstitute{\nvt@title}{‘}{'}[\nvt@temp@s]
+  \StrSubstitute{\nvt@temp@s}{’}{'}[\nvt@temp@s]
+  \xdef\@title{\nvt@temp@s}
+  \xdef\thetitle{\nvt@title}
+  \StrSubstitute{\nvt@author}{‘}{'}[\nvt@temp@s]
+  \StrSubstitute{\nvt@temp@s}{’}{'}[\nvt@temp@s]
+  \xdef\@author{\nvt@temp@s}
+  \xdef\theauthor{\nvt@author}
 }
 %%
 

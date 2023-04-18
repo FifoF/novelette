@@ -23,6 +23,8 @@
 
 
 %% FRONTMATTER, MAINMATTER, BACKMATTER
+\def\nvt@rectohead{}
+\def\nvt@versohead{}
 % These commands can only be used in document body:
 \def\frontmatter{%
   \ifnvt@mainmatter%
@@ -213,7 +215,7 @@
 %% \cleartorecto works same as \clearpage when next page is recto.
 %   If next page would be verso, a blank verso is inserted,
 %   so that the following material is recto.
-% \cleartoend is used at very end of book.
+% \cleartoend is used at very end of book. Only effective in final mode.
 %   It adds a blank page. If the blank is verso, end of book.
 %   But if that blank is recto, it adds a second blank page, end of book.
 %   So, the book always ends with a blank verso.
@@ -224,14 +226,16 @@
   \fi
 }
 \gdef\cleartoend{
-  \ifnvt@cleartoend\else
-    \clearpage
-    \ifodd\c@page
+  \ifthenelse{\equal{\nvt@mode}{final}}{
+    \ifnvt@cleartoend\else
+      \clearpage
+      \ifodd\c@page
+        \thispagestyle{empty}\null\clearpage
+      \fi
       \thispagestyle{empty}\null\clearpage
     \fi
-    \thispagestyle{empty}\null\clearpage
-  \fi
-  \global\nvt@cleartoendtrue
+    \global\nvt@cleartoendtrue
+  }{}
 }
 %%
 

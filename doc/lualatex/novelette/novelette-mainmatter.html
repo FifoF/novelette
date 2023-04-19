@@ -52,22 +52,41 @@ provide space at the top of the page, or between items on the page.</p>
 <a id="mainmattertemplate"></a>
 <div id="doctemplate">
 <p class="linesp noindent">
+<a href="#memo">\memo</a>{<i>Use memo, not percent, for comments.</i>}<br>
 <a href="#mainmatter">\mainmatter</a><br>
 &nbsp;<br>
 <a href="#opening">\begin{opening}</a><br>
-<a href="#name">\name[<i>option</i>]{<i>content</i>}</a><br>
-<a href="#desc">\desc[<i>option</i>]{<i>content</i>}</a><br>
-<a href="#init">\init[<i>kern</i>]{<i>letter</i>}{<i>words</i>}</a> and text.<br>
-<a href="#scene">\scene{<i>text</i>}</a><br>
+<a href="#name">\name</a>[<i>option</i>]{<i>content</i>}<br>
+<a href="#desc">\desc</a>[<i>option</i>]{<i>content</i>}<br>
+<a href="#opening">\end{opening}</a><br>
+<a href="#init">\init</a>[<i>kern</i>]{<i>letter</i>}{<i>words</i>} and text.<br>
+And more text, and more text, etc.<br>
+<a href="#scene">\scene</a>{<i>text</i>}<br>
+And more text, and more text, etc.<br>
+&nbsp;<br>
+Then another opening, and so forth.<br>
 &nbsp;<br>
 <a href="#cleartoend">\cleartoend</a><br>
 <a href="#cleartoend">\end{document}</a>
 </div>
 
 
+<a id="memo"></id>
+<div>
+<h4><code>\memo{<i>Non-printing text.</i>}</code></h4>
+<p>Novelette strongly discourages the use of percent <code>%</code> for comments.
+This is because % is a useful text character. If you forget to write
+<code>\%</code> with the backslash, then the remainder of the text line does
+not print. That may not be what you intended to do.</p>
+<p>Instead, use the <code>\memo{}</code> command. Its content does not print.
+The content may be multi-line. It may be quite lengthy.</p>
+<p>The memo may not be in the middle of a paragraph. It must stand by itself.</p>
+</div>
+
+
 <a id="mainmatter"></a>
 <div>
-<h3>\mainmatter</h3>
+<h4>\mainmatter</h4>
 <p>The <code>\mainmatter</code> command defines the start of mainmatter.
 It clears to a recto page. It re-starts page numbers at arabic 1. Whether
 or not the page number is printed, depends on layout style.</p>
@@ -76,7 +95,7 @@ or not the page number is printed, depends on layout style.</p>
 
 <a id="opening"></a>
 <div>
-<h3>\begin{opening} ... \end{opening}</h3>
+<h4>\begin{opening} ... \end{opening}</h4>
 <p>The <i>opening</i> environment is used at the start of new chapters,
 and can also be used at the start of chapter-like portions of your book.
 It does not matter whether the portion is just one page.</p>
@@ -91,7 +110,7 @@ as often as necessary, to insert blank lines.</p>
 
 <a id="name"></a>
 <div>
-<h3>\name[option]{<i>Chapter Title or Number</i>}</h3>
+<h4>\name[option]{<i>Chapter Title or Number</i>}</h4>
 <p>The \name command  may only be used
 within the <a href="#opening">opening</a> environment. The <i>name</i>
 is usually chapter title or number. This is not intended for more than
@@ -104,7 +123,7 @@ outside, or inside.</p>
 
 <a id="desc"></a>
 <div>
-<h3>\desc[option]{<i>Chapter Subtitle</i>}</h3>
+<h4>\desc[option]{<i>Chapter Subtitle</i>}</h4>
 <p>The \desc command may only be used in an <a href="#opening">opening</a>
 environment. If used, is usually a one-line chapter subtitle. This is
 not intended for an extended amount of text. If necessary, you may use
@@ -118,7 +137,7 @@ outside, or inside.</p>
 
 <a id="init"></a>
 <div>
-<h3>\init[kern]{letter}{letters}</h3>
+<h4>\init[kern]{letter}{letters}</h4>
 <p>The <code>\init</code> command is optional. But if you use it for one
 chapter, you must uniformly use it for all of them.</p>
 <p>It is customary to use something distinctive for the very first line
@@ -145,7 +164,7 @@ use it there. Novelette will not do that for you; do it yourself.</p>
 
 
 <a id="scene"></a>
-<h3>\scene{<i>text</i>}</h3>
+<h4>\scene{<i>text</i>}</h4>
 <p>The <code>\scene</code> command creates a scene break. If all you want is
 a simple blank line, use <code>\null</code> instead.</p>
 <p>The <i>text</i> has several variations:</p>
@@ -171,8 +190,8 @@ scene break. The only solution is to re-write.</p>
 
 <a id="cleartoend"></a>
 <div>
-<h3>\cleartoend<br>
-\end{document}</h3>
+<h4>\cleartoend<br>
+\end{document}</h4>
 <p>When your story is finished, wrtie <code>\cleartoend</code> just prior to
 <code>\end{document}</code>. This ensures that the PDF will have a final
 blank verso page (as required by printers). If yor story ends recto, then

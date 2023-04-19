@@ -380,8 +380,8 @@
   \FPround{\nvt@temp@n}{\nvt@temp@n}{2}
   \FPclip{\nvt@temp@n}{\nvt@temp@n}
   \typeout{Calculated ratio leading/fontsize: \nvt@temp@n}
-  \typeout{\log@mainfont}
-  \typeout{\log@decofont}
+  \typeout{\log@main}
+  \typeout{\log@deco}
   \typeout{\log@mto}
   \log@imagespecs
   \typeout{\nvt@signoffmsg}

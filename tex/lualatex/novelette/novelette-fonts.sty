@@ -43,18 +43,20 @@
 
 %% FONT SELECTION
 \DeclareDocumentCommand\setfont{mmO{}}{
-  \nvt@okfalse
   \StrDel{#1}{ }[\nvt@temp@s]
-  \ifthenelse{\equal{\nvt@temp@s}{main}}{
-    \nvt@oktrue\gdef\nvt@main@font{#2}\gdef\nvt@main@feat{#3}
-  }{}
-  \ifthenelse{\equal{\nvt@temp@s}{deco}}{
-    \nvt@oktrue\gdef\nvt@deco@font{#2}\gdef\nvt@deco@feat{#3}
-  }{}
-  \ifnvt@ok\else
+  \ifthenelse{\equal{\nvt@temp@s}{main} \OR \equal{\nvt@temp@s}{deco}}{}{
     \nvt@error{Bad first argument in \string\setfont.^^J%
       Choices: main deco}
-  \fi
+  }
+  \StrDel{#2}{ }[\nvt@temp@d]
+  \ifthenelse{\equal{\nvt@temp@d}{default}}{}{
+    \ifthenelse{\equal{\nvt@temp@s}{main}}{
+      \gdef\nvt@main@font{#2}\gdef\nvt@main@feat{#3}
+    }{}
+  \ifthenelse{\equal{\nvt@temp@s}{deco}}{
+    \gdef\nvt@deco@font{#2}\gdef\nvt@deco@feat{#3}
+    }{}
+  }
 }
 \@onlypreamble\setfont
 %%
@@ -63,7 +65,11 @@
 %%
 \def\nvt@process@mainfont{
   \ifdefined\nvt@main@feat\else\gdef\nvt@main@feat{}\fi
-  \ifdefined\nvt@main@font\else
+  \nvt@oktrue
+  \ifdefined\nvt@main@font
+    \def\nvt@temp@d{}
+  \else
+    \def\nvt@temp@d{\space\space(default)}
     \IfFontExistsTF{Libertinus Serif}{
       \gdef\nvt@main@font{Libertinus Serif}
     }{
@@ -82,7 +88,7 @@
   \let\mainfont\rmfamily\relax
   \def\nvt@temp@n{}
   \ifthenelse{\equal{\nvt@main@feat}{}}{}{\def\nvt@temp@n{[\nvt@main@feat]}}
-  \xdef\log@mainfont{\string\setfont{main}{\nvt@main@font}\nvt@temp@n}
+  \xdef\log@main{\string\setfont{main}{\nvt@main@font}\nvt@temp@n\nvt@temp@d}
 }
 %%
 
@@ -105,7 +111,7 @@
       \gdef\decofont##1{##1}
     }
   \else
-    \gdef\log@decofont{\string\setfont{deco}{} unused. Same as main font.}
+    \gdef\log@deco{\string\setfont{deco}{} unused. Same as main font.}
     \gdef\decofont##1{##1}
   \fi
 }

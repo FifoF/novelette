@@ -56,9 +56,9 @@
 \gdef\thepdfminorversion{\pdfminorversion}
 \def\nvt@revision{0}
 %% Novelette uses these in a slightly different way than in other classes:
-\protect\long\def\title#1{\gdef\nvt@title{#1}}
+\protect\def\title#1{\gdef\nvt@title{#1}}
 \title{Untitled Document}
-\protect\long\def\author#1{\gdef\nvt@author{#1}}
+\protect\def\author#1{\gdef\nvt@author{#1}}
 \author{Anonymous Author}
 \newcommand\application[1]{\gdef\nvt@application{#1}}
 \application{Novelette}

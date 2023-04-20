@@ -30,70 +30,34 @@
 <a id="basics"></id>
 <div>
 <h3>Basics</h3>
-<p>Novelette requires a working TeX installation, with Luatex support.
-To ensure that you have it, copy this code to file <code>test.tex</code>
-in your home directory. Use a plain text editor with utf-8 encoding,
-without BOM (byte order mark). That is standard for Linux and Mac, but if
-you are on Windows, use a program such as <i>Notepad++</i>, NOT Windows
-Notepad. Code:</p>
-<p class="code"><code>
-\documentclass{article}<br>
-\usepackage{fontspec}<br>
-\begin{document}<br>
-Hello World<br>
-\end{document}
-</code></p>
-<p>Then try to build it to PDF. If you are using a GUI program
-(TeXworks, etc.) be sure that you specify <i>lualatex</i> as the engine.
-If you are using command line:</p>
-<p class="code"><code>lualatex test</code></p>
-<p>If that fails:</p>
+<p>Novelette requires a working TeX installation with LuaTeX and LaTeX.
+It does not require much else.</p>
+<p>When you install TeXlive (or MiKTeX), you need these collections:</p>
 <ul>
-<li>If the system cannot find a program named <i>lualatex</i>, try to build
-with this instead:<br>
-<code>luahbtex --fmt=latex test</code><br>
-If that works, it means your system (probably a Linux variant) needs a tweak:
-As root user, navigate to the directory where TeX keeps its binaries. That can
-be discovered via <code>which luahbtex</code>. In that directory, create a symlink:<br>
-<code>ln -s luahbtex lualatex</code><br>
-Then try to build with <i>lualatex</i>. This time, it should work.</li>
-<li>If you get this error: "LuaTeX is required to compile this document. Sorry."
-It means that you did not compile with <i>lualatex</i>. Be sure to do that,
-and try again.</i>
-<li>If you get an error saying that <i>fontspec</i> is not installed, or that
-<i>fontspec.sty</i> was not found, then use your TeX package installer, and
-get <i>fontspec</i> plus its dependent packages. If using command line:<br>
-<code>tlmgr install --reinstall l3kernel xparse<br>
-tlmgr install --reinstall --with-doc fontspec</code></li>
+<li>Essential programs and files</li>
+<li>LaTeX fundamental packages</li>
+<li>LuaTeX packages</li>
 </ul>
-</div>
-
-
-<a id="packages"></a>
-<div>
-<h3>Supporting Packages</h3>
-<p>After the test document builds successfully, install the other packages
-required by Novelette. Some or all of them may already be installed.</p>
-<p>If you are using MiKTeX, and have it set to automatically install missing
-packages on-the-fly, do this: Edit the above <i>test.tex</i> file.
-Change the document class to <code>novelette</code> and build it with
-<i>lualatex</i>. MiKTeX will obtain the packages you need.</p>
-<p>If you are using command line instead, use the TeX package installer:</p>
-<p class="code"><code>
-tlmgr install --reinstall iftex luatex85 pdftexcmds infwarerr<br>
-tlmgr install --reinstall ltxcmds xparse expl3 xpatch xifthen<br>
-tlmgr install --reinstall letltxmacro etoolbox noindentafter<br>
-tlmgr install --reinstall ifmtarg xstring luahyphenrules<br>
-tlmgr install --reinstall fp silence atbegshi changepage<br>
-tlmgr install --reinstall --with-doc fontspec microtype
-</code></p>
-<p>Then, try a new test document:</p>
-<p class="code"><code>
-\documentclass{novelette}<br>
-\begin{document}<br>
-Welcome to Novelette.<br>
-\end{document}
-</code></p>
+<p>That is a very small installation, in the TeX world. You will also need
+these packages, which you may already have:</p>
+<p class="code"><code>xparse xpatch xifthen xstring ifmtarg fontspec<br>
+fp microtype silence changepage noindentafter</code></p>
+<p>You will need hyphenation patterns for the language you will write
+(you do not need them for the occasional short phrase in another language).
+If you did not install the TeXlive collection for your language, you may
+install only what you need. In most cases, you need package
+<code>hyphen-yourlang</code> where <i>yourlang</i> is the English lowercase
+name of your language (french, not françcais; italian, not italiano).
+Disregard regional differences: canadien, suisse, français are all french.</p>
+<p>Unless you are an advanced user who writes custom code, you do not need
+to read the documentation for packages other than Novelette itself. If you
+are an advanced user, you probably need the documentation for packages
+<code>fontspec</code> and <code>microtype</code>.</p>
+<p>In some Linux operating systems, there is no <code>lualatex</code> binary
+program. Check: <code>which lualatex</code>. If it is not found, try this:
+<code>which luahbtex</code>. If that is not found, then your TeX installation
+is bad. Otherwise, navigate to the directory that has <code>luahbtex</code>
+and command: <code>ln -s luahbtex lualatex</code></p>
 </div>
 
 

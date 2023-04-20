@@ -41,3 +41,10 @@ If you need italics, use this order. Note the use of braces:
 \dlig
 
 
+%% START STEALING SHEEP
+	\baa
+If you write command \baa at the start of a paragraph, it will slightly
+squeeze the text, just for that one paragraph. If you are lucky, a paragraph
+with N lines and only a little text on the last line, may be squeezed down
+to N-1 lines.
+	\baa is the sound of a sheep. This is a typographic in-joke.

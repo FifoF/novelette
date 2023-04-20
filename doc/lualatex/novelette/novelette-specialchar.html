@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Novelette - Documentation - Special Characters</title>
+<link rel="stylesheet" type="text/css" href="novelette.css">
+</head>
+<body>
+<div id="main">
+
+<h2>Novelette - Documentation</h2>
+<p class="links">On Other Pages:
+<a href="novelette.html">Overview</a>
+<a href="novelette-setup.html">Setup</a>
+<a href="novelette-preamble.html">Preamble</a>
+<a href="novelette-frontmatter.html">Frontmatter</a>
+<a href="novelette-language.html">Language</a>
+</p>
+<p class="links">On This Page:
+<a href="#intro">Intro</a>
+</p>
+
+<a id="intro"></a>
+<div>
+<h2>Special Characters (or Not)</h2>
+
+<p>TeX is notorious for its numerous characters with special meaning:</p>
+<p class="code"><code>\ { } ~ % # $ ^ & _</code></p>
+<p>Some other characters have special meaning, but only in a particular
+context.</p>
+
+
+<a id="preamble"></a>
+<div>
+<h3>Special Characters in Preamble</h3>
+<p>In the <a href="novelette-preamble.html">Preamble</a>, special characters
+always have their TeX special meanings. This may cause errors.
+The most likely errors will result if you use a special character in the
+title or author. Examples of <b>bad</b> code:</p>
+<p class="code"><code>
+\title{The 20% Conspiracy}<br>
+\title{Jack & Jill}
+</code></p>
+<p>You may remove the special meaning with backslash in front of the character.
+Examples of <b>good</b> code:</p>
+<p class="code"><code>
+\title{The 20\% Conspiracy}<br>
+\title{Jack \& Jill}
+</code></p>
+</div>
+
+
+
+<a href="document"></a>
+<div>
+<h3>Special Characters in Document Body</h3>
+<p>After <code>\begin{document}</code>, Novelette removes the special meaning
+from these characters:</p>
+<p class="code"><code># $ ^ & _</code></p>
+<p>If you type any of the above characters, they will simply print. It does
+not matter whether or not you put a backslash in front of them.</p>
+<p>Novelette has its own commands for superscript, subscript, and Unicode
+character code. In most cases, you cannot define macros within the document
+body. You cannot enter math mode, create tables, or do tab alignment.</p>
+<p>These characters retain their special meaning:</p>
+<p><code>\</code> (backslash) begins a command. If you need to print a
+backslash character, use <code>\textbackslash</code> instead.</p>
+<p><code>{</code> and <code>}</code> create a group. If you need to print
+those characters, use <code>\{</code> and <code>\}</code> instead.</p>
+<p><code>~</code> (tilde) is a non-breaking space. If you need to print the
+tilde character (rather than place a tilde over another character),
+use <code>\textasciitilde</code> instead.</p>
+<p><code>%</code> (percent) begins a comment. It does not print, and anything
+after it on the same line (of plain text) does not print. If you wish to
+print % and also print what follows, use <code>\%</code> instead.</p>
+<p>Actually, it is better to not use <code>%</code> anywhere in the document
+body. Did you really mean comment, or did you really mean to print % there?
+TeX cannot read your mind, and does not throw an error or warning. But Novelette
+helps you: If it sees <code>%</code> in document body, without preceding
+backslash, it writes an ALERT message in the log file. Then you can either
+change the naked <code>%</code> to <code>\%</code> so that it prints,
+or use <code>\memo{}</code> if you meant comment.</p>
+</div>
+
+
+</div>
+</div><div>&nbsp;</div>
+</body>
+</html>
+

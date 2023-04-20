@@ -17,9 +17,10 @@
 <a href="novelette-language.html">Language</a>
 </p>
 <p class="links">On This Page:
-<a href="#mainmattertemplate">Mainmatter-Template</a>
-(other links within the template)
+<a href="#mainmattercommands">Mainmatter-Commands</a>
+<a href="#mainmatterexample">Mainmatter-Example</a>
 </p>
+
 
 <a id="mainwhat"></a>
 <div>
@@ -41,16 +42,19 @@ text will have an odd page number, higher than 1.</li>
 announcing Part I. The story text will begin on an odd page higher than 1.</li>
 </ul>
 
-<h3>Quick Start</h3>
-<p>Here is a model for the first chapter, assumed to begin at Page 1.
- Each of its commands is a hyperlink within this documentation. Click to learn
-what the commands do, and how to choose their values.</p>
+<h3>Mainmatter Commands</h3>
+<p>This illustrates the most important commands used, from the start of
+mainmatter. These start new chapters with an opening, and possibly divide
+chapters into scenes.</p>
+<p>Commands for local text styles (Italics, small caps, etc.) are
+described <a href="novelette-textstyles.html">here</a>.
+Commands for inserting images are <a href="novelette-images.html">here</a>.</p>
 <p>The <code>\null</code> command inserts a blank line. May be repeated.
 Actual mainmatter opening pages will often have many <code>\null</code> to
 provide space at the top of the page, or between items on the page.</p>
 
-<a id="mainmattertemplate"></a>
-<div id="doctemplate">
+<a id="mainmattercommands"></a>
+<div id="doctemplate" class="doctemplate">
 <p class="linesp noindent">
 <a href="#memo">\memo</a>{<i>Use memo, not percent, for comments.</i>}<br>
 <a href="#mainmatter">\mainmatter</a><br>
@@ -59,13 +63,14 @@ provide space at the top of the page, or between items on the page.</p>
 <a href="#name">\name</a>[<i>option</i>]{<i>content</i>}<br>
 <a href="#desc">\desc</a>[<i>option</i>]{<i>content</i>}<br>
 <a href="#opening">\end{opening}</a><br>
-<a href="#init">\init</a>[<i>kern</i>]{<i>letter</i>}{<i>words</i>} and text.<br>
+<a href="#init">\init</a>[<i>kern</i>]{<i>letter</i>}{<i>words</i>} text.<br>
 And more text, and more text, etc.<br>
 <a href="#scene">\scene</a>{<i>text</i>}<br>
 And more text, and more text, etc.<br>
 &nbsp;<br>
 Then another opening, and so forth.<br>
 &nbsp;<br>
+\memo{Novelette does not use backmatter.}<br>
 <a href="#cleartoend">\cleartoend</a><br>
 <a href="#cleartoend">\end{document}</a>
 </div>
@@ -74,13 +79,13 @@ Then another opening, and so forth.<br>
 <a id="memo"></id>
 <div>
 <h4><code>\memo{<i>Non-printing text.</i>}</code></h4>
-<p>Novelette strongly discourages the use of percent <code>%</code> for comments.
+<p>Novelette strongly discourages percent <code>%</code> for comments.
 This is because % is a useful text character. If you forget to write
 <code>\%</code> with the backslash, then the remainder of the text line does
 not print. That may not be what you intended to do.</p>
 <p>Instead, use the <code>\memo{}</code> command. Its content does not print.
 The content may be multi-line. It may be quite lengthy.</p>
-<p>The memo may not be in the middle of a paragraph. It must stand by itself.</p>
+<p>The memo may not be mid-paragraph. It must stand by itself.</p>
 </div>
 
 
@@ -149,9 +154,9 @@ be set larger than normal, so it is distinctive. It does not affect the
 line grid.</p>
 <p>The plural <i>letters</i> are letters, perhaps a few words, that will be
 set with lowercase converted to small caps. Note that the <i>letter</i>
-argument already placed a letter, so do not repeat it in the <i>letters</i>.</p>
+argument already placed a letter, so do not repeat it in <i>letters</i>.</p>
 <p>After this, text is normal. Example:</p>
-<p class="code">\init{I}{t was dark and stormy,} but that was not unusual.</code></p>
+<p class="code">\init{I}{t was dark and stormy,} as usual there.</code></p>
 <p>The optional <i>kern</i> will adjust the spacing between the enlarged
 letter, and the following small caps letter. It is a number, without units.
 Negative number moves them closer, positive farther. Rarely beyond -.2 to .2
@@ -171,13 +176,14 @@ a simple blank line, use <code>\null</code> instead.</p>
 <ul>
 <li>\scene{-} skips one line, and puts a long dash (about one-fourth width)
 in the gap</li>
-<li>\scene{*} skips one line, and puts three widely-spaced asterisks in the gap.</li>
+<li>\scene{*} skips one line, and puts three widely-spaced asterisks in
+the gap.</li>
 <li>\scene{text} (where text is neither - nor *) skips TWO lines, and puts the
 text left-aligned in the gap. The text is slightly larger than main text.
 It is off-grid, but this is visually best.</li>
-<li>\scene{-text} (first character is hyphen) is like the above, except that
-the text begins with a long dash, with the first letter at indent. If your
-chapters are routinely divided into scenes, this method is especially attractive.</li>
+<li>\scene{-text} (first character is hyphen) is like the above, except the
+text begins with a long dash, with the first letter at indent. If your chapters
+are routinely divided into scenes, this method is especially attractive.</li>
 </ul>
 <p>If you use a blank line instead of <code>\scene</code>, there may be pages
 where the blank line is at top or bottom. Standard practice is to use
@@ -198,6 +204,63 @@ blank verso page (as required by printers). If yor story ends recto, then
 only one blamk page is added. If your story ends verso, then two blank pages
 are added. This is calculated automatically.</p>
 </div>
+
+
+<a id="mainmatterexample"></a>
+<div>
+<h3>Example Main Matter</h3>
+<p>The main matter of your book should look something like this:</p>
+</div>
+
+
+<div id="exampledoc" class="doctemplate">
+<p class="noindent">
+\mainmatter</a><br>
+&nbsp;<br>
+\begin{opening}<br>
+\null\null\null\null<br>
+\name{Chapter 1}<br>
+\null<br>
+\desc{The Radioactive Worm}<br>
+\null\null\null<br>
+\end{opening}<br>
+\init{I}{t was a dark and stormy night.} Suddenly, out of the darkness,
+a glowing worm appeared. Etc.<br>
+&nbsp;<br>
+\begin{opening}<br>
+\null\null\null\null<br>
+\name{Chapter 2}<br>
+\null<br>
+\desc{The Slime Trail}<br>
+\null\null\null<br>
+\end{opening}<br>
+\init{T}{he night was still dark and stormy.} But slicing its way through
+the darkness was a glowing path. Etc.<br>
+&nbsp;<br>
+\begin{opening}<br>
+\null\null\null\null<br>
+\name{Chapter 3}<br>
+\null<br>
+\desc{A Crow Responds}<br>
+\null\null\null<br>
+\end{opening}<br>
+\init{W}{hen dawn arrived,} it was no longer dark. Yet the glowing
+slime was visible, attracting the attention of a crow. Etc.</br>
+&nbsp;<br>
+\begin{opening}<br>
+\null\null\null\null<br>
+\name{Chapter 4}<br>
+\null<br>
+\desc{Bitter End}<br>
+\null\null\null<br>
+\end{opening}<br>
+\init{A}{fter eating the worm, the crow died. The moral of this
+story is: Do not eat radioactive worms.<br>
+&nbsp;<br>
+\cleartoend<br>
+\end{document}
+</div>
+
 
 
 </div><div>&nbsp;</div>

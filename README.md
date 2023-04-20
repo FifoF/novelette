@@ -15,8 +15,8 @@ the code.
 Expected release mid-April 2023. Before I release it, I must wait for
 2023 binaries on my platform. They are custom-built, beyond my control.
 
-Update: April 19, 2023: Almost ready for beta testing. At this point, there are
+Update: April 20, 2023: Almost ready for beta testing. At this point, there are
 "no known bugs" and the command set is reasonably stable. Might do some
 under-the-hood modifications, or not. Working on the documentation,
 so there are places where the docs are incomplete or incorrect.
-Testing welcome! Still waiting for 2023 binaries.
+Testing welcome! Finally upgraded to TeXlive2023.

@@ -19,8 +19,10 @@
 <p class="links">On This Page:
 <a href="#basics">Basics</a>
 <a href="#packages">Required-Packages</a>
-<a href="#reqfont">Required-Font</a>
-<a href="#yourfont">Your-Font</a>
+<a href="#yourfonts">Your-Fonts</a>
+<a href="#fontlicenses">Font-Licenses</a>
+<a href="#fontpreviews">Font-Previews</a>
+<a href="#altfont">Alternate-Font</a>
 </p>
 <a id="setup"></a>
 <div>
@@ -61,61 +63,54 @@ and command: <code>ln -s luahbtex lualatex</code></p>
 </div>
 
 
-<a id="reqfont"></a>
-<div><h3>Required Font</h3>
-<p>Although TeX uses <i>Latin Modern Roman</i> as default font, it is utterly
-unsuitable for popular fiction, particularly when using print-on-demand.
-You will need to use a different font.</p>
-<p>Novelette expects that you have <i>Libertinus Serif</i> installed where TeX
-can find it. In MiKTeX, install <code>libertinus-fonts</code>.
-In TeXlive command line:</p>
-<p class="code"><code>tlmgr install libertinus-fonts</code></p>
-<p>Note that other packages with <i>libertinus</i> in the name, are something
-else. You want <i>libertinus-fonts</i>.</p>
-<p>If you do not use
-<a href="novelette-preamble.html#setfont"><code>\setfont</code></a>
-to choose something else, Novelette will use <i>Libertinus Serif</i> as
-main font. It is suited to popular fiction, although there are other fonts
-that look as good (or better) for this purpose.</p>
-<p>Since <i>Libertinus Serif</i> has a reasonably large character set,
-Novelette uses it as "Plan B" when your chosen main font does not have a
-practicular character. For example, if your chosen main font does not have
-the Greek lowercase letter "pi", you can get it this way:</p>
-<p class="code"><code>Pecan \altfont{\uni{03C0}} with ice cream.</code></p>
-<p>Note that <code>\uni{03C0}</code> requests Unicode 03C0, which is pi.</p>
-<p>If you do not choose your own main font, and do not have
-<i>Libertinus Serif</i> as default, then Novelette will use <i>Latin Modern
-Roman</i>. but it will issue a warning, and prevent using final mode.</p>
+<a id="yourfonts"></id>
+<div>
+<h3>Your Fonts</h3>
+<p>Do not rely on the default fonts that come with a basic TeX installation.
+In general, they are not suited to popular fiction.</p>
+<p>Novelette can use any OpenType font (extension <code>otf</code>)
+and some TrueType fonts (extension <code>ttf</code>). It cannot use Type 1
+fonts (extension <code>pfb</code>).</p>
+<p>The <a href="https://tug.org/FontCatalogue/">LaTeX Font Catalog</a> shows
+samples of all fonts that can be installed within TeX. If you like a font,
+be sure that it is available as OpenType (or TrueType).</p>
+<p>You are not limited to LaTeX fonts. On most platforms, Novelette can find
+fonts installed in the operating system, not just the ones installed by TeX.
+So, if you have a free/shareware/commercial font that you like, and can
+install it in your operating system, Novelette can use it.</p>
 </div>
 
 
-<a id="yourfont"></id>
+<a id="fontlicenses"></a>
 <div>
-<h3>Your Font</h3>
-<p>Novelette can use any OpenType font (extension <code>otf</code>)
-and some TrueType fonts (extension <code>ttf</code>). It cannot use Type 1
-fonts (extension <code>pfb, afm, pfm, vf</code>).</p>
-<p>The TeX Font Catalog (online web page) shows samples of all fonts that
-can be installed within TeX. However, you are not limited to those fonts.
-On most platforms, Novelette can find fonts installed in the operating system,
-not just the ones installed within TeX. But be sure that the fonts are
-licensed for your purpose.</p>
-<p>Each font must have a license that permits embedding, for printed
-books, for profit. Many "free" or system fonts do not have a suitable license.
+<h3>Font Licenses</h3>
+<p>Whether you use a LaTeX font, or a font that comes with your operating
+system, or a font that came with some program, or a font that you installed
+from any other source: <i>Be sure that the font has a license that permits
+embedding, for printed books, for profit.</i> This is your responsibility;
+Novelette cannot check it.</p>
+<p>Many "free" or system fonts do not have a suitable license.
 In particular, DO NOT use any font that comes with the "GNU Public License"
 (GPL) unless it also has a "font exception" clause that allows embedding
-for any purpose.</p>
-<p>Some fonts have a free version, and a paid version. You might need the
-paid version. Some fonts come with a program, and can only be used for
-files created by that program. Novelette cannot verify the license; this is
-your responsibilty.</p>
+for any purpose. Some fonts have a free version, and a paid version.
+You might need the paid version.</p>
+<p>In general, fonts with the LPPL (LaTeX Project Public License), or
+MIT License, or SIL OFL (Open Font License), can be used.</p>
+</div>
+
+
+<a id="fontpreviews"></a>
+<div>
+<h3>Font Previews</h3>
 <p>Your print-on-demand book will be printed using a high-speed photocopier,
 not offset press (unless you strike it rich). Before committing to a font,
-create test files, for each <i>Font Name</i>. Select either <i>letter</i>
-or <i>A4</i> depending on what size paper is used. Note that this is not
-the same as your book page size:</p>
+create test files, for each <i>Font Name</i>.</p>
+<p>Use the following code. Select either <i>letter</i> or <i>A4</i> depending
+on what size paper is used. This is not the same as your book page size:</p>
 <p class="code"><code>
 \documentclass{novelette}<br>
+\title{Font Test File}<br>
+\author{Novelette}<br>
 \setfont{main}{<i>Font Name</i>}<br>
 \sheetfeed{<i>letter or A4</i>}<br>
 \begin{document}<br>
@@ -132,6 +127,31 @@ for offset presses may print too light. Pay attention to the reading
 experience: Does the text flow the way you expect in fiction, or does it look
 more like a textbook?</p>
 <p>Only <i>you</i> can decide.</p>
+</div>
+
+
+<a id="altfont"></a>
+<div>
+<h3>Alternate Font</h3>
+<p>Some very nice OpenType and TrueType fonts do not have an extended
+character set. Usually, that is no problem. If you are writing in one
+of the major Western European languages, almost any font has what you need.</p>
+<p>But what if you need the occasional character that is not in your chosen
+font? Novelette provides <code>\altfont{<i>character</i>}</code> for this
+purpose. The <i>character</i> is picked from font <i>Libertinus Serif</i>,
+scaled to match surrounding lowercase text.</p>
+<p>For that to work properly, you must have <i>Libertinus Serif</i> fonts
+installed where TeX can find them. You only need the fonts, not support
+for math or anything else. Command line:</p>
+<p class="code"><code>tlmgr install libertinus-fonts</code></p>
+<p>Why <i>Libertinus Serif</i>? It has moderate design that will be
+inconspicuous when you insert the occasional character. It has a large
+character set, with many OpenType Features. In fact, it is worth consideration
+as your main font.</p>
+<p>If you do not use <code>\altfont</code>, then it does not matter.
+But if you use <code>\altfont</code> and <i>Libertinus Serif</i> is not
+installed, then Novelette will issue a warning, use
+<i>Latin Modern Roman</i> there, and prevent final mode.</p>
 </div>
 
 

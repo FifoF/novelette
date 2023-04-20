@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Novelette - Documentation - Writing: What to Use</title>
+<link rel="stylesheet" type="text/css" href="novelette.css">
+</head>
+<body>
+<div id="main">
+
+<h2>Novelette - Documentation</h2>
+<p class="links">On Other Pages:
+<a href="novelette.html">Overview</a>
+<a href="novelette-setup.html">Setup</a>
+<a href="novelette-preamble.html">Preamble</a>
+<a href="novelette-frontmatter.html">Frontmatter</a>
+<a href="novelette-language.html">Language</a>
+</p>
+<p class="links">On This Page:
+<a href="#intro">Intro</a>
+<a href="#wordprocessor">Word-Processor</a>
+<a href="#plaintext">Plain-Text</a>
+<a href="#idegui">IDEs-GUIs</a>
+</p>
+
+<a id="intro"></a>
+<div>
+<h2>Writing: What to Use</h2>
+<p>How to write your book? Should you use a word processor? A plain text
+editor? A TeX IDE (integrated devlopment environment)? Or one of
+the TeX GUI (graphical user interface) programs?</p>
+<p>The answer is NOT "anything". Some choices are better than others.</p>
+</div>
+
+
+<a id="wordprocessor"></id>
+<div>
+<h3>Word Processors</h3>
+<p>Your best choice is probably a word processor. Reason: Such programs
+usually have built-in spelling check, and can subtitute smart quotes
+(curly instead of straight). If you are a good typist, this will help
+you write quickly, instead of being bogged down by TeX code. You can
+add the TeX code later.</p>
+<p>What you need to know:</p>
+<ul>
+<li>If you do write any TeX code, it will be flagged as mis-spelled.
+So it is better to turn off automatic spelling correction.</li>
+<li>How you set page size, margins, text size, font name, or anything else,
+is irrelevant. That information will not be transferred to TeX.</li>
+<li>Do not use headers or footers. The method used by a word processor
+is very different from the method used by TeX.</li>
+<li>TeX separates paragraphs with a blank line. Alternatively,
+<code>\par</code> ends a paragraph. The word processor may begin a new
+paragraph whenever you hit Enter, and indent whatever follows. Those indents
+will be ignored by TeX. The best way to ensure correct paragraphs,
+is to separate them with a blank line.</li>
+<li>Text styling, such as Italics, must not be used. You will need to write
+TeX markup later.</li>
+<li>Your text must be exported as "plain text" in utf-8 encoding, without BOM
+(byte order mark). Ensure that it does not add headers or page numbers.</li>
+<li>If you cannot do all of the above, then do not use a word processor.</li>
+</ul>
+</div>
+
+
+<a id="plaintext"></a>
+<div>
+<h3>Plain Text Editors</h3>
+<p>A plain text editor is exactly that. What you type is what it saves.
+Some plain text editors are enhanced with spell check. Some are enhanced
+with syntax highlighting, which colors the code markup.</p>
+<p>Be sure that the plain text editor saves (or exports) its work in utf-8
+encoding, without BOM. This is the standard on Linux devices. On Windows,
+you may need to check the program settings. Under no circumstances use
+Windows Notepad. The free program Notepad++ is popular for Windows.</p>
+<p>Do not enable automatic code completion. Since Novelette has many
+commands that differ from ordinary LaTeX, the result may be incorrect.</p>
+<p>The developer of Novelette uses the "nano" plain text editor, on Linux.
+Spelling check, via a word processor, is done later. Final TeX markup
+is in nano or TeXworks (see below).</p>
+</div>
+
+
+<a id="idegui"></a>
+<div>
+<h3>IDEs and GUIs</h3>
+<p>There are several programs that provide a graphical interface for TeX
+documents. Typically, they provide a TeX-oriented menu, a pane or tab
+where you can write plain text, and another pane or tab where you can
+view the resulting PDF (after build, not in real time).</p>
+<p>However, most of these programs were created for writing mathematical
+expressions. Their menu choices are irrelevant to popular fiction. Worse,
+they may offer to insert TeX commands that will fail in Novelette.
+So, do not use those programs.</p>
+<p>The exception is TeXworks. It comes with MiKTeX, and is available on
+most Linux platforms. Its minimal interface does what you need to do,
+without offering features that you cannot use. You may be able to add
+spell-check. If you like TeXworks, use it.</p>
+<p>The developer of Novelette is very insistent on having paragraphs,
+and page breaks, just where they are best-suited to the text. After the
+writing and markup is tentatively finished, the files are loaded into
+TeXworks. Where necessary, paragraphs are individually edited. This is
+the advantage of original fiction; anything can be re-written with more or
+fewer words.</p>
+</div>
+
+
+
+</div>
+<div>&nbsp;</div>
+</body>
+</html>
+

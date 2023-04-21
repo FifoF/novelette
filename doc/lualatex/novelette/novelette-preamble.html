@@ -21,51 +21,32 @@
 
 <p>The Preamble is where you write settings. Novelette comes with pre-set
 values for everything. Only change what you need.</p>
-
-<div>
-<h4>Install Libertinus Serif fonts: Package libertinus-fonts</h4>
-<p>Before you do anything else, install the
-<span class="nowrap"><i>Libertinus Serif</i></span> fonts.
-These are the default fonts, and are also used as "Plan B" for any
-other font you require. If you are using MiKTeX, install them via
-the MiKTeX console. If you are using command line (Linux, etc.) then use
-<i>tlmgr</i> to install them:</p>
-<p class="code"><code>tlmgr install libertinus-fonts</code></p>
-<p>Although there are other packages with "libertinus" in the name, the only
-one you need is <span class="nowrap"><i>libertinus-fonts</i>.</span></p>
-<p>Unlike other component packages, Novelette will not throw an error if
-you do not have those fonts. You must install them yourself. You may never
-need them; but if you do, it is best to have them ready.</p>
-</div>
-
-<div>
-<h3>Quick Start</h3>
 <p>Here is a model Preamble. Each of its commands is a
 hyperlink within this documentation. Click to learn what the commands do,
 and how to choose their values.</p>
-</div>
+
 
 <div id="doctemplate" class="doctemplate">
 <p class="linesp noindent">
 <a href="#lualatex">% !TeX TS-program = lualatex</a><br>
 <a href="#utf8">% !TeX encoding = UTF-8</a><br>
 <a href="#documentclass">\documentclass{novelette}</a><br>
-<a href="#mode">\mode</a>{<i>choice</i>}<br>
+<a href="#mode">\mode</a>{draft|shade|align|final}<br>
 <a href="#warnalert">\warnalert<br>
-<a href="#title">\title</a>{<i>choice</i>}<br>
-<a href="#subtitle">\subtitle</a>{<i>choice</i>}<br>
-<a href="#author">\author</a>{</i>choice</i>}<br>
-<a href="#setlang">\setlang</a>{<i>choice</i>}[<i>option</i>]<br>
-<a href="#trimsize">\trimsize</a>{choice}<br>
-<a href="#sheetfeed">\sheetfeed</a>{<i>choice</i>} % Normally unused.<br>
-<a href="#margins">\margins</a>{<i>choice</i>}<br>
-<a href="#layout">\layout</a>{<i>choice</i>}<br>
-<a href="#text">\text</a>{choose}<br>
-<a href="#setfont">\setfont</a>{main}{<i>choice</i>}[<i>option</i>]<br>
-<a href="#setfont">\setfont</a>{deco}{<i>choice</i>}[<i>option</i>]<br>
-<a href="#intent">\intent</a>{<i>choice</i>}<br>
-<a href="#setmicrotype">\setmicrotype</a>{<i>choice</i>}<br>
-<a href="#guides">\guides</a>{<i>choice</i>}<br>
+<a href="#title">\title</a>{Title of Your Book}<br>
+<a href="#subtitle">\subtitle</a>{Subtitle, If Any}<br>
+<a href="#author">\author</a>{Author Name}<br>
+<a href="#setlang">\setlang</a>{language code}[option]<br>
+<a href="#trimsize">\trimsize</a>{width=size,height=size}<br>
+<a href="#sheetfeed">\sheetfeed</a>{trimsize|letter|A4} % Normally unused.<br>
+<a href="#margins">\margins</a>{sizes for top, outside, bottom, inside}<br>
+<a href="#layout">\layout</a>{style=integer,gap=number}<br>
+<a href="#text">\text</a>{fontsize=size,lines=integer}<br>
+<a href="#setfont">\setfont{main}</a>{Font Name}[features]<br>
+<a href="#setfont">\setfont{deco}</a>{Font Name}[features]<br>
+<a href="#intent">\intent</a>{none|SWOP|FOGRA39|JC200103}<br>
+<a href="#setmicrotype">\setmicrotype</a>{microtype setup}<br>
+<a href="#guides">\guides</a>{integers}<br>
 <a href="#begindoc">\begin{document}</a>
 </p>
 </div>
@@ -110,20 +91,23 @@ has no function, so it is ignored. It may mean something in the future.</p>
 
 <a id="mode"></a>
 <div>
-<h4><code>\mode{<i>choice</i>}</code></h4>
+<h4><code>\mode{<i>draft|shade|align|final</i>}</code></h4>
 <p>Novelette has four modes: <code>draft shade align final</code>.
 If you do not set the mode, its default is <code>draft</code>.</p>
-<p><code>draft</code> disables <a href="#intent">PDF/X conformance</a>.
+<ul>
+<li><b><code>draft</code></b> disables <a href="#intent">PDF/X conformance</a>.
 The PDF title is changed, to include the word DRAFT. Otherwise, the layout,
 line breaks, and page breaks are the same as they will be, when you graduate
-to final mode.</p>
-<p><code>shade</code> is draft mode, with margins tinted gray.</p>
-<p><code>align</code> is shade+draft mode, with text baselines marked.</p>
-<p><code>final</code> should only be used when you are ready. In final mode,
-Novelette performs some checks that it would otherwise omit (to save time).
+to final mode.</li>
+<li><b><code>shade</code></b> is draft mode, with margins tinted gray.</li>
+<li><b><code>align</code></b> is shade+draft mode, with text baselines
+marked.</li>
+<li><b><code>final</code></b> should only be used when you are ready. In final
+mode, Novelette performs checks that it would otherwise omit (to save time).
 If your document fails one of the checks, you will be warned. Then it will
 automatically revert to draft mode, so that the failed PDF cannot be confused
-with a good final file.</p>
+with a good final file.</li>
+</ul>
 </div>
 
 
@@ -139,7 +123,7 @@ maybe not. Novelette cannot read your mind.</p>
 <p>GUI TeX editors ignore ALERTs. The <code>\warnalert</code> command
 issues a warning, when there are ALERTs. This will be noticed by the GUI.</p>
 <p>You should use <code>\warnalert</code> until you are satisfied that any
-remaining ALERTs can be ignored. In final mode, there will be no warning.</p>
+remaining ALERTs can be ignored. Then, remove this command from Preamble.</p>
 </div>
 
 
@@ -155,9 +139,9 @@ and ISBN appear in print.</p>
 you provided to the distribution service. Do not use TeX macros, styles, or
 character codes (except as listed below). Use straight (ordinary keyboard)
 apostrophe, not curly. You may use Latin-1 letters with diacriticals.</p>
-<p>Exceptions: Special characters \# \$ \% \&
+<p>Exceptions: Special characters <code>\# \$ \% \&</code>
 are preceded by a backslash, as shown.</p>
-<p>Example: \title{The \$20 Balloon}</p>
+<p>Example: <code>\title{The \$20 Balloon}</code></p>
 <p>Note: The print service may allow you to use non-alphanumeric characters
 in the title, or may forbid them. It is a matter of how things are indexed
 in their database. Novelette does not care.</p>
@@ -166,7 +150,7 @@ in their database. Novelette does not care.</p>
 
 <a id="subtitle"></a>
 <div>
-<h4><code>\subtitle{<i>Subtitle of Your Book</i>}</code></h4>
+<h4><code>\subtitle{<i>Subtitle, If Any</i>}</code></h4>
 <p>Not all books have a subtitle, so the default is no subtitle. If you do
 have a subtitle, write it here.</p>
 <p>Unlike the title and author, the subtitle is not part of PDF metadata.
@@ -177,7 +161,7 @@ the book distribution network.</p>
 
 <a id="author"></a>
 <div>
-<h4><code>\author{<i>Author of Your Book</i>}</code></h4>
+<h4><code>\author{<i>Author Name</i>}</code></h4>
 <p>The considerations for <code>\title</code> apply, with these additional:</p>
 <p>Novelette is not intended for academic works. There should be a single
 author, or two equal authors, using a single <code>\author</code>.</p>
@@ -195,8 +179,8 @@ have it indexed under the desired name (pseudonym or real name).</p>
 
 <a id="setlang"></a>
 <div>
-<h4><code>\setlang{<i>code</i>}[<i>option</i>]<br>
-\setlang*{<i>code</i>}[<i>option</i>]</code></h4>
+<h4><code>\setlang{<i>language code</i>}[<i>option</i>]<br>
+\setlang*{<i>language code</i>}[<i>option</i>]</code></h4>
 <p>The <code>code</code> is a Western European language code. Novelette is not
 configured for other world languages, due to layout calculation methods.</p>
 <p>Details of this command are explained on <a href="novelette-language.html">
@@ -210,14 +194,16 @@ It does not format dates and times. Do those things yourself.</p>
 
 <a id="trimsize"></a>
 <div>
-<h4><code>\trimsize{width=<i>size</i>,height=<i>size</i>}</code></h4>
+<h4><code>\trimsize{<i>width=size,height=size</i>}</code></h4>
 <p>Trim Size is the size of your book pages. Be sure to choose cream paper
 (creme, off-white), not white paper. The print service will offer a choice
 of several standard sizes.</p>
 <p>Dimensions are measured in units of inches or millimeters (in,mm).
 Examples:<p>
-<p><code>\trimsize{width=5.5in,height=8.5in} % American Digest.</code></p>
-<p><code>\trimsize{width=129mm,height=198mm} % British B-Format.</code></p>
+<p class="code">
+<code>\trimsize{width=5.5in,height=8.5in}</code> % American Digest.<br>
+<code>\trimsize{width=129mm,height=198mm}</code> % British B-Format.
+</p>
 <p>The name "trim size" comes from the manufacturing process. The pages are
 printed on larger paper, then roughly cut and assembled with glue.
 The cover is attached with glue, then the entire book is "trimmed" with
@@ -229,20 +215,22 @@ pages. The cover size is slightly larger.</p>
 
 <a id="sheetfeed"></a>
 <div>
-<h4><code>\sheetfeed{<i>choice</i>}</code></h4>
-<p>Do not use the <code>\sheetfeed</code> setting, unless you are certain.
-If you use this setting incorrectly, big problems will result. Do not guess.
-Available choices are <code>letter</code> and <code>A4</code>.</p>
-<p>If you do not use <code>\sheetfeed</code>, the PDF page size will be the
-book trim size. This is how nearly all print-on-demand services want it.</p>
-<p><b><code>letter</code></b> centers the trim size, vertically
-and horizontally, in the larger USletter size (8.5in width, 11in height),</p>
-<p><b><code>A4</code></b> (or a4) centers the trim size, vertically and
-horizontally, in the larger European A4 size (210mm width, 297mm height).</p>
-<p>If you are printing pages at home, for manual editing, then you might
-use <code>letter</code> or <code>A4</code>, to produce consistent results from
-your home printer. That might also be the case, if your book will be reviewed
-by an editor.</p>
+<h4><code>\sheetfeed{<i>trimsize|letter|A4</i>}</code></h4>
+<p>The default value is <b><code>trimsize</code></b>. Almost always, this is
+the correct setting. Do not use <code>\sheetfeed</code> unless you are certain.
+If you use it incorrectly, big problems will result. Do not guess.</p>
+<ul>
+<li><b><code>trimsize</code></b> produces PDF pages that are the same size
+as the paper of your finished book.</li>
+<li><b><code>letter</code></b> centers the trim size, vertically
+and horizontally, in the larger USletter size (8.5in width, 11in height).</li>
+<li><b><code>A4</code></b> (or a4) centers the trim size, vertically and
+horizontally, in the larger European A4 size (210mm width, 297mm height).</li>
+</ul>
+<p class="noindent">If you are printing pages at home, for manual editing,
+then you might use <code>letter</code> or <code>A4</code>, to produce
+consistent results from your home printer. That might also be the case,
+if your book will be reviewed by an editor.</p>
 <p>Novelette does not produce crop marks or trim marks. It does write the
 internal "TrimBox" metadata to the PDF.</p>
 </div>
@@ -250,7 +238,11 @@ internal "TrimBox" metadata to the PDF.</p>
 
 <a id="margins"></a>
 <div>
-<h4><code>\margins{top=<i>size</i>,outside=<i>size</i>,bottom=<i>size</i>,inside=<i>size</i>}</code></h4>
+<h4>
+<code>\margins{<i>top=size,outside=size,bottom=size,inside=size</i>}</code>
+</h4>
+<p>The sizes are dimensions, with units <code>in</code> or <code>mm</code>
+(inches or millimetres).</p>
 <p>In Novelette, margins surround the printable area. Nothing may be printed
 within the margins. The header, main text, and footer all must fit within the
 rectangle surrounded by the margins. This is how the term "margins" is used
@@ -259,19 +251,21 @@ by most print services.</p>
 within the bottom margin.</p>
 <p>Margins are measured in units of inches or millimeters (in,mm). It is best
 to use the same units for margins, as you use for trim size.</p>
-<p><b><code>top</code></b> margin is the area above the topmost printable item,
-which is the header or main text.</p>
-<p><b><code>outside</code></b> margin is the area at the outer page edge,
+<ul>
+<li><b><code>top</code></b> margin is the area above the topmost printable item,
+which is the header or main text.</li>
+<li><b><code>outside</code></b> margin is the area at the outer page edge,
 being the left side of even-numbered (verso) pages, or the right side of
-odd-numbered (recto) pages.</p>
-<p><b><code>bottom</code></b> margin is the area below the lowest printable
-item, which is the footer or main text.</p>
-<p><b><code>inside</code></b> margin is at the spine (binding). In general,
+odd-numbered (recto) pages.</li>
+<li><b><code>bottom</code></b> margin is the area below the lowest printable
+item, which is the footer or main text.</li>
+<li><b><code>inside</code></b> margin is at the spine (binding). In general,
 this margin should be set 0.125in (or 3mm) wider than the ouside margin.
-The extra width allows for binding glue.</p>
-<p>You may abbreviate the margins setting, with a single value:<br>
-<code>\margins{<i>size</i>}</code> sets top, ouside, and bottom margins
-to that size. Inside margin is set 0.125in (or 3mm) larger.</p>
+The extra width allows for binding glue.</li>
+</ul>
+<p class="noindent">You may abbreviate the margins setting, with a single
+value: <code>\margins{<i>size</i>}</code> sets top, outside, and bottom
+margins to that size. Inside margin is set 0.125in (or 3mm) larger.</p>
 <p>If you do not set margins, Novelette will set them for you.
 Many print services require minimum margins of 0.5in|13mm, plus 0.125in|3mm
 at the spine. These are the Novelette minimum defaults, for small books.
@@ -281,17 +275,24 @@ You can manually use narrower margins, if allowed by your print service.</p>
 
 <a id="layout"></a>
 <div>
-<h4><code>\layout{<i>style</i>=<i>choice</i>,<i>gap</i>=<i>number</i>}</code></h4>
-<p>The <code>\layout</code> command accepts one or more comma-separated
-key=value pairs. It sets the page layout header/footer style.</p>
-<p><b><code>style=<i>choice</i></code></b><br>
-Integer from 1 to 7 selects page style,
-(header and/or footer) from a menu of available styles. The default style
-depends on other page design settings.</p>
-<p>If the integer is followed by lowercase <code>i</code>, then the page number
-will be written in Italics. Example: <code>style=4i</code> is style 4 with
-Italic page numbers.</p>
-<p>Available styles:</p>
+<h4><code>\layout{<i>style=integer,gap=number</i>}</code></h4>
+<p>The <code>\layout</code> command sets the page layout header/footer style.
+You may set none, one, or both of <code>style</code> and <code>gap</code>.
+Novelette will use a default, for anything you do not set.</p>
+<ul>
+<li><b><code>style</code></b> is an integer 1-7. It selects whether there is
+a header and/or footer, and how they are aligned. The integer may be
+followed by the letter <code>i</code>, which requests page numbers in Italics.
+Otherwise, page numbers are not italicized.</li>
+<li><b><code>gap</code></b> is a number 0-1. May be decimal. This sets the
+amount of extra vertical space between header and main text, and between
+main text and footer. Gap <code>0</code> (rarely used) places header/footer
+at the next line above/below main text. This is usually too close.
+Gap <code>1</code> skips a full line between header/footer and main text.
+This is best for medium to large books. Compromise gap <code>0.5</code>
+may be good for small books.</li>
+</ul>
+<p class="noindent">These are the <code>style</code> choices:</p>
 <ul>
 <li>1 = Only footer. Page number centered.</li>
 <li>2 = Header and footer. Centered.</li>
@@ -303,75 +304,88 @@ page number, at fixed distance from margin. Centered text.</li>
 Centered text.</li>
 <li>7 = Header. Centered number/text or text/number.</li>
 </ul>
-<p><b><code>gap=<i>number</i></code></b><br>
-Number is integer|decimal from 0 to 1.
-Value 0 (rarely used) places header|footer at the line immediately above|below
-main text. Value 1 skips a whole line between them, and is best for
-large books. Value 0.5 is a nice compromise for smaller books.</p>
-<p>Note: If you use a header/footer, there will be pages where nothing
-is printed in the header/footer. Nevertheless, the space for header/footer
-is reserved; main text does not vertically expand to fill the empty
-header/footer.<p>
-<p>Note: Command <a href="#thispagestyle"><code>\thispagestyle</code></a>
+<p class="noindent">There will be pages where nothing
+is printed in the header/footer. Nevertheless, the space is reserved;
+main text does not vertically expand to fill the empty header/footer.<p>
+<p>Command <a href="#thispagestyle"><code>\thispagestyle</code></a>
 locally changes the layout for a single page.</p>
 </div>
 
 
 <a id="text"></a>
 <div>
-<h4><code>\text{<i>key</i>=<i>value</i>,<i>key</i>=<i>value</i>}</code></h4>
-<p>The <code>\text</code> command accepts one or more comma-separated
-key=value pairs.</p>
-<p><b><code>fontsize=<i>size</i></code></b><br>
-Sets the size of main text font. Integer or decimal. Typical value near 11.5pt.
-Must have units pt (TeX points) or bp (PostScript points). The default is
-calculated from page sizes.</p>
-<p><b><code>lines=<i>integer</i></code></b><br>
+<h4><code>\text{<i>fontsize=size,lines=integer</i>}</code></h4>
+<p>You may specify none, one, or both of <i>fontsize</i> and <i>lines</i>.
+Novelette will choose a default, for anything you do not set.</p>
+<ul>
+<li><b><code>fontsize=<i>size</i></code></b><br>
+Sets the size of main text font. Integer or decimal, with units
+<code>pt</code> (TeX points) or <code>bp</code> (PostScript points).
+The default is calculated from page sizes, and is typically near 11.5pt.</li>
+<li><b><code>lines=<i>integer</i></code></b><br>
 Number of lines in main text block, not counting header or footer.
-The default number depends on page sizes.</p>
+The default number depends on page sizes. Typically 28-35.</li>
+</ul>
 </div>
 
 
 <a id="setfont"></a>
 <div>
-<h4><code>\setfont{<i>role</i>}{<i>Font Name</i>}[<i>features</i>]</code></h4>
+<h4>
+<code>\setfont{main}{<i>Font Name</i>}[<i>features</i>]</code><br>
+<code>\setfont{deco}{<i>Font Name</i>}[<i>features</i>]</code>
+</h4>
 <p>Novelette uses <i>fontspec</i> technology for Open Type fonts. If you are
 a knowledgeable LaTeX user, you may use some aspects of <i>fontspec</i>
 directly, but that is strongly discouraged, due to potential layout conflict.
-Do not use <code>\setmainfont</code>.</p>
-<p><code>\setfont</code> has two mandatory arguments, and an optional
-argument.</p>
-<p><b><code>role</code></b> is a keyword, one of: <code>main deco</code>.
-It assigns the font to its proper place and purpose.</p>
-<p><b><code>Font Name</code></b> is the Open Type font family name, such as
-<i>Libertinus Serif</i>. No TeX fonts with three-letter codes.</p>
-<p><b><code>features</code></b> is an optional, comma-separated list of
-Open Type features, using <i>fontspec</i> syntax. Default uses kerning and
-OldStyle numerals. Default also uses TeX ligatures
-(converts `` to “ and so forth).</p>
-<p>Common ligatures (ff, fi, fl, ffi, ffl) are not enabled by default, since
-they are not necessarily useful. To enable common ligatures, write
-<span class="nowrap"><code>[Ligatures=Common]</code></span> option.</p>
+Do not use <code>\setmainfont</code>. Instead, use <code>\setfont</code>.</p>
+<p>The <i>Font Name</i> is the actual name of the font (case-sensitive),
+not a TeX code. Examples are <i>Libertinus Serif</i> and <i>EB Garamond</i>.
+You are not limited to fonts fron the LaTeX catalog.</p>
+<p>Optional <i>features</i> are Open Type features, selected using
+<i>fontspec</i> syntax. Novelette provides default features that are adequate
+for most purposes, so you probably do not need to request features.</p>
+<ul>
+<li><code><b>\setfont{main}</b>{<i>Font Name</i>}[<i>features</i>]</code>
+selects the font that will be used for main text. The same font will be used
+(with some size and feature modifications) for footnotes, openings, headers,
+and footers.</li>
+<li><code><b>\setfont{deco}</b>{<i>Font Name</i>}[<i>features</i>]</code>
+allows you to specify a decorative font, which may only be used on
+<i>display pages</i>, such as the book title page. If you do not set it,
+the deco font will be the main font.</li>
+</ul>
+<p class="noindent">Common ligatures (ff, fi, fl, ffi, ffl) are not enabled
+by default, since they are not necessarily useful. To enable common ligatures,
+write <span class="nowrap"><code>[Ligatures=Common]</code></span> option.</p>
+<p>Note that you do not specify different fonts for different purposes,
+with the exception of deco. Novelette does this automatically. The purpose
+is to focus your effort on writing, rather than on TeX coding.</p>
 </div>
 
 
 <a id="intent"></a>
 <div>
-<h4><code>\intent{<i>choice</i>}</code></h4>
+<h4><code>\intent{<i>none|SWOP|FOGRA39|JC200103</i>}</code></h4>
 <p>There are four intents: <code>none SWOP FOGRA39 JC200103</code>.
-Default is <code>none</code>.
-No matter which intent you choose, fonts are subset embedded. That is enough
-for some print services.</p>
-<p><code>none</code> does not produce PDF/X. No matter how you set intent, it
-is automatically changed to <code>none</code> unless you are in final mode.
-The other intents produce <span class="nowrap">PDF/X-1a:2001.</span></p>
-<p><code>SWOP</code> means "US Web Coated SWOP". This is most frequently used
-in the United States.</p>
-<p><code>FOGRA39</code> (actually FOGRA39L) is frequently used in Europe.</p>
-<p><code>JC200103</code> is frequently used in Japan.</p>
-<p>Dirty little secret: Even if your print service requires an intent,
-it will be ignored. The only reason it may be required, is that it is part
-of the standard, so it cannot be omitted.</p>
+Default is <code>none</code>. This procuces PDF that has subset-embedded
+fonts, but not PDF/X conformance. It is sufficient for many print services.
+The other intents also produce PDF/X-1a:2001 conformance, for print services
+that require this standard.</p>
+<p>No matter how you set <code>\intent</code>, it is automatically changed
+to <code>none</code> when your document is not in <code>\mode{final}</code>.
+It will also be changed to <code>none</code> if your document has an error,
+or certain critical warnings.</p>
+<ul>
+<li><b><code>none</code></b> does not produce PDF/X.</li>
+<li><b><code>SWOP</code></b> means "US Web Coated SWOP". This is most
+frequently used in the United States.</li>
+<li><b><code>FOGRA39</code></b> is frequently used in Europe.</li>
+<li><b><code>JC200103</code></b> is frequently used in Japan.</li>
+</ul>
+<p class="noindent">Dirty little secret: Even if your print service requires
+an intent, it will be ignored. The only reason it may be required, is because
+it is part of the PDF/X standard, so it cannot be omitted.</p>
 </div>
 
 
@@ -390,14 +404,18 @@ own options to <i>microtype</i> at the time it loads.</p>
 
 <a id="guides"></a>
 <div>
-<h4><code>\guides{<i>integer,integer,integer,integer</i>}</code></h4>
+<h4><code>\guides{<i>up,to,four,integers</i>}</code></h4>
 <p>You may create four or fewer pairs of guides. These are marks in the
-side margins, when in shade or align mode. The guides align with main text
-baseline and descender, at the <code>integer</code> line number from top of
-main text.</p>
+side margins, when in <code>\mode{shade}</code> or <code>\mode{align}</code>.
+The guides align with main text baseline and descender, at an
+<code>integer</code> line number from top of main text.</p>
+<p>For example, <code>\guides{6,12}</code> creates a pair of guides located
+at line 6 of main text (not counting header), and a pair of guides located
+at line 12.</p>
 <p>Guides are not enforced. They are merely for your own use. Typically,
-a guide is placed where you wish the topmost item in openings to sit, and
-another guide is placed at the first line of main text under the opening.</p>
+a guide is placed where you wish the topmost item in each
+<a href="novelette-mainmatter.html#opening">opening</a> to sit, and
+another guide is placed at the first line of main text beneath it.</p>
 <p>If you use guides, they will be the same on every page.</p>
 </div>
 
@@ -412,7 +430,7 @@ it means that you made a syntax error somewhere in the Preamble.</p>
 <p><b>IMPORTANT:</b> TeX has many characters, or character combinations,
 that have special meaning. What you type is not what you get in print.</p>
 <p>After \begin{document}, Novelette reduces the number of special characters,
-to reduce the chance that you will become tanlged with special meanings.
+to reduce the chance that you will become tangled with special meanings.
 This is <a href="#specialcharbody">explained in detail</a>.</p>
 </div>
 

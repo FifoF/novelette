@@ -18,66 +18,83 @@
 </p>
 
 <h3>Language Choice</h3>
+<p>Novelette only supports Western European languages (most, not all).
+This is because many other languages have character shapes that are not
+consistent with Novelette's layout calculations.</p>
+
 
 <a id="setlang"></a>
 <div>
 <h4><code>\setlang{<i>code</i>}[<i>option</i>]<br>
 \setlang*{<i>code</i>}[<i>option</i>]</code></h4>
-<p>The <code>code</code> is a Western European language code. Novelette is not
-configured for other world languages, due to layout calculation methods.</p>
-<p>Novelette only uses this setting for hyphenation patterns, and (for French)
-punctuation spacing. It is not a spelling or grammar check. It does not format
-time or date. So you may write snippets of text in most other languages,
-if you do not mind them being hyphenated like your setting.</p>
+<p>For languages other than French or German, there is no difference between
+the unstarred <code>\setlang</code> and the starred <code>\setlang*</code>.
+Only French has an option.</p>
+<p>Be sure to use the language code, not the language name.
+Wrong: <code>\setlang{italian}</code>. Correct: <code>\setlang{it}</code>.</p>
+<p>If you do not use <code>\setlang</code>, Novelette will use a generic
+version of English, built into LaTeX. However, if you are writing in English,
+use either <code>\setlang{en}</code> or <code>\setlang{en-US}</code></p>
+<p>Novelette only uses <code>\setlang</code> for hyphenation patterns, and
+(for French) punctuation spacing. It is not a spelling or grammar check.
+It does not format time or date. You may write snippets of text in most other
+languages, if you do not mind them being hyphenated like your setting.</p>
 <p>Hyphenation patterns are provided by a TeX package that supports the chosen
-language. If you do not already have what you need, use the TeX package
-manager to install <code>hyphen-<i>language</i></code> where <i>language</i>
-is the English name for that language, in lowercase (<i>hyphen-french</i>
-rather than hyphen-francais). Alternatively, it may be the two-letter language code,
-as shown below, with <i>hyph</i> suffix (French is <code>frhyph</code>).</p>
-<p>Available codes:</p>
-<ul>
-<li><code>da</code> (Danish)</li>
-<li><code>nl</code> (Dutch)</li>
-<li><code>is</code> (Icelandic)</li>
-<li><code>ga</code> (An Caighdeán Gaelic)</li>
-<li><code>nb</code> (Norwegian Bokmål)</li>
-<li><code>nn</code> (Norwegian Nynorsk)</li>
-<li><code>sv</code> (Swedish)</li>
-<li><code>fi</code> (Finnish)</li>
-<li><code>pt</code> (Portuguese)</li>
-<li><code>es</code> (Spanish)</li>
-<li><code>eu</code> (Basque)</li>
-<li><code>ca</code> (Catalan)</li>
-<li><code>oc</code> (Occitan)</li>
-<li><code>fr</code> (French, France)</li>
-<li><code>fr-CH</code> (French, Swiss)</li>
-<li><code>de</code> (German, Germany/Austria)</li>
-<li><code>de-CH</code> (German, Swiss)</li>
-<li><code>it</code> (Italian)</li>
-<li><code>en</code> (English, British)</li>
-<li><code>en-US</code> (English, USA)</li>
-<li><code>xx</code> (No hyphenation).</li>
-</ul>
-<p>For most languages, there is no difference between the starred and
-unstarred <code>\setlang</code> commands, and no options. Exceptions:</p>
-<p>In <b>German (<code>de</code>)</b>, the unstarred <code>\setlang</code>
+language. If you are writing in your own language, the necessary package is
+probably pre-installed. If you do not already have what you need, use the
+TeX package manager to install it.</p>
+<p>This table lists the available languages (in their English names),
+the <code>\setlang{code}</code>, and the name of the TeX package that contains
+its hyphenation patterns. Note: MiKTeX may use different package names.</p>
+
+<table style="margin: 1em auto">
+<thead><tr><td>LANGUAGE</td><td>CODE &nbsp;</td><td>PACKAGE</td></tr></thead>
+<tbody>
+<tr><td>Danish</td><td><code>da</code></td><td>hyphen-danish</td></tr>
+<tr><td>Dutch</td><td><code>nl</code></td><td>hyphen-dutch</td></tr>
+<tr><td>Icelandic</td><td><code>is</code></td><td>hyphen-icelandic</td></tr>
+<tr><td>Gaelic (An Caighdeán) &nbsp;</td><td><code>ga</code></td><td>hyphen-irish</td></tr>
+<tr><td>Norwegian (Bokmål)</td><td><code>nb</code></td><td>hyphen-norwegian</td></tr>
+<tr><td>Norwegian (Nynorsk)</td><td><code>nn</code></td><td>hyphen-norwegian</td></tr>
+<tr><td>Swedish</td><td><code>sv</code></td><td>hyphen-swedish</td></tr>
+<tr><td>Finnish</td><td><code>fi</code></td><td>hyphen-finnish</td></tr>
+<tr><td>Portuguese</td><td><code>pt</code></td><td>hyphen-portuguese</td></tr>
+<tr><td>Spanish</td><td><code>es</code></td><td>hyphen-spanish</td></tr>
+<tr><td>Basque</td><td><code>eu</code></td><td>hyphen-basque</td></tr>
+<tr><td>Catalan</td><td><code>ca</code></td><td>hyphen-catalan</td></tr>
+<tr><td>Occitan</td><td><code>oc</code></td><td>hyphen-occitan</td></tr>
+<tr><td>German<sup>1,2</sup> (DE,AT)</td><td><code>de</code></td><td>hyphen-german</td></tr>
+<tr><td>German<sup>1,2</sup> (Swiss)</td><td><code>de-CH</code></td><td>hyphen-german</td></tr>
+<tr><td>French<sup>3,5</sup> (France)</td><td><code>fr</code></td><td>hyphen-french</td></tr>
+<tr><td>French<sup>3,4,5</sup> (Swiss)</td><td><code>fr-CH</code></td><td>hyphen-french</td></tr>
+<tr><td>Italian</td><td><code>it</code></td><td>hyphen-italian</td></tr>
+<tr><td>English (British)</td><td><code>en</code></td><td>hyphen-english</td></tr>
+<tr><td>English (American)</td><td><code>en-US</code></td><td>hyphen-english</td></tr>
+</tbody>
+</table>
+
+<p class="noindent">NOTES</p>
+<p>1. In German, the unstarred <code>\setlang</code>
 uses contemporary <span class="nowrap">(post-1996)</span> rules.
 The starred <code>\setlang*</code> uses older (1901) rules.</p>
-<p>In <b>French (<code>fr</code>)</b> the unstarred <code>\setlang</code> adds
+<p>2. In German, package <code>dehyph-exptl</code> provides more
+recent rules than does <code>hyphen-german</code>. If installed, it will
+be used.</p>
+<p>3. French (<code>fr</code>) : The unstarred <code>\setlang</code> adds
 extra space before the colon, semicolon, exclamation, and question marks.
 It also adds extra space after opening guillemets, and before closing
-guillemets. Option <code>[-g]</code> omits the guillemet spacing.
-<b>Swiss French (<code>fr-CH</code>)</b> is the same as French, except there
+guillemets. Option <code>[-g]</code> omits the guillemet spacing.</p>
+<p>4. Swiss French (<code>fr-CH</code>) : Same as French, except there
 is no extra space before the colon.</p>
-<p>For both <b>French</b> and <b>Swiss French</b>, the starred
+<p>5. Both French and Swiss French : The starred
 <code>\setlang*</code> does not add any extra space (whether or not option
 <code>[-g]</code>). This might be useful if you already wrote spaces
 manually.</p>
 </div>
 
 
-</div><div>&nbsp;</div>
+</div>
+<div>&nbsp;</div>
 </body>
 </html>
 

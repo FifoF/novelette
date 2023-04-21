@@ -25,12 +25,8 @@
 
 <p>Front Matter, or <i>frontmatter</i>, contains information "about the book"
 rather than "the story itself". The absolute minimum is a Title Page and
-Copyright Page. The practical minimum is six pages. It is rare for an
-original work of popular fiction to have more than six pages of frontmatter.
-Books with longer frontmatter are either non-fiction, or reprints of older
-works in critical editions.</p>
-
-<h3>Quick Start</h3>
+Copyright Page. The practical minimum is six pages. It is rare for original
+works of popular fiction to have more.</p>
 <p>Here is a model for six pages of frontmatter. Each of its commands is a
 hyperlink within this documentation. Click to learn what the commands do,
 and how to choose their values.</p>
@@ -44,7 +40,7 @@ space at the top of the page, or between items on the page.</p>
 <a href="#frontmatter">\frontmatter</a><br>
 <a href="#memo">\memo</a>{Page i, <a href="#halftitle">Half-Title</a>.}<br>
 <a href="#display">\begin{display}</a><br>
-<a href="#style">\style</a>{<i>choice</i>}{Title of Your Book}<br>
+<a href="#style">\style</a>[<i>options</i>]{Title of Your Book}<br>
 <a href="#display">\end{display}</a><br>
 <a href="#memo">\memo</a>{Page ii, normally blank.}<br>
 <a href="#blankpage">\blankpage</a><br>
@@ -79,13 +75,13 @@ header or footer, they still occupy space.</p>
 <a id="memo"></a>
 <div>
 <h4><code>\memo{<i>Non-printing text.</i>}</code></h4>
-<p>Novelette strongly discourages the use of percent <code>%</code> for comments.
+<p>Novelette strongly discourages the use of percent <code>%</code> comments.
 This is because % is a useful text character. If you forget to write
 <code>\%</code> with the backslash, then the remainder of the text line does
 not print. That may not be what you intended to do.</p>
 <p>Instead, use the <code>\memo{}</code> command. Its content does not print.
 The content may be multi-line. It may be quite lengthy.</p>
-<p>The memo may not be in the middle of a paragraph. It must stand by itself.</p>
+<p>A memo may not be placed mid-paragraph. It must stand by itself.</p>
 </div>
 
 
@@ -247,8 +243,8 @@ check with the print distribution service.</li>
 <a id="visualbarrier"></a>
 <div>
 <h3>Visual Barrier</h3>
-<p>The <i>visual barrier</i> is not a standard publishing term. It is my own
-term for "whatever you put on page v".</p>
+<p>The <i>visual barrier</i> is not a standard publishing term. It is
+Novelette's term for "whatever you put on page v".</p>
 <p>After the copyright on page iv, many books do not have anything else
 to say, before the story begins. But it is visually distracting to place the
 legalese copyright facing the first page of your story. It ruins the mood.</p>
@@ -303,12 +299,14 @@ fixes it. So an Epigraph should either be something from Public Domain,
 or your own writing (possibly created just for this purpose).</p>
 <p>Pretentious writers like to quote Shakespeare or the King James Bible.
 The works of authors such as Charles Dickens and Victor Hugo are in Public
-Domain, so you could pick a line or two from one of them.</p>
-<p>But an Epigraph does not have to be pretentious. Suppose your book is
+Domain, so you could pick a line or two from one of them. But a translation
+may be more recent, and still under copyright.</p>
+<p>An Epigraph does not have to be pretentious. Suppose your book is
 about mutant spiders brought to Earth by a hail of meteorites. Here is an
 Epigraph that is suited to the theme:</p>
 <p class="code"><code>
 \begin{display}<br>
+\null\null\null\null\null\null\null\null<br>
 \begin{blockindent}[3]<br>
 \noindent The itsy-bitsy spider\\<br>
 Went up the water spout.\\<br>
@@ -317,6 +315,8 @@ Washed the spider out.\par<br>
 \end{blockindent}<br>
 \end{display}
 </code></p>
+<p class="noindent">Novelette does not have a particular format command for
+an Epigraph or poem. You must format it yourself.</p>
 </div>
 
 
@@ -344,10 +344,11 @@ his father found:</p>
 Shortly after the Great War, my father was on an expedition investigating
 some ancient tombs that had been unearthed by cannon fire. Among the usual
 detritus were several manuscripts, one of which was very unlike the others.
-Professor Zorkle Dondles, of West Erewhon University, translated... etc.\par
+Professor Zork Dondles, of West Erewhon University, translated... etc.\par<br>
+\clearpage
 </code></p>
-<p>The above example is on the edge between "about the book" and
-"part of the story". But as long as it pretends to be about the book, and
+<p class="noindent">The above example is on the edge between "about the book"
+and "part of the story". But as long as it pretends to be about the book, and
 the reader will know that it is fictional, it can go in frontmatter.</p>
 </div>
 
@@ -355,7 +356,7 @@ the reader will know that it is fictional, it can go in frontmatter.</p>
 <a id="halfrepeat"></a>
 <div>
 <h3>Repeat of Half-Title</h3>
-<p>Sometimes, even professionl authors have nothing to say. Let's get to the
+<p>Sometimes, even professional authors have nothing to say. Let's get to the
 story! No more diversions! In this case, page v may simply be a repeat of
 the <a href="#halftitle">halftitle</a> page.</p>
 </div>
@@ -372,7 +373,7 @@ needs to be Page 1. That could be a repeat of the halftitle, or Part I, or an
 Epigraph that is extracted from the story (not from an external source).</p>
 <p>If your book is divided into parts, the page announcing Part I is not
 considered to be front matter. It would be the first page of mainmatter.</p>
-<p>If your fontmatter is lengthy (don't do it!) then it is customary to
+<p>If your frontmatter is lengthy (don't do it!) then it is customary to
 repeat the halftitle page, but in this case it would not be frontmatter.
 It would be the first page of mainmatter.</p>
 </div>

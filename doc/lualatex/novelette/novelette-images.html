@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Novelette - Documentation - Images</title>
+<link rel="stylesheet" type="text/css" href="novelette.css">
+</head>
+<body>
+<div id="main">
+
+<h2>Novelette - Documentation</h2>
+<p class="links">On Other Pages:
+<a href="novelette-setup.html">Setup</a>
+<a href="novelette-preamble.html">Preamble</a>
+<a href="novelette-frontmatter.html">Frontmatter</a>
+<a href="novelette-mainmatter.html">Mainmatter</a>
+<a href="novelette-language.html">Language</a>
+</p>
+
+
+<a id="overview"></a>
+<div>
+<h3>Images</h3>
+
+<p>You may place raster images in Novelette. The command and options are
+very different from what other document classes use. If you do not read
+this documentation and attempt to place an image by other methods,
+Novelette will send you a nasty error message.</p>
+
+
+<a id="format"></a>
+<div>
+<h4>Image Format</h4>
+<p>Novelette images must be monochrome black/white <b>png</b> format, at 1-bit
+per pixel. Each image must be stripped of private metadata, such as EXIF.</p>
+<p>You may not use drawing methods to build an image within Novelette.
+Use a graphics program, and create your image at density 600 pixels per inch
+(236.22 pixels/cm). That is the preferred density, although many print
+services allow 300&mdash;1200 pixels/inch (118.11&mdash;472.44 px/cm).
+When your image design is finished, export a flattened <i>png</i> at that
+density. The <i>png</i> must contain its resolution.</p>
+</div>
+
+
+<a id="postprocess"></a>
+<div>
+<h4>Post-Processing</h4>
+<p>When you are in draft|shade|align mode, Novelette will allow you to place
+an image that will fail in final mode. This is so you can focus on your
+writing, and deal with image issues later.</p>
+<p>Before using final mode, you must post-process each image. Either the
+<i>ImageMagick</i> or <i>GraphicsMagick</i> command-line program will work.
+You cannot do this in an image editor. For image <i>filename.png</i> :</p>
+<ul>
+<li>ImageMagick:
+  <code>magick mogrify -monochrome -strip filename.png</code></li>
+<li>GraphicsMagick:
+  <code>gm mogrify -monochrome -strip filename.png</code></li>
+</ul>
+<p class="noindent">In final mode, Novelette performs a sanity check on each
+image. If any image fails, then build reverts to draft mode, and you will
+be warned.</p>
+</div>
+
+
+<a id="fakeimage"></a>
+<div>
+<h4>Fake Images</h4>
+<p>If not in final mode, Novelette allows "fake" images. These are drawn, gray
+rectangles. Width is half the textwidth. Height is an integer, indicating
+the number of text lines that the fake image displaces. Using fake images
+allows you to <i>write now, do graphics later.</i> The log Summary will tell
+you what real image sizes (pixels at 600ppi) correspond to fake images.</p>
+</div>
+
+
+<a id="imagecommand"></a>
+<div>
+<h4><code>\image[<i>placement</i>]{<i>filename.png</i>}<br>
+\image[<i>placement</i>]{<i>integer</i>}</code></h4>
+<p>When it is provided with a file name, <code>\image</code> looks for the
+file, and throws an error if it is not found. The file must be in the same
+directory as the main document, or in a subdirectory. That is, you cannot
+request an image using <code>../</code> to move up a directory, and you
+cannot use an absolute file path.</p>
+<p>In final mode, Novelette will also perform a check on each image. This
+takes time, so it is best to remain in draft mode until you are ready.
+Typesetting is the same.</p>
+<p>When it is provided with an <i>integer</i> instead of a filename,
+Novelette places a "fake image" there. The fake image is a gray rectangle
+at half the textwidth, occupying that integer number of lines. The log
+Summary will tell you what height to use for the real image.</p> 
+<p>If specified, <i>placement</i> may contain a horizontal value, a vertical
+value, or both. Does not matter if space or comma is present. Error if
+conflicting values of the same type. Use one of <code>l c r o i</code>
+for horizontal alignment:</p>
+<ul>
+<li><code><b>l</b></code> (left-aligned)</li>
+<li><code><b>c</b></code> (horizontally centered) (default)</li>
+<li><code><b>r</b></code> (right-aligned)</li>
+<li><code><b>o</b></code> (outside aligned)</li>
+<li><code><b>i</b></code> (inside aligned)</li>
+</ul>
+<p class="noindent">Use one of <code>h t b p</code> for insertion between
+paragraphs of main text. These are similar to (but not quite the same as)
+standard LaTeX float definitions:</p>
+<ul>
+<li><code><b>h</b></code> Default. Place image "here" where the
+command is written, anywhere on the page. But if it cannot fit, move it to the
+top of the following page. Main text will flow to fill the lines left behind.
+If you do not want text flow, use <code>\clearpage</code> to break pages.</li>
+<li><code><b>t</b></code> Place image at "top" of the page where command is
+written, usually above the command. In some cases, if the command is too late,
+or if other material is at the top, then the image is moved to the top of the
+following page.</li>
+<li><code><b>b</b></code> Place image at "bottom" of the page where command is
+written. If it cannot fit there, place it at bottom of following page.</li>
+<li><code><b>p</b></code> Place image on a "page" by itself.</li>
+</ul>
+<p class="noindent">The <code>\image</code> command must occupy its own
+paragraph. The bottom of the image will be at a text baseline.</p>
+<p>Novelette only adds enough whitespace, above or below an image,
+to maintain the text line grid. If you need more whitespace, you may insert
+the <code>\null</code> command above|below the image, to create blank lines.
+Or, recreate the image with its own whitespace included.</p>
+<p>There is no capability for a border. If you need one, draw it within the
+image itself.</p>
+<p>There is no caption command. If necessary, draw the text within the image
+itself. Beware of using fine-detail fonts within low-resolution images.</p>
+</div>
+
+
+<a id="examples"></a>
+<div>
+<h3>Examples</h3>
+<ul>
+<li><code>\image{bloodstain.png}</code> place the image at its default
+placement (centered, here if possible).</li>
+<li><code>\image{4}</code> draw a gray rectangle that displaces 4 lines of
+text, at its default placement (centered, here if possible).</li>
+<li><code>\image[ot]{clue.png}</code> place the image at top of page, aligned
+to the outside margin.</li>
+<li><code>\image[rb]{3}</code> draw a gray rectangle that displaces 3 lines of
+text, at bottom of page, aligned to right margin.</li>
+</ul>
+</div>
+
+
+</div>
+<div>&nbsp;</div>
+</body>
+</html>
+

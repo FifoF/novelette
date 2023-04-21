@@ -63,8 +63,8 @@ its hyphenation patterns. Note: MiKTeX may use different package names.</p>
 <tr><td>Basque</td><td><code>eu</code></td><td>hyphen-basque</td></tr>
 <tr><td>Catalan</td><td><code>ca</code></td><td>hyphen-catalan</td></tr>
 <tr><td>Occitan</td><td><code>oc</code></td><td>hyphen-occitan</td></tr>
-<tr><td>German<sup>1,2</sup> (DE,AT)</td><td><code>de</code></td><td>hyphen-german</td></tr>
-<tr><td>German<sup>1,2</sup> (Swiss)</td><td><code>de-CH</code></td><td>hyphen-german</td></tr>
+<tr><td>German<sup>1,2</sup> (DE,AT)</td><td><code>de</code></td><td>hyphen-german<br>dehyph-exptl</td></tr>
+<tr><td>German<sup>1,2</sup> (Swiss)</td><td><code>de-CH</code></td><td>hyphen-german<br>dehyph-exptl</td></tr>
 <tr><td>French<sup>3,5</sup> (France)</td><td><code>fr</code></td><td>hyphen-french</td></tr>
 <tr><td>French<sup>3,4,5</sup> (Swiss)</td><td><code>fr-CH</code></td><td>hyphen-french</td></tr>
 <tr><td>Italian</td><td><code>it</code></td><td>hyphen-italian</td></tr>
@@ -76,10 +76,10 @@ its hyphenation patterns. Note: MiKTeX may use different package names.</p>
 <p class="noindent">NOTES</p>
 <p>1. In German, the unstarred <code>\setlang</code>
 uses contemporary <span class="nowrap">(post-1996)</span> rules.
-The starred <code>\setlang*</code> uses older (1901) rules.</p>
+The starred <code>\setlang*</code> uses older (1901) rules.
+Swiss German has little or no change from old to new.</p>
 <p>2. In German, package <code>dehyph-exptl</code> provides more
-recent rules than does <code>hyphen-german</code>. If installed, it will
-be used.</p>
+recent rules than does <code>hyphen-german</code>. Install both packages.</p>
 <p>3. French (<code>fr</code>) : The unstarred <code>\setlang</code> adds
 extra space before the colon, semicolon, exclamation, and question marks.
 It also adds extra space after opening guillemets, and before closing

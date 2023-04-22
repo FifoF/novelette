@@ -1,43 +1,87 @@
-%% This is file `novelette-filler.sty',
-%% part of `novelette' document class.
-%% Copyright 2023 Robert Allgeyer.
-%%
-%% This file may be distributed and/or modified under the
-%% conditions of the LaTeX Project Public License, either version 1.3c
-%% of this license or (at your option) any later version.
-%% The latest version of this license is in
-%%    http://www.latex-project.org/lppl.txt
-%% and version 1.3c or later is part of all distributions of LaTeX
-%% version 2005/12/01 or later.
-%%
-\ProvidesFile{novelette-filler.sty}%
-[2023/01/20 v0.2 LaTeX file (filler text)]
-%%
+\documentclass{novelette}
+\title{Decay of the Art of Lying}
+\author{Mark Twain}
+\mode{draft}
+\intent{none}
+\setfont{main}{default}
+\setfont{deco}{default}
+\setlang{en-US}
+\warnalert
+\setmicrotype{default}
+\labelfont
+\begin{document}
+\frontmatter
 
+\begin{display}
+\vfil
+\begin{center}
+\decofont{Decay}\par
+\decofont{of the}\par
+\decofont{Art of Lying}\par
+\end{center}
+\null\null\null\null
+\vfil
+\end{display}
 
-%% FILLER TEXT
-%% ----------------------------------------------------------------------------
-% Novelette does not load the `lipsum' package, or `blindtext'.
-% If you need filler text, command \fillertext inserts the following text.
-% An error will be issued if you use \fillertext in final mode.
-%   The text is heavily edited from "The Decay of the Art of Lying"
-% by American author Mark Twain (Samuel Clemens), 1835-1910.
-%   Due to passage of time since the death of its author,
-% it is in the Public Domain of the United States of America,
-% and of nations that agree to the Berne Copyright Convention.
-% Other nations may have different laws regarding Public Domain.
-%   The plain text was obtained from a well-known online free text site,
-% which discourages use of its name in re-distributed files.
-%   Edits were made in the interest of modern usage.
-%%
+\memo{Frontispiece image, instead of the usual blank page.}
+\begin{display}
+\vfil
+\image{twainline.png}
+{\centering Samuel Clemens\par}
+\vfil
+\end{display}
 
+\begin{display}
+\null\null\null\null\null\null
+\begin{center}
+\decofont{Decay}\par
+\decofont{of the}\par
+\decofont{Art of Lying}\par
+\null\null
+\decofont{Mark Twain}\par
+\vfill
+Demonstration of the Novelette Document Class\par
+\end{center}
+\end{display}
 
-%%
-\long\def\fillertext{%
-  \ifthenelse{\equal{\nvt@mode}{final}}{%
-    \ClassWarningNoLine{novelette}{%
-      Using \string\fillertext\space in final mode.}%
-  }{}%
+\begin{display}
+\vfill
+\begin{center}
+Decay of the Art of Lying\\
+/ Mark Twain\par
+Mark Twain is the pseudonym of American\\
+author Samuel Clemens (1835--1910)\par
+The text and image are in the Public Domain\\
+of the United States of America, and of nations\\
+subscribing to the Berne Copyright Convenion,\\
+due to passage of time (over 100 years) since\\
+initial publication and the death of its author.\par
+This is a work of fiction.\par
+Novelette project page:\\
+https/github.com/rallg/novelette\par
+\end{center}
+\null\null
+\end{display}
+
+\begin{display}
+\vfil
+{\centering\ital{Give 'em Hell}\par}
+\vfil
+\end{display}
+
+\blankpage
+
+\mainmatter
+
+\begin{opening}
+\null\null\null\null\null\null
+\name{Decay of the Art of Lying}
+\null\null\null\null\null\null\null\null
+\end{opening}
+\init{S}{amuel Clemens,} known as Mark Twain, opined that the Art of Lying
+was in decay. This is an excerpt from his speech.
+
+\scene{-}
 
 I do not mean to suggest that the \ital{custom} of lying has
 suffered any decay or interruption. The Lie, as a Virtue, a
@@ -64,6 +108,13 @@ Now let us see what the philosophers say. Note that venerable proverb:
 Children and fools \ital{always} speak the truth. The deduction is plain:
 adults and wise persons \ital{never} speak it.
 
+\memo{This is an example of a memo. It is like a comment. Nothing within
+the memo braces will print.
+  You may use multiple lines. If you write any TeX code within the memo
+it will be ignored (unless it is a syntax error).
+  Unlike the percent comment, a memo is not placed at the end of a line.
+It must be separate from any paragraph (or other content) above and below.}
+
 Parkman, the historian, says,
 ``The principle of truth may itself be carried into an absurdity.'' In
 another place in the same chapters he says, ``The saying is old that
@@ -71,7 +122,7 @@ truth should not be spoken at all times; and those whom a sick
 conscience worries into habitual violation of the maxim are imbeciles
 and nuisances.''
 
-That  is strong language, but true.
+That is strong language, but true.
 None of us could \ital{live} with an habitual truth-teller;
 but thank goodness none of us has to. An habitual truth-teller is simply
 an impossible creature who does not exist, and never has existed.
@@ -105,8 +156,8 @@ reflect that that sort of a soul is not strictly worth saving.
 Whoever tells a lie to help a poor devil out of trouble, is one of whom the
 angels doubtless say, ``Lo, let us exalt this magnanimous liar.''
 
-An injurious lie is an uncommendable thing; and so, also, and in the
-same degree, is an injurious truth. Lying is universal: we \ital{all} do it.
+An injurious lie is an uncommendable thing; and so, also, and in the same
+degree, is an injurious truth. Lying is universal: we \ital{all} do it.
 Therefore, the wise thing is for us
 diligently to train ourselves to lie thoughtfully, judiciously; to lie
 with a good object, and not an evil one; to lie for others' advantage,
@@ -123,11 +174,5 @@ Joking aside, I think there is much need of wise examination into what
 sorts of lies are best and wholesomest to be indulged, seeing we \ital{must}
 all lie and we \ital{do} all lie.
 
-}
-%%
-
-
-%%
-\endinput
-%% End of file novelette-filler.sty.
-
+\cleartoend
+\end{document}

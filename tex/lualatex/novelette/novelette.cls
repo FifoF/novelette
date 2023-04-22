@@ -93,6 +93,7 @@
 \newif\ifnvt@warnalert % True issues warning when alerts > 0.
 \newif\ifnvt@warnalt % True if \altfont used without Libertinus Serif.
 \newif\ifnvt@sheetfeed % True if \sheetfeed is other than trimsize.
+\newif\ifnvt@didlabel % True after mainfont name is written on first page.
 %%
 
 
@@ -253,10 +254,7 @@
   \nvt@process@metadata
   \nvt@process@pdfboxes
   \RequirePackage{novelette-shading}
-  \ifthenelse{\equal{\nvt@mode}{final}}{\global\nvt@warnalertfalse}{}
-  \ifthenelse{\equal{\nvt@mode}{draft}}{\nvt@labeldraft}{}
-  \ifthenelse{\equal{\nvt@mode}{shade}}{\nvt@labelshade}{}
-  \ifthenelse{\equal{\nvt@mode}{align}}{\nvt@labelalign}{}
+%%%%%  \ifthenelse{\equal{\nvt@mode}{final}}{\global\nvt@warnalertfalse}{}
   \RequirePackage{novelette-filler}
 }
 %%

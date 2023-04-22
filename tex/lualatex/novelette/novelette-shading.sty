@@ -15,7 +15,7 @@
 %%
 
 
-%% LABEL MODE, SHADE MARGINS, SHADE LINES
+%% SHADE MARGINS, SHADE LINES
 % Novelette provides several methods for ensuring that your printed content
 % is aligned with your page layout.
 %   In \mode{shade}, the four margins are shaded gray. In \mode{align}
@@ -24,11 +24,6 @@
 % Both of these modes also automatically invoke draft mode.
 %   Novelette allows a small amount of padding at the side margins, so that
 % protruding text does not infringe the margins.
-%   In any mode except final, each page is labeled by mode, the title changes,
-% and the PDF metadata will be modified to exclude PDF/X conformance. The page
-% labels are provided here. Novelette automatically switches out of final mode
-% if errors or some warnings are detected, but by then it is too late to
-% label the pages.
 %%
 
 
@@ -51,34 +46,6 @@
   \else%
     \put(\nvt@temp@l+\nvt@mout,-.5\pageheight-.5\nvt@trimh+\nvt@mbot){#1}%
   \fi%
-}
-%%
-
-
-%% PAGE LABELS
-\def\nvt@labeldraft{%
-  \AddToHook{shipout/foreground}{%
-    \nvt@print@UL{%
-      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{%
-        {\normalfont\addfontfeature{ScaleAgain=.75}%
-           MODE: DRAFT. Main Font: \nvt@main@font}%
-  }}}%
-}
-\def\nvt@labelshade{%
-  \AddToHook{shipout/foreground}{%
-    \nvt@print@UL{%
-      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{%
-        {\normalfont\addfontfeature{Scale=.75}%
-          MODE: SHADE. Main Font: \nvt@main@font}%
-  }}}%
-}
-\def\nvt@labelalign{%
-  \AddToHook{shipout/foreground}{%
-    \nvt@print@UL{%
-      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{%
-        {\normalfont\addfontfeature{Scale=.75}%
-           MODE: ALIGN. Main Font: \nvt@main@font}%
-  }}}%
 }
 %%
 

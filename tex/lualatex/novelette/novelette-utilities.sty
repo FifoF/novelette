@@ -220,7 +220,7 @@
 %% \cleartorecto works same as \clearpage when next page is recto.
 %   If next page would be verso, a blank verso is inserted,
 %   so that the following material is recto.
-% \cleartoend is used at very end of book. Only effective in final mode.
+% \cleartoend is used at very end of book.
 %   It adds a blank page. If the blank is verso, end of book.
 %   But if that blank is recto, it adds a second blank page, end of book.
 %   So, the book always ends with a blank verso.
@@ -231,16 +231,14 @@
   \fi
 }
 \gdef\cleartoend{
-  \ifthenelse{\equal{\nvt@mode}{final}}{
-    \ifnvt@cleartoend\else
-      \clearpage
-      \ifodd\c@page
-        \thispagestyle{empty}\null\clearpage
-      \fi
+  \ifnvt@cleartoend\else
+    \clearpage
+    \ifodd\c@page
       \thispagestyle{empty}\null\clearpage
     \fi
-    \global\nvt@cleartoendtrue
-  }{}
+    \thispagestyle{empty}\null\clearpage
+  \fi
+  \global\nvt@cleartoendtrue
 }
 %%
 
@@ -254,6 +252,23 @@
 }
 %%
 
+
+%%
+\def\nvt@fontlabel{%
+  \ifnvt@didlabel\else%
+    \nvt@print@UL{%
+      \hspace*{\nvt@spad}\raisebox{\nvt@dscn}{%
+        {\normalfont\addfontfeature{ScaleAgain=.75}Main Font: \nvt@main@font}%
+      }%
+    }%
+    \global\nvt@didlabeltrue%
+  \fi%
+}
+\def\labelfont{%
+  \ifthenelse{\equal{\nvt@mode}{final}}{}{%
+    \AddToHook{shipout/foreground}{\nvt@fontlabel}%
+  }%
+}
 
 
 %%

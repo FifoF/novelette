@@ -155,9 +155,8 @@
 %   Each display starts on a new page, and concludes with a new page.
 % Note that TeX disregards multiple requests for a new page, unless there
 % is something (even an intentional blank page) in between.
-%   On a display page, all items are horizontally centered by default.
-% There is no paragraph indent. There is a one-line gap between paragraphs.
-% Header and footer will be empty.
+%   On a display page, here is no paragraph indent. There is a one-line gap
+% between paragraphs. Header and footer will be empty.
 %%
 \newenvironment{display}{%
   \clearpage%
@@ -167,11 +166,8 @@
   \nvt@indisplaytrue%
   \setlength\parindent{0pt}%
   \setlength\parskip{\nvt@leading}%
-  \begin{center}%
 }{% End the environment:
-  \end{center}%
   \endgroup%
-  \vfil%
 }
 \AfterEndEnvironment{display}{\clearpage}
 %%
@@ -187,6 +183,7 @@
     \StrBehind{\nvt@temp@s}{align=}[\nvt@temp@s]%
     \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
     \StrLeft{\nvt@temp@s}{1}[\nvt@temp@s]%
+    \ifthenelse{\equal{\nvt@temp@s}{}}{\def\nvt@temp@s{c}}{}%
     \def\nvt@alignchoice{:l:c:r:o:i:}%
     \IfSubStr{\nvt@alignchoice}{:\nvt@temp@s:}{}{%
       \ClassWarning{novelette}{Bad value for align in \string\style.^^J%

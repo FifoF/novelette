@@ -3,22 +3,22 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 <title>Novelette - Documentation - Main Matter</title>
-<link rel="stylesheet" type="text/css" href="novelette.css">
+<link rel="stylesheet" type="text/css" href="novelette-resource/novelette.css">
 </head>
 <body>
 <div id="main">
 
 <h2>Novelette - Documentation</h2>
-<p class="links">On Other Pages:
+<p class="links">
 <a href="novelette.html">Overview</a>
 <a href="novelette-setup.html">Setup</a>
 <a href="novelette-preamble.html">Preamble</a>
 <a href="novelette-frontmatter.html">Frontmatter</a>
 <a href="novelette-language.html">Language</a>
-</p>
-<p class="links">On This Page:
-<a href="#mainmattercommands">Mainmatter-Commands</a>
-<a href="#mainmatterexample">Mainmatter-Example</a>
+<a href="novelette-idegui.html">IDE-GUI</a>
+<a href="novelette-images.html">Images</a>
+<a href="novelette-specialchar.html">Special&nbsp;Characters</a>
+<a href="novelette-textstyle.html">Text&nbsp;Styles</a>
 </p>
 
 
@@ -66,7 +66,7 @@ provide space at the top of the page, or between items on the page.</p>
 <a href="#init">\init</a>[<i>kern</i>]{<i>letter</i>}{<i>words</i>} text.<br>
 And more text, and more text, etc.<br>
 <a href="#scene">\scene</a>{<i>text</i>}<br>
-And more text, and more text, etc.<br>
+And more text.<a href="#footnotes">\footnote</a>{With a footnote.}<br>
 &nbsp;<br>
 Then another opening, and so forth.<br>
 &nbsp;<br>
@@ -194,6 +194,34 @@ scene break. The only solution is to re-write.</p>
 </div>
 
 
+<a id="footnotes"></a>
+<div>
+<h3>Footnotes</h3>
+<p>Novelette is not intended for academic works. It only supports the kind of
+footnote used by authors, to make a remark. These are known as "literary
+style". The reference marks are symbols, not numbers.</p>
+<ul>
+<li><code>\footnote{Content of the footnote.}</code> places a reference mark
+at the point in the main text, and writes the marked footnote at the bottom
+of that page.</li>
+<li><code>\footnotez{Content of the footnote.}</code> does not place a
+reference mark, either in main text or at the footnote. This style is
+sometimes used when a footnote applies to entire chapter, rather than to
+any specific text. It is the only kind of footnote that may be attached
+within an opening.</li>
+</ul>
+<p>The footnote is left-aligned (not indented), separated from main text
+by a short line, and at slightly smaller text size. If a footnote continues
+for more than one paragraph (don't do it!) then the additional paragraph
+is indented.</p>
+<p>Marked footnotes use symbols <code>* † ‡ §</code> (asterisk, dagger,
+daggerdbl, section) then repeat as pairs <code>** †† ‡‡ §§</code>. If more
+than 8 marked footnotes in a chapter, they re-start with asterisk. The cycle
+is re-set to asterisk at each opening.</p>
+<p>Pages with the display environment may not have footnotes.</p>
+</div>
+
+
 <a id="cleartoend"></a>
 <div>
 <h4>\cleartoend<br>
@@ -263,7 +291,8 @@ story is: Do not eat radioactive worms.<br>
 
 
 
-</div><div>&nbsp;</div>
+</div>
+<div>&nbsp;</div>
 </body>
 </html>
 

@@ -3,24 +3,23 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 <title>Novelette - Documentation - Text Style</title>
-<link rel="stylesheet" type="text/css" href="novelette.css">
+<link rel="stylesheet" type="text/css" href="novelette-resource/novelette.css">
 </head>
 <body>
 <div id="main">
 
 <h2>Novelette - Documentation</h2>
-<p class="links">On Other Pages:
+<p class="links">
 <a href="novelette.html">Overview</a>
+<a href="novelette-setup.html">Setup</a>
 <a href="novelette-preamble.html">Preamble</a>
 <a href="novelette-frontmatter.html">Frontmatter</a>
 <a href="novelette-mainmatter.html">Mainmatter</a>
 <a href="novelette-language.html">Language</a>
+<a href="novelette-idegui.html">IDE-GUI</a>
+<a href="novelette-images.html">Images</a>
+<a href="novelette-specialchar.html">Special&nbsp;Characters</a>
 </p>
-<p class="links">On This Page:
-<a href="#basics">Basics</a>
-</p>
-<a id="setup"></a>
-<div>
 
 
 <h2>Text Style Commands</h2>
@@ -43,8 +42,105 @@ more commands, because Novelette disables <code>\usepackage</code> and
 </div>
 
 
+<a id="blockindent"></a>
+<div>
+<h3>Block Indent</h3>
+<p>You may indent one or more entire paragraphs:</p>
+<p class="code"><code>
+\begin{blockindent}[<i>integer,integer</i>]<br>
+Stuff to be indented.\par<br>
+More stuff to be indented.\par</br>
+\end{blockindent}
+</code></p>
+<p class="noindent">Without the optional argument, the block is left-indented
+1 normal paragraph indent. With a single integer as optional argument,
+the block is left-indented that many multiples or the normal indent.
+With two comma-separated integers, indents are at left and right.</p>
+<p>Within the block, the first line of each paragraph will be indented
+relative to the block. If you wish, remove that indent by writing
+<code>\noindent</code> or <code>\backindent</code> at the beginning of
+the paragraph.</p>
+</div>
+
+
+<a id="centering"></id>
+<div>
+<h3>Centering</h3>
+<p>There are two methods for centering text. If the centered text should not
+fill the entire textwidth, you may create a symmetrical block indent, then
+write the centered text within the block.</p>
+<ul>
+<li><code>{\centering Text of a centered paragraph\par}</code> may be used
+when there is only one paragraph to be centered. Note the placement of
+braces, and the use of <code>\par</code>. You may use <code>\\</code>
+to break lines within the paragraph.</li>
+<li><code>\begin{center} One or more paragraphs. \end{center}</code> creates
+an environment, that centers everything within it.</li>
+<li>Other TeX document classes add vertical space above and below centered
+text. Novelette does not.</li>
+</ul>
+</div>
+
+<!-- ragged right, noindent, nohyphens, parskip -->
+
+
+<a id="poetry"></a>
+<div>
+<h3>Poetry (Verse)</h3>
+<p>Novelette does not have special commands for setting poems. Use block
+indent, and <code>\noindent</code> each paragraph. Manually break lines,
+using <code>\\</code>, and end each paragraph with <code>\par</code>.</p>
+</div>
+
+
+
 <h3>MORE TO COME</h3>
 
+
+<!--
+
+ITALICS
+	\ital{Text in italics}
+Includes trailing italic correction. May include more than one paragraph.
+
+
+SMALL CAPS
+	\smcp{Lowercase text in small caps}
+Only uses real small caps, not faked. If your font does not have them,
+then the result is ordinary text.
+	\allsmcp{All included text in small caps}
+Uses the smcp and c2sc features, if available in the font.
+
+
+MEDIUM CAPS
+	\medcap{TEXT} -or- \medcaps{TEXT}
+Fakes "medium caps" at height between small caps and ordinary uppercase.
+Useful for acronyms, where small caps are too small, uppercase too big.
+Be sure that the TEXT is uppercase (lowercase will look bad).
+	If the font does not have the `c2sc' OpenType feature, TEXT is unchanged.
+If you need italics, use this order. Note the use of braces:
+	\ital{\medcap{TEXT}}
+
+
+\cleartorecto
+
+\sups
+\subs
+\lnum
+
+\liga
+\dlig
+
+
+%% START STEALING SHEEP
+	\baa
+If you write command \baa at the start of a paragraph, it will slightly
+squeeze the text, just for that one paragraph. If you are lucky, a paragraph
+with N lines and only a little text on the last line, may be squeezed down
+to N-1 lines.
+	\baa is the sound of a sheep. This is a typographic in-joke.
+
+-->
 
 
 </div>

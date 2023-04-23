@@ -65,23 +65,28 @@ not matter whether or not you put a backslash in front of them.</p>
 character code. In most cases, you cannot define macros within the document
 body. You cannot enter math mode, create tables, or do tab alignment.</p>
 <p>These characters retain their special meaning:</p>
-<p><code>\</code> (backslash) begins a command. If you need to print a
-backslash character, use <code>\textbackslash</code> instead.</p>
-<p><code>{</code> and <code>}</code> create a group. If you need to print
-those characters, use <code>\{</code> and <code>\}</code> instead.</p>
-<p><code>~</code> (tilde) is a non-breaking space. If you need to print the
+<ul>
+<li><code>\</code> (backslash) begins a command. If you need to print a
+backslash character, use <code>\textbackslash</code> instead.</li>
+<li><code>{</code> and <code>}</code> create a group. If you need to print
+those characters, use <code>\{</code> and <code>\}</code> instead.</li>
+<li><code>~</code> (tilde) is a non-breaking space. If you need to print the
 tilde character (rather than place a tilde over another character),
-use <code>\textasciitilde</code> instead.</p>
-<p><code>%</code> (percent) begins a comment. It does not print, and anything
+use <code>\textasciitilde</code> instead.</li>
+<li><code>%</code> (percent) begins a comment. It does not print, and anything
 after it on the same line (of plain text) does not print. If you wish to
-print % and also print what follows, use <code>\%</code> instead.</p>
-<p>Actually, it is better to not use <code>%</code> anywhere in the document
+print % and also print what follows, use <code>\%</code> instead.</li>
+</ul>
+<p class="noindent">It is better to not use <code>%</code> in the document
 body. Did you really mean comment, or did you really mean to print % there?
-TeX cannot read your mind, and does not throw an error or warning. But Novelette
-helps you: If it sees <code>%</code> in document body, without preceding
-backslash, it writes an ALERT message in the log file. Then you can either
-change the naked <code>%</code> to <code>\%</code> so that it prints,
-or use <code>\memo{}</code> if you meant comment.</p>
+TeX cannot read your mind.</p>
+<p>If you write <code>\percenterror</code> in Preamble, Novelette will throw
+an error when it sees <code>%</code> used as comment. It will not perform
+the comment (it will print the following text). Backslashed <code>\%</code>
+remains as ordinary, printed % symbol.</p>
+<p>The <code>\memo{<i>this content is ignored</i>}</code> command should be
+used instead of percent comment. However, unlike <code>%</code>, anything
+after <code>\memo{}</code> on the same line (of source text) will print.</p>
 </div>
 
 

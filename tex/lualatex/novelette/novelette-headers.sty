@@ -24,7 +24,6 @@
 \gdef\footruleskip{0pt}
 \gdef\headrulewidth{0pt}
 \gdef\footrulewidth{0pt}
-\def\headrule{\unskip}
 %%
 
 
@@ -39,8 +38,8 @@
 
 %%
 \def\nvt@headily#1{%
-  {\rule{0pt}{\nvt@leading-\nvt@dscn}%
-  {\nvt@headfont\addfontfeature{LetterSpace=4}#1}}%
+  \rule{0pt}{\nvt@leading-\nvt@dscn}%
+  {\nvt@headfont\addfontfeature{LetterSpace=4}#1}%
 }
 \def\nvt@widebar{%
   \rule[-\nvt@dscn]{.08em}{\nvt@dscn+\nvt@ascn}%
@@ -51,20 +50,17 @@
 %% PROCESS HFSTYLE
 \def\nvt@processnvt@hfstyle{ % Called AtEndPreamble.
   \ifthenelse{\equal{\nvt@hfstyle}{1}}{
-    \fancyfoot[CO,CE]{\rule{0pt}{\nvt@ascn}%
-      {\nvt@headfont\pagenumber}}
+    \fancyfoot[CO,CE]{\nvt@headily{\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{2}}{
     \fancyhead[CE]{\nvt@headily{\nvt@versohead}}
     \fancyhead[CO]{\nvt@headily{\nvt@rectohead}}
-    \fancyfoot[CO,CE]{\rule{0pt}{\nvt@ascn}%
-      {\nvt@headfont\pagenumber}}
+    \fancyfoot[CO,CE]{\nvt@headily{\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{3}}{
     \fancyhead[LE]{\nvt@headily{\nvt@versohead}}
     \fancyhead[RO]{\nvt@headily{\nvt@rectohead}}
-    \fancyfoot[LE,RO]{\vfil\leavevmode\rule{0pt}{\nvt@leading}%
-     {\nvt@headfont\pagenumber}}
+    \fancyfoot[LE,RO]{\nvt@headily{\pagenumber}}
   }{}
   \ifthenelse{\equal{\nvt@hfstyle}{4}}{
     \fancyhead[LE]{\nvt@headily{\pagenumber}}

@@ -78,6 +78,7 @@
 \newif\ifcolors@ % Always false. Compatibility.
 \newif\ifmsdoc % Always false. Compatibility with some packages.
 \newif\ifnvt@ok % Local scratch boolean. Typically used for and/or series.
+\newif\ifnvt@sheetfeed % True if \sheetfeed is other than trimsize.
 \newif\ifnvt@sent@colormsg % When true, prevents color warning duplicates.
 \newif\ifnvt@inopening % True within opening environment.
 \newif\ifnvt@indisplay % True within display environment.
@@ -92,8 +93,8 @@
 \newif\ifnvt@err % True if Novelette (not LaTeX) issued an error.
 \newif\ifnvt@warnalert % True issues warning when alerts > 0.
 \newif\ifnvt@warnalt % True if \altfont used without Libertinus Serif.
-\newif\ifnvt@sheetfeed % True if \sheetfeed is other than trimsize.
 \newif\ifnvt@didlabel % True after mainfont name is written on first page.
+\newif\ifnvt@percenterror % True if percent symbol used for comment in body.
 %%
 
 
@@ -254,7 +255,6 @@
   \nvt@process@metadata
   \nvt@process@pdfboxes
   \RequirePackage{novelette-shading}
-%%%%%  \ifthenelse{\equal{\nvt@mode}{final}}{\global\nvt@warnalertfalse}{}
   \RequirePackage{novelette-filler}
 }
 %%
@@ -287,22 +287,16 @@
   \catcode`\&=12
   \catcode`\^=12
   \gdef\nvt@sdqused{ALERT: Used straightdblquote, page \thepage.}
-  \begingroup
-    \lccode`\~="0022
-    \lowercase{\endgroup%
-      \gdef~{\straightdblquote\typeout{\nvt@sdqused}\stepcounter{nvt@alert}}%
-    }%
+  \begingroup\lccode`\~="0022
+  \lowercase{\endgroup%
+    \gdef~{\straightdblquote\typeout{\nvt@sdqused}\stepcounter{nvt@alert}}%
+  }
   \catcode`\"=13
   \def\({(}
   \def\){)}
   \def\[{[}
   \def\]{]}
-  \gdef\nvt@pctused{ALERT: Used percent symbol for comment, page \thepage.}
-  \begingroup
-    \lccode`\~="0025
-    \lowercase{\endgroup\gdef~{\typeout{\nvt@pctused}\stepcounter{nvt@alert}}%
-    }%
-  \catcode`\%=13
+  \ifnvt@percenterror\nvt@error@percent\fi
 }
 %%
 
@@ -383,9 +377,13 @@
   \typeout{\log@mto}
   \log@imagespecs
   \typeout{\nvt@signoffmsg}
-  \ifnum\value{nvt@alert}=0\else\typeout{ALERT(s) issued. See log file.}\fi
-  \ifnvt@err\typeout{*** NOVELETTE ERROR. OUTPUT IS INVALID. ***}\fi
-  \typeout{*******************************************************************}
+  \ifnum\value{nvt@alert}=0\else
+    \typeout{************ Warnings or ALERTs issued. See log file. ***********}
+  \fi
+  \ifnvt@err
+    \typeout{**** NOVELETTE ERROR OR CRITICAL WARNING. OUTPUT IS INVALID. ****}
+  \fi
+  \typeout{*****************************************************************}
   \typeout{^^J}
 }
 %%

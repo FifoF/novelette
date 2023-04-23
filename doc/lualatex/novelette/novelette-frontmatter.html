@@ -74,14 +74,17 @@ header or footer, they still occupy space.</p>
 
 <a id="memo"></a>
 <div>
-<h4><code>\memo{<i>Non-printing text.</i>}</code></h4>
+<h4><code>\memo{<i>this content is ignored</i>}</code></h4>
 <p>Novelette strongly discourages the use of percent <code>%</code> comments.
 This is because % is a useful text character. If you forget to write
 <code>\%</code> with the backslash, then the remainder of the text line does
 not print. That may not be what you intended to do.</p>
 <p>Instead, use the <code>\memo{}</code> command. Its content does not print.
 The content may be multi-line. It may be quite lengthy.</p>
-<p>A memo may not be placed mid-paragraph. It must stand by itself.</p>
+<p>There is a difference between <code>%</code> and <code>\memo{}</code>.
+After the <code>\memo{}</code> closing brace, anything on the same line
+(of source text) will print:</p>
+<p class="code"><code>This prints \memo{not this} and this prints.</code></p>
 </div>
 
 

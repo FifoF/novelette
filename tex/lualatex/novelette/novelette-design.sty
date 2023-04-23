@@ -175,20 +175,12 @@
     \@setfontsize\normalsize{\nvt@fontsize}{\nvt@temp@l}}
   \normalsize % Temporary.
   \sbox0{\mainfont 3456789JÀÁÂÃÄÅÇçjfhlygpqþ} % Highest and lowest Latin-1.
-  \global\deflength\nvt@ascn{\ht0}
-  \global\deflength\nvt@dscn{\dp0}
-  \sbox0{\mainfont X}
-  \ifdimcomp{\ht0}{>}{0pt}{
-    \global\deflength\nvt@Xht{\ht0}
-  }{\global\deflength\nvt@Xht{.65\nvt@fontsize}}
-  \sbox0{\mainfont x}
-  \ifdimcomp{\ht0}{>}{0pt}{
-    \global\deflength\nvt@xht{\ht0}
-  }{\global\deflength\nvt@xht{.4\nvt@fontsize}}
+  \global\deflength\nvt@ascn{\ht0} % Temporary.
+  \global\deflength\nvt@dscn{\dp0} % Temporary.
   \ifdefined\nvt@lpp\else\nvt@default@lpp\fi
+  \setlength\nvt@temp@l{\nvt@totalh}
   \ifnvt@header
     \ifnvt@footer
-      \setlength\nvt@temp@l{\nvt@totalh}
       \FPadd{\nvt@temp@d}{\nvt@lpp}{2}
       \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@gap}
       \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@gap}
@@ -198,10 +190,11 @@
     \fi
   \else
     \ifnvt@footer
+      \addtolength\nvt@temp@l{\nvt@dscn}
       \FPadd{\nvt@temp@d}{\nvt@lpp}{1}
       \FPadd{\nvt@temp@d}{\nvt@temp@d}{\nvt@gap}
     \else
-      \setlength\nvt@temp@l{\nvt@totalh+\nvt@ascn-2\nvt@dscn}
+      \addtolength\nvt@temp@l{\nvt@ascn-2\nvt@dscn}
       \def\nvt@temp@d{\nvt@lpp}
     \fi
   \fi
@@ -210,16 +203,14 @@
   \global\deflength\nvt@leading{\nvt@temp@n pt}
   \global\deflength\baselineskip{\nvt@leading}
   \ifnvt@header
-    \ifnvt@footer
       \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh-1in}
       \global\deflength\topskip{\nvt@leading}
-    \fi
   \else
-    \ifnvt@footer\else
+%    \ifnvt@footer\else
       \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh%
         -1in-\nvt@leading+\nvt@ascn}
       \global\deflength\topskip{\nvt@leading}
-    \fi
+%    \fi
   \fi
   \global\deflength\textheight{\nvt@lpp\nvt@leading}
   \xdef\log@text{%
@@ -321,9 +312,17 @@
   \FPdiv{\nvt@temp@n}{\strip@pt\nvt@temp@l}{\strip@pt\nvt@leading}
   \FPifgt{\nvt@temp@n}{1}%
     \nvt@error{Too many lines per page. Requested number cannot fit.^^J%
-      cannot fit. If you need that exact number, change something else.^^J%
+      If you need that exact number, change something else.^^J%
       See Novelette documentation for possibilities.}%
   \fi
+  \sbox0{\mainfont X}
+  \ifdimcomp{\ht0}{>}{0pt}{
+    \global\deflength\nvt@Xht{\ht0}
+  }{\global\deflength\nvt@Xht{.65\nvt@fontsize}}
+  \sbox0{\mainfont x}
+  \ifdimcomp{\ht0}{>}{0pt}{
+    \global\deflength\nvt@xht{\ht0}
+  }{\global\deflength\nvt@xht{.4\nvt@fontsize}}
   \ifnvt@header
     \global\deflength\headheight{\nvt@leading}
     \global\deflength\headsep{\nvt@gap\nvt@leading-\nvt@dscn}

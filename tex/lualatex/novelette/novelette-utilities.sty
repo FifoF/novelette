@@ -139,12 +139,8 @@
 
 %% \memo{} does not print or save its argument. May be more than one paragraph.
 % Useful when you wish to put a note to yourself in the *.tex document.
-% Not the same as % comment. It cannot be used at the end of a text line.
-\long\def\memo#1{%
-  \ifvmode\else%
-    \nvt@error{Command \string\memo\space cannot be used within a paragraph.}%
-  \fi%
-}
+% Not the same as % comment, because anything after \memo{} prints.
+\long\def\memo#1{\ignorespaces}
 %%
 
 
@@ -171,37 +167,71 @@
 
 
 %% BLOCK INDENT (option is integer number of \normalindent, [L,R])
+\def\nvt@tabindent{0}
 \newenvironment{blockindent}[1][1]{%
+  \ifvmode\else\par\fi%
   \begingroup%
   \StrDel{#1}{ }[\nvt@temp@s]%
+  \StrDel{\nvt@temp@s}{:}[\nvt@temp@s]%
+  \StrSubstitute{\nvt@temp@s}{,}{:}[\nvt@temp@s]%
   \nvt@oktrue%
+  \FPdiv{\nvt@temp@d}{\strip@pt\textwidth}{\strip@pt\normalindent}%
   \IfInteger{\nvt@temp@s}{
-    \FPdiv{\nvt@temp@d}{\strip@pt\textwidth}{\strip@pt\normalindent}%
     \FPiflt{\nvt@temp@s}{\nvt@temp@d}%
       \setlength\leftskip{\nvt@temp@s\normalindent}%
+      \xdef\nvt@tabindent{\nvt@temp@s}%
     \else\nvt@okfalse\fi%
   }{%
-    \StrBefore{\nvt@temp@s}{,}[\nvt@temp@n]%
+    \StrBefore{\nvt@temp@s}{:}[\nvt@temp@n]%
     \IfInteger{\nvt@temp@n}{%
       \FPiflt{\nvt@temp@n}{\nvt@temp@d}%
         \setlength\leftskip{\nvt@temp@n\normalindent}%
+        \xdef\nvt@tabindent{\nvt@temp@n}%
       \else\nvt@okfalse\fi%
     }{\nvt@okfalse}%
-    \StrBehind{\nvt@temp@s}{,}[\nvt@temp@n]%
+    \StrBehind{\nvt@temp@s}{:}[\nvt@temp@n]%
     \IfInteger{\nvt@temp@n}{%
       \FPiflt{\nvt@temp@n}{\nvt@temp@d}%
         \setlength\rightskip{\nvt@temp@n\normalindent}%
       \else\nvt@okfalse\fi%
     }{\nvt@okfalse}%
   }%
+  \setlength\nvt@temp@l{\leftskip+\rightskip+4\normalindent}%
+  \ifdimcomp{\nvt@temp@l}{>}{\textwidth}{\nvt@okfalse}{}%
   \ifnvt@ok\else%
     \nvt@error{Bad option for \string\begin{blockindent}.^^J%
       Format: \string\begin{blockindent}[L,R]^^J%
       L is left indent, integer >=0 of normal paragraph indent.^^J%
       R is right indent, integer >=0 of normal paragraph indent.^^J%
-      May use L alone, for only left indent.}%
+      May use L alone, for only left indent.^^J%
+      Remaining block width must be at least 4 normal indents.}%
   \fi%
-}{\endgroup}
+}{%
+  \ifvmode\else\par\fi%
+  \endgroup%
+  \gdef\nvt@tabindent{0}%
+}
+%%
+
+
+%% TABLINE
+\DeclareDocumentCommand\tabline{sO{}mm}{%
+  \noindent%
+  \begingroup%
+  \setlength\leftskip{0pt}%
+  \noindent\strut%
+  \ifthenelse{\equal{\nvt@tabindent}{0}}{}{%
+    \makebox[\nvt@tabindent\normalindent][r]{#2\,}%
+  }%
+  {#3}%
+  \IfBooleanTF{#1}{%
+    \space\leaders\hbox{.\,}\hfill%
+  }{%
+    \hfill%
+  }%
+  {#4}\strut\par%
+  \endgroup%
+}
 %%
 
 
@@ -243,7 +273,7 @@
 %%
 
 
-%%
+%% BLANK PAGE
 \def\blankpage{%
   \clearpage%
   \thispagestyle{empty}%
@@ -253,7 +283,7 @@
 %%
 
 
-%%
+%% FONT LABEL (draft mode, enabled by \labelfont in Preamble)
 \def\nvt@fontlabel{%
   \ifnvt@didlabel\else%
     \nvt@print@UL{%
@@ -269,6 +299,30 @@
     \AddToHook{shipout/foreground}{\nvt@fontlabel}%
   }%
 }
+\@onlypreamble\labelfont
+%%
+
+
+%% PERCENT ERROR (enabled by \percenterror in Preamble)
+\def\nvt@error@percent{
+  \begingroup
+  \lccode`\~="0025
+  \lowercase{\endgroup\gdef~{%
+      \nvt@error{Percent symbol used as comment}
+    }%
+  }
+  \catcode`\%=13
+}
+\newcommand\percenterror{\global\nvt@percenterrortrue}
+\@onlypreamble\percenterror
+%%
+
+
+%% WARN IF ALERTs
+\newcommand\warnalert{\global\nvt@warnalerttrue}
+\@onlypreamble\warnalert
+%%
+
 
 
 %%

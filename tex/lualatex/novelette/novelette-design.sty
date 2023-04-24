@@ -204,18 +204,13 @@
   \global\deflength\baselineskip{\nvt@leading}
   \ifnvt@header
       \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh-1in}
-      \global\deflength\topskip{\nvt@leading}
   \else
-%    \ifnvt@footer\else
-      \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh%
-        -1in-\nvt@leading+\nvt@ascn}
-      \global\deflength\topskip{\nvt@leading}
-%    \fi
+    \global\deflength\topmargin{\nvt@mtop+0.5\pageheight-0.5\nvt@trimh%
+      -1in-\nvt@leading+\nvt@ascn}
   \fi
+  \global\deflength\topskip{\nvt@leading}
   \global\deflength\textheight{\nvt@lpp\nvt@leading}
-  \xdef\log@text{%
-    \string\text{fontsize=\the\nvt@fontsize,lines=\nvt@lpp}%
-  }
+  \xdef\log@text{\string\text{fontsize=\the\nvt@fontsize,lines=\nvt@lpp}}
   \xdef\log@charsperline{Estimated characters per line = \nvt@charsperline}
   \xdef\log@layout{%
     \string\layout{style=\nvt@hfstyle\ifnvt@pnital i\fi,gap=\nvt@gap}%

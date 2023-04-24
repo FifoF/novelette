@@ -8,21 +8,27 @@
 <body>
 <div id="main">
 
-<h2>Novelette - Documentation</h2>
+<h4 class="doctop">Novelette - Documentation</h4>
 <p class="links">
-<a href="novelette.html">Overview</a>
-<a href="novelette-setup.html">Setup</a>
-<a href="novelette-preamble.html">Preamble</a>
-<a href="novelette-frontmatter.html">Frontmatter</a>
-<a href="novelette-mainmatter.html">Mainmatter</a>
-<a href="novelette-language.html">Language</a>
-<a href="novelette-idegui.html">IDE-GUI</a>
-<a href="novelette-images.html">Images</a>
-<a href="novelette-specialchar.html">Special&nbsp;Characters</a>
+&bull;<a href="novelette.html">Overview</a>
+&bull;<a href="novelette-install.html">Installation</a>
+&bull;<a href="novelette-writing.html">Writing&nbsp;Tools</a>
+&bull;<a href="novelette-general.html">General&nbsp;Setup</a>
+&bull;<a href="novelette-preamble.html">Preamble</a>
+&bull;<a href="novelette-frontmatter.html">Frontmatter</a>
+&bull;<a href="novelette-mainmatter.html">Mainmatter</a>
+&bull;<a href="novelette-language.html">Language</a>
+&bull;<a href="novelette-images.html">Images</a>
+&bull;Text&nbsp;Styles
+&bull;<a href="novelette-messages.html">Messages</a>
 </p>
 
 
 <h2>Text Style Commands</h2>
+<p class="noindent">In a work of popular fiction, there are not many text
+styles. Novelette provides a reduced, custom command set, that does just
+what you need. Most standard LaTeX commands are disabled, so if you are
+reading some other documentation, it may be wrong for Novelette.</p>
 
 
 <a id="basics"></id>
@@ -63,12 +69,53 @@ the paragraph.</p>
 </div>
 
 
+<a id="tabline"></a>
+<div>
+<h3>Tab Lines</h3>
+<p>Novelette does not have tables or two-column layout. However, you may
+construct simple tables using the <code>\tabline</code> command. This is
+suitable for a table of contents, or other lists with left and right text.</p>
+<p>Use one or more <code>\tabline</code> within block indent:</p>
+<p class="code"><code>
+\begin{blockindent}[L,R]<br>
+\tabline[<i>option</i>]{<i>left item</i>}{<i>right item</i>}<br>
+<i>additional tablines</i><br>
+\end{blockindent}
+</code></p>
+<p class="noindent">The <i>left item</i> will be left-aligned at <i>L</i>
+indents from left margin. The <i>right item</i> will be right-aligned at
+<i>R</i> indents from right margin. Beteen them is a gap. If you want the gap
+to be filled with a dotted line connecting the items, use
+<code>\tabline*</code> with star.</p> 
+<p>The <i>option</i> is any text. If used, it is probably a number, followed
+by period. It will be placed to the left of the <i>left item</i>, separated
+by space. Be sure that <i>L</i> is large enough to fit the optional text.
+For example, L=1 is probably enough to fit a two-digit number with period.
+But it will not be enough for uppercase Roman numerals. Novelette does not
+adjust for insufficient space. It is your responsibility.</p>
+<p>Example:</p>
+<p class="code"><code>
+{\centering CONTENTS\par}\null<br>
+\begin{blockindent}[4,4]<br>
+\tabline*[1.]{The House}{1}
+\tabline*[2.]{The Ghost}{32}
+\tabline{of Bibbleton Manor}{}
+\tabline*[3.]{Frequent Screams}{53}
+\end{blockindent}
+</code></p>
+<p class="noindent">Above, note how the second tabline was extended.
+Alternatively, the second tabline could have been written without the star
+and page number. Then, the star and page number would be at the extension.</p>
+</div>
+
+
 <a id="centering"></id>
 <div>
 <h3>Centering</h3>
 <p>There are two methods for centering text. If the centered text has multiple
 lines, but you do not want it to span the entire textwidth, then you must
-manually break lines where needed.</p>
+manually break lines where needed. You may not center text within a
+block indent.</p>
 <ul>
 <li><code>{\centering Text of a centered paragraph\par}</code> may be used
 when there is only one paragraph to be centered. Note the placement of
@@ -143,6 +190,8 @@ to N-1 lines.
 -->
 
 
+<h3 class="floatright"><a href="#top">^top</a></h3>
+<p class="noindent">&nbsp;</p>
 </div>
 <div>&nbsp;</div>
 </body>

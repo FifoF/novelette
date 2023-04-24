@@ -8,93 +8,109 @@
 <body>
 <div id="main">
 
-<h2>Novelette - Documentation</h2>
+<h4 class="doctop">Novelette - Documentation</h4>
 <p class="links">
-<a href="novelette.html">Overview</a>
-<a href="novelette-setup.html">Setup</a>
-<a href="novelette-preamble.html">Preamble</a>
-<a href="novelette-frontmatter.html">Frontmatter</a>
-<a href="novelette-mainmatter.html">Mainmatter</a>
-<a href="novelette-language.html">Language</a>
-<a href="novelette-idegui.html">IDE-GUI</a>
-<a href="novelette-specialchar.html">Special&nbsp;Characters</a>
-<a href="novelette-textstyle.html">Text&nbsp;Styles</a>
+&bull;<a href="novelette.html">Overview</a>
+&bull;<a href="novelette-install.html">Installation</a>
+&bull;<a href="novelette-writing.html">Writing&nbsp;Tools</a>
+&bull;<a href="novelette-general.html">General&nbsp;Setup</a>
+&bull;<a href="novelette-preamble.html">Preamble</a>
+&bull;<a href="novelette-frontmatter.html">Frontmatter</a>
+&bull;<a href="novelette-mainmatter.html">Mainmatter</a>
+&bull;<a href="novelette-language.html">Language</a>
+&bull;Images
+&bull;<a href="novelette-textstyle.html">Text&nbsp;Styles</a>
+&bull;<a href="novelette-messages.html">Messages</a>
 </p>
 
 
-
-<a id="overview"></a>
-<div>
-<h3>Images</h3>
-
-<p>You may place raster images in Novelette. The command and options are
-very different from what other document classes use. If you do not read
-this documentation and attempt to place an image by other methods,
+<h2>Images</h2>
+<p class="noindent">You may place raster images in Novelette. The command and
+options are very different from what other document classes use. If you do not
+read this documentation and attempt to place an image by other methods,
 Novelette will send you a nasty error message.</p>
+<p class="links">
+&bull;<a href="#format">Image&nbsp;Specifications</a>
+&bull;<a href="#postprocess">Post&nbsp;Processing</a>
+&bull;<a href="#fakeimage">Fake&nbsp;Images</a>
+&bull;<a href="#imagecommand">\image&nbsp;Command</a>
+&bull;<a href="#examples">Examples</a>
+</p>
 
 
 <a id="format"></a>
 <div>
-<h4>Image Format</h4>
-<p>Novelette images must be monochrome black/white <b>png</b> format, at 1-bit
-per pixel. Each image must be stripped of private metadata, such as EXIF.</p>
-<p>You may not use drawing methods to build an image within Novelette.
-Use a graphics program, and create your image at density 600 pixels per inch
-(236.22 pixels/cm). That is the preferred density, although many print
-services allow 300&mdash;1200 pixels/inch (118.11&mdash;472.44 px/cm).
-When your image design is finished, export a flattened <i>png</i> at that
-density. The <i>png</i> must contain its resolution.</p>
+<h4 class="floatleft">Image Specifications</h4>
+<h4 class="floatright"><a href="#top">^top</a></h4>
+<p class="noindent">Novelette images must meet these specifications.
+If an image fails, Novelette will allow it in draft mode. That allows you
+to write now, deal with image issues later. However, a warning or error will
+be thrown in final mode.</p>
+<ul>
+<li>Created by a graphics program. Cannot draw within Novelette.</li>
+<li>Raster PNG only. No JPG/EPS/PDF/SVG/TikZ.</li>
+<li>Flattened monochrome black/white, at 1-bit per pixel.</li>
+<li>No private metadata (such as EXIF).</li>
+<li>Density 600 pixels/inch (236.22 pixels/cm) preferred.</li>
+<li>Image must contain its resolution (height, width, density).</li>
+<li>Post-processing required for final mode (see below).</li>
+</ul>
+<p class="noindent">Many print services will accept images with a range of
+densities from 300 to 1200 pixels/inch. Standard is 600 pixels/inch for
+monochrome "line art" images.</p>
 </div>
 
 
 <a id="postprocess"></a>
 <div>
-<h4>Post-Processing</h4>
-<p>When you are in draft|shade|align mode, Novelette will allow you to place
-an image that will fail in final mode. This is so you can focus on your
-writing, and deal with image issues later.</p>
-<p>Before using final mode, you must post-process each image. Either the
-<i>ImageMagick</i> or <i>GraphicsMagick</i> command-line program will work.
-You cannot do this in an image editor. For image <i>filename.png</i> :</p>
+<h4 class="floatleft">Post-Processing</h4>
+<h4 class="floatright"><a href="#top">^top</a></h4>
+<p class="noindent">Before using final mode, you must post-process each image.
+Either the <i>ImageMagick</i> or <i>GraphicsMagick</i> command-line program
+will work. You cannot do this in a GUI image editor.
+For image <i>filename.png</i> :</p>
 <ul>
 <li>ImageMagick:
-  <code>magick mogrify -monochrome -strip filename.png</code></li>
+  <code><b>magick mogrify -monochrome -strip filename.png</b></code></li>
 <li>GraphicsMagick:
-  <code>gm mogrify -monochrome -strip filename.png</code></li>
+  <code><b>gm mogrify -monochrome -strip filename.png</b></code></li>
 </ul>
-<p class="noindent">In final mode, Novelette performs a sanity check on each
-image. If any image fails, then build reverts to draft mode, and you will
-be warned.</p>
 </div>
 
 
 <a id="fakeimage"></a>
 <div>
-<h4>Fake Images</h4>
-<p>If not in final mode, Novelette allows "fake" images. These are drawn, gray
-rectangles. Width is half the textwidth. Height is an integer, indicating
-the number of text lines that the fake image displaces. Using fake images
-allows you to <i>write now, do graphics later.</i> The log Summary will tell
-you what real image sizes (pixels at 600ppi) correspond to fake images.</p>
+<h4 class="floatleft">Fake Images</h4>
+<h4 class="floatright"><a href="#top">^top</a></h4>
+<p class="noindent">If not in final mode, Novelette allows "fake" images.
+These are drawn, gray rectangles. Width is half the textwidth. Height is an
+integer, indicating the number of text lines that the fake image displaces.
+Using fake images allows you to <i>write now, do graphics later.</i>
+The log Summary will tell you what real image sizes (pixels at 600ppi)
+correspond to fake images.</p>
 </div>
 
 
 <a id="imagecommand"></a>
 <div>
-<h4><code>\image[<i>placement</i>]{<i>filename.png</i>}<br>
-\image[<i>placement</i>]{<i>integer</i>}</code></h4>
-<p>When it is provided with a file name, <code>\image</code> looks for the
-file, and throws an error if it is not found. The file must be in the same
-directory as the main document, or in a subdirectory. That is, you cannot
-request an image using <code>../</code> to move up a directory, and you
-cannot use an absolute file path.</p>
+<h4 class="floatleft">Image Commands</h4>
+<h4 class="floatright"><a href="#top">^top</a></h4>
+<p class="noindent">Novelette does not use the LaTeX
+<code>\includegraphics</code> command. It uses its own <code>\image</code>
+to place a real or fake image.</p>
+<p class="code">
+Real: <code><b>\image[<i>placement</i>]{<i>filename.png</i>}</b></code><br>
+Fake: <code><b>\image[<i>placement</i>]{<i>integer</i>}</b></code></p>
+<p class="noindent">When it is provided with a file name, <code>\image</code>
+looks for the file, and throws an error if it is not found. The file must be
+in the same directory as the main document, or in a subdirectory. That is,
+you cannot request an image using <code>../</code> to move up a directory,
+and you cannot use an absolute file path.</p>
 <p>In final mode, Novelette will also perform a check on each image. This
 takes time, so it is best to remain in draft mode until you are ready.
 Typesetting is the same.</p>
 <p>When it is provided with an <i>integer</i> instead of a filename,
-Novelette places a "fake image" there. The fake image is a gray rectangle
-at half the textwidth, occupying that integer number of lines. The log
-Summary will tell you what height to use for the real image.</p> 
+Novelette places a "fake image" displacing that many lines of text.</p> 
 <p>If specified, <i>placement</i> may contain a horizontal value, a vertical
 value, or both. Does not matter if space or comma is present. Error if
 conflicting values of the same type. Use one of <code>l c r o i</code>
@@ -137,7 +153,9 @@ itself. Beware of using fine-detail fonts within low-resolution images.</p>
 
 <a id="examples"></a>
 <div>
-<h3>Examples</h3>
+<h3 class="floatleft">Examples</h3>
+<h4 class="floatright"><a href="#top">^top</a></h4>
+<p class="noindent">Some examples of the <code>\image</code> command:</p>
 <ul>
 <li><code>\image{bloodstain.png}</code> place the image at its default
 placement (centered, here if possible).</li>
@@ -151,6 +169,8 @@ text, at bottom of page, aligned to right margin.</li>
 </div>
 
 
+<h3 class="floatright"><a href="#top">^top</a></h3>
+<p class="noindent">&nbsp;</p>
 </div>
 <div>&nbsp;</div>
 </body>

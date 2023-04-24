@@ -8,35 +8,36 @@
 <body>
 <div id="main">
 
-<h2>Novelette - Documentation</h2>
+<h4 class="doctop">Novelette - Documentation</h4>
 <p class="links">
-<a href="novelette.html">Overview</a>
-<a href="novelette-setup.html">Setup</a>
-<a href="novelette-preamble.html">Preamble</a>
-<a href="novelette-frontmatter.html">Frontmatter</a>
-<a href="novelette-mainmatter.html">Mainmatter</a>
-<a href="novelette-language.html">Language</a>
-<a href="novelette-idegui.html">IDE-GUI</a>
-<a href="novelette-images.html">Images</a>
-<a href="novelette-textstyle.html">Text&nbsp;Styles</a>
+&bull;<a href="novelette.html">Overview</a>
+&bull;<a href="novelette-install.html">Installation</a>
+&bull;<a href="novelette-writing.html">Writing&nbsp;Tools</a>
+&bull;General&nbsp;Setup
+&bull;<a href="novelette-preamble.html">Preamble</a>
+&bull;<a href="novelette-frontmatter.html">Frontmatter</a>
+&bull;<a href="novelette-mainmatter.html">Mainmatter</a>
+&bull;<a href="novelette-language.html">Language</a>
+&bull;<a href="novelette-images.html">Images</a>
+&bull;<a href="novelette-textstyle.html">Text&nbsp;Styles</a>
+&bull;<a href="novelette-messages.html">Messages</a>
 </p>
 
 
-<a id="intro"></a>
-<div>
-<h2>Special Characters (or Not)</h2>
+<h2>General Setup</h2>
 
-<p>TeX is notorious for its numerous characters with special meaning:</p>
+<pclass="noindent">TeX is notorious for its numerous characters with
+special meaning:</p>
 <p class="code"><code>\ { } ~ % # $ ^ & _</code></p>
-<p>Some other characters have special meaning, but only in a particular
-context.</p>
+<p class="noindent">Some other characters have special meaning, but only in
+a particular context.</p>
 
 
 <a id="preamble"></a>
 <div>
 <h3>Special Characters in Preamble</h3>
 <p>In the <a href="novelette-preamble.html">Preamble</a>, special characters
-always have their TeX special meanings. This may cause errors.
+always have their TeX special meanings. Incorrect usage causes errors.
 The most likely errors will result if you use a special character in the
 title or author. Examples of <b>bad</b> code:</p>
 <p class="code"><code>
@@ -77,9 +78,9 @@ use <code>\textasciitilde</code> instead.</li>
 after it on the same line (of plain text) does not print. If you wish to
 print % and also print what follows, use <code>\%</code> instead.</li>
 </ul>
-<p class="noindent">It is better to not use <code>%</code> in the document
-body. Did you really mean comment, or did you really mean to print % there?
-TeX cannot read your mind.</p>
+<p class="noindent">It is better to <i>not</i> use <code>%</code> in the
+document body. Did you really mean comment, or did you really mean to
+print % there? TeX cannot read your mind.</p>
 <p>If you write <code>\percenterror</code> in Preamble, Novelette will throw
 an error when it sees <code>%</code> used as comment. It will not perform
 the comment (it will print the following text). Backslashed <code>\%</code>
@@ -90,7 +91,8 @@ after <code>\memo{}</code> on the same line (of source text) will print.</p>
 </div>
 
 
-</div>
+<h3 class="floatright"><a href="#top">^top</a></h3>
+<p class="noindent">&nbsp;</p>
 </div>
 <div>&nbsp;</div>
 </body>

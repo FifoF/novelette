@@ -3,19 +3,22 @@
 body{color:#000000; background-color:#aaaaaa}
 #main{max-width:44em; padding:1em; border:2px solid #000000;
   margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto;
-  background-color:#dddddd}
+  background-color:#f0f0f0}
 *.doctemplate{width:80%; padding:1em; border:1px solid #000000;
   margin-top:1em; margin-bottom:1em; margin-left:auto; margin-right:auto;
   background-color:#ffffff}
 div{margin-top:1em; margin-bottom:1em}
-h2{margin:0em}
-h3{margin-bottom:0em}
-h4{margin-bottom:0em}
+h2{margin:0em; margin-top:1em; margin-bottom:0.5em}
+h3{margin-bottom:0.5em}
+h4{margin-bottom:0.5em}
 p{margin:0em; text-indent:1.5em}
 p.linesp{line-height: 150%}
-p.noindent{text-indent:0em}
+p.noindent{text-indent:0em; clear:both}
 p.links{text-indent:0em; margin-top:.5em; margin-bottom:.5em}
 *.nowrap {white-space:nowrap}
 *.code {margin-left:3em; text-indent:0em}
 code{color:#660000}
 ul{margin:0em;padding-left:1.5em}
+*.doctop{margin:0em}
+*.floatleft{float:left}
+*.floatright{float:right; text-align:right}

@@ -23,9 +23,32 @@
 &bull;Messages
 </p>
 
-<h2>Messages</h2>
 
-<p class="noindent">This file is a work in progress. More to come.</p>
+<h2>Messages</h2>
+<p class="noindent">Warnings, Errors, Alerts, Info, and other messages
+may come from several places. The most baffling are from the essential
+compiler program and its core support. Fortunately, you will only see them
+if you make a syntax error in your document (command name wrong,
+used a number where you should have used a length, and so forth).</p>
+<p>Somewhat more intelligble messages come from packages used by Novelette.
+For example, headers and footers are handled by the <i>fancyhdr</i> package.
+If you get an error or warning from <i>fancyhdr</i>, it means that you
+attempted to write a header/footer that makes no sense.</p>
+<p>Novelette provides its own messages. When it issues a Warning or Error,
+it will specifically tell you how to fix it. Requesting more help is
+ineffective, since all the help you need is already there.</p>
+<p>In a few cases, good code may not be what you intended. Novelette cannot
+read your mind, so it is unsure whether what you wrote is what you meant.
+Then, it will write an Alert message to the log file. If you write command
+<code>\warnalert{on}</code> in Preamble, then a Warning will be issued if one
+or more Alerts are present. GUI programs cannot detect the Alerts, but they
+can detect a Warning. When you are satisfied that the Alerts are not
+problems, remove <code>\warnalert{on}</code>.</p>
+<p>Near the end of the log file, Novelette writes a Summary for your document.
+It shows the various settings, as they were actually used. It also shows
+the default values calculated within Novelette. And, it suggests suitable
+sizes for images, if you use them.</p>
+
 
 
 <h3 class="floatright"><a href="#top">^top</a></h3>

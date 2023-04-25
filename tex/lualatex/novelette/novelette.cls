@@ -94,7 +94,7 @@
 \newif\ifnvt@warnalert % True issues warning when alerts > 0.
 \newif\ifnvt@warnalt % True if \altfont used without Libertinus Serif.
 \newif\ifnvt@didlabel % True after mainfont name is written on first page.
-\newif\ifnvt@percenterror % True if percent symbol used for comment in body.
+\newif\ifnvt@warnpercent % True warns if  percent symbol used for comment.
 %%
 
 
@@ -296,7 +296,7 @@
   \def\){)}
   \def\[{[}
   \def\]{]}
-  \ifnvt@percenterror\nvt@error@percent\fi
+  \ifnvt@warnpercent\nvt@warn@percent\fi
 }
 %%
 

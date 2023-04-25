@@ -56,8 +56,6 @@
 }{% Close the environment:
   \setcounter{nvt@fnmnum}{1}% Footnote markers.
   \endgroup%
-  \nvt@fnzmarkfalse%
-  \setlength\parindent{\normalindent}% Restored.
 }
 \AfterEndEnvironment{opening}{%
   \NoIndentAfterThis%
@@ -99,7 +97,7 @@
   \else%
     \ClassWarning{novelette}{\string\name\space bad option, or not opening^^J%
        or display environment. Wrote unformatted text, on page \thepage.}%
-    {#2}%
+    {#2\par}%
   \fi%
   \endgroup%
 }
@@ -140,7 +138,7 @@
   \else%
     \ClassWarning{novelette}{\string\desc\space bad option, or not opening^^J%
        or display environment. Wrote unformatted text, on page \thepage.}%
-    {#2}%
+    {#2\par}%
   \fi%
   \endgroup%
 }
@@ -174,7 +172,7 @@
 
 
 %% TEXT STYLE (only in display pages)
-\DeclareDocumentCommand\style{O{}+m}{%
+\DeclareDocumentCommand\style{O{}m}{%
   \ifnvt@indisplay%
     \begingroup%
     \setlength\parindent{0pt}%
@@ -193,11 +191,11 @@
     }
     \ifthenelse{\equal{\nvt@temp@s}{r}}{/strut/hfill{}}{}%
     \ifodd\c@page\ifthenelse{\equal{\nvt@temp@s}{o}}{/strut/hfill{}}{}\fi%
-    \ifthenelse{\equal{\nvt@temp@s}{c}}{\begin{center}}{}%
+    \ifthenelse{\equal{\nvt@temp@s}{c}}{\centering}{}%
     \StrDel{#1,}{ }[\nvt@temp@s]%
     \StrBehind{\nvt@temp@s}{font=}[\nvt@temp@s]%
     \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
-    \ifthenelse{\equal{\nvt@temp@s}{deco}}{\nvt@deco@font}{}%
+    \ifthenelse{\equal{\nvt@temp@s}{deco}}{\decofont}{}%
     \StrDel{#1,}{ }[\nvt@temp@s]%
     \StrSubstitute{\nvt@temp@s}{Scale=}{scale=}[\nvt@temp@s]%
     \StrBehind{\nvt@temp@s}{scale=}[\nvt@temp@s]%
@@ -232,14 +230,13 @@
         Choose: bold=true bold=false (default false)^^J%
         The bad value was ignored.}%
     \fi%
-    {#2}%
+    {#2}\par%
     \StrDel{#1,}{ }[\nvt@temp@s]%
     \StrBehind{\nvt@temp@s}{align=}[\nvt@temp@s]%
     \StrBefore{\nvt@temp@s}{,}[\nvt@temp@s]%
     \ifthenelse{\equal{\nvt@temp@s}{l}}{/hfill/strut}{}%
     \ifodd\c@page\ifthenelse{\equal{\nvt@temp@s}{i}}{/hfill/strut}{}\fi%
     \ifthenelse{\equal{\nvt@temp@s}{c}}{\end{center}}{}%
-    \par%
     \endgroup%
   \else%
     \nvt@error{\string\style\space only allowed in display pages.}

@@ -38,7 +38,6 @@ and how to choose their values.</p>
 <a href="#utf8">% !TeX encoding = UTF-8</a><br>
 <a href="#documentclass">\documentclass{novelette}</a><br>
 <a href="#mode">\mode</a>{draft|shade|align|final}<br>
-<a href="#warnalert">\warnalert<br>
 <a href="#title">\title</a>{Title of Your Book}<br>
 <a href="#subtitle">\subtitle</a>{Subtitle, If Any}<br>
 <a href="#author">\author</a>{Author Name}<br>
@@ -53,6 +52,9 @@ and how to choose their values.</p>
 <a href="#intent">\intent</a>{none|SWOP|FOGRA39|JC200103}<br>
 <a href="#setmicrotype">\setmicrotype</a>{microtype setup}<br>
 <a href="#guides">\guides</a>{integers}<br>
+<a href="#labelfont">\labelfont{off}<br>
+<a href="#warnalert">\warnalert{off}<br>
+<a href="#warnpercent">\warnpercent{off}<br>
 <a href="#begindoc">\begin{document}</a>
 </p>
 </div>
@@ -114,22 +116,6 @@ If your document fails one of the checks, you will be warned. Then it will
 automatically revert to draft mode, so that the failed PDF cannot be confused
 with a good final file.</li>
 </ul>
-</div>
-
-
-<a id="warnalert"></a>
-<div>
-<h4><code>\warnalert</code></h4>
-<p>In the developer's experience, there are several situations where the
-TeX markup is good (no error or warning), but may not be what was intended.
-Novelette can detect some of these situations, and issue ALERT messages
-in the log file.</p>
-<p>If you get an ALERT, review your document. Maybe you should fix it,
-maybe not. Novelette cannot read your mind.</p>
-<p>GUI TeX editors ignore ALERTs. The <code>\warnalert</code> command
-issues a warning, when there are ALERTs. This will be noticed by the GUI.</p>
-<p>You should use <code>\warnalert</code> until you are satisfied that any
-remaining ALERTs can be ignored. Then, remove this command from Preamble.</p>
 </div>
 
 
@@ -423,6 +409,51 @@ a guide is placed where you wish the topmost item in each
 <a href="novelette-mainmatter.html#opening">opening</a> to sit, and
 another guide is placed at the first line of main text beneath it.</p>
 <p>If you use guides, they will be the same on every page.</p>
+</div>
+
+
+<a id="labelfont"></a>
+<div>
+<h4><code>\labelfont{<i>on</i> or <i>off</i>}</code></h4>
+<p class="noindent">Default <i>off</i>. If you use <code>\labelfont{on}</code>
+in draft mode, then the name of the main font is printed at upper left of
+the first page. If you compare fonts by making test prints, you will know
+which font corresponds to which print.</p>
+<p>The command is ignored in final mode.</p>
+</div>
+
+
+<a id="warnalert"></a>
+<div>
+<h4><code>\warnalert{<i>on</i> or <i>off</i>}</code></h4>
+<p>Default <i>off</i>. In the developer's experience, there are several
+situations where the TeX markup is good (no error or warning), but may not be
+what was intended. Novelette can detect some of these situations, and issue
+ALERT messages in the log file.</p>
+<p>If you get an ALERT, review your document. Maybe you should fix it,
+maybe not. Novelette cannot read your mind.</p>
+<p>GUI TeX editors ignore ALERTs. The <code>\warnalert{on}</code> command
+issues a warning, when there are ALERTs. This will be noticed by the GUI.</p>
+<p>You should use <code>\warnalert{on}</code> until you are satisfied that any
+remaining ALERTs can be ignored. Then, <code>\warnalert{off}</code> or
+remove the command from Preamble.</p>
+</div>
+
+
+<a id="warnpercent"></a>
+<div>
+<h4><code>\warnpercent{<i>on</i> or <i>off</i>}</code></h4>
+<p class="noindent">Default <i>off</i>. The percent symbol <code>%</code> has
+special meaning as comment. To print percent, use <code>\%</code>.</p>
+<p>Normally, if you type <code>%</code> when you really meant to type
+<code>\%</code>, then the result is incorrect. But there is no warning.
+Unless you carefully proofread the PDF, you will not notice the problem.</p>
+<p>With <code>\warnpercent{on}</code> the behavior in Preamble is unchanged.
+Then <code>%</code> is re-defined after <code>\begin{document}</code>.
+Instead of acting as a comment character, <code>%</code> without backslash
+issues a warning. The <code>\%</code> is unchanged.</p>
+<p>If you use this, and get warnings, then re-work your document body so that
+<code>%</code> comments are changed to <code>\memo{}</code> form.</p>
 </div>
 
 

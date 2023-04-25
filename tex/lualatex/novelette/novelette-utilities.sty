@@ -283,7 +283,7 @@
 %%
 
 
-%% FONT LABEL (draft mode, enabled by \labelfont in Preamble)
+%% FONT LABEL
 \def\nvt@fontlabel{%
   \ifnvt@didlabel\else%
     \nvt@print@UL{%
@@ -294,32 +294,63 @@
     \global\nvt@didlabeltrue%
   \fi%
 }
-\def\labelfont{%
-  \ifthenelse{\equal{\nvt@mode}{final}}{}{%
-    \AddToHook{shipout/foreground}{\nvt@fontlabel}%
-  }%
+\newcommand\labelfont[1]{%
+  \StrDel{#1}{ }[\nvt@temp@s]
+  \nvt@okfalse
+  \ifthenelse{\equal{\nvt@temp@s}{on}}{\nvt@oktrue}{}
+  \ifthenelse{\equal{\nvt@temp@s}{off}}{\nvt@oktrue}{}
+  \ifnvt@ok
+    \ifthenelse{\equal{\nvt@mode}{final}}{}{%
+      \AddToHook{shipout/foreground}{\nvt@fontlabel}%
+    }%
+  \else
+    \nvt@error{Bad value for \string\labelfont{}.^^J%
+      Either on or off. Default off}
+  \fi
 }
 \@onlypreamble\labelfont
 %%
 
 
-%% PERCENT ERROR (enabled by \percenterror in Preamble)
-\def\nvt@error@percent{
+%% PERCENT WARNING
+\def\nvt@warn@percent{
   \begingroup
   \lccode`\~="0025
   \lowercase{\endgroup\gdef~{%
-      \nvt@error{Percent symbol used as comment}
+      \nvt@warn{Percent symbol used as comment}
     }%
   }
   \catcode`\%=13
 }
-\newcommand\percenterror{\global\nvt@percenterrortrue}
-\@onlypreamble\percenterror
+\newcommand\warnpercent[1]{
+  \StrDel{#1}{ }[\nvt@temp@s]
+  \nvt@okfalse
+  \ifthenelse{\equal{\nvt@temp@s}{on}}{
+    \nvt@oktrue\global\nvt@warnpercenttrue}{}
+  \ifthenelse{\equal{\nvt@temp@s}{off}}{
+    \nvt@oktrue\global\nvt@warnpercentfalse}{}
+  \ifnvt@ok\else
+    \nvt@error{Bad value for \string\warnpercent{}.^^J%
+      Either on or off. Default off}
+  \fi
+}
+\@onlypreamble\warnpercent
 %%
 
 
 %% WARN IF ALERTs
-\newcommand\warnalert{\global\nvt@warnalerttrue}
+\newcommand\warnalert[1]{
+  \StrDel{#1}{ }[\nvt@temp@s]
+  \nvt@okfalse
+  \ifthenelse{\equal{\nvt@temp@s}{on}}{
+    \nvt@oktrue\global\nvt@warnalerttrue}{}
+  \ifthenelse{\equal{\nvt@temp@s}{off}}{
+    \nvt@oktrue\global\nvt@warnalertfalse}{}
+  \ifnvt@ok\else
+    \nvt@err{Bad value for \string\warnalert{}.^^J%
+      Either on or off. Default off}
+  \fi
+}
 \@onlypreamble\warnalert
 %%
 

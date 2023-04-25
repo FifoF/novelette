@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-<title>Novelette - Documentation - Special Characters</title>
+<title>Novelette - Documentation - General Setup</title>
 <link rel="stylesheet" type="text/css" href="novelette-resource/novelette.css">
 </head>
 <body>
@@ -25,43 +25,51 @@
 
 
 <h2>General Setup</h2>
+<p class="noindent'>You do not need to know much about LaTeX to use Novelette.
+In fact, the less you know, the better, because Novelette is unlike other
+document classes. If some online LaTeX resource shows you how to do something,
+there is a very good chance that it will not work in Novelette.</p>
 
-<pclass="noindent">TeX is notorious for its numerous characters with
-special meaning:</p>
+<p class=links">
+&bull;<a href="#specials">Special&nbsp;Characters</a>
+&bull;<a href="#document">File&nbsp;Content</a>
+&bull;<a href="#processing">Processing</a>
+&bull;<a href="#optimizing">Optimizing</a>
+</p>
+
+
+<a id="specials"></a>
+<div>
+<h3 class="floatleft">Special Characters</h3>
+<h3 class="floatright"><a href="#top">^top</a></h3>
+<p class="noindent">TeX is notorious for its numerous characters with special
+meaning. They are:</p>
 <p class="code"><code>\ { } ~ % # $ ^ & _</code></p>
 <p class="noindent">Some other characters have special meaning, but only in
 a particular context.</p>
 
-
-<a id="preamble"></a>
-<div>
-<h3>Special Characters in Preamble</h3>
-<p>In the <a href="novelette-preamble.html">Preamble</a>, special characters
-always have their TeX special meanings. Incorrect usage causes errors.
-The most likely errors will result if you use a special character in the
-title or author. Examples of <b>bad</b> code:</p>
+<h4>Special Characters in Preamble</h4>
+<pclass="noindent">In the <a href="novelette-preamble.html">Preamble</a>,
+special characters always have their TeX special meanings. Incorrect usage
+causes errors. The most likely errors will result if you use a special
+character in the title or author. Examples of <b>bad</b> code:</p>
 <p class="code"><code>
 \title{The 20% Conspiracy}<br>
 \title{Jack & Jill}
 </code></p>
-<p>You may remove the special meaning with backslash in front of the character.
-Examples of <b>good</b> code:</p>
+<p class="noindent">You may remove the special meaning with backslash
+in front of the character. Examples of <b>good</b> code:</p>
 <p class="code"><code>
 \title{The 20\% Conspiracy}<br>
 \title{Jack \& Jill}
 </code></p>
-</div>
 
-
-
-<a href="document"></a>
-<div>
-<h3>Special Characters in Document Body</h3>
-<p>After <code>\begin{document}</code>, Novelette removes the special meaning
-from these characters:</p>
+<h4>Special Characters in Document Body</h4>
+<p class="noindent">After <code>\begin{document}</code>, Novelette removes
+the special meaning from these characters:</p>
 <p class="code"><code># $ ^ & _</code></p>
-<p>If you type any of the above characters, they will simply print. It does
-not matter whether or not you put a backslash in front of them.</p>
+<p class="noindent">If you type any of the above characters, they will print.
+It does not matter whether or not you put a backslash in front of them.</p>
 <p>Novelette has its own commands for superscript, subscript, and Unicode
 character code. In most cases, you cannot define macros within the document
 body. You cannot enter math mode, create tables, or do tab alignment.</p>

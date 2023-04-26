@@ -50,9 +50,7 @@
   \sbox0{{\addfontfeature{ScaleAgain=\nvt@temp@d}#1}}%
   \setlength\nvt@temp@l{\ht0}%
   \setlength\nvt@temp@l{\nvt@ascn-\nvt@temp@l}%
-  \rule{.12\nvt@fontsize}{0pt}\makebox[0pt][l]{%
-    \smash{\raisebox{\nvt@temp@l}{\addfontfeature{ScaleAgain=\nvt@temp@d}#1}}%
-  }%
+  \smash{\raisebox{\nvt@temp@l}{\addfontfeature{ScaleAgain=\nvt@temp@d}#1}}%
 }
 \def\@makefnmark{\ifnvt@fnzmark\else\nvt@getfnmark\fi}
 \def\nvt@getfnmark{% Places marker in the main text.

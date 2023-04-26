@@ -10,7 +10,7 @@ books that are well within the capability of Novelette.
 This is a work in progress. The main features have
 been tested, but are still subject to change.
 
-Update: April 24, 2023: Almost ready for beta testing. At this point,
+Update: April 26, 2023: Almost ready for beta testing. At this point,
 the command set is reasonably stable. Might do some
 under-the-hood modifications, or not. Working on the documentation,
 so there are places where the docs are incomplete or incorrect.

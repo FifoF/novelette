@@ -72,7 +72,6 @@ And more text.<a href="#footnotes">\footnote</a>{With a footnote.}<br>
 Then another opening, and so forth.<br>
 &nbsp;<br>
 \memo{Novelette does not use backmatter.}<br>
-<a href="#cleartoend">\cleartoend</a><br>
 <a href="#cleartoend">\end{document}</a>
 </div>
 
@@ -160,7 +159,7 @@ line grid.</p>
 set with lowercase converted to small caps. Note that the <i>letter</i>
 argument already placed a letter, so do not repeat it in <i>letters</i>.</p>
 <p>After this, text is normal. Example:</p>
-<p class="code">\init{I}{t was dark and stormy,} as usual there.</code></p>
+<p class="code"><code>\init{I}{t was dark and stormy,} as usual.</code></p>
 <p>The optional <i>kern</i> will adjust the spacing between the enlarged
 letter, and the following small caps letter. It is a number, without units.
 Negative number moves them closer, positive farther. Rarely beyond -.2 to .2
@@ -173,6 +172,7 @@ use it there. Novelette will not do that for you; do it yourself.</p>
 
 
 <a id="scene"></a>
+<div>
 <h4>\scene{<i>text</i>}</h4>
 <p>The <code>\scene</code> command creates a scene break. If all you want is
 a simple blank line, use <code>\null</code> instead.</p>
@@ -211,30 +211,31 @@ of that page.</li>
 <li><code>\footnotez{Content of the footnote.}</code> does not place a
 reference mark, either in main text or at the footnote. This style is
 sometimes used when a footnote applies to entire chapter, rather than to
-any specific text. It is the only kind of footnote that may be attached
-within an opening.</li>
+any specific text.</li>
+<li>If used within an opening, <code>\footnote</code>
+is automatically converted to <code>\footnotez</code>.</li>
+<li>Pages with the display environment may not have footnotes.</li>
 </ul>
-<p>The footnote is left-aligned (not indented), separated from main text
-by a short line, and at slightly smaller text size. If a footnote continues
-for more than one paragraph (don't do it!) then the additional paragraph
-is indented.</p>
+<p class="noindent">Do not place a footnote mid-sentence. You may place
+a footnote mid-paragraph. If placed at the end of a paragraph, it must be
+followed by <code>\par</code> or other paragraph separation.</p>
+<p>The footnote is left-aligned (not indented), separated
+from main text by a short line, and at slightly smaller text size.
+If a footnote continues for more than one paragraph (don't do it!)
+then the additional paragraph is indented.</p>
 <p>Marked footnotes use symbols <code>* † ‡ §</code> (asterisk, dagger,
 daggerdbl, section) then repeat as pairs <code>** †† ‡‡ §§</code>. If more
 than 8 marked footnotes in a chapter, they re-start with asterisk. The cycle
-is re-set to asterisk at each opening.</p>
-<p>Pages with the display environment may not have footnotes.</p>
+is automatically re-set to asterisk at each opening.</p>
 </div>
 
 
 <a id="cleartoend"></a>
 <div>
-<h4>\cleartoend<br>
-\end{document}</h4>
-<p>When your story is finished, wrtie <code>\cleartoend</code> just prior to
-<code>\end{document}</code>. This ensures that the PDF will have a final
-blank verso page (as required by printers). If yor story ends recto, then
-only one blamk page is added. If your story ends verso, then two blank pages
-are added. This is calculated automatically.</p>
+<h4>\end{document}</h4>
+<p>At <code>\end{document}</code> Novelette automatically adds a blank
+page. If necessary, it adds a second blank page, so that the final blank
+is verso (even-numbered). This is the standard.</p>
 </div>
 
 
@@ -247,7 +248,7 @@ are added. This is calculated automatically.</p>
 
 <div id="exampledoc" class="doctemplate">
 <p class="noindent">
-\mainmatter</a><br>
+\mainmatter<br>
 &nbsp;<br>
 \begin{opening}<br>
 \null\null\null\null<br>
@@ -289,7 +290,6 @@ slime was visible, attracting the attention of a crow. Etc.</br>
 \init{A}{fter eating the worm, the crow died. The moral of this
 story is: Do not eat radioactive worms.<br>
 &nbsp;<br>
-\cleartoend<br>
 \end{document}
 </div>
 

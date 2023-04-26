@@ -52,9 +52,9 @@ and how to choose their values.</p>
 <a href="#intent">\intent</a>{none|SWOP|FOGRA39|JC200103}<br>
 <a href="#setmicrotype">\setmicrotype</a>{microtype setup}<br>
 <a href="#guides">\guides</a>{integers}<br>
-<a href="#labelfont">\labelfont{off}<br>
-<a href="#warnalert">\warnalert{off}<br>
-<a href="#warnpercent">\warnpercent{off}<br>
+<a href="#labelfont">\labelfont</a>{on|off}<br>
+<a href="#warnalert">\warnalert</a>{on|off}<br>
+<a href="#warnpercent">\warnpercent</a>{on|off}<br>
 <a href="#begindoc">\begin{document}</a>
 </p>
 </div>
@@ -191,7 +191,7 @@ It does not format dates and times. Do those things yourself.</p>
 (creme, off-white), not white paper. The print service will offer a choice
 of several standard sizes.</p>
 <p>Dimensions are measured in units of inches or millimeters (in,mm).
-Examples:<p>
+Examples:</p>
 <p class="code">
 <code>\trimsize{width=5.5in,height=8.5in}</code> % American Digest.<br>
 <code>\trimsize{width=129mm,height=198mm}</code> % British B-Format.
@@ -298,7 +298,7 @@ Centered text.</li>
 </ul>
 <p class="noindent">There will be pages where nothing
 is printed in the header/footer. Nevertheless, the space is reserved;
-main text does not vertically expand to fill the empty header/footer.<p>
+main text does not vertically expand to fill the empty header/footer.</p>
 <p>Command <a href="#thispagestyle"><code>\thispagestyle</code></a>
 locally changes the layout for a single page.</p>
 </div>

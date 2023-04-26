@@ -95,6 +95,8 @@
 \newif\ifnvt@warnalt % True if \altfont used without Libertinus Serif.
 \newif\ifnvt@didlabel % True after mainfont name is written on first page.
 \newif\ifnvt@warnpercent % True warns if  percent symbol used for comment.
+\newif\ifnvt@includeonly % True if \includeonly used.
+\newif\ifnocleartoend % Developer use.
 %%
 
 
@@ -193,7 +195,6 @@
   \WarningFilter{microtype}{Redefining}
   \WarningsOff[Fancyhdr,fancyhdr]
 }{}
-\RequirePackage{calc} % Length expression calculations.
 \RequirePackage{atbegshi} % For header changes.
 \RequirePackage{changepage} % Block indents, etc. Do not use strict!
 \RequirePackage{noindentafter} % For unindented chapter and scene starts.
@@ -202,6 +203,7 @@
 \RequirePackage{novelette-settings}
 \RequirePackage{novelette-fonts}
 \RequirePackage{novelette-design}
+\apptocmd\includeonly{\global\nvt@includeonlytrue}{}{}
 %%
 
 
@@ -225,6 +227,9 @@
 \AtEndPreamble{
   \LetLtxMacro\RequirePackage\nvt@get@package\relax
   \LetLtxMacro\usepackage\nvt@get@package\relax
+  \ifnvt@includeonly\else
+    \ifthenelse{\equal{nvt@mode}{final}}{\gdef\nvt@mode{draft}}{} %%%%%%
+  \fi
   \ifthenelse{\equal{\nvt@mode}{final}}{}{\gdef\nvt@intent{none}}
   \nvt@process@trimsize
   \nvt@process@margins
@@ -311,7 +316,7 @@
   \catcode`\#=6
   \catcode`\&=4
   \catcode`\^=7
-  \cleartoend
+  \ifnocleartoend\else\cleartoend\fi
   \iferrorsissued{\global\nvt@errtrue}{}
   \pdfinfo{%
     /CreationDate(\pdffeedback creationdate) %

@@ -134,29 +134,31 @@
 
 %% TEST IMAGE FORMAT
 \newcommand\nvt@TestImageFormat[1]{%
-  \def\nvt@imgformat{fake}%
-  \nvt@okfalse%
-  \IfEndWith{#1}{.png}{\nvt@oktrue}{}%
-  \IfEndWith{#1}{.PNG}{\nvt@oktrue}{}%
-  \ifnvt@ok%
-    \IfBeginWith*{#1}{/}{\nvt@okfalse}{% No absolute path.
-      \IfBeginWith*{#1}{..}{\nvt@okfalse}{% No escape from document directory.
-        \IfFileExists{#1}{}{\nvt@okfalse}%
+  \IfInteger{#1}{%
+    \def\nvt@imgformat{fake}%
+    \setlength\nvt@intht{#1\nvt@leading}%
+  }{%
+    \nvt@okfalse%
+    \IfEndWith{#1}{.png}{\nvt@oktrue}{}%
+    \IfEndWith{#1}{.PNG}{\nvt@oktrue}{}%
+    \IfBeginWith*{#1}{/}{\nvt@okfalse}{}% No absolute path.
+    \IfBeginWith*{#1}{..}{\nvt@okfalse}{}% No escape from document directory.
+    \ifnvt@ok%
+      \IfFileExists{#1}{%
+        \def\nvt@imgformat{real}%
+      }{%
+        \nvt@error{Image #1 not found. Is it in correct location?}%
+        \def\nvt@imgformat{fake}%
+        \setlength\nvt@intht{2\nvt@leading}%
       }%
-    }%
-  \fi%
-  \ifnvt@ok%
-    \def\nvt@imgformat{real}%
-  \else%
-    \IfInteger{#1}{%
-      \nvt@oktrue%
-      \setlength\nvt@intht{#1\nvt@leading}%
-  }{}%
-  \fi%
-  \ifnvt@ok\else%
-    \setlength\nvt@intht{2\nvt@leading}%
-    \nvt@error{Bad value in \string\image, page \thepage.}%
-  \fi%
+    \else%
+      \nvt@error{Problem with image #1.^^J%
+        Must have file extension png or PNG,^^J%
+        and may not be located using absolute path or ../path}%
+        \def\nvt@imgformat{fake}%
+        \setlength\nvt@intht{2\nvt@leading}%
+    \fi%
+  }%
 }
 %%
 

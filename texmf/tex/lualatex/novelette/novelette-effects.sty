@@ -148,7 +148,6 @@
 %%   Within the block, align=A sets text justification. If not set, text is justified and
 %% hyphenated as usual, and each paragraph is indented (you may use \noindent). If A is one of
 %% left, right, center, then no hyphenation and no indent.
-%%   Option [font=italic] prints entire block in Italics.
 \newif\ifnvt@inblock %% True within block environment.
 \newif\ifnvt@smallblock %% True when block uses small text.
 \DeclareDocumentEnvironment{block}{O{}}{%%
@@ -264,34 +263,42 @@
 %% ATTRIB:
 %%   This may be used within a block, after its last paragraph ends. The text of the attribution
 %% must fit within the block width, one line only. If more, break it into several \attrib.
-%%   The text will be preceded by em dash, and right-aligned to either block right offset,
-%% or right side of key text (if used). It will be normal size or small, according to
-%% block option. It will not be Italics, regardless of block option, but you may use \textit
-%% in the usual fashion.
-\DeclareDocumentCommand\attrib{m}{%%
+%%   The text will be right-aligned to the block right side. It will be normal size or small,
+%% according to the block option. It will not be Italics unless you use \textit for the text
+%% of the attribution.
+%%   Unstarred \attrib does not print a line above the attrib. Starred \attrib* prints a line
+%% at block width, above the attribution.
+%%   Careful: Since \attrib is right-aligned, it may be too far to the right when the block
+%% does not set a right offset.
+%%   If you wish, begin the text of the attribution with em dash (---).
+\DeclareDocumentCommand\attrib{sm}{%%
   \par\begingroup\upshape%%
   \ifnvt@inblock%%
+    \IfBooleanTF{#1}{%%
+    %%%%% create minimal \line at block width.
+    }{}%%
     \edef\tmphaskeywidth{\fpeval{\nvt@keywidth > 0pt}}%%
-    \sbox1{---#1}%%
+    \sbox1{#2}%%
     \ifnum\tmphaskeywidth=1\relax%%
       \edef\tmpbadwidth{\fpeval{\wd1 > \nvt@keywidth}}%%
       \ifnum\tmpbadwidth=1\relax%%
         \nvt@warn{\string\attrib{text} is too wide to fit in block.}%%
-        {---#1}%%
+        {\char"FFFD too wide}%%
       \else%%
-        \makebox[\nvt@keywidth][r]{---#1}%%
+        \makebox[\nvt@keywidth][r]{#2}%%
       \fi%%
     \else%%
       \edef\tmpbadwidth{\fpeval{\wd1 > \linewidth}}%%
       \ifnum\tmpbadwidth=1\relax%%
-        {---#1}%%
+        \nvt@warn{\string\attrib{text} is too wide to fit in block.}%%
+        \hfill{\char"FFFD too wide}%%
       \else%%
-        \hfill{---#1}%%
+        \hfill{#2}%%
       \fi%%
     \fi%%
   \else%%
     \nvt@warn{\string\attrib\space can only be used within block environment.}%%
-    {---#1}%%
+    {\char"FFFD{#2}}%%
   \fi%%
   \par\endgroup%%
 }%%
@@ -470,46 +477,62 @@
 %% same display zone. Although these commands are intended for such purposes as chapter titles,
 %% Novelette does not care why you use them.
 %%   Each \styleN has its font, scale, track, align, and case set by \setstyleN commands
-%% in preamble, or the built-in defaults (if unset by user). These are fixed.
-%%   The local \styleN[option] cannot change those settings. Local option [info] writes the
-%% typeset width of the text to Terminal (console). Option [logo] allows \logo in the text.
+%% in preamble, or the built-in defaults (if unset by user). These are fixed, and cannot
+%% be locally changed. The [option] determines whether the styled text is accompanied by lines
+%% above and/or below it, and the style of the lines.
 %%   There is no automatic chapter numbering (see \todo command, for placeholder).
 \def\nvt@noparthere{%%
   \nvt@err{Cannot use \string\par, \noexpand\\, or \string\linebreak^^J%%
     \spii inside \string\styleN (N=0-9), or \string\scene, or \string\sceneimage.}%%
+  \strut\char"FFFD Bad \textbackslash styleN.\par%%
   \directlua{nvt.adderr('Paragraph or linebreak disallowed inside command.')}%%
 }%%
 \def\nvt@badstyle#1{%%
   \nvt@err{Do not write \string\style{N}[option]{text}.^^J%%
     \spii Write \string\styleN[option]{text} with N=0-9.}%%
-    \char"FFFD\space%%
+  \strut\char"FFFD Bad \textbackslash styleN.%%
   \directlua{nvt.adderr('\\style{N} should be \\styleN.')}%%
 }%%
-\def\style{\@ifnextchar\bgroup\nvt@badstyle\nvt@stylecmd}
-\newif\ifnvt@instyle %% True within \styleN and \scene commands.
+\def\style{\@ifnextchar\bgroup\nvt@badstyle\nvt@stylecmd}%%
+\newif\ifnvt@instyle%% True within \styleN commands.
 \DeclareDocumentCommand\nvt@stylecmd{mO{}+m}{%% +m will be re-parsed as m.
-  \begingroup\nvt@instyletrue\def\tmplogo{0}%%
+  \begingroup\nvt@instyletrue%%
+  \def\tmphtabove{}\def\tmpwabove{0}\def\tmpuabove{0}%%
+  \def\tmpaspabove{0pt}\def\tmpbspabove{0pt}%%
+  \def\tmphtbelow{}\def\tmpwbelow{0}\def\tmpubelow{0}%%
+  \def\tmpaspbelow{0pt}\def\tmpbspbelow{0pt}%%
   \directlua{nvt.parsestyle('\luaescapestring{#1}','\luaescapestring{#2}')}%%
   \ifnum\tmpreturn=-99\relax%%
     \nvt@fatal{Cannot use \string\styleN\space in preamble.^^J%%
       Did you mean \string\setstyleN\space instead (N=0-9) ?}%%
   \fi%%
+  \ifnum\tmpreturn=-2\relax%%
+    \nvt@err{Bad option for \string\styleN[option]{text}.^^J%%
+      \spii Choices for font, scale, track, align, and case are global,^^J%%
+      \spiv set by \string\setstyleN\space in preamble. No local over-ride.^^J%%
+      \spii Option syntax: [above=A,below=B]^^J%%
+      \spiv A and B begin with integers 0-9. Default 0.^^J%%
+      \spvi Value 0 does not draw a line there.^^J%%
+      \spvi Values 1-9 draw a line, at increasing width. Range 0.76pt to 6pt.^^J%%
+      \spiv If integer is followed by w then line is full textwidth.^^J%%
+      \spvi Without w the line width and alignment are same as styled text.^^J%%
+      \spiv If integer is followed by u then line prints^^J%%
+      \spvi close to the styled text, like underline and/or overline.^^J%%
+      \spvi Without u the line is farther away from the styled text.^^J%%
+      \spiv You may combine the integer, w, and u, in any order.}%%
+    \strut\char"FFFD Bad \textbackslash styleN.\par%%
+    \directlua{nvt.adderr('Bad \\styleN syntax.')}%%
+  \fi%%
   \ifnum\tmpreturn=-1\relax%%
     \nvt@err{Commands \string\styleN\space (N=0-9) may only be used within display zones.^^J%%
       \spii They may not be nested, or used within block environment.}%%
-    \strut\char"FFFD\par%%
+    \strut\char"FFFD Bad \textbackslash styleN.\par%%
     \directlua{nvt.adderr('\\styleN in disallowed location.')}%%
   \fi%%
-  \ifnum\tmpreturn=0\relax%%
-    \nvt@err{Bad \string\styleN[option]{text}.^^J%%
-      \spii N must be integer 0-9. Not the letter N or n.^^J%%
-      \spii Choices for font, scale, track, align, and case^^J%%
-      \spiv are globally fixed by \string\setstyleN{choices} in preamble.^^J%%
-      \spii Option may be one or both: info logo (comma-separated).
-      \spiv [info] -> Writes the typeset text width to Terminal (console).^^J%%
-      \spix That might be useful for your own design purposes.^^J%%
-      \spiv [logo] -> Allows use of \string\logo\space within the text.}%%
-      \strut\char"FFFD\par%%
+  \ifnum\tmpreturn=0\relax%% %%%%%
+    \nvt@err{Bad \string\styleN{text}.^^J%%
+      \spii N must be integer 0-9. Not the letter N or n.}%%
+    \strut\char"FFFD Bad \textbackslash styleN.\par%%
     \directlua{nvt.adderr('Bad \\styleN syntax.')}%%
   \fi%%
   \ifnum\tmpreturn=1\relax%%
@@ -520,30 +543,46 @@
     \def\tmpfeat{\nvt@aff{\tmpraw,Scale=\tmpscale,LetterSpace=\tmptrack}}%%
     \def\par{\nvt@noparthere}\def\\{\nvt@noparthere}\def\linebreak{\nvt@noparthere}%%
     \begingroup%%
-      \DeclareDocumentCommand\logo{sm}{}%% Measure without logo.
+      \DeclareDocumentCommand\logo{sm}{\hspace{1.2\nvt@em}}%% Measure without image.
       \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%%
       \edef\tmpboxdp{\fpeval{\dp0 > .235*\tmpscale*\nvt@em}}%%
+      \edef\tmpboxwd{\fpeval{\wd0 > \textwidth}}%%
       \ifnum\tmpboxdp=1\relax%%
         \nvt@warn{\string\style#1\space content has disallowed characters.}%%
       \fi%%
+      \ifnum\tmpboxwd=1\relax%%
+        \edef\tmphowmuch{\fpeval{ceil(100*\wd0/\textwidth,2)}}%%
+        \nvt@err{Content of \string\styleN\space is too wide. Must fit on one line.^^J%%
+          \spii Measured content width is \tmphowmuch\@percentchar\space of max textwidth.^^J%%
+          \spii You must reduce content or reduce scale.}%%
+        \sbox0{\char"FFFD \textbackslash styleN too wide.}%%
+        \directlua{nvt.adderr('\\styleN content is too wide.')}%%
+      \fi%%
     \endgroup%%
-    \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%% Re-measure with logo.
-%%%%% ensure above/below padding for logo, when scale not enough. %%%%%
-    \edef\tmpwdz{\the\wd0}%%
-    \edef\tmpwide{\fpeval{\wd0 > \textwidth}}%%
-    \ifnum\tmpwide=1\relax%%
-      \edef\tmphowmuch{\fpeval{ceil(100*\wd0/\textwidth,2)}}%%
-      \nvt@err{Content of \string\styleN\space is too wide. Must fit on one line.^^J%%
-        \spii Measured content width is \tmphowmuch\@percentchar\space of max textwidth.^^J%%
-        \spii You must reduce content or reduce scale.}%%
-      \sbox0{\tmpfont\tmpfeat\spaceskip=\tmpsp{\char"FFFD}}%%
-      \directlua{nvt.adderr('\\styleN content is woo wide.')}%%
-    \fi
-    \ifnum\tmpinfo=1\relax%%
-      \edef\tmpwdz{\fpeval{round(\wd0/\nvt@em,2)}em}%%
-      \typeout{Info: PDFpage \thepage, \string\style#1\space width \tmpwdz.}%%
+    \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%%
+    \ifx\tmphtabove\@empty\else%%
+      \ifnum\tmpwabove=1\relax\def\tmpwdabove{\the\textwidth}\else\def\tmpwdabove{\wd0}\fi%%
+      \ifnum\tmpuabove=1\relax%% %%%%%
+        \def\tmpaspabove{-20pt}\def\tmpbspabove{-20pt}%%
+      \else%%
+        \def\tmpaspabove{0pt}\def\tmpbspabove{0pt}%%
+      \fi%%
+      \vspace{\tmpaspabove}%%
+      \strut\tmpleft\rule{\tmpwdabove}{\tmphtabove}\tmpright\strut\nvt@par%%
+      \vspace{\tmpbspabove}%%
     \fi%%
     \tmpstrut\tmpleft{\usebox0}\tmpright\tmpstrut\nvt@par%%
+    \ifx\tmphtbelow\@empty\else%%
+      \ifnum\tmpwbelow=1\relax\def\tmpwdbelow{\the\textwidth}\else\def\tmpwdbelow{\wd0}\fi%%
+      \ifnum\tmpubelow=1\relax%% %%%%%
+        \def\tmpaspbelow{-4pt}\def\tmpbspbelow{-4pt}%%
+      \else%%
+        \def\tmpaspbelow{0pt}\def\tmpbspbelow{0pt}%%
+      \fi%%
+      \vspace{\tmpaspbelow}%%
+      \strut\tmpleft\rule{\tmpwdbelow}{\tmphtbelow}\tmpright\strut\nvt@par%%
+      \vspace{\tmpbspbelow}%%
+    \fi%%
   \fi%%
   \endgroup%%
 }%%
@@ -707,71 +746,6 @@
 %%
 
 
-%% RE-DEFINE \underline:
-\DeclareDocumentCommand\underline{m}{%%
-  \ifnvt@indisplay%%
-    {#1}%%
-    \begingroup%%
-    \sbox0{#1}%%
-    \hspace{-\wd0}%%
-    \edef\tmpdrop{\fpeval{.3*\nvt@em + .76}pt}%%
-    \smash{\rule[-\tmpdrop]{\wd0}{0.76pt}}%%
-    \vspace{.3\nvt@em}%%
-    \endgroup%%
-  \else%%
-    \nvt@warn{\string\underline\space only available in display zone.}%%
-    {#1}%%
-  \fi%%
-}%%
-
-
-%% RE-DEFINE \line:
-%%   The standard LaTeX \line is not needed, so it is re-defined. Novelette \line is an \hrule
-%% with minimum and maximum dimensions, vertically padded to always occupy baselineskip.
-%%   To track possible layout changes, the width must be measured in normal em. The thickness
-%% is a number without units (requesting units would likely cause user confusion).
-\DeclareDocumentCommand\line{m}{%%
-  \def\tmpshow{1}\def\tmpleft{\hfill}\def\tmpright{\hfill}%%
-  \def\tmpwidth{10em}\def\tmpthick{.76pt}%%
-  \ifnvt@indisplay\def\tmpok{1}\else\def\tmpok{0}\fi%%
-  \ifnvt@inblock\def\tmpok{0}\fi%%
-  \ifnvt@infootnote\def\tmpok{0}\fi%%
-  \ifnvt@inheader\def\tmpok{0}\fi%
-  \ifnum\tmpok=1\relax%%
-    \par\vspace*{-\nvt@bls}\strut\par%%
-    \directlua{nvt.parseline('\luaescapestring{#1}')}%%
-    \ifnum\tmpreturn=1\relax%%
-      \begingroup\setlength\parindent{0pt}%%
-      \ifnum\tmpshow=1\relax%%
-        \strut\tmpleft\smash{\raisebox{\tmpr}{\rule{\tmpwidth}{\tmpthick}}}\tmpright\strut\par%%
-      \else%%
-        \strut\par%%
-      \fi%%
-    \else%%
-      \nvt@err{Bad \string\line{align=A,width=W,thick=T}.^^J%%
-        \spii Novelette re-defines standard LaTeX \string\line. Format:^^J%%
-        \spiv A -> left right center. Default center.^^J%%
-        \spiv W -> must have units 'em', not 'pt' or any other. Default 10em.^^J%%
-        \spix Good: width=5.63em. Bad: width=14pt.^^J%%
-        \spix Recommended minimum width 4em.^^J%%
-        \spix If too wide, W is silently truncated to textwidth.^^J%%
-        \spix W=100em produces full-width line.^^J%%
-        \spiv T -> number 0-9, without units. May be decimal. Default 1.^^J%%
-        \spix Larger T means thicker line. T=1 is 0.75pt.^^J%%
-        \spix 0<T<1 promoted to T=1. T>9 demoted to T=9.^^J%%
-        \spix T=0 reserves space, but does not print line.}%%
-      \strut\tmpleft\char"FFFD Bad \textbackslash\line.\tmpright\strut\par%%
-      \directlua{nvt.adderr('Bad \\line syntax.')}%%
-    \fi%%
-    \endgroup%%
-  \else%%
-    \nvt@err{Cannot use \string\line\space outside display zone, or within block}%%
-    \directlua{nvt.adderr('\\line in disallowed location.')}%%
-  \fi%%
-}%%
-%%
-
-
 %% Decorative Lines (always centered):
 \DeclareDocumentCommand\surf{}{%% wavy swung dash
   \par\vspace*{\nvt@bls}\strut\par%%
@@ -833,6 +807,10 @@
 \def\Huge{\nvt@nocmd{\string\Huge}}
 \def\HUGE{\nvt@nocmd{\string\HUGE}}
 \DeclareDocumentCommand\textls{O{}+m}{\nvt@nocommand{\string\textls}#2}
+\long\def\underline#1{%%
+  \nvt@warn{Novelette has no \string\underline. Try \string\style* or \string\line* instead.}%%
+  {#1}%%
+}%%
 %%
 
 

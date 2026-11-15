@@ -26,7 +26,7 @@ if not (_VERSION >= 'Lua 5.3') then
 end
 --
 
-nvt = nvt or {} -- Namespace.
+nvt = nvt or {} -- Namespace. NOT local !
 nvt.mode = nvt.mode or 'draft' -- Actually set before this file is read.
 nvt.startmode = nvt.mode
 
@@ -390,15 +390,15 @@ nvt.parseimage = function (star,opt,file,sc) -- sc=0->image, sc=1->sceneimage
   local a, t, f, l, lx, n ; local img = 0 ; local label = 'image' ; local ok = true
   opt = string.gsub(opt, ' ', '') ; opt = opt .. ',' ; opt = string.gsub(opt, 'lines=', 'line=')
   if file ~= '' then
-    label = string.gsub(file, '.*/', '')
+    label = string.gsub(file, '.*/', '') ----- utf8
     local e = utf8.len(label)
-    if e > 32 then local b = utf8.offset(label, e - 32) ; label = string.sub(label, b, e) end
+    if e > 32 then local b = utf8.offset(label, e - 32) ; label = string.sub(label, b, e) end ----- utf8
   end
   tex.sprint('\\def\\tmplabel{' .. label .. '}')
-  file = string.gsub(file, '^%s', '') ; file = string.gsub(file, '%s$', '')
+  file = string.gsub(file, '^%s', '') ; file = string.gsub(file, '%s$', '') ----- utf8
   if star == 'star' or nvt.mode == 'preview' or nvt.mode == 'final' then
     img = 1
-    local sp = string.gsub(file, '%s', '') ; if sp == '' then img = -1 end
+    local sp = string.gsub(file, '%s', '') ; if sp == '' then img = -1 end ----- utf8
     if string.find(file, '~') then img = -1 end
     if string.find(file, '%.%.') then img = -1 end
     if string.find(file, '\\') then img = -1 end
@@ -466,7 +466,7 @@ end
 -- Parse \logo:
 nvt.parselogo = function (star,file)
   local a, t, f, l, lx, n ; local img = 0
-  file = string.gsub(file, '^%s', '') ; file = string.gsub(file, '%s$', '')
+  file = string.gsub(file, '^%s', '') ; file = string.gsub(file, '%s$', '') ----- utf8
   if star == 'star' or nvt.mode == 'preview' or nvt.mode == 'final' then
     img = 1
     local sp = string.gsub(file, '%s', '') ; if sp == '' then img = -1 end
@@ -492,7 +492,7 @@ end
 -- Check that a \subdoc call does not re-use same path/filename:
 nvt.norepeatsubdoc = function (s)
   local n ; local ok = true
-  s = string.gsub(s, ' ', '')
+  s = string.gsub(s, ' ', '') ----- utf8
   local m = string.gsub(s, ':.*', '')
   local t = string.gsub(s, '^' .. m .. ':', '')
   local v = #nvt.subdocs
@@ -511,7 +511,7 @@ end
 -- Parse subdoc file paths:
 nvt.parsethisdoc = function (s)
   local p, f, d, t, m, n ; local e = ''
-  s = string.gsub(s, ' ', '')
+  s = string.gsub(s, ' ', '') ----- utf8
   if string.find(s, '%.%.') then
     e = 'Cannot use .. in thisdoc path.'
   end
@@ -543,7 +543,7 @@ nvt.parsethisdoc = function (s)
     e = 'Path to thisdoc cannot be symlink (soflink).'
   end
   _, n = string.gsub(s, '/', '') ; if n > 5 then
-    e = 'Too many folder leve;s for thisdoc relative to maindoc. Limit 5.'
+    e = 'Too many folder levels for thisdoc relative to maindoc. Limit 5.'
   end
   if n == 0 or n > 5 then d = ''
   elseif n == 1 then d = '..'
@@ -871,30 +871,16 @@ end
 
 
 -- Parse \styleN for N = 0-9:
-nvt.parsestyle = function (N, s) -- style number, option
-  s = string.gsub(s, ' ', '')
-  local h, d
-  if string.find(s, 'info') then
-    tex.sprint('\\def\\tmpinfo{1}') ; s = string.gsub(s, 'info', '')
-  else
-    tex.sprint('\\def\\tmpinfo{0}')
-  end
-  N = tonumber(N)
-  if (not N or N < 0 or N > 9) then
+nvt.parsestyle = function (N,s) -- style number, option
+  local d, h, a, b, n, m ; local p = '' ; local q = ''
+  N = tonumber(N) ; s = string.gsub(s, ' ', '')
+  if nvt.preamble == true then tex.sprint('\\def\\tmpreturn{-99}') ; nvt.good = false
+  elseif (not N or N < 0 or N > 9) then
     tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
   else
     tex.sprint('\\def\\tmpscale{' .. nvt.stylescale[N] .. '}')
-    if string.find(s, 'logo') then
-      tex.sprint('\\def\\tmplogo{1}') ; s = string.gsub(s, 'logo', '')
-      h = math.max(nvt.stylescale[N],3) * nvt.bls
-      d = 0.3 * math.max(nvt.stylescale[N],3) * nvt.bls
-    else
---      h = nvt.stylescale[N] * nvt.bls
---      d = 0.3 * nvt.stylescale[N] * nvt.bls
------      h = 1.17 * nvt.stylescale[N] * nvt.bls
-      d = 0.26 * nvt.stylescale[N] * nvt.em
-      h = (0.65 * nvt.stylescale[N] * nvt.em) + (2 * d)
-    end
+    d = 0.26 * nvt.stylescale[N] * nvt.em
+    h = (0.65 * nvt.stylescale[N] * nvt.em) + (2 * d)
     local ssp = nvt.space[nvt.stylefont[N]] + 0.02 * nvt.styletrack[N]
     tex.sprint('\\def\\tmph{' .. h .. 'pt}\\def\\tmpd{' .. d .. 'pt}')
     tex.sprint('\\def\\tmpleft{' .. nvt.styleleft[N] .. '}')
@@ -905,66 +891,103 @@ nvt.parsestyle = function (N, s) -- style number, option
       .. nvt.stylefont[N] .. '}\\endgroup')
     tex.sprint('\\def\\tmpspace{' .. ssp .. '}')
     tex.sprint('\\def\\tmpraw{' .. nvt.styleraw[N] .. '}')
+    tex.sprint('\\def\\tmpreturn{1}')
+  end
+  if s ~= '' then
+    s = s .. ','
+    if string.find(s, 'above=') then
+      a, n = string.gsub(s, '.*above=', '') ; a = string.gsub(a, ',.*', '')
+      _, m = string.find(a, '%d')
+      if n == 1 and m <= 1 then
+        p = string.gsub(a, '%D', '') ; q = string.gsub(a, p, '')
+        local pp = tonumber(p) ; p = 0.76 + (pp - 1)*0.655
+        tex.sprint('\\def\\tmphtabove{' .. p .. 'pt}')
+        if string.find(a, 'w') then
+          tex.sprint('\\def\\tmpwabove{1}') ; q = string.gsub(q, 'w', '')
+        end
+        if string.find(a, 'u') then
+          tex.sprint('\\def\\tmpuabove{1}') ; q = string.gsub(q, 'u', '')
+        end
+        s = string.gsub(s, 'above=' .. a, '')
+      end
+    end
+    if string.find(s, 'below=') then
+      b, n = string.gsub(s, '.*below=', '') ; b = string.gsub(b, ',.*', '')
+      _, m = string.find(b, '%d')
+      if n == 1 and m <= 1 then
+        p = string.gsub(b, '%D', '') ; q = string.gsub(b, p, '')
+        local pp = tonumber(p) ; p = 0.76 + (pp - 1)*0.655
+        tex.sprint('\\def\\tmphtbelow{' .. p .. 'pt}')
+        if string.find(b, 'w') then
+          tex.sprint('\\def\\tmpwbelow{1}') ; q = string.gsub(q, 'w', '')
+        end
+        if string.find(b, 'u') then
+          tex.sprint('\\def\\tmpubelow{1}') ; q = string.gsub(q, 'u', '')
+        end
+        s = string.gsub(s, 'below=' .. b, '')
+      end
+    end
     s = string.gsub(s, ',', '')
     if s == '' then
       tex.sprint('\\def\\tmpreturn{1}')
     else
-      tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
+      tex.sprint('\\def\\tmpreturn{-2}') ; nvt.good = false
     end
-    if nvt.preamble == true then tex.sprint('\\def\\tmpreturn{-99}') end
   end
 end
 --
 
 
 -- Parse \line argument:
-nvt.parseline = function (s)
-  s = string.gsub(s, ' ', '') ; s = s .. ',' ; s = string.gsub(s, 'thickness', 'thick')
-  local n, a, w, t, r ; local tt = 0.76
-  if string.find(s, 'align=') then
-    a, n = string.gsub(s, '.*align=', '') ; a = string.gsub(a, ',.*', '')
+nvt.parseline = function (s1,s2) -- star (0|1), option
+  s2 = string.gsub(s2, ' ', '') ; s2 = s2 .. ','
+  local n, a, w, h, r ; local ww = .2 ; local hh = 1
+  if string.find(s2, 'align=') then
+    a, n = string.gsub(s2, '.*align=', '') ; a = string.gsub(a, ',.*', '')
     if n == 1 and a == 'left' then
       tex.sprint('\\def\\tmpleft{}\\def\\tmpright{\\hfill}')
-      s = string.gsub(s, 'align=left', '')
+      s2 = string.gsub(s2, 'align=left', '')
     elseif n == 1 and a == 'right' then
       tex.sprint('\\def\\tmpleft{\\hfill}\\def\\tmpright{}')
-      s = string.gsub(s, 'align=right', '')
+      s2 = string.gsub(s2, 'align=right', '')
     elseif n == 1 and a == 'center' then
       tex.sprint('\\def\\tmpleft{\\hfill}\\def\\tmpright{\\hfill}')
-      s = string.gsub(s, 'align=center', '')
+      s2 = string.gsub(s2, 'align=center', '')
     end
   end
-  if string.find(s, 'width=') then
-    w, n = string.gsub(s, '.*width=', '') ; w = string.gsub(w, ',.*', '')
-    if n == 1 and string.find(w, 'em$') then
-      w = string.gsub(w, 'em$', '') ; ww = tonumber(w)
-      if ww and ww >= 0 then
-        s = string.gsub(s, 'width=' .. w .. 'em', '')
-        if ww * nvt.em < nvt.textwidth then
-          tex.sprint('\\def\\tmpwidth{' .. w .. 'em }')
-        end
+  if string.find(s2, 'width=') then
+    w, n = string.gsub(s2, '.*width=', '') ; w = string.gsub(w, ',.*', '')
+    if n == 1 then
+      ww = tonumber(w)
+      if ww and ww >= 0 and ww <= 1 then
+        s2 = string.gsub(s2, 'width=' .. w, '')
+        tex.sprint('\\def\\tmpwidth{' .. w .. '}')
       end
     end
   end
-  if string.find(s, 'thick=') then
-    t, n = string.gsub(s, '.*thick=', '') ; t = string.gsub(t, ',.*', '')
-    tt = tonumber(t)
-    if tt then
-      s = string.gsub(s, 'thick=' .. t, '')
-      if tt == 0 then
-        tex.sprint('\\def\\tmpshow{0}')
-      else
-        if tt < 1 then tt = 1 end
-        if tt > 9 then tt = 9 end
-        tt = 0.76 + 0.655 * (tt - 1)
+  if string.find(s2, 'height=') then
+    h, n = string.gsub(s2, '.*height=', '') ; h = string.gsub(h, ',.*', '')
+    if n == 1 then
+      hh = tonumber(h)
+      if hh and hh >= 1 and hh <= 9 then
+        s2 = string.gsub(s2, 'height=' .. h, '')
+        tex.sprint('\\def\\tmpheight{' .. h .. '}')
       end
     end
   end
-  tex.sprint('\\def\\tmpthick{' .. tt .. 'pt }')
-  r = 0.5 * (nvt.bls - tt - 0.65*nvt.em)
+  r = 0.5 * (nvt.bls - hh - 0.65*nvt.em)
   tex.sprint('\\def\\tmpr{' .. r .. 'pt}')
-  s = string.gsub(s, ',', '')
-  if s == '' then
+  s1 = tonumber(s1)
+  if (not s1) or s1 == 0 then
+    tex.sprint('\\def\\tmpvspa{0pt}\\def\\tmpvspb{0pt}')
+  else ----- to be calculated
+    local a = s1 + 1 + hh
+    tex.sprint('\\def\\tmpvspa{' .. a .. 'pt}')
+    local b = 4
+    tex.sprint('\\def\\tmpvspb{' .. b .. 'pt}')
+  end
+  s2 = string.gsub(s2, ',', '')
+  if s2 == '' then
     tex.sprint('\\def\\tmpreturn{1}')
   else
     tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
@@ -1592,7 +1615,7 @@ function nvt.parsetitle(s)
     tex.sprint('\\def\\tmpreturn{-1}') ; nvt.good = false
   else
     nvt.didtitle = true  ----- use unicode.utf8.sub(x,y,z)
-    local sp = string.gsub(s, '[^%(%)]', '') ; sp = string.gsub(sp, '%(%)', '')
+    local sp = string.gsub(s, '[^%(%)]', '') ; sp = string.gsub(sp, '%(%)', '') ----- utf8
     if string.len(sp) > 0 then
       tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
     else
@@ -1637,7 +1660,7 @@ end
 --
 function nvt.parseversion(s)
   if nvt.didversion == true then
-    tex.sprint('\\def\\tmpreturn{-1}') -- but still good
+    tex.sprint('\\def\\tmpreturn{-1}') -- but still good -----
   else
     nvt.didversion = true  ----- use unicode.utf8.sub(x,y,z)
     local sp = string.gsub(s, '[^%(%)]', '') ; sp = string.gsub(sp, '%(%)', '')
@@ -1886,8 +1909,17 @@ end
 
 -- Parse \enable setting(s), which may be used more than once, with cumulative effect:
 function nvt.parseenable (s)
-  local conflict = false ; local g = 0
+  local g = 0 ; local e = 0
   s = s .. ',' ; s = string.gsub(s,' ','')
+  if string.find(s, 'end0,') then
+    tex.sprint('\\def\\tmpend{0}') ; s = string.gsub(s, 'end0', '') ; e = e + 1
+  end
+  if string.find(s, 'end2,') then
+    tex.sprint('\\def\\tmpend{2}') ; s = string.gsub(s, 'end2', '') ; e = e + 1
+  end
+  if string.find(s, 'end4,') then
+    tex.sprint('\\def\\tmpend{4}') ; s = string.gsub(s, 'end4', '') ; e = e + 1
+  end
   if string.find(s,'britq,') then
     tex.sprint('\\def\\tmpbritq{1}') ; s=string.gsub(s,'britq','')
   end
@@ -1908,8 +1940,8 @@ function nvt.parseenable (s)
       s = string.gsub(s, 'guide=last', '')
     end
   end
-  s=string.gsub(s,',','')
-  if (s ~= '') or (conflict == true) then
+  s = string.gsub(s, ',', '')
+  if s ~= '' or e > 1 then
     nvt.good = false ; tex.sprint('\\def\\tmpreturn{0}')
   else
     tex.sprint('\\def\\tmpreturn{1}')
@@ -1921,9 +1953,6 @@ end
 -- Parse disable setting(s), which may be used more than once, for cumulative effect:
 function nvt.parsedisable (s)
   s = s .. ',' ; s = string.gsub(s, ' ', '')
-  if string.find(s, 'blankend,') then
-    tex.sprint('\\def\\tmpnoblankend{1}') ; s = string.gsub(s, 'blankend', '')
-  end
   if string.find(s,'renumber,') then
     tex.sprint('\\def\\tmpnorenumber{1}') ; s = string.gsub(s, 'renumber', '')
   end
@@ -1951,7 +1980,7 @@ end
 --
 
 
--- Parse \examine setting: ---- nvt.didexamine ?
+-- Parse \examine setting: ----- nvt.didexamine ?
 nvt.parseexamine = function (s)
   s = string.gsub(s, ' ', '')
   if s == '1' then tex.sprint('\\def\\tmpex{1}') ; nvt.examine = true

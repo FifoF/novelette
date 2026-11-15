@@ -65,7 +65,7 @@
 \newif\ifnvt@insubdoc %% True when compiling only subdocs.
 \ifdefined\thisdoc %% At time when \documentclass loads.
   \global\nvt@insubdoctrue
-  \global\nvt@noblankendtrue
+  \global\nvt@endzerotrue\global\nvt@endtwofalse\global\nvt@endfourfalse
   \directlua{nvt.parsethisdoc('\luaescapestring{\thisdoc}')}
   \edef\thisdocdet{\nvt@expdet{\thisdoc}}
   \ifnum\tmpreturn=1\relax

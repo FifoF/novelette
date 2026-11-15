@@ -17,11 +17,11 @@
 %% relative to the main document. File paths are always relative to the main document, even if
 %% the file is called by a sub-document.
 %%   You may never place graphics in footnotes or page headers. Only \logo may be used inline
-%% with text; \image and \sceneimage create their own paragraphs.
+%% with text, within a \styleN; \image and \sceneimage create their own paragraphs.
 %%   All three graphics commands have starred and unstarred versions. In preview and final modes,
 %% there is no difference: each file is carefully inspected.
 %%   In draft mode, an unstarred command does not look for its file. Instead, it prints a gray
-%% placeholder rectangle. If starred, it prints the file if it fits its area.
+%% placeholder rectangle. If starred, it prints the file, when it fits the area.
 %%   If a file is too wide or tall for its area, it is not printed. Instead, a placeholder
 %% rectangle prints where the file would print, and the document is demoted to draft mode.
 
@@ -316,10 +316,10 @@
 %% LOGO: \logo{PathTo/filename.png}  also starred version.
 %%   A logo is a small image that sits inline with surrounding text. Its purpose is publisher's
 %% logo on the title or copyright page, but Novelette does not know or care why you use it.
-%%   You may only use \logo within a \styleN with option [logo]. The logo width and height
-%% may not exceed 0.32in. It will be vertically positioned so that its lower 1/4 is below
-%% text baseline, and its upper 3/4 is above baseline. It will be horizontally padded to occupy
-%% 3em (unscaled). Regardless of its scale, the \styleN will occupy 3 at least 3 normal lines.
+%%   You may only use \logo within a \styleN. The logo width and height
+%% may not exceed 0.16in. That's not much: It is only 48px per side @300px/in, 0r 96px @600px/in.
+%%   The logo is vertically positioned so that its lower 1/4 is below text baseline, and its
+%% upper 3/4 is above baseline. It will be horizontally padded to occupy 1.2em (unscaled).
 %%   The starred \logo* and unstarred \logo behave the same as the related \image* and \image.
 \DeclareDocumentCommand\logo{sm}{%%
   \begingroup%%
@@ -360,33 +360,13 @@
       \directlua{nvt.adderr('Bad \\logo path or filename.')}%%
     \fi%%
   \fi%%
-  \ifnum\tmplogo=1\relax%% \tmplogo is provided by \styleN.
-    \ifnum\tmpisfile=-1\relax%%
-      \nvt@err{Bad logo argument: {#2}.^^J%%
-        \spii There are several possibilities:^^J%%
-        \spiv 1. The filename does not have .png file extension.^^J%%
-        \spiv 2. Path to logo file is not relative to main document.^^J%%
-        \spix Do not use path relative to sub-documents.^^J%%
-        \spix Do not use absolute path, or symlink (softlink).^^J%%
-        \spiv 3. File is not in same folder as main document,^^J%%
-        \spix or in subfolder from main document (max 5 levels).^^J%%
-        \spiv 4. Path or filename has forbidden characters. Among them:^^J%%
-        \spix You may use hyphen or underscore, but not space or tilde.}%%
-      \def\logofake{1}%%
-      \directlua{nvt.adderr('Bad \\logo path or filename.')}%%
-    \fi%%
-    \ifnum\logofake=0\relax%%
-      \nvt@reallogo{#2}%%
-    \else%%
-      \sbox0{{\nvt@gray{8}\rule{.32in}{.32in}}}%%
-    \fi%%
-    \edef\tmplogodrop{\fpeval{.25*\ht0}pt}%%
-    \strut\makebox[3\nvt@em]{\hfill\smash{\raisebox{-\tmplogodrop}{\usebox0}}\hfill}%%
+  \ifnum\logofake=0\relax%%
+    \nvt@reallogo{#2}%%
   \else%%
-    \nvt@err{\string\logo\space may only be placed within \string\styleN, with [logo] option.}%%
-    \strut\makebox[3\nvt@em]{\hfill\char"FFFD\hfill}%%
-    \directlua{nvt.adderr('\\logo in disallowed location.')}%%
+    \sbox0{{\nvt@gray{8}\rule{.16in}{.16in}}}%%
   \fi%%
+  \edef\tmplogodrop{\fpeval{.25*\ht0}pt}%%
+  \strut\makebox[1.2\nvt@em]{\hfill\smash{\raisebox{-\tmplogodrop}{\usebox0}}\hfill}%%
   \endgroup%%
 }%%
 %%
@@ -400,9 +380,8 @@
     \nvt@warn{File #1 failed validation.^^J%%
       See Novelette docs for how to fix this problem.^^J%%
       Cannot produce preview or final mode, if not valid.}%%
-    \sbox0{{\nvt@gray{8}\rule[-.06in]{.24in}{.18in}}}%%
+    \sbox0{{\nvt@gray{8}\rule[-.04in]{.16in}{.16in}}}%%
   \else%%
-\edef\tmpnumone{#1}%%
     \@ifundefined{#1 image:I}{%%
       \saveimageresource attr{/Interpolate true}{#1}%%
       \sbox0{\useimageresource\lastsavedimageresourceindex}%%
@@ -413,10 +392,10 @@
       \sbox0{\csname #1 image:I\endcsname}%%
     }%%
   \fi%%
-  \edef\tmpfit{\fpeval{(\ht0 > .324in) + (\wd0 > .324in)}}%% .004in fuzz h,w
+  \edef\tmpfit{\fpeval{(\ht0 > .162in) + (\wd0 > .162in)}}%% .002in fuzz h,w
   \ifnum\tmpfit>0\relax%%
     \nvt@warn{File #1 is too large for \string\logo.^^J%%
-      \spii Max width 0.32in, height 0.32in.}%%
+      \spii Max width 0.16in, height 0.16in.}%%
   \fi%%
 }%%
 %%

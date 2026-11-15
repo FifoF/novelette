@@ -205,7 +205,7 @@
 \newif\ifnvt@useplas
 \newif\ifnvt@uselight
 \newif\ifnvt@useicel
-\let\nvt@par\par\relax %% For local \par tweaks.
+\let\nvt@par\par\relax %% For \par tweaks.
 \let\nvt@input\input\relax %% For internal use only, where \input is deactivated.
 \let\nvt@maybestopnow\relax%% Changes when compiling only subdocs.
 \catcode`\_=12\relax %% So that _ may be used as text anywhere.
@@ -234,7 +234,6 @@
     \IfFileExists{./\jobname.typo}{%%
       \directlua{%%
         local fileout = './' .. tex.jobname .. '.typo'
-local in = io.open(fileout,"r+")
         local out = io.open(fileout,"w+")
         out:write('Previous typo file has been cleared by compiling without examine.')
         io.close(out)
@@ -357,9 +356,19 @@ local in = io.open(fileout,"r+")
 %% is written to Info and/or XMP. Finally, a summary report is prepared.
 \AtEndDocument{%%
   \clearpage
-  \ifnvt@noblankend\else
-    \ifodd\c@page\nvt@thispagestyle{empty}\null\clearpage\fi
-    \nvt@blankverso
+  \ifnvt@draft\else
+    \ifnvt@endtwo
+      \ifodd\c@page\nvt@thispagestyle{empty}\null\clearpage\fi
+      \nvt@blankverso
+    \else
+      \ifnvt@endfour
+        \edef\tmpfour{\fpeval{round(4*((\value{page}-1)/4 - floor((\value{page}-1)/4)),0)}}
+        \ifnum\tmpfour>1\relax\nvt@thispagestyle{empty}\null\clearpage\fi
+        \ifnum\tmpfour>2\relax\nvt@thispagestyle{empty}\null\clearpage\fi
+        \ifnum\tmpfour>3\relax\nvt@thispagestyle{empty}\null\clearpage\fi
+        \nvt@blankverso
+      \fi
+    \fi
   \fi
   \let\input\nvt@input\relax
   \nvt@didprinttrue

@@ -454,6 +454,15 @@
 %% ENABLE:
 %%   You may enable some features that are not ordinarily pre-set for you. The setting consists
 %% of comma-separated choices. You may use \enable more than once in Preamble (cumulative effect).
+%%   end0 end2 end4 -> You may select only one of these three choices. Default end0 in draft mode,
+%%     Default end2 in preview and final modes.
+%%       Most print-on-demand services require the PDF to end with a blank verso page. They will
+%%     place a manufacturing code there. Choice end2 adds 1 or 2 blank pages, as needed,
+%%     to ensure that the final page is blank verso.
+%%       A few P.O.D. services request that the PDF end where your content ends, verso or recto,
+%%     without added blanks. They will automatically add pages, as needed. Choice end0 does that.
+%%       If the service requests a final blank verso, with page count divisible by 4, use end4.
+%%     That adds 1 to 4 blank pages, as needed.
 %%   britq -> Normally, Novelette resolves ``` and ''' as American-style quotes: double outside,
 %%     single inside (ordinary LaTeX does the wrong thing). \enable{britq} resolves triple quotes
 %%     British-style: single outsdie, double inside.
@@ -461,23 +470,30 @@
 %%     With or without xmp, the Info dictionary always contains essential metadata.
 %%   guide=G -> Marker in left margin at line G, only on first page of component in draft mode.
 %%     guide=last places marker at last line per page (not including footer).
+\newif\ifnvt@endzero
+\newif\ifnvt@endtwo \nvt@endtwotrue
+\newif\ifnvt@endfour
 \newif\ifnvt@britq
 \newif\ifnvt@xmp
 \newif\ifnvt@hasguide
 \def\nvt@guideline{0}
 \DeclareDocumentCommand\enable{m}{%%
   \begingroup
-  \def\tmpbritq{0}\def\tmpxmp{0}
+  \def\tmpend{2}\def\tmpbritq{0}\def\tmpxmp{0}
   \def\tmphasguide{0}\def\tmpguide{0}
   \directlua{nvt.parseenable('\luaescapestring{#1}')}
   \ifnum\tmpreturn=0\relax
     \nvt@err{Bad setting for \string\enable.^^J%%
       \spii Format: \string\enable{comma,separated,choices}.^^J%%
-      \spiv Choices: britq xmp guide=G^^J%%
+      \spiv Choices: end0 end2 end4 britq xmp guide=G^^J%%
+      \spix At most one of end0 end2 end4.^^J%%
       \spix G is an integer from 0 (no guide) to lines per page.^^J%%
       \spix If you \string\disable{guide}, it over-rides this value.}%%
     \directlua{nvt.adderr('Bad \\enable.)}
   \fi
+  \ifnum\tmpend=0\relax\global\nvt@endzerotrue\global\nvt@endtwofalse\global\nvt@endfourfalse\fi
+  \ifnum\tmpend=2\relax\global\nvt@endtwotrue\global\nvt@endzerofalse\global\nvt@endfourfalse\fi
+  \ifnum\tmpend=4\relax\global\nvt@endfourtrue\global\nvt@endzerofalse\global\nvt@endtwofalse\fi
   \ifnum\tmpbritq=1\relax\global\nvt@britqtrue\fi
   \ifnum\tmpxmp=1\relax\global\nvt@xmptrue\fi
   \ifnum\tmphasguide=1\relax\global\nvt@hasguidetrue\xdef\nvt@guideline{\tmpguideline}\fi
@@ -490,8 +506,6 @@
 %% DISABLE:
 %%   You may disable some features that are ordinarily pre-set for you. The setting consists
 %% of comma-separated choices. You may use \disable more than once in Preamble (cumulative effect).
-%%   blankend -> Normally, one or two blank pages are automatically added at end of PDF,
-%%     so that final page is blank verso. \disable{blankend} omits adding those pages.
 %%   renumber -> PDFpage numbers are continous. Printable book page numbers, where they appear,
 %%     are lowercase italic in frontmatter, reset to arabic 1 at mainmatter, no reset at endmatter.
 %%     \disable{renumber} sets book page equal to PDF page, continous arabic throughout.
@@ -504,24 +518,22 @@
 %%   metasub -> Normally, non-empty subtitle has custom Info dictionary entry. If using xmp,
 %%     it is written there (prism namespace). \disable(metasub) omits these entries.
 %%   guide -> Any global or local guide=N setting is ignored.
-\newif\ifnvt@noblankend
 \newif\ifnvt@norenumber
 \newif\ifnvt@nopageflip
 \newif\ifnvt@noautodeco
 \newif\ifnvt@nometasub
 \newif\ifnvt@noguide
 \def\disable#1{%%
-  \def\tmpnoblankend{0}\def\tmpnorenumber{0}\def\tmpnopageflip{0}
+  \def\tmpnorenumber{0}\def\tmpnopageflip{0}
   \def\tmpnoautodeco{0}\def\tmpnometasub{0}\def\tmpnoguide{0}
   \directlua{nvt.parsedisable('\luaescapestring{#1}')}
   \ifnum\tmpreturn=0\relax
     \nvt@err{Bad setting for \string\disable.^^J%%
       \spii Format: \string\disable{comma,separated,choices}.^^J%%
-      \spiv Choices: blankend renumber pageflip autodeco metasub guide^^J%%
+      \spiv Choices: renumber pageflip autodeco metasub guide^^J%%
       \spix If you \string\disable{guide}, it over-rides \string\enable{guide=G}.}%%
     \directlua{nvt.adderr('Bad \\disable.')}
   \fi
-  \ifnum\tmpnoblankend=1\relax\global\nvt@noblankendtrue\fi
   \ifnum\tmpnorenumber=1\relax\global\nvt@norenumbertrue\fi
   \ifnum\tmpnopageflip=1\relax\global\nvt@nopagefliptrue\fi
   \ifnum\tmpnoautodeco=1\relax\global\nvt@noautodecotrue\fi
@@ -634,7 +646,6 @@
 }%%
 \let\endcenter\par
 \let\centering\par
-\def\underline#1{#1} %% No standard underline! Re-defined later, as an effect.
 %% End general settings.
 
 

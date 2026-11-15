@@ -430,7 +430,7 @@
     \ifnum\nvt@fnindent=1\relax\makebox[\nvt@parindent]{\tmpmarker\hfill}\fi%% away
     \ifnum\nvt@fnindent=2\relax\makebox[\nvt@parindent]{}\tmpmarker\space\fi%% both
     \ifnum\nvt@fnindent=3\relax\makebox[\nvt@parindent]{\hfill\tmpmarker\space}\fi%% near
-    {#2}\par%%
+    {#2}\nvt@par%%
   }%%
   \ifnum\c@footnote=8\relax\setcounter{footnote}{0}\fi%%
   \nvt@infootnotefalse%%

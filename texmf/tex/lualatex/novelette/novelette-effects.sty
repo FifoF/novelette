@@ -746,6 +746,45 @@
 %%
 
 
+%% HORIZONTAL LINE:
+%%   The standard LaTeX \line command can draw arbitrary lines, not necessarily horizontal.
+%% Novelette only allows horizontal, with limitations, and with custom syntax:
+\DeclareDocumentCommand\line{m}{%%
+  \begingroup%%
+  \ifnvt@inheader\def\tmpok{0}\else\def\tmpok{1}\fi%%
+  \ifnvt@infootnote\def\tmpok{0}\fi%%
+  \ifnvt@instyle\def\tmpok{0}\fi%%
+  \ifnvt@inscene\def\tmpok{0}\fi%%
+  \ifnvt@inendnote\def\tmpok{0}\fi%%
+  \ifnum\tmpok=1\relax%%
+    \def\tmpleft{\hfill}\def\tmpright{\hfill}%%
+    \def\tmpup{2.1pt}\def\tmpwidth{.2}\def\tmpheight{.76pt}%%
+    \directlua{nvt.parseline('\luaescapestring{#1}')}%%
+    \ifnum\tmpreturn=1\relax%%
+      \edef\tmpwd{\fpeval{\tmpwidth*\linewidth}pt}%%
+      \par\strut\tmpleft\rule[\tmpup]{\tmpwd}{\tmpheight}\tmpright\strut\par%%
+    \else%%
+      \nvt@err{Bad \string\line. Novelette uses a custom macro, not LaTeX standard.^^J%%
+        \spii Format: \string\line{align=A,width=W,height=H}^^J%%
+        \spiv A -> left right center. Default center.^^J%%
+        \spiv W -> Decimal number 0<=W<=1 (no units). Default 0.2.^^J%%
+        \spix Width of line, as portion of available linewidth.^^J%%
+        \spxi In a block, linewidth is block width. Else, full textwidth.^^J%%
+        \spxi If W=0 then no line appears, but the space is occupied.^^J%% 
+        \spiv H -> Decimal number 1<=H<=9. Default 1.^^J%%
+        \spix H=1 line 0.76pt thick. Inceasing H, thicker line. H=9 is 6pt.^^J%%
+        \spiv In all cases, the line occupies one normal baselineskip.}%%
+      \par\strut\char"FFFD Bad \textbackslash line.\par%%
+    \fi%%
+  \else%%
+    \nvt@err{Attempted to use \string\line\space in disallowed location.}%%
+    {\char"FFFD}%%
+  \fi%%
+  \endgroup%%
+}%%
+%%
+
+
 %% Decorative Lines (always centered):
 \DeclareDocumentCommand\surf{}{%% wavy swung dash
   \par\vspace*{\nvt@bls}\strut\par%%
@@ -774,7 +813,9 @@
 %% the excerpt and note. The excerpt is a few words of main text, so the reader can locate it
 %% on its page. Novelette places the excerpt in angle brackets. followed by colon. After that,
 %% you write the note. If multi-paragraph, indented as usual.
+\newif\ifnvt@inendnote
 \DeclareDocumentCommand\endnote{mm+m}{%% {bookpage}{excerpt}{note}
+  \begingroup\nvt@inendnotetrue%%
   \ifnvt@inbackmatter%%
     \begin{block}[2/0,size=small]%%
     \strut\hspace{-2\nvt@parindent}\makebox[2\nvt@parindent][r]{#1\space\space}%%
@@ -785,6 +826,7 @@
     \par{\char"FFFD} No \string\endnote\space allowed here.\par%%
     \directlua{nvt.adderr('\\endnote appears before \\backmatter.')}%%
   \fi%%
+  \endgroup%%
 }%%
 %%
 
@@ -808,7 +850,8 @@
 \def\HUGE{\nvt@nocmd{\string\HUGE}}
 \DeclareDocumentCommand\textls{O{}+m}{\nvt@nocommand{\string\textls}#2}
 \long\def\underline#1{%%
-  \nvt@warn{Novelette has no \string\underline. Try \string\style* or \string\line* instead.}%%
+  \nvt@warn{Novelette has no \string\underline. %%
+    Try \string\style\space or \string\line\space instead.}%%
   {#1}%%
 }%%
 %%

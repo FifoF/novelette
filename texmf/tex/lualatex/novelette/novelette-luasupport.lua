@@ -939,55 +939,47 @@ end
 
 
 -- Parse \line argument:
-nvt.parseline = function (s1,s2) -- star (0|1), option
-  s2 = string.gsub(s2, ' ', '') ; s2 = s2 .. ','
-  local n, a, w, h, r ; local ww = .2 ; local hh = 1
-  if string.find(s2, 'align=') then
-    a, n = string.gsub(s2, '.*align=', '') ; a = string.gsub(a, ',.*', '')
+nvt.parseline = function (s)
+  s = string.gsub(s, ' ', '') ; s = s .. ','
+  local n, a, w, h, u ; local ww = .2 ; local hh = 1
+  if string.find(s, 'align=') then
+    a, n = string.gsub(s, '.*align=', '') ; a = string.gsub(a, ',.*', '')
     if n == 1 and a == 'left' then
       tex.sprint('\\def\\tmpleft{}\\def\\tmpright{\\hfill}')
-      s2 = string.gsub(s2, 'align=left', '')
+      s = string.gsub(s, 'align=left', '')
     elseif n == 1 and a == 'right' then
       tex.sprint('\\def\\tmpleft{\\hfill}\\def\\tmpright{}')
-      s2 = string.gsub(s2, 'align=right', '')
+      s = string.gsub(s, 'align=right', '')
     elseif n == 1 and a == 'center' then
       tex.sprint('\\def\\tmpleft{\\hfill}\\def\\tmpright{\\hfill}')
-      s2 = string.gsub(s2, 'align=center', '')
+      s = string.gsub(s, 'align=center', '')
     end
   end
-  if string.find(s2, 'width=') then
-    w, n = string.gsub(s2, '.*width=', '') ; w = string.gsub(w, ',.*', '')
+  if string.find(s, 'width=') then
+    w, n = string.gsub(s, '.*width=', '') ; w = string.gsub(w, ',.*', '')
     if n == 1 then
       ww = tonumber(w)
       if ww and ww >= 0 and ww <= 1 then
-        s2 = string.gsub(s2, 'width=' .. w, '')
+        s = string.gsub(s, 'width=' .. w, '')
         tex.sprint('\\def\\tmpwidth{' .. w .. '}')
       end
     end
   end
-  if string.find(s2, 'height=') then
-    h, n = string.gsub(s2, '.*height=', '') ; h = string.gsub(h, ',.*', '')
+  if string.find(s, 'height=') then
+    h, n = string.gsub(s, '.*height=', '') ; h = string.gsub(h, ',.*', '')
     if n == 1 then
       hh = tonumber(h)
       if hh and hh >= 1 and hh <= 9 then
-        s2 = string.gsub(s2, 'height=' .. h, '')
-        tex.sprint('\\def\\tmpheight{' .. h .. '}')
+        s = string.gsub(s, 'height=' .. h, '')
+        h = 0.76 + (hh - 1) * 0.655
+        tex.sprint('\\def\\tmpheight{' .. h .. 'pt}')
       end
     end
   end
-  r = 0.5 * (nvt.bls - hh - 0.65*nvt.em)
-  tex.sprint('\\def\\tmpr{' .. r .. 'pt}')
-  s1 = tonumber(s1)
-  if (not s1) or s1 == 0 then
-    tex.sprint('\\def\\tmpvspa{0pt}\\def\\tmpvspb{0pt}')
-  else ----- to be calculated
-    local a = s1 + 1 + hh
-    tex.sprint('\\def\\tmpvspa{' .. a .. 'pt}')
-    local b = 4
-    tex.sprint('\\def\\tmpvspb{' .. b .. 'pt}')
-  end
-  s2 = string.gsub(s2, ',', '')
-  if s2 == '' then
+  u = 0.21*nvt.em - 0.5*((hh - 1) * 0.655) -----
+  tex.sprint('\\def\\tmpup{' .. u .. 'pt}')
+  s = string.gsub(s, ',', '')
+  if s == '' then
     tex.sprint('\\def\\tmpreturn{1}')
   else
     tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false

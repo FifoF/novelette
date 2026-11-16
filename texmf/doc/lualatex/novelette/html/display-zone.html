@@ -133,7 +133,8 @@ white space. Use <code>\blankline</code> and <code>\vspace</code> commands for t
      a line at increasing thickness, from 0.76pt to 6pt.</p>
 </li><li>
   <p>If the integer is followed by the letter <code>w</code> then the line is drawn at full
-     textwidth. Otherwise, it is drawn at the same width as the styled text.</p>
+     textwidth. Otherwise, it is drawn at the same width as the styled text, with the
+     same alignment.</p>
 </li><li>
   <p>If the integer is followed by the letter <code>u</code> then the line is drawn like
      and underline or overline, close to the styled text but not overlapping. The distance
@@ -145,11 +146,11 @@ white space. Use <code>\blankline</code> and <code>\vspace</code> commands for t
 
 <a id="line"></a>
 <h4>Horizontal Lines</h4>
-<p>For decoration, you may print horizontal lines within display zones. This <i>may</i> be useful
-in special places such as the book title page. But it can be distracting, when used within
-the flow of your story.</p>
 <p>Although standard LaTeX has a <code>\line</code> command, its purpose is irrelevant
-in Novelette. So the command is re&#8209;written with custom syntax:</p>
+in Novelette. So the command is re&#8209;written with custom syntax.</p>
+<p>For decoration, you may print horizontal lines. This <i>may</i> be useful
+in special places such as the book title page. But it can be distracting, when used within
+the flow of your story. In all cases, the line is padded to occupy one normal baselineskip.</p>
 <p><code>\line{align=<i>A</i>,width=<i>W</i>,height<i>H</i>}</code></p>
 <ul><li>
   <p><i>A</i> <img src="images/pointer.svg" height="16" width="16" alt=""/>
@@ -157,10 +158,10 @@ in Novelette. So the command is re&#8209;written with custom syntax:</p>
 </li><li>
   <p><i>W</i> <img src="images/pointer.svg" height="16" width="16" alt=""/>
      Decimal number 0<=W<=1. Portion of current linewidth.</p>
-  <p>If placed immediately beneath <code>\end{block}</code>, the current linewidth is the
+  <p>If placed within a <code>block</code> environment, the current linewidth is the
      width of the block. Otherwise, it is the textwidth.</p>
   <p>If you set <code>width=0</code> it is not a problem. That reserves vertical space, but does
-     not print a line.</p>    
+     not print a line.</p>
 </li><li>
   <p><i>H</i> <img src="images/pointer.svg" height="16" width="16" alt=""/>
      Decimal number 1<=H<=9. Height of the line.</p>
@@ -168,11 +169,8 @@ in Novelette. So the command is re&#8209;written with custom syntax:</p>
      by print-on-demand services.</p>
   <p><code>height=9</code> draws the thickest line allowed by Novelette, at 6pt.</p>
 </li></ul>
-<p class="noindent">Without asterisk, the unstarred <code>\line</code> command occupies a vertical
-  space of one normal baselineskip, regardless of the line height. With asterisk, the starred
-  <code>\line*</code> only occupies as much vertical space as necessary, with allowance for
-  clearing text above and below it. Both command may be used in a display zone, but only
-  the unstarred command may be used in maintext.</p>
+<p class="noindent">Also see <code>\style<i>N</i></code> for lines above and/or below the
+styled text.</p>
 
 
 <p><a id="titlepage"></a>&nbsp;</p>
@@ -192,9 +190,7 @@ due to the glue strip (area resered for binding).</p>
 % Other pages here.
 \begin{component} % Starts with display zone.
 \vfill
-\line{align=center,thick=9,width=14.48em}
-\style1[info]{DORKUS}
-\line{align=center,thick=9,width=14.48em}
+\style1[above=5,below=5]{DORKUS}
 \blankline
 \style2{A Novel}
 \vfill

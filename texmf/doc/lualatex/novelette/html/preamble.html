@@ -68,6 +68,7 @@
 <a href="#styles">\scenestyle{align=<i>A</i>}</a><br/>
 <a href="#styles">\footnotestyle{indent=<i>I</i>}</a><br/>
 <a href="#pdfx">\pdfx{<i>choice</i>}</a><br/>
+<a href="#endpdf">\endpdf{<i>choice</i>}</a><br/>
 <a href="#enable">\enable{<i>comma,separated,choices</i>}</a><br/>
 <a href="#disable">\disable{<i>comma,separated,choices</i>}</a><br/>
 <a href="#examine">\examine{<i>0|1</i>}</a><br/>
@@ -231,7 +232,7 @@
   <p>The width and height are measured with units of inches or millimeters. The same units
      must be used for both. Use <code>in</code> for inches, <code>mm</code> for millimeters.</p>
 </li><li>
-  <p>Use only standard sizes offered by your print service, with off&#8208;white
+  <p>Select only standard sizes offered by your print service, with off&#8208;white
      (cream, creme) paper. Never use white paper for popular fiction.</p>
 </li><li>
   <p>Avoid "extended distribution" (whatever it is named). You do not want booksellers to be
@@ -492,12 +493,64 @@
 </li></ul>
 
 
+<p><a id="endpdf"></a>&nbsp;</p>
+<h4 class="section">\endpdf{<i>choice</i>}</h4>
+<h4 class="link"><a href="#top">
+<img src="images/top.svg" width="16" height="16" alt=""/>TOP</a></h4>
+<p>The <code>choice</code> is one of <code>0 1 2 3 4<code>. Default <code>0</code>.</p>
+<p>Each <i>leaf</i> of your printed book has two <i>pages</i>, recto and verso. Thus, the number
+of printed pages is always even. In some cases, for manufacturing reasons, the number of printed
+pages is a multiple of 4. In all cases, the final (verso) page will not contain any of your
+content, but contains a code added by the manufacturer at time of printing. In other words,
+what is printed, will be a little bit more than the contents of your PDF.</p>
+<p>Some services request that your PDF end at its last content; they will add at least one
+blank page. Other services request that your PDF end with a blank verso page, so that they
+can use it for the code, without adding more pages. Yet other services request that your PDF
+end on a page (blank or not) that is one less than divisible by 4. And finally, some services
+request that your PDF end with a blank page divisible by 4.</p>
+<p>Yikes! What to do? <code>\endpdf{<i>choice</i></code> to the rescue. Choices:</p>
+<ul><li>
+  <p><code>0</code> <img src="images/pointer.svg" height="16" width="16" alt=""/>
+     Default. Does not add any pages to your PDF. It will not end with a blank page unless
+     you manually place it.</p>
+</li><li>
+  <p><code>1</code> <img src="images/pointer.svg" height="16" width="16" alt=""/>
+     Forces PDF to end with an odd (recto) page. If necessary, adds one blank page. If not
+     necessary, adds none.</p>
+</li><li>
+  <p><code>2</code> <img src="images/pointer.svg" height="16" width="16" alt=""/>
+     Forces PDF to end with an even (verso) page, which is blank. Adds one or two blank
+     pages, as needed.</p>
+</li><li>
+  <p><code>3</code> <img src="images/pointer.svg" height="16" width="16" alt=""/>
+     Forces PDF to end with an odd (recto) page that is one less than divisible by 4.
+     If necessary, adds 1 to 3 blank pages for that purpose. If not necessary, adds none.</p>
+</li><li>
+  <p><code>4</code> <img src="images/pointer.svg" height="16" width="16" alt=""/>
+     Forces PDF to end with an even (verso) page that is blank, and divisible by 4.
+     Adds 1 to 4 blank pages, as needed.</p>
+</li></ul>
+<p class="noindent">Those are all the situations known to the Novelette developer. If you need
+something else, do it yourself using <code>\blankpage</code> as needed.</p>
+
+
+
 <p><a id="enable"></a>&nbsp;</p>
 <h4 class="section">\enable{<i>comma,separated,choices</i>}</h4>
 <h4 class="link"><a href="#top">
 <img src="images/top.svg" width="16" height="16" alt=""/>TOP</a></h4>
 <p>Each of these choices enables some optional behavior:</p>
 <ul><li>
+  <p><code>britq</code> <img src="images/pointer.svg" height="16" width="16" alt=""/>
+     If you type <code>```</code> or <code>'''</code> then Novelette
+     will interpret the triple characters as American-style quotes: double on the outside,
+     single inside, with a narrow nonbreaking space between them.</p>
+  <p>When you enable <code>britq</code>, this interpretation is reversed, to single outside,
+     double inside. Isolated quotes are not transformed
+     single<&#8209;>double. The interpetation only applies to triple characters.</p>
+  <p>Note: Unlike other LaTeX, Novelette does not change <code>"</code> to curly quotes.
+     See the <a href="ligatures.html">ligatures page</a> for details.</p>
+</li><li>
   <p><code>xmp</code> <img src="images/pointer.svg" height="16" width="16" alt=""/>
      Adds an XMP metadata packet. The technology used by Novelette
      stores metadata in a PDF Info dictionary, because it is required by the long-established
@@ -513,16 +566,6 @@
   <p>This is useful for vertically aligning the start of main text, beneath new chapter
      displays. The marker is "g" with an arrow pointing to the correct text baseline. Note that
      this does not force the text position; you must align it yourself.</p>
-</li><li>
-  <p><code>britq</code> <img src="images/pointer.svg" height="16" width="16" alt=""/>
-     If you type <code>```</code> or <code>'''</code> then Novelette
-     will interpret the triple characters as American-style quotes: double on the outside,
-     single inside, with a narrow nonbreaking space between them.</p>
-  <p>When you enable <code>britq</code>, this interpretation is reversed, to single outside,
-     double inside. Isolated quotes are not transformed
-     single<&#8209;>double. The interpetation only applies to triple characters.</p>
-  <p>Note: Unlike other LaTeX, Novelette does not change <code>"</code> to curly quotes.
-     See the <a href="ligatures.html">ligatures page</a> for details.</p>
 </li></ul>
 
 
@@ -543,11 +586,6 @@
      the same as the printed page numbers. If you disable renumber, then arabic numerals
      will be used throughout, from <code>1</code> at frontmatter, without reset at mainmatter.
      Then, the PDF viewer shows page numbers the same as they will print.</p>
-</li><li>
-  <p><code>blankend</code> <img src="images/pointer.svg" height="16" width="16" alt=""/>
-     Most print services require PDF with an even number of pages, with the last page
-     entirely blank. Novelette automatically does that. When you disable <code>blankend</code>,
-     no pages are added.</p>
 </li><li>
   <p><code>pageflip</code> <img src="images/pointer.svg" height="16" width="16" alt=""/>
      Only obeyed in draft mode. Normally, the side margins shift from left to right, due to the

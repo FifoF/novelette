@@ -305,13 +305,13 @@ or <i>eps</i> or <i>pdf</i> files. This is intentional.</p>
   <p>If necessary, the line containing the logo will be padded above and below,
      to occupy three lines. That avoids smashing it into adjacent lines.</p>
 </li><li>
-  <p>Its width and height may not exceed 0.32in (144px @ 600px/in).</p>
-  <p>That is: 96px @300px/in, or 192px @ 600px/in, etc.</p>
+  <p>Its width and height may not exceed 0.16in.</p>
+  <p>That is: 48px @300px/in, or 96px @ 600px/in, etc.</p>
 </li><li>
   <p>The enclosing <code>\style<i>N</i></code> may scale its text, but it will not
      scale the logo.</p>
 </li><li>
-  <p>The logo will be horizontally padded to occupy 3em, at normal (unscaled) font size.</p>
+  <p>The logo will be horizontally padded to occupy 1.2em, at current (scaled) font size.</p>
 </li><li>
   <p>The lower 1/4 of the logo sits below the surrounding text baseline.</p>
 </li><li>
@@ -319,10 +319,10 @@ or <i>eps</i> or <i>pdf</i> files. This is intentional.</p>
      the other unstarred and starred graphics commands.</p>
 </li><li>
   <p>Example:
-     <code>\style5[logo]{Firble Press \logo{images/fp-logo.png} Brisbane Paris}</code></p>
-  <p class="center" style="margin-top:.5rem">Pathetic Press
-     <img src="images/pp-logo.png" style="height:1.5rem;vertical-align:top;" alt="PP logo"/>
-     Brisbane Paris</p>
+     <code>\style5[logo]{Firble \logo{images/fp-logo.png} Press}</code></p>
+  <p class="center" style="margin-top:.5rem">Firble
+     <img src="images/fp-logo.png" style="height:1rem;vertical-align:top;" alt="FP logo"/>
+     Press</p>
 </li></ul>
 
 

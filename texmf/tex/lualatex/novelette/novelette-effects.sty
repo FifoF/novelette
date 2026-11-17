@@ -543,7 +543,7 @@
     \def\tmpfeat{\nvt@aff{\tmpraw,Scale=\tmpscale,LetterSpace=\tmptrack}}%%
     \def\par{\nvt@noparthere}\def\\{\nvt@noparthere}\def\linebreak{\nvt@noparthere}%%
     \begingroup%%
-      \DeclareDocumentCommand\logo{sm}{\hspace{1.2\nvt@em}}%% Measure without image.
+      \DeclareDocumentCommand\logo{sm}{\char"2500}%% Measure without image.
       \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%%
       \edef\tmpboxdp{\fpeval{\dp0 > .235*\tmpscale*\nvt@em}}%%
       \edef\tmpboxwd{\fpeval{\wd0 > \textwidth}}%%

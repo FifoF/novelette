@@ -19,11 +19,13 @@
 %%   You may never place graphics in footnotes or page headers. Only \logo may be used inline
 %% with text, within a \styleN; \image and \sceneimage create their own paragraphs.
 %%   All three graphics commands have starred and unstarred versions. In preview and final modes,
-%% there is no difference: each file is carefully inspected.
+%% there is no difference: Each file is carefully inspected for PDF/X conformance.
 %%   In draft mode, an unstarred command does not look for its file. Instead, it prints a gray
-%% placeholder rectangle. If starred, it prints the file, when it fits the area.
+%% placeholder rectangle. If starred, it prints the file, when it fits the area; but it does not
+%% inspect the file for PDF/X conformance.
 %%   If a file is too wide or tall for its area, it is not printed. Instead, a placeholder
 %% rectangle prints where the file would print, and the document is demoted to draft mode.
+%% Unlike standard LaTeX, an over-size file is not pushed to a later catch-all page.
 
 
 %% IMAGE: \image[option]{path/to/filename.png}  also starred version.
@@ -319,7 +321,8 @@
 %%   You may only use \logo within a \styleN. The logo width and height
 %% may not exceed 0.16in. That's not much: It is only 48px per side @300px/in, 0r 96px @600px/in.
 %%   The logo is vertically positioned so that its lower 1/4 is below text baseline, and its
-%% upper 3/4 is above baseline. It will be horizontally padded to occupy 1.2em (unscaled).
+%% upper 3/4 is above baseline. It will be horizontally padded to occupy 1.2em at \styleN scale,
+%% but its actual print size does not change with style scale.
 %%   The starred \logo* and unstarred \logo behave the same as the related \image* and \image.
 \DeclareDocumentCommand\logo{sm}{%%
   \begingroup%%
@@ -366,7 +369,7 @@
     \sbox0{{\nvt@gray{8}\rule{.16in}{.16in}}}%%
   \fi%%
   \edef\tmplogodrop{\fpeval{.25*\ht0}pt}%%
-  \strut\makebox[1.2\nvt@em]{\hfill\smash{\raisebox{-\tmplogodrop}{\usebox0}}\hfill}%%
+  \strut\makebox[1.2em]{\hfill\smash{\raisebox{-\tmplogodrop}{\usebox0}}\hfill}%%
   \endgroup%%
 }%%
 %%

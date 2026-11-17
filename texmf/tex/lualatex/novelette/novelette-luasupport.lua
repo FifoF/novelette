@@ -86,6 +86,7 @@ nvt.pdfx = true
 nvt.oi = 'fogra'
 nvt.examine = false
 nvt.examinemsg = 0
+nvt.endpdf = 0 -- Becomes \endpdf setting.
 nvt.nopageflip = false
 nvt.qq = 0 -- Counts bad use of " (double quotes).
 nvt.notdef = 0  -- Increments when .notdef glyph appears.
@@ -191,6 +192,18 @@ nvt.addwarn = function (s, e)
     table.insert(nvt.warnlist, 'Overall: ' .. s)
   else
     table.insert(nvt.warnlist, 'p. ' .. tex.getcount('c@page') .. ': ' .. s)
+  end
+end
+--
+
+
+-- Parse \endpdf:
+nvt.parseendpdf = function (s)
+  s = string.gsub(s, ' ', '') ; s = tonumber(s)
+  if s == 0 or s == 1 or s == 2 or s == 4 then
+    nvt.endpdf = s ; tex.sprint('\\def\\tmpreturn{1}')
+  else
+    tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
   end
 end
 --
@@ -1903,15 +1916,6 @@ end
 function nvt.parseenable (s)
   local g = 0 ; local e = 0
   s = s .. ',' ; s = string.gsub(s,' ','')
-  if string.find(s, 'end0,') then
-    tex.sprint('\\def\\tmpend{0}') ; s = string.gsub(s, 'end0', '') ; e = e + 1
-  end
-  if string.find(s, 'end2,') then
-    tex.sprint('\\def\\tmpend{2}') ; s = string.gsub(s, 'end2', '') ; e = e + 1
-  end
-  if string.find(s, 'end4,') then
-    tex.sprint('\\def\\tmpend{4}') ; s = string.gsub(s, 'end4', '') ; e = e + 1
-  end
   if string.find(s,'britq,') then
     tex.sprint('\\def\\tmpbritq{1}') ; s=string.gsub(s,'britq','')
   end
@@ -2052,9 +2056,10 @@ end
 
 
 -- Finalize, with wrapup message to Terminal:
-nvt.finalize = function ()
+nvt.finalize = function (s)
+  local nblank = tonumber(s) or 0
   if nvt.good == false then
-    tex.sprint('\\def\\tmpmode{bad}') ; nvt.mode = 'draft'
+    tex.sprint('\\def\\tmpmode{bad}') ; nvt.mode = 'draft' ; s = 0
   end
   tex.sprint('\\def\\tmpmode{' .. nvt.mode .. '}')
   -- toc info:
@@ -2081,12 +2086,34 @@ nvt.finalize = function ()
           end
         end
       end
+    else
+      s = 0
     end
   end
-  if tocok == false then
+  if tocok == false then -----
     local wm = "One or more component page disagrees with table of contents."
-    nvt.addwarn(wm, 'end')
+    nvt.addwarn(wm, 'end') -----
     tex.sprint('\\begingroup\\makeatletter\\nvt@warn{' .. wm .. '}\\endgroup')
+  end
+  --
+  if nvt.endpdf ~= 0 then
+    local sres2 = nblank%2 ; local sres4 = nblank%4
+    if nvt.endpdf == 1 and sres2 == 0 then tex.sprint('\\def\\tmpblank{1}') end
+    if nvt.endpdf == 2 then
+      if sres2 == 0 then tex.sprint('\\def\\tmpblank{2}') end
+      if sres2 == 1 then tex.sprint('\\def\\tmpblank{1}') end
+    end 
+    if nvt.endpdf == 3 then
+      if sres4 == 0 then tex.sprint('\\def\\tmpblank{3}') end
+      if sres4 == 1 then tex.sprint('\\def\\tmpblank{2}') end
+      if sres4 == 2 then tex.sprint('\\def\\tmpblank{1}') end
+    end
+    if nvt.endpdf == 4 then
+      if sres4 == 0 then tex.sprint('\\def\\tmpblank{4}') end
+      if sres4 == 1 then tex.sprint('\\def\\tmpblank{3}') end
+      if sres4 == 2 then tex.sprint('\\def\\tmpblank{2}') end
+      if sres4 == 3 then tex.sprint('\\def\\tmpblank{1}') end
+    end
   end
   --
   luatexbase.add_to_callback('wrapup_run', function ()

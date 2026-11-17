@@ -356,20 +356,6 @@
 %% is written to Info and/or XMP. Finally, a summary report is prepared.
 \AtEndDocument{%%
   \clearpage
-  \ifnvt@draft\else
-    \ifnvt@endtwo
-      \ifodd\c@page\nvt@thispagestyle{empty}\null\clearpage\fi
-      \nvt@blankverso
-    \else
-      \ifnvt@endfour
-        \edef\tmpfour{\fpeval{round(4*((\value{page}-1)/4 - floor((\value{page}-1)/4)),0)}}
-        \ifnum\tmpfour>1\relax\nvt@thispagestyle{empty}\null\clearpage\fi
-        \ifnum\tmpfour>2\relax\nvt@thispagestyle{empty}\null\clearpage\fi
-        \ifnum\tmpfour>3\relax\nvt@thispagestyle{empty}\null\clearpage\fi
-        \nvt@blankverso
-      \fi
-    \fi
-  \fi
   \let\input\nvt@input\relax
   \nvt@didprinttrue
   \ifnum\currentgrouplevel>\z@\relax\directlua{nvt.good = false}\fi
@@ -378,7 +364,13 @@
   \else
     \typeout{Info: Reached end of the document body.}
   \fi
-  \directlua{nvt.finalize()}
+  \edef\tmppg{\arabic{page}}\def\tmpblank{0}
+  \directlua{nvt.finalize('\luaescapestring{\tmppg}')}
+  \ifnum\tmpblank=1\relax\blankpage\fi
+  \ifnum\tmpblank=2\relax\blankpage\blankpage\fi
+  \ifnum\tmpblank=3\relax\blankpage\blankpage\blankpage\fi
+  \ifnum\tmpblank=4\relax\blankpage\blankpage\blankpage\blankpage\fi
+  \typeout{Info: \string\endpdf\space added \tmpblank\space blank page(s) at end.}
   \def\tmptest{bad}\ifx\tmpmode\tmptest\def\nvt@titleprefix{BAD: }\fi
   \def\tmptest{final}\ifx\tmpmode\tmptest\else\nvt@pdfxfalse\def\nvt@oi{none}\nvt@xmpfalse\fi
   \ifnvt@examine

@@ -200,7 +200,7 @@ end
 -- Parse \endpdf:
 nvt.parseendpdf = function (s)
   s = string.gsub(s, ' ', '') ; s = tonumber(s)
-  if s == 0 or s == 1 or s == 2 or s == 4 then
+  if s == 0 or s == 1 or s == 2 or s == 3 or s == 4 then
     nvt.endpdf = s ; tex.sprint('\\def\\tmpreturn{1}')
   else
     tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
@@ -2057,7 +2057,7 @@ end
 
 -- Finalize, with wrapup message to Terminal:
 nvt.finalize = function (s)
-  local nblank = tonumber(s) or 0
+  local nblank = tonumber(s) or 0 ; nblank = nblank - 1
   if nvt.good == false then
     tex.sprint('\\def\\tmpmode{bad}') ; nvt.mode = 'draft' ; s = 0
   end
@@ -2126,6 +2126,10 @@ nvt.finalize = function (s)
   table.insert(nvt.sumbuffer, 'Author: ' .. nvt.author .. '\n')
   table.insert(nvt.sumbuffer, 'Docdate: ' .. nvt.docdate .. '\n')
   table.insert(nvt.sumbuffer, 'Version: ' .. nvt.version .. '\n')
+  if nvt.mode == 'final' then
+    table.insert(nvt.sumbuffer, 'Total page count (including blanks, if any): '
+      .. tex.count[0] .. '\n')
+  end
   if nvt.mode == nvt.startmode then
     table.insert(nvt.sumbuffer, 'Mode: ' .. nvt.mode .. '\n')
   else

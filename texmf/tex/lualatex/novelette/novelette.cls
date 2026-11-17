@@ -364,7 +364,7 @@
   \else
     \typeout{Info: Reached end of the document body.}
   \fi
-  \edef\tmppg{\arabic{page}}\def\tmpblank{0}
+  \edef\tmppg{\arabic{page}}\def\tmpblank{0}%% Note that this is actual + 1 here.
   \directlua{nvt.finalize('\luaescapestring{\tmppg}')}
   \ifnum\tmpblank=1\relax\blankpage\fi
   \ifnum\tmpblank=2\relax\blankpage\blankpage\fi

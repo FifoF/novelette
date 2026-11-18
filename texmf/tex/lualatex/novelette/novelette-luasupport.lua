@@ -476,8 +476,8 @@ end
 --
 
 
--- Parse \logo:
-nvt.parselogo = function (star,file)
+-- Parse \emblem:
+nvt.parseemblem = function (star,file)
   local a, t, f, l, lx, n ; local img = 0
   file = string.gsub(file, '^%s', '') ; file = string.gsub(file, '%s$', '') ----- utf8
   if star == 'star' or nvt.mode == 'preview' or nvt.mode == 'final' then
@@ -954,7 +954,7 @@ end
 -- Parse \line argument:
 nvt.parseline = function (s)
   s = string.gsub(s, ' ', '') ; s = s .. ','
-  local n, a, w, h, u ; local ww = .2 ; local hh = 1
+  local n, a, w, h, u ; local ww = 0.2 ; local h = 0.76
   if string.find(s, 'align=') then
     a, n = string.gsub(s, '.*align=', '') ; a = string.gsub(a, ',.*', '')
     if n == 1 and a == 'left' then
@@ -989,7 +989,8 @@ nvt.parseline = function (s)
       end
     end
   end
-  u = 0.21*nvt.em - 0.5*((hh - 1) * 0.655) -----
+--  u = 0.21*nvt.em - 0.5*((hh - 1) * 0.655) -----
+  u = (0.21 * nvt.em) + (0.5 * h) -----
   tex.sprint('\\def\\tmpup{' .. u .. 'pt}')
   s = string.gsub(s, ',', '')
   if s == '' then

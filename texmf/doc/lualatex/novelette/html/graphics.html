@@ -28,7 +28,7 @@
 <a href="image">Command: \image</a> &nbsp;
 <a href="#dims">Image Dimensions</a> &nbsp;
 <a href="#scene">Command: \sceneimage</a> &nbsp;
-<a href="#logo">Command: \logo</a> &nbsp;
+<a href="#emblem">Command: \emblem</a> &nbsp;
 <a href="#scripts">Shell Scripts</a>
 </div>
 
@@ -64,12 +64,11 @@ LaTeX tutorials. Pay attention here:</p>
   <p>The <code>\image</code> command inserts an image, in its own paragraph. Depending on
      where you use it, the image may or may not be able to float.</p>
 </li><li>
-  <p>The <code>\logo</code> command inserts an image, inline with text. This command may only
-     be used in certain areas, and the image size is very limited. It is intended for
-     things such as publisher's logo.</p>
+  <p>The <code>\emblem</code> command inserts an image, inline with text. This command may only
+     be used in certain areas, and the image size is very limited.</p>
 </li><li>
-  <p>The <code>\scene</code> command has option <code>[image]</code>, which prints
-     a limited-size image (instead of text) for use as scene break.</p> 
+  <p>The <code>\sceneimage</code> command is like <code>\image</code>, but with dimensions
+     limited for use as a scene break, instead of text.</p> 
 </li></ul>
 
 
@@ -77,8 +76,8 @@ LaTeX tutorials. Pay attention here:</p>
 <h4 class="section">Starred and Unstarred Commands</h4>
 <h4 class="link"><a href="#top">
 <img src="images/top.svg" width="16" height="16" alt=""/> TOP</a></h4>
-<p>Commands <code>\image</code>, <code>\logo</code>, and <code>\sceneimage</code> have
-starred versions <code>\image*</code>, <code>\logo*</code>, and <code>\sceneimage*</code>.</p>
+<p>Commands <code>\image</code>, <code>\emblem</code>, and <code>\sceneimage</code> have
+starred versions <code>\image*</code>, <code>\emblem*</code>, and <code>\sceneimage*</code>.</p>
 <ul><li>
   <p>In preview and final modes, the starred and unstarred commands behave the same:
      The file must exist, be in an allowable path, fit its allowed width and height, and
@@ -249,7 +248,7 @@ or <i>eps</i> or <i>pdf</i> files. This is intentional.</p>
 <h4 class="link"><a href="#top">
 <img src="images/top.svg" width="16" height="16" alt=""/> TOP</a></h4>
 <p>This applies to ordinary images, using the <code>\image</code> command. It does not apply
-   to <code>\logo</code> or to <code>\sceneimage</code> commands.</p> 
+   to <code>\emblem</code> or to <code>\sceneimage</code> commands.</p> 
 <ul><li>
   <p>Run a test document with your Preamble settings, in draft mode. The Terminal Summary will
      show the textwidth, font em size, and baselineskip. These are specific to your settings.
@@ -290,36 +289,35 @@ or <i>eps</i> or <i>pdf</i> files. This is intentional.</p>
 </li></ul>
 
 
-<p><a id="logo"></a>&nbsp;</p>
-<h4 class="section">Command: \logo (Also \logo*)</h4>
+<p><a id="emblem"></a>&nbsp;</p>
+<h4 class="section">Command: \emblem (Also \emblem*)</h4>
 <h4 class="link"><a href="#top">
 <img src="images/top.svg" width="16" height="16" alt=""/> TOP</a></h4>
-<p>A Novelette "logo" is a special kind of image. It may be used inline with text.
-   Its purpose is to print something such as a publisher's logo, in places such as the title
-   and copyright pages; but Novelette does not know or care why you use it.</p>
-<p><code>\logo{PathTo/filename.png}</code></p>
+<p>A Novelette "emblem" is a small image that may be used inline with text, but only within
+   a <code>\style<i>N</i></code> or <code>\scene</code> command. Its purpose is to allow
+   such things as publisher's logo, or other small decorations.</p>
+<p><code>\emblem{PathTo/filename.png}</code></p>
 <ul><li>
-  <p>A logo may only be used within a <code>\style<i>N</i></code> command that has
-     option <code>[logo]</code>.</p>
+  <p>An emblem cannot appear in ordinary text, page headers, block environmments, or footnotes.
+     It may only be used within <code>\style<i>N</i></code> or <code>\scene</code> commands.</p>
 </li><li>
-  <p>If necessary, the line containing the logo will be padded above and below,
-     to occupy three lines. That avoids smashing it into adjacent lines.</p>
-</li><li>
-  <p>Its width and height may not exceed 0.16in.</p>
-  <p>That is: 48px @300px/in, or 96px @ 600px/in, etc.</p>
-</li><li>
+  <p>When its <code>\style<i>N</i></code> scale is 1, or in any <code>\scene</code>,
+     the emblem width and height may not exceed 0.16in. That is 48px @300px/in,
+     or 96px @ 600px/in, etc.</p>
+  <p>When its <code>\style<i>N</i></code> scale is greater than 1, the maximum dimensions
+     of the emblem are increased in proportion. Round pixel counts down, not up.</p>
   <p>The enclosing <code>\style<i>N</i></code> may scale its text, but it will not
-     scale the logo.</p>
+     rescale the emblem image.</p>
 </li><li>
-  <p>The logo will be horizontally padded to occupy 1.2em, at current (scaled) font size.</p>
+  <p>The emblem will be horizontally padded to occupy 1.2em, at current (scaled) font size.</p>
 </li><li>
-  <p>The lower 1/4 of the logo sits below the surrounding text baseline.</p>
+  <p>The lower 1/4 of the emblem sits below the surrounding text baseline.</p>
 </li><li>
-  <p>The unstarred <code>\logo</code> and the starred <code>\logo*</code> behave the same as
+  <p>The unstarred <code>\emblem</code> and the starred <code>\emblem*</code> behave the same as
      the other unstarred and starred graphics commands.</p>
 </li><li>
   <p>Example:
-     <code>\style5[logo]{Firble \logo{images/fp-logo.png} Press}</code></p>
+     <code>\style5{Firble \emblem{images/fp-logo.png} Press}</code></p>
   <p class="center" style="margin-top:.5rem">Firble
      <img src="images/fp-logo.png" style="height:1rem;vertical-align:top;" alt="FP logo"/>
      Press</p>

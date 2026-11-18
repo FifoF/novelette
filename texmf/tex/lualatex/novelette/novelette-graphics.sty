@@ -8,7 +8,7 @@
 %% GRAPHICS:
 %%   Novelette does not use standard LaTeX graphics commands, such as \includegraphics. You cannot
 %% create vector (TiKz) drawings, or include eps/pdf files.
-%%   There are two graphics commands: \image and \logo. In all cases, the graphics file must be
+%%   There are two graphics commands: \image and \emblem. In all cases, the graphics file must be
 %% png raster format, monochrome or true grayscale. It must state its resolution (density).
 %%   In preview and final modes, the file must also pass conformance tests. Novelette provides
 %% shell scripts, using ImageMagick, that process files to ensure conformance. These scripts
@@ -16,7 +16,7 @@
 %%   Files must be located in the same folder as the main document, or (better) in a subfolder
 %% relative to the main document. File paths are always relative to the main document, even if
 %% the file is called by a sub-document.
-%%   You may never place graphics in footnotes or page headers. Only \logo may be used inline
+%%   You may never place graphics in footnotes or page headers. Only \emblem may be used inline
 %% with text, within a \styleN; \image and \sceneimage create their own paragraphs.
 %%   All three graphics commands have starred and unstarred versions. In preview and final modes,
 %% there is no difference: Each file is carefully inspected for PDF/X conformance.
@@ -44,6 +44,7 @@
   \ifnvt@inheader\def\tmpok{0}\fi%%
   \ifnvt@instyle\def\tmpok{0}\fi%%
   \ifnvt@inblock\def\tmpok{0}\fi%%
+  \ifnvt@inscene\def\tmpok{0}\fi%%
   \ifnum\tmpok=0\relax%%
     \nvt@err{Cannot place \string\image\space in footnote or page header,^^J%%
       \spii or in \string\styleN\space (N=0-9), \string\scene, or block environment.}%%
@@ -151,8 +152,9 @@
 %%   Like \image, the mandatory argument is a png raster image file. \sceneimage and \sceneimage*
 %% have the same bahavior as \image and \image*, and may print a placeholder. But unlike
 %% \image, the \sceneimage file can never float or tweak. It has a fixed maximum size, and does
-%% not use lines=L to reserve the space.
-%%   The lower half of the image sits below the middle baseline.
+%% not use lines=L to reserve the space. The lower half of the sceneimage sits below the
+%% middle baseline.
+%%   Note that \sceneimage is not the same as using \emblem within \scene.
 \newif\ifnvt@insceneimage %% True within \sceneimage.
 \DeclareDocumentCommand\sceneimage{sO{}m}{%%
   \begingroup%%
@@ -315,41 +317,41 @@
 %%
 
 
-%% LOGO: \logo{PathTo/filename.png}  also starred version.
-%%   A logo is a small image that sits inline with surrounding text. Its purpose is publisher's
-%% logo on the title or copyright page, but Novelette does not know or care why you use it.
-%%   You may only use \logo within a \styleN. The logo width and height
-%% may not exceed 0.16in. That's not much: It is only 48px per side @300px/in, 0r 96px @600px/in.
-%%   The logo is vertically positioned so that its lower 1/4 is below text baseline, and its
+%% EMBLEM: \emblem{PathTo/filename.png}  also starred version.
+%%   An emblem is a small image that sits inline with surrounding text. You may only use \emblem
+%% within a \styleN or \scene. The emblem width and height may not exceed 0.16in. That's not much:
+%% It is only 48px per side @300px/in, 0r 96px @600px/in.
+%%   The emblem is vertically positioned so that its lower 1/4 is below text baseline, and its
 %% upper 3/4 is above baseline. It will be horizontally padded to occupy 1.2em at \styleN scale,
 %% but its actual print size does not change with style scale.
-%%   The starred \logo* and unstarred \logo behave the same as the related \image* and \image.
-\DeclareDocumentCommand\logo{sm}{%%
+%%   The starred \emblem* and unstarred \emblem behave the same as the related \image* and \image.
+\DeclareDocumentCommand\emblem{sm}{%%
   \begingroup%%
   \ifnvt@dev\def\nvt@imgrulewd{2pt}\fi%%
   \ifnvt@instyle\def\tmpok{1}\else\def\tmpok{0}\fi%%
+  \ifnvt@inscene\def\tmpok{1}\fi%%
   \ifnum\tmpok=1\relax%%
     \def\fps@figure{}\def\tmpvalidate{0}%%
     \catcode`\~=12\relax\def\tmpopt{#2}%% Otherwise, ~ in file path would be undetected here.
     \IfBooleanTF{#1}{%%
-      \directlua{nvt.parselogo('star','\luaescapestring{#2}')}%%
+      \directlua{nvt.parseemblem('star','\luaescapestring{#2}')}%%
     }{%%
-      \directlua{nvt.parselogo('','\luaescapestring{#2}')}%%
+      \directlua{nvt.parseemblem('','\luaescapestring{#2}')}%%
     }%%
-    \ifnum\tmpisfile<1\relax\def\logofake{1}\else\def\logofake{0}\fi%%
+    \ifnum\tmpisfile<1\relax\def\emblemfake{1}\else\def\emblemfake{0}\fi%%
     \ifnum\tmpisfile=1\relax%%
       \IfFileExists{#2}{%%
-        \def\logofake{0}%%
+        \def\emblemfake{0}%%
       }{%%
-        \nvt@err{Missing \string\logo\space file #2.^^J%%
+        \nvt@err{Missing \string\emblem\space file #2.^^J%%
           \spii The path and filename have correct format, but the file is not there.^^J%%
           \spii Either you mis-spelled the path or filename, or no such file.}%%
-        \def\logofake{1}%%
-        \directlua{nvt.adderr('Missing \\logo file.')}%%
+        \def\emblemfake{1}%%
+        \directlua{nvt.adderr('Missing \\emblem file.')}%%
       }%%
     \fi%%
     \ifnum\tmpisfile=-1\relax%%
-      \nvt@err{Bad \string\logo\space argument: {#2}.^^J%%
+      \nvt@err{Bad \string\emblem\space argument: {#2}.^^J%%
         \spii There are several possibilities:^^J%%
         \spiv 1. Image filename does not have .png file extension.^^J%%
         \spiv 2. Path to image file is not relative to main document.^^J%%
@@ -359,24 +361,24 @@
         \spix or in subfolder from main document (max 5 levels).^^J%%
         \spiv 4. Path or filename has forbidden characters. Among them:^^J%%
         \spix You may use hyphen or underscore, but not space or tilde.}%%
-      \def\logofake{1}%%
-      \directlua{nvt.adderr('Bad \\logo path or filename.')}%%
+      \def\emblemfake{1}%%
+      \directlua{nvt.adderr('Bad \\emblem path or filename.')}%%
     \fi%%
   \fi%%
-  \ifnum\logofake=0\relax%%
-    \nvt@reallogo{#2}%%
+  \ifnum\emblemfake=0\relax%%
+    \nvt@realemblem{#2}%%
   \else%%
     \sbox0{{\nvt@gray{8}\rule{.16in}{.16in}}}%%
   \fi%%
-  \edef\tmplogodrop{\fpeval{.25*\ht0}pt}%%
-  \strut\makebox[1.2em]{\hfill\smash{\raisebox{-\tmplogodrop}{\usebox0}}\hfill}%%
+  \edef\tmpemblemdrop{\fpeval{.25*\ht0}pt}%%
+  \strut\makebox[1.2em]{\hfill\smash{\raisebox{-\tmpemblemdrop}{\usebox0}}\hfill}%%
   \endgroup%%
 }%%
 %%
 
 
-%% Real logo (if bad, defaults to fake):
-\def\nvt@reallogo#1{%%
+%% Real emblem (if bad, defaults to fake):
+\def\nvt@realemblem#1{%%
   \def\tmpvalid{1}%%
   \ifnum\tmpvalidate=1\relax\nvt@validateimage{#1}\fi%%
   \ifnum\tmpvalid=0\relax%%
@@ -397,14 +399,14 @@
   \fi%%
   \edef\tmpfit{\fpeval{(\ht0 > .162in) + (\wd0 > .162in)}}%% .002in fuzz h,w
   \ifnum\tmpfit>0\relax%%
-    \nvt@warn{File #1 is too large for \string\logo.^^J%%
+    \nvt@warn{File #1 dimensions too large for \string\emblem.^^J%%
       \spii Max width 0.16in, height 0.16in.}%%
   \fi%%
 }%%
 %%
 
 
-%% Image or Logo file validation:
+%% Image or Emblem file validation:
 \def\nvt@validateimage#1{%%
   \directlua{nvt.validateimage('\luaescapestring{#1}')}%%
 }%%

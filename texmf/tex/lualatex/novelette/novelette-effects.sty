@@ -111,6 +111,7 @@
 \def\nvt@keytext{} %% Default empty.
 \DeclareDocumentCommand\key{+m}{%% +m converted to m within definition.
   \ifnvt@instyle\def\tmpok{0}\else\def\tmpok{1}\fi%%
+  \ifnvt@inscene\def\tmpok{0}\fi%%
   \ifnvt@inblock\def\tmpok{0}\fi%%
   \ifnvt@infootnote\def\tmpok{0}\fi%%
   \ifnvt@inheader\def\tmpok{0}\fi%%
@@ -543,7 +544,7 @@
     \def\tmpfeat{\nvt@aff{\tmpraw,Scale=\tmpscale,LetterSpace=\tmptrack}}%%
     \def\par{\nvt@noparthere}\def\\{\nvt@noparthere}\def\linebreak{\nvt@noparthere}%%
     \begingroup%%
-      \DeclareDocumentCommand\logo{sm}{\char"2500}%% Measure without image.
+      \DeclareDocumentCommand\emblem{sm}{\char"2500}%% Measure without image.
       \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%%
       \edef\tmpboxdp{\fpeval{\dp0 > .235*\tmpscale*\nvt@em}}%%
       \edef\tmpboxwd{\fpeval{\wd0 > \textwidth}}%%
@@ -563,9 +564,7 @@
     \ifx\tmphtabove\@empty\else%%
       \ifnum\tmpwabove=1\relax\def\tmpwdabove{\the\textwidth}\else\def\tmpwdabove{\wd0}\fi%%
       \ifnum\tmpuabove=1\relax%% %%%%%
-        \def\tmpaspabove{-20pt}\def\tmpbspabove{-20pt}%%
-      \else%%
-        \def\tmpaspabove{0pt}\def\tmpbspabove{0pt}%%
+        \edef\tmpbspabove{\fpeval{.1*\tmpscale*\nvt@em - .5*\ht0}pt}%%
       \fi%%
       \vspace{\tmpaspabove}%%
       \strut\tmpleft\rule{\tmpwdabove}{\tmphtabove}\tmpright\strut\nvt@par%%
@@ -575,9 +574,9 @@
     \ifx\tmphtbelow\@empty\else%%
       \ifnum\tmpwbelow=1\relax\def\tmpwdbelow{\the\textwidth}\else\def\tmpwdbelow{\wd0}\fi%%
       \ifnum\tmpubelow=1\relax%% %%%%%
-        \def\tmpaspbelow{-4pt}\def\tmpbspbelow{-4pt}%%
-      \else%%
-        \def\tmpaspbelow{0pt}\def\tmpbspbelow{0pt}%%
+        \edef\tmpaspbelow{%%
+          \fpeval{.5*\tmphtbelow + .1*\tmpscale*\nvt@em - \dp0 - .3*\tmpscale*\nvt@bls}pt%%
+        }%%
       \fi%%
       \vspace{\tmpaspbelow}%%
       \strut\tmpleft\rule{\tmpwdbelow}{\tmphtbelow}\tmpright\strut\nvt@par%%
@@ -597,6 +596,7 @@
 %% paragraph is not indented.
 %%   The default \scene alignment is set in preamble by \scenestyle, or center if unset.
 %% Option [align=A] is for local over-ride (A = left right center).
+%%   You may use \emblem, but not \image, within \scene. See \sceneimage for an alternative.
 %%   Scenes have no automatic numbering. Do it yourself. See the \todo command.
 \newif\ifnvt@inscene %% True inside \scene.
 \DeclareDocumentCommand\scene{O{}+m}{%% +m will be re-parsed as m.
@@ -615,7 +615,7 @@
     \nvt@warn{Did not understand \string\scene\space option.^^J%%
       \spii Only option is [align=A] for A -> left right center.}%%
   \fi%%
-  \ifnum\tmpok=1\relax%%
+  \ifnum\tmpok=1\relax%% %%%%% re-measure for \emblem.
     \sbox0{\nvt@aff{RawFeature={+titl,+case},Scale=1.08,FakeStretch=.96,LetterSpace=4}%%
       \char"200D{#2}\char"200D}%%
     \edef\tmpwide{\fpeval{\wd0 > 3.5in}}%%
@@ -671,6 +671,7 @@
   \ifnvt@indisplay\def\tmpok{0}\fi%%
   \ifnvt@inblock\def\tmpok{0}\fi%%
   \ifnvt@instyle\def\tmpok{0}\fi%%
+  \ifnvt@inscene\def\tmpok{0}\fi%%
   \begingroup\let\itshape\relax%%
   \def~{\hspace{.08em}}%%
   \ifnum\tmpok=1\relax%%
@@ -718,6 +719,7 @@
   \ifnvt@indisplay\def\tmpok{0}\fi%%
   \ifnvt@inblock\def\tmpok{0}\fi%%
   \ifnvt@instyle\def\tmpok{0}\fi%%
+  \ifnvt@inscene\def\tmpok{0}\fi%%
   \let\itshape\relax%%
   \ifnum\tmpok=1\relax%%
     %% Vertical stretch depends on em and bls, but horizontal only on em. Xheight=.65em.

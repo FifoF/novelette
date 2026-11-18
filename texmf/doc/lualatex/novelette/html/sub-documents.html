@@ -47,13 +47,14 @@ main document, or (better) in a subfolder relative to the main document.</p>
   <p>The top four lines of a sub-document must follow a specific format:</p>
   <pre class="code">%!TeX program = lualatex
                     %!TeX encoding = UTF-8
-                    \def\thisdoc{M:PathFromMainDocumentTo/SubdocFilename.tex}
+                    \def\thisdoc{X&gt;PathFromMainDocumentTo/SubdocFilename.tex}
                     \input{PathFromSubdocTo/MainDocument.tex}</pre>
   <ul><li>
-    <p>Above, <code>M</code> is one of <code>frontmatter mainmatter backmatter</code>.
-       Do not use backslash. This must match where the sub-document will appear, when it is called
-       by the main document. Its purpose it to let the sub-document know where it belongs,
-       when compiled alone. Note that a colon follows.</p>
+    <p><code>X</code> is one of <code>F M B</code>.
+       Letter <code>F</code> means frontmatter, <code>M</code> means mainmatter,
+       <code>B</code> means backmatter. This must match where the sub-document will appear,
+       when it is called by the main document. Its purpose it to let the sub-document know where
+       it belongs, when compiled alone. Note that <code>&gt;</code> follows.</p>
   </li><li>
     <p><code>\def\thisdoc</code> tells the compiler how the main document will find this file.
        The path is <i>relative to the main document</i>, whether this sub-document is directly
@@ -73,7 +74,7 @@ main document, or (better) in a subfolder relative to the main document.</p>
   <p>A sub-document has no <code>\documentclass</code>, no preamble settings, no
      <code>\begin{document}</code>, no <code>\end{document}</code>.</p>
 </li><li>
-  <p>After the required top four lines, the remainder of the sub-document consists of
+  <p>After the required top lines, the remainder of the sub-document consists of
      material within <code>component</code> environments, or calls to other sub-documents.</p>
 </li><li>
   <p>You do not need to write any command to close a sub-document. You may write

@@ -123,14 +123,15 @@ to restore the baseline to grid, then automatically adds that space.</p>
 <code>\maintext</code> will print. Standard practice (not mandatory) is to tweak the
 display zones, so that each <code>\maintext</code> prints at the same vertical position.</p>
 <p>To help you find that position, Novelette provides a guide marker. It only prints in
-draft mode. The marker is lowercase <code>g</code> with the baseline shown, appearing
-in the left margin next to the text.</p>
+draft mode. The marker <code>Xy</code> appears in the left margin next to the text.</p>
 <p>The global default guide position, counted in normal lines, is set in preamble by
-<code>\enable{guide=<i>G</i>}</code> for integer <i>G</i>. Default <i>G</i>=0 means
+<code>\enable{guide=<i>G</i>}</code> for integer <i>G</i>. Default <code>guide=0</code> means
 no guide.</p>
 <p>You may locally change the value per&#8209;component using option
 <code>[guide=<i>G</i>]</code>.</p> 
-<p>You choose whether or not to obey the guide. Missing it is not a problem.</p>
+<p>You choose whether or not to obey the guide. Missing it is not a problem. Note that the
+position of main text is quantized to the line grid, so a small change in the display zone
+may mean a sudden jump in the main text position.</p>
 
 
 <p><a id="option"></a>&nbsp;</p>

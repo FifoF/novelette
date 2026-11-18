@@ -1,0 +1,49 @@
+
+
+
+
+
+
+How Do I ... ?
+
+Create Chapters. Novelette has no command that is specifically intended for chapters.
+Intead, each chapter is just a component like any other.
+
+Insert Lorem Ipsum Text. Novelette command \yada{n} does it. If \yada{0} and \yada{}
+create a very short dummy sentence, which will always fit on one line. \yada{1} through
+\yada{9} (max 9) create increasingly larger paragraphs. The dummy text is not genuine
+Lorem Ipsum, it is random Latin-like gibberish that changes each time.
+
+Underline text. Novelette has no \underline command. If you use \styleN[option]{text}
+with appropriate option, the you may print lines under and/or over that text. The effect
+will not be exactly the same as \underline would do.
+
+Draw a line. Use \line{argument}. This is a re-definition of LaTeX \line, limiting the line
+to horizontal.
+
+
+Why Can't I ... ?
+
+Bold Font. Novelette fonts are not complete families. The Serif font has Italic, but no
+Bold or BoldItalic. This is because fictional works never use bold fonts in ordinary text.
+  Some of the Sans and Deco fonts are inherently Bold (or darker).
+
+Page Floats. Novelette is intended for works that are read continously, not academic works
+where you might flip pages back and forth. Although images may (usually) float, there are no
+"float pages" that accumulate them, and no full-page floats. If you need an image to stand
+by itself on a page, put it in a single-page component between other components.
+
+Automated Chapter and Scene Numbers. Since some writers use Roman numerals, and other
+speel out the numbers, that would require extensive multilingual support. Bah!
+Do it yourself.
+
+Automated Table of Contents. That would require multi-pass compiling, which is likely to
+cause confusion if you work with a separate human editor. You do have an editor, don't you?
+
+Convert to Ebook. Since Novelette's structure and commands are non-standard, that would require
+writing software specifically designed to parse your material. Not impossible, but easier
+to do manually, since you would need to redit the results in any case.
+
+Create Cover Artwork. Any well-designed, attractive cover requires graphics software.
+
+

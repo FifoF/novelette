@@ -63,9 +63,8 @@ back mattr.</p>
 <h4 class="section">Guide Marker</h4>
 <h4 class="link"><a href="#top">
 <img src="images/top.svg" width="16" height="16" alt=""/> TOP</a></h4>
-<p>You may <a href="preamble.html#guide">enable guide</a> in preamble. It places this marker
-<img src="images/guide.svg" height="16" width="16" alt="guide marker"/> in the left margin,
-on (most) pages with a display zone, in draft mode only.</p>
+<p>You may <a href="preamble.html#guide">enable guide</a> in preamble. It places <code>Xy</code>
+in the left margin, on (most) pages with a display zone, in draft mode only.</p>
 <p><img src="images/best-practice.svg" height="16" width="16" alt=""/>
 Best practice is to use a guide. Then, by adjusting content in the display zone, you can align
 the first line of main text with the guide. This creates a uniform appearance for chapter
@@ -85,6 +84,9 @@ start pages.</p>
      <code>\vspace</code> or <code>\vskip</code>.</p>
   <p>Do not use <code>\blankline</code> immediately after <code>\maintext</code>. Adjustment of
      the vertical position is performed in the display zone.</p>
+</li><li>
+  <p>The first line of main text is quantized to the line grid, so a small change in the
+     display zone may mean a sudden jump in the position of main text.</p>
 </li></ul>
 
 

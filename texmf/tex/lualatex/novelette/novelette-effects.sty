@@ -544,23 +544,24 @@
     \def\tmpfeat{\nvt@aff{\tmpraw,Scale=\tmpscale,LetterSpace=\tmptrack}}%%
     \def\par{\nvt@noparthere}\def\\{\nvt@noparthere}\def\linebreak{\nvt@noparthere}%%
     \begingroup%%
-      \DeclareDocumentCommand\emblem{sm}{\char"2500}%% Measure without image.
+      \DeclareDocumentCommand\emblem{sm}{\char"2500}%% Measure using 1.2em placholder for image.
       \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%%
-      \edef\tmpboxdp{\fpeval{\dp0 > .235*\tmpscale*\nvt@em}}%%
-      \edef\tmpboxwd{\fpeval{\wd0 > \textwidth}}%%
-      \ifnum\tmpboxdp=1\relax%%
-        \nvt@warn{\string\style#1\space content has disallowed characters.}%%
-      \fi%%
-      \ifnum\tmpboxwd=1\relax%%
-        \edef\tmphowmuch{\fpeval{ceil(100*\wd0/\textwidth,2)}}%%
-        \nvt@err{Content of \string\styleN\space is too wide. Must fit on one line.^^J%%
-          \spii Measured content width is \tmphowmuch\@percentchar\space of max textwidth.^^J%%
-          \spii You must reduce content or reduce scale.}%%
-        \sbox0{\char"FFFD \textbackslash styleN too wide.}%%
-        \directlua{nvt.adderr('\\styleN content is too wide.')}%%
-      \fi%%
+      \xdef\tmpboxdp{\fpeval{\dp0 > .235*\tmpscale*\nvt@em}}%%
+      \xdef\tmpboxwd{\fpeval{\wd0 > \textwidth}}%%
     \endgroup%%
-    \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%%
+    \ifnum\tmpboxdp=1\relax%%
+      \nvt@warn{\string\style#1\space content has disallowed characters.}%%
+    \fi%%
+    \ifnum\tmpboxwd=1\relax%%
+      \edef\tmphowmuch{\fpeval{ceil(100*\wd0/\textwidth,2)}}%%
+      \nvt@err{Content of \string\styleN\space is too wide. Must fit on one line.^^J%%
+        \spii Measured content width is \tmphowmuch\@percentchar\space of max textwidth.^^J%%
+        \spii You must reduce content or reduce scale.}%%
+      \sbox0{\char"FFFD \textbackslash styleN too wide.}%%
+      \directlua{nvt.adderr('\\styleN content is too wide.')}%%
+    \else%%
+      \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%%
+    \fi%%
     \ifx\tmphtabove\@empty\else%%
       \ifnum\tmpwabove=1\relax\def\tmpwdabove{\the\textwidth}\else\def\tmpwdabove{\wd0}\fi%%
       \ifnum\tmpuabove=1\relax%% %%%%%
@@ -583,6 +584,7 @@
       \vspace{\tmpbspbelow}%%
     \fi%%
   \fi%%
+  \gdef\tmboxwd{}\gdef\tmpboxht{}%%
   \endgroup%%
 }%%
 %%
@@ -615,13 +617,19 @@
     \nvt@warn{Did not understand \string\scene\space option.^^J%%
       \spii Only option is [align=A] for A -> left right center.}%%
   \fi%%
-  \ifnum\tmpok=1\relax%% %%%%% re-measure for \emblem.
-    \sbox0{\nvt@aff{RawFeature={+titl,+case},Scale=1.08,FakeStretch=.96,LetterSpace=4}%%
-      \char"200D{#2}\char"200D}%%
-    \edef\tmpwide{\fpeval{\wd0 > 3.5in}}%%
+  \ifnum\tmpok=1\relax%%
+    \begingroup%%
+      \DeclareDocumentCommand\emblem{sm}{\char"2500}%% Measure with 1.2em placeholder for emblem.
+      \sbox0{\nvt@aff{RawFeature={+titl,+case},Scale=1.08,FakeStretch=.96,LetterSpace=4}%%
+        \char"200D{#2}\char"200D}%%
+      \xdef\tmpwide{\fpeval{\wd0 > 3.5in}}%%
+    \endgroup%%
     \ifnum\tmpwide=1\relax%%
       \nvt@warn{\string\scene\space content width exceeds 3.5in. Too wide.}%%
       \sbox0{\char"FFFD\space \string\scene\space content is too wide.}%%
+    \else%%
+      \sbox0{\nvt@aff{RawFeature={+titl,+case},Scale=1.08,FakeStretch=.96,LetterSpace=4}%%
+        \char"200D{#2}\char"200D}%%
     \fi%%
     \strut\tmpsceneleft\smash{\raisebox{-.108\nvt@em}{\usebox0}}\tmpsceneright\strut\par%%
   \else%%
@@ -630,6 +638,7 @@
     {\char"FFFD}%%
     \directlua{nvt.adderr('\\scene in disallowed location.')}%%
   \fi%%
+  \gdef\tmpwide{}%%
   \endgroup\nopagebreak\blankline%%
 }%%
 %%

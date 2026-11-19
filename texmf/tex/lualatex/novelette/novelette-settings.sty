@@ -149,7 +149,7 @@
 \newif\ifnvt@preview
 \newif\ifnvt@final
 \def\mode#1{%%
-  \directlua{nvt.parsemode('\luaescapestring{#1}')}
+  \directlua{nvt.mode('\luaescapestring{#1}')}
   \ifnum\tmpreturn=-1\relax
     \nvt@fatal{Duplicate setting for \string\mode.}
   \fi
@@ -171,7 +171,7 @@
 \newlength\nvt@trimwidth \newlength\nvt@trimheight
 \newif\ifnvt@metric %% Becomes true if W and H use metric units.
 \DeclareDocumentCommand\trimsize{m}{%% Ignored when mode=usl.
-  \directlua{nvt.parsetrimsize('\luaescapestring{#1}')}
+  \directlua{nvt.trimsize('\luaescapestring{#1}')}
   \ifnum\tmpreturn=-1\relax
     \nvt@fatal{Duplicate setting for \string\trimsize.}
   \fi
@@ -204,7 +204,7 @@
 %%   This sets the page arrangement. Anything omitted uses its default.
 \newif\ifnvt@moreglue %% Becomes true if \layout{glue=wide}. 
 \DeclareDocumentCommand\layout{m}{%%
-  \directlua{nvt.parselayout('\luaescapestring{#1}')}
+  \directlua{nvt.layout('\luaescapestring{#1}')}
   \ifnum\tmpreturn=-1\relax
     \nvt@fatal{Duplicate setting for \string\layout.}
   \fi
@@ -242,7 +242,7 @@
 \newif\ifnvt@pdfx\nvt@pdfxtrue %% Default PDF/X-1a:2001.
 \def\pdfx#1{
   \def\tmpoi{fogra}
-  \directlua{nvt.parsepdfx('\luaescapestring{#1}')}
+  \directlua{nvt.pdfx('\luaescapestring{#1}')}
   \ifnum\tmpreturn=-1\relax
     \nvt@warn{Duplicate setting for \string\pdfx. First obeyed, others ignored.}
   \fi
@@ -281,7 +281,7 @@
 \newif\ifnvt@allowvrchange %% True if local changes to header text allowed.
 \gdef\nvt@versohead{}\gdef\nvt@rectohead{}
 \DeclareDocumentCommand\vrheadtext{O{}mm}{%% Parsed but ignored, when page layout has no header.
-  \directlua{nvt.parsevrheadtext('\luaescapestring{#1}')}%% Do not parse #2 or #3.
+  \directlua{nvt.vrheadoption('\luaescapestring{#1}')}%% Do not parse #2 or #3.
   \ifnum\tmpreturn=0\relax%%
     \nvt@err{Did not understand \string\vrheadtext\space option.^^J%%
       \spii Normally, do not set the option.^^J%%
@@ -327,7 +327,7 @@
 }%%
 \def\setstyle{\@ifnextchar\bgroup\nvt@badsetstyle\nvt@setstylecmd}%%
 \DeclareDocumentCommand\nvt@setstylecmd{mm}{%%
-  \directlua{nvt.parsesetstyle('\luaescapestring{#1}','\luaescapestring{#2}')}
+  \directlua{nvt.setstyle('\luaescapestring{#1}','\luaescapestring{#2}')}
   \ifnum\tmpreturn=-1\relax
     \nvt@warn{One or more duplicate \string\setstyleN settings. Duplicates ignored.}
   \fi
@@ -352,7 +352,7 @@
 %%
 \def\nvt@headspaceskip{.21em} %% Default, for Serif.
 \DeclareDocumentCommand\headstyle{m}{%%
-  \directlua{nvt.parseheadstyle('\luaescapestring{#1}')}
+  \directlua{nvt.headstyle('\luaescapestring{#1}')}
   \ifnum\tmpreturn=-1\relax
     \nvt@warn{Duplicate setting for \string\headstyle. First obeyed, others ignored.}
   \fi
@@ -378,7 +378,7 @@
 \directlua{nvt.didheadstyle=0}
 %%
 \DeclareDocumentCommand\scenestyle{m}{%%
-  \directlua{nvt.parsescenestyle('\luaescapestring{#1}')}
+  \directlua{nvt.scenestyle('\luaescapestring{#1}')}
   \ifnum\tmpreturn=-1\relax
     \nvt@warn{Duplicate setting for \string\scenestyle. First obeyed, others ignored.}
   \fi
@@ -393,7 +393,7 @@
 \directlua{nvt.didscenestyle=0}
 %%
 \DeclareDocumentCommand\footnotestyle{m}{%%
-  \directlua{nvt.parsefootnotestyle('\luaescapestring{#1}')}
+  \directlua{nvt.footnotestyle('\luaescapestring{#1}')}
   \ifnum\tmpreturn=-1\relax
     \nvt@warn{Duplicate setting for \string\footnotestyle. First obeyed, others ignored.}
   \fi
@@ -433,7 +433,7 @@
 \def\lang#1{%% If your language is English, then set en-US or en-UK instead!
   \def\nvt@rawlang{#1}
   \def\tmpreturn{3}
-  \directlua{nvt.parselang('\luaescapestring{\nvt@rawlang}')}
+  \directlua{nvt.language('\luaescapestring{\nvt@rawlang}')}
   \ifnum\tmpreturn=0\relax
     \nvt@err{Bad setting for \string\lang.^^J%%
       \spii Unavailable language code, or multiple language codes.^^J%%
@@ -469,7 +469,7 @@
   \begingroup
   \def\tmpbritq{0}\def\tmpxmp{0}
   \def\tmphasguide{0}\def\tmpguide{0}
-  \directlua{nvt.parseenable('\luaescapestring{#1}')}
+  \directlua{nvt.enable('\luaescapestring{#1}')}
   \ifnum\tmpreturn=0\relax
     \nvt@err{Bad setting for \string\enable.^^J%%
       \spii Format: \string\enable{comma,separated,choices}.^^J%%
@@ -510,7 +510,7 @@
 \def\disable#1{%%
   \def\tmpnorenumber{0}\def\tmpnopageflip{0}
   \def\tmpnoautodeco{0}\def\tmpnometasub{0}\def\tmpnoguide{0}
-  \directlua{nvt.parsedisable('\luaescapestring{#1}')}
+  \directlua{nvt.disable('\luaescapestring{#1}')}
   \ifnum\tmpreturn=0\relax
     \nvt@err{Bad setting for \string\disable.^^J%%
       \spii Format: \string\disable{comma,separated,choices}.^^J%%
@@ -539,7 +539,7 @@
   \ifnvt@didexamine
     \nvt@warn{Multiple \string\examine\space in preamble. First obeyed, others ignored.}
   \else
-    \directlua{nvt.parseexamine('\luaescapestring{#1}')}
+    \directlua{nvt.examine('\luaescapestring{#1}')}
     \ifnum\tmpreturn=1\relax
       \ifnum\tmpex=1\global\nvt@examinetrue\fi
     \else
@@ -559,7 +559,7 @@
 %% Perhaps the PDF must have page count divisible by 4; or not. Yikes! What to do?
 %%   The \endpdf setting allows you to add blank pages at the end, according to page count.
 \DeclareDocumentCommand\endpdf{m}{%%
-  \directlua{nvt.parseendpdf('\luaescapestring{#1}')}
+  \directlua{nvt.atendpdf('\luaescapestring{#1}')}
   \ifnum\tmpreturn=0\relax
     \nvt@err{Bad setting for \string\endpdf{choice}. Choices:^^J%%
       \spii 0 -> Does nothing at end. Default. Always in draft mode.^^J%%

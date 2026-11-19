@@ -428,7 +428,7 @@
 %% Value of the number is likely to be in the range -.5 to .5 without units.
 \DeclareDocumentCommand\sk{m}{%%
   \begingroup%%
-  \directlua{nvt.parsesk('\luaescapestring{#1}')}%% also do the math
+  \directlua{nvt.sk('\luaescapestring{#1}')}%% also do the math
   \ifnum\tmpreturn=1\relax%%
     \kern\tmpkern em%%
   \else%%

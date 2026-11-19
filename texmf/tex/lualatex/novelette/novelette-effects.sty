@@ -166,12 +166,12 @@
     \def\tmpblockalign{0}\def\tmpblockleft{0}\def\tmpblockright{0}%%
     \def\tmpkeyleft{0}\def\tmpkeyright{0}\def\tmphalfkeydiff{}%%
     \ifnvt@indisplay%%
-      \directlua{nvt.parseblock('\luaescapestring{#1}','D')}%%
+      \directlua{nvt.block('\luaescapestring{#1}','D')}%%
     \else%%
       \ifnvt@inbackmatter%%
-        \directlua{nvt.parseblock('\luaescapestring{#1}','D')}%%
+        \directlua{nvt.block('\luaescapestring{#1}','D')}%%
       \else%%
-        \directlua{nvt.parseblock('\luaescapestring{#1}','M')}%%
+        \directlua{nvt.block('\luaescapestring{#1}','M')}%%
       \fi%%
     \fi%%
     \ifnum\tmpblocksize=-2\relax%%
@@ -327,7 +327,7 @@
   \def\tmptocformat{0}\def\tmptocside{0}\def\tmppad{0}\def\tmptocdots{-1}%%
 %%  \hyphenpenalty 10000\relax\exhyphenpenalty 10000\relax%%
   \nvt@intoctrue\nvt@inblocktrue%%
-  \directlua{nvt.parsetoc('\luaescapestring{#1}')}%%
+  \directlua{nvt.toc('\luaescapestring{#1}')}%%
   \ifnum\tmpreturn=0\relax%%
     \nvt@err{Bad option for toc environment.^^J%%
       \spii Option: [format=F,pad=P,dots=D]^^J%%
@@ -387,7 +387,7 @@
   \par%%
   \ifnvt@intoc%%
     \def\tmppage{}\def\tmplead{-1}%%
-    \directlua{nvt.parseentry('\luaescapestring{#1}')}%%
+    \directlua{nvt.entry('\luaescapestring{#1}')}%%
     \vspace*{\tmpentrypad}%%
     \ifnum\tmpreturn=1\relax%%
       \sbox0{#2}%%
@@ -448,7 +448,7 @@
 \DeclareDocumentCommand\subentry{O{}+m}{%%
   \ifnvt@intoc%%
     \begingroup\edef\tmpsmsub{1}%%
-    \directlua{nvt.parsesubentry('\luaescapestring{#1}')}%%
+    \directlua{nvt.subentry('\luaescapestring{#1}')}%%
     \ifnum\tmpsmsub=1\relax%%
       \setlength\baselineskip{.875\nvt@bls}\nvt@aff{Scale=.875}%%
     \fi%%
@@ -484,7 +484,7 @@
 %%   There is no automatic chapter numbering (see \todo command, for placeholder).
 \def\nvt@noparthere{%%
   \nvt@err{Cannot use \string\par, \noexpand\\, or \string\linebreak^^J%%
-    \spii inside \string\styleN (N=0-9), or \string\scene, or \string\sceneimage.}%%
+    \spii inside \string\styleN (N=0-9), or \string\scene.}%%
   \strut\char"FFFD Bad \textbackslash styleN.\par%%
   \directlua{nvt.adderr('Paragraph or linebreak disallowed inside command.')}%%
 }%%
@@ -502,7 +502,7 @@
   \def\tmpaspabove{0pt}\def\tmpbspabove{0pt}%%
   \def\tmphtbelow{}\def\tmpwbelow{0}\def\tmpubelow{0}%%
   \def\tmpaspbelow{0pt}\def\tmpbspbelow{0pt}%%
-  \directlua{nvt.parsestyle('\luaescapestring{#1}','\luaescapestring{#2}')}%%
+  \directlua{nvt.style('\luaescapestring{#1}','\luaescapestring{#2}')}%%
   \ifnum\tmpreturn=-99\relax%%
     \nvt@fatal{Cannot use \string\styleN\space in preamble.^^J%%
       Did you mean \string\setstyleN\space instead (N=0-9) ?}%%
@@ -521,13 +521,13 @@
       \spvi close to the styled text, like underline and/or overline.^^J%%
       \spvi Without u the line is farther away from the styled text.^^J%%
       \spiv You may combine the integer, w, and u, in any order.}%%
-    \strut\char"FFFD Bad \textbackslash styleN.\par%%
+    \strut\char"FFFD Bad \textbackslash styleN.\nvt@par%%
     \directlua{nvt.adderr('Bad \\styleN syntax.')}%%
   \fi%%
   \ifnum\tmpreturn=-1\relax%%
     \nvt@err{Commands \string\styleN\space (N=0-9) may only be used within display zones.^^J%%
       \spii They may not be nested, or used within block environment.}%%
-    \strut\char"FFFD Bad \textbackslash styleN.\par%%
+    \strut\char"FFFD Bad \textbackslash styleN.\nvt@par%%
     \directlua{nvt.adderr('\\styleN in disallowed location.')}%%
   \fi%%
   \ifnum\tmpreturn=0\relax%% %%%%%
@@ -543,15 +543,8 @@
     \edef\tmpsp{\fpeval{(\tmpscale*\tmpspace + .02*\tmptrack)*\nvt@em}pt}%%
     \def\tmpfeat{\nvt@aff{\tmpraw,Scale=\tmpscale,LetterSpace=\tmptrack}}%%
     \def\par{\nvt@noparthere}\def\\{\nvt@noparthere}\def\linebreak{\nvt@noparthere}%%
-    \begingroup%%
-      \DeclareDocumentCommand\emblem{sm}{\char"2500}%% Measure using 1.2em placholder for image.
-      \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%%
-      \xdef\tmpboxdp{\fpeval{\dp0 > .235*\tmpscale*\nvt@em}}%%
-      \xdef\tmpboxwd{\fpeval{\wd0 > \textwidth}}%%
-    \endgroup%%
-    \ifnum\tmpboxdp=1\relax%%
-      \nvt@warn{\string\style#1\space content has disallowed characters.}%%
-    \fi%%
+    \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%%
+    \edef\tmpboxwd{\fpeval{\wd0 > \textwidth}}%%
     \ifnum\tmpboxwd=1\relax%%
       \edef\tmphowmuch{\fpeval{ceil(100*\wd0/\textwidth,2)}}%%
       \nvt@err{Content of \string\styleN\space is too wide. Must fit on one line.^^J%%
@@ -559,8 +552,6 @@
         \spii You must reduce content or reduce scale.}%%
       \sbox0{\char"FFFD \textbackslash styleN too wide.}%%
       \directlua{nvt.adderr('\\styleN content is too wide.')}%%
-    \else%%
-      \sbox0{{\tmpfont\tmpfeat\spaceskip=\tmpsp\char"200D{#3}\char"200D}}%%
     \fi%%
     \ifx\tmphtabove\@empty\else%%
       \ifnum\tmpwabove=1\relax\def\tmpwdabove{\the\textwidth}\else\def\tmpwdabove{\wd0}\fi%%
@@ -584,13 +575,12 @@
       \vspace{\tmpbspbelow}%%
     \fi%%
   \fi%%
-  \gdef\tmboxwd{}\gdef\tmpboxht{}%%
   \endgroup%%
 }%%
 %%
 
 
-%% SCENE: \scene[option]{text}  also see \sceneimage (graphics).
+%% SCENE: \scene[option]{text}
 %%   The simplest scene breaks are one or more \blankline, possible with \dinkus where needed.
 %% But if a chapter of your story has distinct sub-chapters, each with its own name, then the
 %% \scene command may be useful. This creates a three-line gap between paragraphs. You may
@@ -598,47 +588,45 @@
 %% paragraph is not indented.
 %%   The default \scene alignment is set in preamble by \scenestyle, or center if unset.
 %% Option [align=A] is for local over-ride (A = left right center).
-%%   You may use \emblem, but not \image, within \scene. See \sceneimage for an alternative.
+%%   You may use \image within \scene, subject to size limiations
 %%   Scenes have no automatic numbering. Do it yourself. See the \todo command.
 \newif\ifnvt@inscene %% True inside \scene.
 \DeclareDocumentCommand\scene{O{}+m}{%% +m will be re-parsed as m.
+  \begingroup%%
   \ifnvt@instyle\def\tmpok{0}\else\def\tmpok{1}\fi%%
   \ifnvt@inblock\def\tmpok{0}\fi%%
   \ifnvt@inscene\def\tmpok{0}\fi%%
-  \begingroup\nvt@inscenetrue%%
+  \ifnvt@inheader\def\tmpok{0}\fi%%
+  \ifnvt@infootnote\def\tmpok{0}\fi%%
+  \nvt@inscenetrue%%
   \def\par{\nvt@noparthere}\def\\{\nvt@noparthere}\def\linebreak{\nvt@noparthere}%%
   \def\tmpsceneleft{\nvt@sceneleft}\def\tmpsceneright{\nvt@sceneright}%%
-  \directlua{nvt.parsescene('\luaescapestring{#1}')}%%
+  \directlua{nvt.scene('\luaescapestring{#1}')}%%
   \ifnum\tmpreturn=-99\relax%%
     \nvt@fatal{Cannot use \string\scene\space in preamble.^^J%%
       Did you mean \string\scenestyle\space ?}%%
   \fi%%
   \ifnum\tmpreturn=0\relax%%
     \nvt@warn{Did not understand \string\scene\space option.^^J%%
-      \spii Only option is [align=A] for A -> left right center.}%%
+      \spii Only option is [align=A] for local A -> left right center.}%%
   \fi%%
   \ifnum\tmpok=1\relax%%
-    \begingroup%%
-      \DeclareDocumentCommand\emblem{sm}{\char"2500}%% Measure with 1.2em placeholder for emblem.
-      \sbox0{\nvt@aff{RawFeature={+titl,+case},Scale=1.08,FakeStretch=.96,LetterSpace=4}%%
-        \char"200D{#2}\char"200D}%%
-      \xdef\tmpwide{\fpeval{\wd0 > 3.5in}}%%
-    \endgroup%%
+    \def\tmpscale{1.08}%% Read by inline \image.
+    \sbox0{\nvt@aff{RawFeature={+titl,+case},Scale=1.08,FakeStretch=.96,LetterSpace=4}%%
+      \char"200D{#2}\char"200D}%%
+    \edef\tmpwide{\fpeval{\wd0 > 3.5in}}%%
     \ifnum\tmpwide=1\relax%%
       \nvt@warn{\string\scene\space content width exceeds 3.5in. Too wide.}%%
       \sbox0{\char"FFFD\space \string\scene\space content is too wide.}%%
-    \else%%
-      \sbox0{\nvt@aff{RawFeature={+titl,+case},Scale=1.08,FakeStretch=.96,LetterSpace=4}%%
-        \char"200D{#2}\char"200D}%%
     \fi%%
     \strut\tmpsceneleft\smash{\raisebox{-.108\nvt@em}{\usebox0}}\tmpsceneright\strut\nvt@par%%
   \else%%
     \nvt@err{Command \string\scene\space cannot be nested in itself,^^J%%
-      \spii or used in \string\styleN (N=0-9), \string\image, or block environment.}%%
+      \spii or used in \string\styleN (N=0-9), \string\image, or block environment.^^J%%
+      \spii or use in page headers or footnotes.}%%
     {\char"FFFD}%%
     \directlua{nvt.adderr('\\scene in disallowed location.')}%%
   \fi%%
-  \gdef\tmpwide{}%%
   \endgroup\nopagebreak\blankline%%
 }%%
 %%
@@ -770,7 +758,7 @@
   \ifnum\tmpok=1\relax%%
     \def\tmpleft{\hfill}\def\tmpright{\hfill}%%
     \def\tmpup{2.1pt}\def\tmpwidth{.2}\def\tmpheight{.76pt}%%
-    \directlua{nvt.parseline('\luaescapestring{#1}')}%%
+    \directlua{nvt.line('\luaescapestring{#1}')}%%
     \ifnum\tmpreturn=1\relax%%
       \edef\tmpwd{\fpeval{\tmpwidth*\linewidth}pt}%%
       \par\strut\tmpleft\rule[\tmpup]{\tmpwd}{\tmpheight}\tmpright\strut\par%%
@@ -781,7 +769,7 @@
         \spiv W -> Decimal number 0<=W<=1 (no units). Default 0.2.^^J%%
         \spix Width of line, as portion of available linewidth.^^J%%
         \spxi In a block, linewidth is block width. Else, full textwidth.^^J%%
-        \spxi If W=0 then no line appears, but the space is occupied.^^J%% 
+        \spxi If W=0 then no line appears, but the space is occupied.^^J%%
         \spiv H -> Decimal number 1<=H<=9. Default 1.^^J%%
         \spix H=1 line 0.76pt thick. Inceasing H, thicker line. H=9 is 6pt.^^J%%
         \spiv In all cases, the line occupies one normal baselineskip.}%%

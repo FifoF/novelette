@@ -112,7 +112,8 @@
     nvt = nvt or { }
     nvt.now = '\luaescapestring{\nvt@now}'
     require 'novelette-luasupport'
-    nvt.parseclass('\luaescapestring{\@classoptionslist}')
+    nvt.classopt('\luaescapestring{\@classoptionslist}')
+    nvt.getclassdir()
   }%%
   \IfFileExists{\jobname.typo}{%%
     \directlua{%%

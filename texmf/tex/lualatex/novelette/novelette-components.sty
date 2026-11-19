@@ -63,7 +63,7 @@
   \ifnvt@inbackmatter\@nameuse{ps@empty}\nvt@thispagestyle{empty}\fi%%
   \nvt@getbookpage\edef\tmpbp{\nvt@thispage}%%
   \def\tmplegal{0}\def\tmpsingle{0}\def\tmprecto{0}%%
-  \directlua{nvt.parsecomponent('\luaescapestring{#1}','\luaescapestring{\tmpbp}')}%%
+  \directlua{nvt.component('\luaescapestring{#1}','\luaescapestring{\tmpbp}')}%%
   \def\tmptest{force}%%
     \ifx\tmpfps\tmptest\nvt@thispagestyle{normal}\fi%%
     \ifx\tmprps\tmptest\@nameuse{ps@normal}\fi%%

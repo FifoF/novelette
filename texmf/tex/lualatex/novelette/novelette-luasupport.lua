@@ -27,16 +27,14 @@ end
 --
 
 nvt = nvt or {} -- Namespace. NOT local !
-nvt.mode = nvt.mode or 'draft' -- Actually set before this file is read.
-nvt.startmode = nvt.mode
-
--- Conversion of some useful length values to TeX pt
-nvt.inch = 72.27
-nvt.mm = 2.8452755876
---
 
 -- Variables. These are the defaults. Quotes mean that the variable is a string, even if it looks
 -- like a number. Without quotes, the variable is a number or a boolean.
+nvt.inch = 72.27 -- Converts in to pt.
+nvt.mm = 2.8452755876 -- Converts mm to pt.
+nvt.classdir = '' -- Becomes absolute path to novelette.cls (the one actually used).
+nvt.currentmode = 'draft' -- Default.
+nvt.startmode = 'draft' -- Default.
 nvt.subdocs = {} -- Holds path/filename for \subdoc call, to prevent cyclic error.
 nvt.subdocs[1] = 'placeholder'
 nvt.good = true -- Becomes false if error or warning. Once false, remains false.
@@ -82,9 +80,9 @@ nvt.evensidemargin = 0.5*nvt.inch
 nvt.oddsidemargin = 0.625*nvt.inch
 nvt.topmargin = 0.5*nvt.inch
 nvt.textwidth = 3.875*nvt.inch
-nvt.pdfx = true
+nvt.dopdfx = true
 nvt.oi = 'fogra'
-nvt.examine = false
+nvt.doexamine = false
 nvt.examinemsg = 0
 nvt.endpdf = 0 -- Becomes \endpdf setting.
 nvt.nopageflip = false
@@ -94,8 +92,8 @@ nvt.todo = 0 -- Increments when \todo used.
 nvt.clsvar = '' -- For experimental document class option.
 nvt.luaerr = false -- Becomes true if lua error.
 nvt.metric = false -- Becomes true if trimsize uses mm units. Once true, remains true.
-nvt.pagelist = '' -- Might become nonempty when nvt.examine==true.
-nvt.thisdoc = '' -- Becomes nonempty when compiling only subdoc files.
+nvt.pagelist = '' -- Might become nonempty when nvt.doexamine==true.
+nvt.thisdocname = '' -- Becomes nonempty when compiling only subdoc files.
 nvt.preamble = true -- Becomes false AtBeginDocument.
 nvt.didyada = false -- Becomes true if \yada used.
 nvt.guide = 0 -- Becomes nonzero if guide enabled.
@@ -147,8 +145,8 @@ nvt.didheadstyle = false
 nvt.didscenestyle = false
 nvt.didfootnotestyle = false
 nvt.sumbuffer = {} -- Will contain summary and other info.
-nvt.entry = {} -- For toc: nvt.entry[i] = 'id,tocpage;bookpage'
-nvt.entrylist = '' -- Accumulates bad entry/actual info.
+nvt.entries = {} -- For toc: nvt.entries[i] = 'id,tocpage;bookpage'
+nvt.badentrylist = '' -- Accumulates bad entry/actual info.
 nvt.eid = ',' -- Accumulates comma-separated entry id.
 nvt.cid = ',' -- Accumulates comma-separated component id.
 nvt.tocbad = 0 -- Increments for bad toc entry or subentry.
@@ -167,7 +165,7 @@ end
 
 
 -- Parse \sk:
-nvt.parsesk = function (s)
+nvt.sk = function (s)
   local n = tonumber(s) ; local k
   if n and n >= -10 and n <= 10 then
     k = n * 0.084
@@ -179,7 +177,7 @@ end
 --
 
 
---
+-- Add error and warning messages to summary file:
 nvt.adderr = function (s, e)
   if e and e ~= '' then
     table.insert(nvt.errlist, 'Overall: ' .. s)
@@ -198,7 +196,7 @@ end
 
 
 -- Parse \endpdf:
-nvt.parseendpdf = function (s)
+nvt.atendpdf = function (s)
   s = string.gsub(s, ' ', '') ; s = tonumber(s)
   if s == 0 or s == 1 or s == 2 or s == 3 or s == 4 then
     nvt.endpdf = s ; tex.sprint('\\def\\tmpreturn{1}')
@@ -285,7 +283,7 @@ end
 
 
 -- Parse \entry option:
-nvt.parseentry = function (s)
+nvt.entry = function (s)
   local n, l, ll, p, pp, a, idp
   local gotp = false ; local gotid = false
   local lok = true ; local pok = true ; local idok = true
@@ -346,25 +344,25 @@ nvt.parseentry = function (s)
   end
   s = string.gsub(s, ',', '')
   if (gotp == true and gotid == false) or (gotp == false and gotid == true) then
-    table.insert(nvt.entry, '<bad entry in table>')
+    table.insert(nvt.entries, '<bad entry in table>')
     nvt.tocbad = nvt.tocbad + 1 ; tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
   elseif lok == false or pok == false or idok == false then
-    table.insert(nvt.entry, '<bad entry in table>')
+    table.insert(nvt.entries, '<bad entry in table>')
     nvt.tocbad = nvt.tocbad + 1 ; tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
   elseif gotp == true and gotid == true then
-    idp = id .. ',' .. p ; table.insert(nvt.entry, idp) ; tex.sprint('\\def\\tmpreturn{1}')
+    idp = id .. ',' .. p ; table.insert(nvt.entries, idp) ; tex.sprint('\\def\\tmpreturn{1}')
   elseif s == '' and lok == true and idok == true and pok == true then
     tex.sprint('\\def\\tmpreturn{1}')
   else
     nvt.tocbad = nvt.tocbad + 1 ; tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
-    table.insert(nvt.entry, '<bad entry in table>')
+    table.insert(nvt.entries, '<bad entry in table>')
   end
 end
 --
 
 
 -- Parse \subentry option:
-nvt.parsesubentry = function (s)
+nvt.subentry = function (s)
   s = string.gsub(s, ' ', '') ; s = s .. ',' ; local n, t
   if string.find(s, 'size=') then
     t, n = string.gsub(s, '.*size=', '') ; t = string.gsub(t, ',.*', '')
@@ -388,7 +386,7 @@ end
 
 
 -- Parse \vrheadtext option (does not parse the text):
-nvt.parsevrheadtext = function (s)
+nvt.vrheadoption = function (s)
   s = string.gsub(s, ' ', '')
   if s == 'local' then tex.sprint('\\def\\tmpreturn{2}') ; string.gsub(s, 'local', '')
   elseif s == '' then tex.sprint('\\def\\tmpreturn{1}')
@@ -398,106 +396,84 @@ end
 --
 
 
--- Parse \image:
-nvt.parseimage = function (star,opt,file,sc) -- sc=0->image, sc=1->sceneimage
-  local a, t, f, l, lx, n ; local img = 0 ; local label = 'image' ; local ok = true
-  opt = string.gsub(opt, ' ', '') ; opt = opt .. ',' ; opt = string.gsub(opt, 'lines=', 'line=')
-  if file ~= '' then
-    label = string.gsub(file, '.*/', '') ----- utf8
+-- Parse \image path:
+nvt.imagepath = function (s)
+  s = string.gsub(s, ' ', '') ----- utf8
+  local a, n ; local img = 1 ; local label = ''
+  if a ~= '' then
+    label = string.gsub(s, '.*/', '') ----- utf8
     local e = utf8.len(label)
-    if e > 32 then local b = utf8.offset(label, e - 32) ; label = string.sub(label, b, e) end ----- utf8
-  end
-  tex.sprint('\\def\\tmplabel{' .. label .. '}')
-  file = string.gsub(file, '^%s', '') ; file = string.gsub(file, '%s$', '') ----- utf8
-  if star == 'star' or nvt.mode == 'preview' or nvt.mode == 'final' then
-    img = 1
-    local sp = string.gsub(file, '%s', '') ; if sp == '' then img = -1 end ----- utf8
-    if string.find(file, '~') then img = -1 end
-    if string.find(file, '%.%.') then img = -1 end
-    if string.find(file, '\\') then img = -1 end
-    if string.find(file, '//') then img = -1 end
-    if string.find(file, ':') then img = -1 end
-    if not string.find(file, '%.png$') then img = -1 end
-    if 'link' == lfs.symlinkattributes(file, 'mode') then img = -1 end
-    file = string.gsub(file, '^%./', '') -- remove initial ./ if present
-    _, n = string.gsub(file, '/', '') ; if n > 5 then img = -1 end -- max 5 folder levels
-  end
-  tex.sprint('\\def\\tmpisfile{' .. img .. '}')
-  if (nvt.mode == 'preview' or nvt.mode == 'final') and img == 1 then
-    tex.sprint('\\def\\tmpvalidate{1}')
-  end
-  a, n = string.gsub(opt, '.*align=', '') ; a = string.gsub(a, ',.*', '')
-  if n > 1 then ok = false end
-  if a == 'center' then
-    tex.sprint('\\def\\tmpalign{0}') ; opt = string.gsub(opt, 'align=center', '')
-  elseif a == 'left' then
-    tex.sprint('\\def\\tmpalign{1}') ; opt = string.gsub(opt, 'align=left', '')
-  elseif a == 'right' then
-    tex.sprint('\\def\\tmpalign{2}') ; opt = string.gsub(opt, 'align=right', '')
-  end
-  if n == 0 and sc == 1 then tex.sprint('\\def\\tmpalign{-1}') end
-  if sc == 0 then
-    t, n = string.gsub(opt, '.*tweak=', '') ; t = string.gsub(t, ',.*', '')
-    if n > 1 then ok = false end
-    if t == 'mid' then
-      tex.sprint('\\def\\tmptweak{0}') ; opt = string.gsub(opt, 'tweak=mid','')
-    elseif t == 'up' then
-      tex.sprint('\\def\\tmptweak{1}') ; opt = string.gsub(opt, 'tweak=up','')
-    elseif t == 'down' then
-      tex.sprint('\\def\\tmptweak{2}') ; opt = string.gsub(opt, 'tweak=down','')
-    end
-    f, n = string.gsub(opt, '.*float=', '') ; f = string.gsub(f, ',.*','')
-    if n > 1 then ok = false  end
-    if f == 'none' then
-      tex.sprint('\\def\\tmpfloat{0}') ; opt = string.gsub(opt, 'float=none', '')
-    elseif f == 'here' then
-      tex.sprint('\\def\\tmpfloat{1}') ; opt = string.gsub(opt, 'float=here', '')
-    elseif f == 'top' then
-      tex.sprint('\\def\\tmpfloat{2}') ; opt = string.gsub(opt, 'float=top', '')
-    elseif f == 'bottom' then
-      tex.sprint('\\def\\tmpfloat{3}') ; opt = string.gsub(opt, 'float=bottom', '')
-    end
-    l, n = string.gsub(opt, '.*line=', '') ; l = string.gsub(l, ',.*', '')
-    if n > 1 then ok = false end
-    lx = l ; l = tonumber(l) -- tonumber may change format; preserve original as lx.
-    if l and l == math.floor(l) and l > 1 and l <= nvt.lines then
-      tex.sprint('\\def\\tmplines{' .. lx .. '}') ; opt = string.gsub(opt, 'line=' .. lx, '')
-    else
-      ok = false
-    end
-    opt = string.gsub(opt, ',', '')
-    if ok == true and opt == '' then
-      tex.sprint('\\def\\tmpreturn{1}')
-    else
-      tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
+    if e > 32 then
+      local b = utf8.offset(label, e - 32)
+      label = string.sub(label, b, e) ----- utf8
     end
   end
+  tex.sprint('\\def\\tmplabel{' .. label .. '}') -----
+  if s == '' then img = -1 end
+  if string.find(s, '~') then img = 0 end
+  if string.find(s, '%.%.') then img = 0 end
+  if string.find(s, '\\') then img = 0 end
+  if string.find(s, '//') then img = 0 end
+  if string.find(s, ':') then img = 0 end
+  if not string.find(s, '%.png$') then img = 0 end
+  if 'link' == lfs.symlinkattributes(s, 'mode') then img = 0 end
+  s = string.gsub(s, '^%./', '') -- remove initial ./ if present
+  _, n = string.gsub(s, '/', '') ; if n > 5 then img = 0 end -- max 5 folder levels
+  tex.sprint('\\def\\tmpimagepath{' .. img .. '}')
 end
 --
 
 
--- Parse \emblem:
-nvt.parseemblem = function (star,file)
-  local a, t, f, l, lx, n ; local img = 0
-  file = string.gsub(file, '^%s', '') ; file = string.gsub(file, '%s$', '') ----- utf8
-  if star == 'star' or nvt.mode == 'preview' or nvt.mode == 'final' then
-    img = 1
-    local sp = string.gsub(file, '%s', '') ; if sp == '' then img = -1 end
-    if string.find(file, '~') then img = -1 end
-    if string.find(file, '%.%.') then img = -1 end
-    if string.find(file, '\\') then img = -1 end
-    if string.find(file, '//') then img = -1 end
-    if string.find(file, ':') then img = -1 end
-    if not string.find(file, '%.png$') then img = -1 end
-    if 'link' == lfs.symlinkattributes(file, 'mode') then img = -1 end
-    file = string.gsub(file, '^%./', '') -- remove initial ./ if present
-    _, n = string.gsub(file, '/', '') ; if n > 5 then img = -1 end -- max 5 folder levels
+-- Parse \image option:
+nvt.imageoption = function (s)
+  local a, t, f, l, lx, n ; local ok = true
+  s = string.gsub(s, ' ', '') ; s = s .. ',' ; s = string.gsub(s, 'lines=', 'line=')
+  a, n = string.gsub(s, '.*align=', '') ; a = string.gsub(a, ',.*', '')
+  if n == 1 then
+    if a == 'center' then
+      tex.sprint('\\def\\tmpalign{0}') ; s = string.gsub(s, 'align=center', '')
+    elseif a == 'left' then
+      tex.sprint('\\def\\tmpalign{1}') ; s = string.gsub(s, 'align=left', '')
+    elseif a == 'right' then
+      tex.sprint('\\def\\tmpalign{2}') ; s = string.gsub(s, 'align=right', '')
+    end
   end
-  tex.sprint('\\def\\tmpisfile{' .. img .. '}')
-  if (nvt.mode == 'preview' or nvt.mode == 'final') and img == 1 then
-    tex.sprint('\\def\\tmpvalidate{1}')
+  if n == 0 then tex.sprint('\\def\\tmpalign{-1}') end
+  t, n = string.gsub(s, '.*tweak=', '') ; t = string.gsub(t, ',.*', '')
+  if n == 1 then
+    if t == 'mid' then
+      tex.sprint('\\def\\tmptweak{0}') ; s = string.gsub(s, 'tweak=mid','')
+    elseif t == 'up' then
+      tex.sprint('\\def\\tmptweak{1}') ; s = string.gsub(s, 'tweak=up','')
+    elseif t == 'down' then
+      tex.sprint('\\def\\tmptweak{2}') ; s = string.gsub(s, 'tweak=down','')
+    end
   end
-  if img == -1 then nvt.good = false end
+  f, n = string.gsub(s, '.*float=', '') ; f = string.gsub(f, ',.*','')
+  if n == 1 then
+    if f == 'none' then
+      tex.sprint('\\def\\tmpfloat{0}') ; s = string.gsub(s, 'float=none', '')
+    elseif f == 'here' then
+      tex.sprint('\\def\\tmpfloat{1}') ; s = string.gsub(s, 'float=here', '')
+    elseif f == 'top' then
+      tex.sprint('\\def\\tmpfloat{2}') ; s = string.gsub(s, 'float=top', '')
+    elseif f == 'bottom' then
+      tex.sprint('\\def\\tmpfloat{3}') ; s = string.gsub(s, 'float=bottom', '')
+    end
+  end
+  l, n = string.gsub(s, '.*line=', '') ; l = string.gsub(l, ',.*', '')
+    if n == 1 then
+    lx = l ; l = tonumber(l) -- tonumber may change format; preserve original as lx.
+    if l and l == math.floor(l) and l > 1 and l <= nvt.lines then
+      tex.sprint('\\def\\tmplines{' .. lx .. '}') ; s = string.gsub(s, 'line=' .. lx, '')
+    end
+  end
+  s = string.gsub(s, ',', '')
+  if s == '' and n == 1 then
+    tex.sprint('\\def\\tmpreturn{1}')
+  else
+    tex.sprint('\\def\\tmpreturn{0}') ; nvt.good = false
+  end
 end
 --
 
@@ -522,7 +498,7 @@ end
 
 
 -- Parse subdoc file paths:
-nvt.parsethisdoc = function (s)
+nvt.thisdoc = function (s)
   local p, f, d, t, m, n ; local e = ''
   s = string.gsub(s, ' ', '') ----- utf8
   if string.find(s, '%.%.') then
@@ -583,7 +559,7 @@ end
 
 
 -- Parse \mode setting:
-nvt.parsemode = function (s)
+nvt.mode = function (s)
   if nvt.didmode == true then
     tex.sprint('\\def\\tmpreturn{-1}') ; nvt.good = false
   else
@@ -595,7 +571,7 @@ nvt.parsemode = function (s)
       if s == '' then
         tex.sprint('\\gdef\\nvt@titleprefix{PREVIEW: }')
         tex.sprint('\\global\\nvt@draftfalse\\global\\nvt@previewtrue')
-        nvt.mode = 'preview' ; nvt.startmode = 'preview'
+        nvt.currentmode = 'preview' ; nvt.startmode = 'preview'
       end
     end
     if s == 'final' then
@@ -603,7 +579,7 @@ nvt.parsemode = function (s)
       if s == '' then
         tex.sprint('\\gdef\\nvt@titleprefix{}')
         tex.sprint('\\global\\nvt@draftfalse\\global\\nvt@finaltrue')
-        nvt.mode = 'final' ; nvt.startmode = 'final'
+        nvt.currentmode = 'final' ; nvt.startmode = 'final'
       end
     end
     if s == 'dev' then
@@ -611,7 +587,7 @@ nvt.parsemode = function (s)
       if s == '' then
         tex.sprint('\\gdef\\nvt@titleprefix{DEV TEST: }')
         tex.sprint('\\global\\nvt@draftfalse\\global\\nvt@devtrue')
-        nvt.mode = 'dev' ; nvt.startmode = 'dev'
+        nvt.currentmode = 'dev' ; nvt.startmode = 'dev'
       end
     end
     if s == 'usl' then
@@ -619,7 +595,7 @@ nvt.parsemode = function (s)
       if s == '' then
         tex.sprint('\\gdef\\nvt@titleprefix{}')
         tex.sprint('\\global\\nvt@draftfalse\\global\\nvt@usltrue')
-        nvt.mode = 'usl' ; nvt.startmode = 'usl'
+        nvt.currentmode = 'usl' ; nvt.startmode = 'usl'
       end
     end
     tex.sprint('\\endgroup')
@@ -634,7 +610,7 @@ end
 
 
 -- Parse class option (usually empty):
-nvt.parseclass = function (s)
+nvt.classopt = function (s)
   s = string.gsub(s, ' ', '') ; local ok = true
   if s ~= ''  and not string.find(s, '^var=')
     then ok = false
@@ -647,6 +623,17 @@ nvt.parseclass = function (s)
   else
     nvt.good = false ; tex.sprint('\\def\\tmpreturn{0}')
   end
+end
+--
+
+
+-- Get directory of novelette.cls file:
+nvt.getclassdir = function ()
+  local clspath = status.filename ; local abspath = './'
+  if clspath and lfs.attributes(clspath) then
+    abspath = (lfs.attributes(clspath) and clspath) or kpse.find_file(clspath)
+  end
+  nvt.classdir = abspath:match("^(.*[/\\])") or "./"
 end
 --
 
@@ -679,7 +666,7 @@ luatexbase.add_to_callback('pre_linebreak_filter',
 
 
 -- Parse \headstyle:
-nvt.parseheadstyle = function (s)  ---- need to add check for multiple use
+nvt.headstyle = function (s)  ---- need to add check for multiple use
   s = s .. ',' ; s = string.gsub(s, ' ', '') ; s = string.gsub(s, '"', '')
   local n, a, t, f, c, x, xx, min, max, sk
   tex.sprint('\\begingroup\\makeatletter')
@@ -798,7 +785,7 @@ end
 
 
 -- Parse \setstyleN for N = 0-9:
-nvt.parsesetstyle = function (N, s) -- style number, setting
+nvt.setstyle = function (N, s) -- style number, setting
   s = s .. ',' ; s = string.gsub(s, ' ', '')
   local n, m, mm, mmm, t, tt, a, f, c, h, d ; local ok = true
   N = tonumber(N) ; if not N then ok = false end
@@ -884,7 +871,7 @@ end
 
 
 -- Parse \styleN for N = 0-9:
-nvt.parsestyle = function (N,s) -- style number, option
+nvt.style = function (N,s) -- style number, option
   local d, h, a, b, n, m ; local p = '' ; local q = ''
   N = tonumber(N) ; s = string.gsub(s, ' ', '')
   if nvt.preamble == true then tex.sprint('\\def\\tmpreturn{-99}') ; nvt.good = false
@@ -952,7 +939,7 @@ end
 
 
 -- Parse \line argument:
-nvt.parseline = function (s)
+nvt.line = function (s)
   s = string.gsub(s, ' ', '') ; s = s .. ','
   local n, a, w, h, u ; local ww = 0.2 ; local h = 0.76
   if string.find(s, 'align=') then
@@ -1002,8 +989,8 @@ end
 --
 
 
--- Parse \scene option and \sceneimage option:
-nvt.parsescene = function (s)
+-- Parse \scene option option:
+nvt.scene = function (s)
   s = string.gsub(s, ' ', '') ; s = string.gsub(s, ',', '')
   local n, a, g
   if string.find(s, 'align=') then
@@ -1032,7 +1019,7 @@ end
 
 
 -- Parse \scenestyle:
-nvt.parsescenestyle = function (s)
+nvt.scenestyle = function (s)
   s = s .. ',' ; s = string.gsub(s, ' ', '') ; s = string.gsub(s, ',', '')
   local n, t, a, f, c, x, xx, ok ; local miss = ''
   local min = 1 ; local max = 1.5
@@ -1065,7 +1052,7 @@ end
 
 
 -- Parse \footnotestyle:
-nvt.parsefootnotestyle = function (s)
+nvt.footnotestyle = function (s)
   local ok = false
   if nvt.didfootnotestyle == true then
     tex.sprint('\\def\\tmpreturn{-1}') ; nvt.good = false
@@ -1164,21 +1151,8 @@ end
 --
 
 
--- Parse \padentry option:
-function nvt.parsepad (s)
-  s = string.gsub(s,' ','') ; if s == '' then s = 0 end
-  s = tonumber(s)
-  if not s or (s < 0) or (s > 1) then
-    tex.sprint('\\def\\tmppad{0}\\def\\tmpreturn{0}') ; nvt.good = false
-  else
-    tex.sprint('\\def\\tmppad{' .. s .. '}\\def\\tmpreturn{1}')
-  end
-end
---
-
-
 -- Parse option of block environment:
-function nvt.parseblock (s,d)
+function nvt.block (s,d)
   local n, size, font, a, l, r, ln, rn
   s = string.gsub(s, ' ', '') ; s = s .. ','
   size, n = string.gsub(s, '.*size=', '') ; size = string.gsub(size, ',.*', '')
@@ -1241,7 +1215,7 @@ end
 
 
 -- Parse option of toc environment:
-nvt.parsetoc = function (s)
+nvt.toc = function (s)
   s = string.gsub(s, ' ', '') ; s = s .. ','
   local n, f, p, d
   if string.find(s, 'format=') then
@@ -1298,7 +1272,7 @@ end
 
 
 -- Parse option of component environment:
-function nvt.parsecomponent (s,p) -- option,bookpage
+function nvt.component (s,p) -- option,bookpage
   s = string.gsub(s, ' ', '') ; s = s .. ',' ; local n, g, gg, id, idp, z, c, f, r
   tex.sprint('\\def\\tmpguide{' .. nvt.guide .. '}')
   if string.find(s, 'guide=') then
@@ -1314,12 +1288,12 @@ function nvt.parsecomponent (s,p) -- option,bookpage
       if n == 1 and id ~= '' and string.len(id) <= 8 then
         s = string.gsub(s, 'id=' .. id, '')
         z = string.gsub(id, '%a', '') ; z = string.gsub(z, '%d', '')
-        if z == '' and nvt.thisdoc == '' then
+        if z == '' and nvt.thisdocname == '' then
           s = string.gsub(s, 'id=' .. id, '')
           texio.write_nl('Info: component id=' .. id .. ' begins on bookpage ' .. p .. '\n')
-          for i = 1, #nvt.entry do
-            local eid = string.gsub(nvt.entry[i], ',.*', '')
-            if id == eid then nvt.entry[i] = nvt.entry[i] .. ';' .. p end
+          for i = 1, #nvt.entries do
+            local eid = string.gsub(nvt.entries[i], ',.*', '')
+            if id == eid then nvt.entries[i] = nvt.entries[i] .. ';' .. p end
           end
         end
       end
@@ -1713,7 +1687,7 @@ end
 
 -- Parse \trimsize setting:
 -- Lua calculates and records in Tex pt, converted to Postscript (bp) by LaTEX.
-function nvt.parsetrimsize (s)
+function nvt.trimsize (s)
   if nvt.didtrimsize == true then
     tex.sprint('\\def\\tmpreturn{-1}') ; nvt.good = false
   else
@@ -1778,7 +1752,7 @@ end
 
 
 -- Parse \layout setting:
-function nvt.parselayout (s)
+function nvt.layout (s)
   if nvt.didlayout == true then
     tex.sprint('\\def\\tmpreturn{-1}') ; nvt.good = false
   else
@@ -1836,7 +1810,7 @@ end
 
 
 -- Parse \pdfx setting:
-function nvt.parsepdfx (s)
+function nvt.pdfx (s)
   if nvt.didpdfx == true then
     tex.sprint('\\def\\tmpreturn{-1}') ; nvt.good = false
   else
@@ -1851,7 +1825,7 @@ function nvt.parsepdfx (s)
     if string.find(s, 'swop') then nvt.oi = 'swop' ; s = string.gsub(s, 'swop', '')
     elseif string.find(s, 'fogra') then nvt.oi = 'fogra' ; s = string.gsub(s, 'fogra' ,'')
     elseif string.find(s, 'off') then
-      nvt.pdfx = false ; nvt.oi = '' ; s = string.gsub(s, 'off', '')
+      nvt.dopdfx = false ; nvt.oi = '' ; s = string.gsub(s, 'off', '')
     end
     if s == '' then tex.sprint('\\gdef\\nvt@oi{' .. nvt.oi .. '}') end
     tex.sprint('\\endgroup')
@@ -1859,14 +1833,14 @@ function nvt.parsepdfx (s)
   if s == '' then
     tex.sprint('\\def\\tmpreturn{1}')
   else
-    tex.sprint('\\def\\tmpreturn{0}') ; nvt.pdfx = false ; nvt.good = false
+    tex.sprint('\\def\\tmpreturn{0}') ; nvt.dopdfx = false ; nvt.good = false
   end
 end
 --
 
 
 -- Parse \lang setting:
-nvt.parselang = function (s)
+nvt.language = function (s)
   if nvt.didlang == true then
     tex.sprint('\\def\\tmreturn{-1}') ; nvt.good = false
   else
@@ -1914,7 +1888,7 @@ end
 
 
 -- Parse \enable setting(s), which may be used more than once, with cumulative effect:
-function nvt.parseenable (s)
+function nvt.enable (s)
   local g = 0 ; local e = 0
   s = s .. ',' ; s = string.gsub(s,' ','')
   if string.find(s,'britq,') then
@@ -1948,7 +1922,7 @@ end
 
 
 -- Parse disable setting(s), which may be used more than once, for cumulative effect:
-function nvt.parsedisable (s)
+function nvt.disable (s)
   s = s .. ',' ; s = string.gsub(s, ' ', '')
   if string.find(s,'renumber,') then
     tex.sprint('\\def\\tmpnorenumber{1}') ; s = string.gsub(s, 'renumber', '')
@@ -1978,9 +1952,9 @@ end
 
 
 -- Parse \examine setting: ----- nvt.didexamine ?
-nvt.parseexamine = function (s)
+nvt.examine = function (s)
   s = string.gsub(s, ' ', '')
-  if s == '1' then tex.sprint('\\def\\tmpex{1}') ; nvt.examine = true
+  if s == '1' then tex.sprint('\\def\\tmpex{1}') ; nvt.doexamine = true
   elseif s == '0' then tex.sprint('\\def\\tmpex{0}')
   else tex.sprint('\\def\\tmpreturn{0}')
   end
@@ -2004,7 +1978,7 @@ function nvt.calculatehorizontal ()
   if nvt.em > 12.05 then -- If necessary, limit em, and adjust textwidth.
     nvt.em = 12.05 ; nvt.textwidth = nvt.em*nvt.charperline*0.386
   end
-  if nvt.mode == 'draft' and nvt.nopageflip == true then -- Split glue strip, for easier editing.
+  if nvt.currentmode == 'draft' and nvt.nopageflip == true then -- Split glue strip.
     nvt.evensidemargin = 0.5*(nvt.trimwidth-nvt.textwidth)
     nvt.oddsidemargin = 0.5*(nvt.trimwidth-nvt.textwidth)
   else -- Glue strip alternates, as in print.
@@ -2060,29 +2034,29 @@ end
 nvt.finalize = function (s)
   local nblank = tonumber(s) or 0 ; nblank = nblank - 1
   if nvt.good == false then
-    tex.sprint('\\def\\tmpmode{bad}') ; nvt.mode = 'draft' ; s = 0
+    tex.sprint('\\def\\tmpmode{bad}') ; nvt.currentmode = 'draft' ; s = 0
   end
-  tex.sprint('\\def\\tmpmode{' .. nvt.mode .. '}')
+  tex.sprint('\\def\\tmpmode{' .. nvt.currentmode .. '}')
   -- toc info:
   local tocok = true
-  for i = 1, #nvt.entry do
+  for i = 1, #nvt.entries do
     local id, ep, bp
-    id = string.gsub(nvt.entry[i], ',.*', '')
-    ep = string.gsub(nvt.entry[i], '.*,', '') ; ep = string.gsub(ep, ';.*', '')
+    id = string.gsub(nvt.entries[i], ',.*', '')
+    ep = string.gsub(nvt.entries[i], '.*,', '') ; ep = string.gsub(ep, ';.*', '')
     if ep == '' then ep = '0' end
-    if string.find(nvt.entry[i], ';') then
-      bp = string.gsub(nvt.entry[i], '.*;', '') ; if bp == '' then bp = 'unknown' end
+    if string.find(nvt.entries[i], ';') then
+      bp = string.gsub(nvt.entries[i], '.*;', '') ; if bp == '' then bp = 'unknown' end
     else
       bp = 'unknown'
     end
-    if nvt.thisdoc == '' then
+    if nvt.thisdocname == '' then
       if string.find(id, '<') then
-        nvt.entrylist = nvt.entrylist .. id .. '\n'
+        nvt.badentrylist = nvt.badentrylist .. id .. '\n'
       else
         if ep ~= bp then
           if nvt.startmode ~= 'draft' or ep ~= '0' then
-            tocok = false ; if nvt.mode ~= 'bad' then nvt.mode = 'draft' end
-            nvt.entrylist = nvt.entrylist .. 'entryid=' .. id .. ', tocpage=' .. ep
+            tocok = false ; if nvt.currentmode ~= 'bad' then nvt.currentmode = 'draft' end
+            nvt.badentrylist = nvt.badentrylist .. 'entryid=' .. id .. ', tocpage=' .. ep
               .. ', bookpage=' .. bp .. '\n'
           end
         end
@@ -2118,7 +2092,7 @@ nvt.finalize = function (s)
   end
   --
   luatexbase.add_to_callback('wrapup_run', function ()
-  if nvt.mode == 'final' then table.insert(nvt.sumbuffer, 'Approved as final.') end
+  if nvt.currentmode == 'final' then table.insert(nvt.sumbuffer, 'Approved as final.') end
   table.insert(nvt.sumbuffer, '\n\n********************************** '
     .. 'SUMMARY **********************************\n')
   table.insert(nvt.sumbuffer, 'File: ' .. tex.jobname .. '.tex. Compiled ' .. nvt.now .. '\n')
@@ -2127,14 +2101,14 @@ nvt.finalize = function (s)
   table.insert(nvt.sumbuffer, 'Author: ' .. nvt.author .. '\n')
   table.insert(nvt.sumbuffer, 'Docdate: ' .. nvt.docdate .. '\n')
   table.insert(nvt.sumbuffer, 'Version: ' .. nvt.version .. '\n')
-  if nvt.mode == 'final' then
+  if nvt.currentmode == 'final' then
     table.insert(nvt.sumbuffer, 'Total page count (including blanks, if any): '
       .. tex.count[0] .. '\n')
   end
-  if nvt.mode == nvt.startmode then
-    table.insert(nvt.sumbuffer, 'Mode: ' .. nvt.mode .. '\n')
+  if nvt.currentmode == nvt.startmode then
+    table.insert(nvt.sumbuffer, 'Mode: ' .. nvt.currentmode .. '\n')
   else
-    table.insert(nvt.sumbuffer, 'Mode: ' .. nvt.mode .. '\n'
+    table.insert(nvt.sumbuffer, 'Mode: ' .. nvt.currentmode .. '\n'
       .. '  Requested mode ' .. nvt.startmode .. '. Denied due to error/warning/overfull.\n')
   end
   table.insert(nvt.sumbuffer, 'Trim Size: ' .. nvt.trimtext .. '\n')
@@ -2175,7 +2149,7 @@ nvt.finalize = function (s)
       table.insert(nvt.sumbuffer, 'Hyphenation language: ' .. nvt.lang .. '\n')
     end
   end
-  if nvt.examine == true then
+  if nvt.doexamine == true then
     if nvt.startmode == 'draft' then
       if nvt.pagelist == '' then
         table.insert(nvt.sumbuffer, 'Examined document for typo flaws. Found none. Amazing!\n')
@@ -2197,7 +2171,7 @@ nvt.finalize = function (s)
   else
     table.insert(nvt.sumbuffer, 'This summary is saved in file ' .. tex.jobname .. '.sum.\n')
   end
-  if nvt.thisdoc ~= '' then
+  if nvt.thisdocname ~= '' then
     table.insert(nvt.sumbuffer, 'Compiled subdoc, so mode cannot be preview or final.\n')
   end
   table.insert(nvt.sumbuffer, 
@@ -2269,13 +2243,13 @@ nvt.finalize = function (s)
     table.insert(nvt.sumbuffer, alertlist)
   end
 ----- more alerts
-  if nvt.thisdoc ~= '' then
+  if nvt.thisdocname ~= '' then
     table.insert(nvt.sumbuffer,
       '\n\nTable of contents (if used) is not checked when compiling subdoc.\n')
   else
-    if nvt.entrylist ~= '' then
+    if nvt.badentrylist ~= '' then
       table.insert(nvt.sumbuffer, '\n\n! Bad table of contents entries, or wrong pages:\n')
-      table.insert(nvt.sumbuffer, nvt.entrylist)
+      table.insert(nvt.sumbuffer, nvt.badentrylist)
     end
   end
   table.insert(nvt.sumbuffer, '\n\n')
